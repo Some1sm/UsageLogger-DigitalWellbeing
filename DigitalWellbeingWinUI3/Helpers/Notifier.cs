@@ -19,7 +19,7 @@ namespace DigitalWellbeingWinUI3.Helpers
     public static class Notifier
     {
         public static TaskbarIcon TrayIcon;
-        private static int NOTIFICATION_TIMOUT_SECONDS = 10;
+
         private static TimeSpan warningLimit = TimeSpan.FromMinutes(15);
         private static int CHECK_INTERVAL = 60; // Check every 60 seconds
 
