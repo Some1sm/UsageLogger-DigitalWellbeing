@@ -145,6 +145,31 @@ namespace DigitalWellbeingWinUI3.Views
             ChangeDay(1);
         }
 
+        private void CalendarPicker_SelectedDatesChanged(CalendarView sender, CalendarViewSelectedDatesChangedEventArgs args)
+        {
+            if (args.AddedDates.Count > 0)
+            {
+                var date = args.AddedDates[0];
+                var newDate = date.DateTime;
+                
+                if (newDate > System.DateTime.Now)
+                {
+                    // If future, reset to Today
+                    sender.SelectedDates.Clear();
+                    ViewModel.LoadedDate = System.DateTime.Now;
+                }
+                else
+                {
+                    ViewModel.LoadedDate = newDate;
+                }
+                
+                ViewModel.RefreshDayView();
+                
+                // Hide flyout
+                CalendarFlyout.Hide();
+            }
+        }
+
         private void ChangeDay(int offset)
         {
              // Find current index

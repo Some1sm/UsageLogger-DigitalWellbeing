@@ -19,6 +19,28 @@ namespace DigitalWellbeingWinUI3.Views
              ViewModel.UpdateLayoutWidths(e.NewSize.Width);
         }
 
+        private void CalendarPicker_SelectedDatesChanged(CalendarView sender, CalendarViewSelectedDatesChangedEventArgs args)
+        {
+            if (args.AddedDates.Count > 0)
+            {
+                var date = args.AddedDates[0];
+                var newDate = date.DateTime;
+                if (newDate > System.DateTime.Now)
+                {
+                    // If future, reset to Today
+                    sender.SelectedDates.Clear();
+                    ViewModel.SelectedDate = System.DateTime.Now;
+                }
+                else
+                {
+                    ViewModel.SelectedDate = newDate;
+                }
+                
+                // Hide flyout
+                CalendarFlyout.Hide();
+            }
+        }
+
     }
 
     public class DateFormatConverter : Microsoft.UI.Xaml.Data.IValueConverter

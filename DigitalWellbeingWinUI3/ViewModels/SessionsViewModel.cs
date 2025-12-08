@@ -25,10 +25,13 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 {
                     _selectedDate = value;
                     OnPropertyChanged();
+                    OnPropertyChanged(nameof(CanGoNext));
                     LoadSessions();
                 }
             }
         }
+
+        public bool CanGoNext => SelectedDate.Date < DateTime.Now.Date;
 
         private ObservableCollection<DigitalWellbeingWinUI3.Models.SessionBlock> _sessionBlocks = new ObservableCollection<DigitalWellbeingWinUI3.Models.SessionBlock>();
         public ObservableCollection<DigitalWellbeingWinUI3.Models.SessionBlock> SessionBlocks

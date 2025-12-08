@@ -26,6 +26,7 @@
         </Grid>
 
         <!-- Controls -->
+        <!-- Controls -->
         <Grid Grid.Row="1" Margin="24,0,24,16" ColumnSpacing="12">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -33,17 +34,36 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             
-            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8">
-                <Button Content="&lt;" Command="{x:Bind ViewModel.PreviousDayCommand}" />
-                <Button Content="Today" Command="{x:Bind ViewModel.TodayCommand}" />
-                <Button Content="&gt;" Command="{x:Bind ViewModel.NextDayCommand}" />
-                <AppBarSeparator />
-                <Button Content="-" Command="{x:Bind ViewModel.ZoomOutCommand}" />
-                <Button Content="+" Command="{x:Bind ViewModel.ZoomInCommand}" />
+            <!-- Date Navigation (Styled) -->
+            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="12">
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="10,5" Height="44" VerticalAlignment="Top">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button Background="Transparent" BorderThickness="0" Padding="0" Margin="0,0,10,0" ToolTipService.ToolTip="Select Date">
+                            <TextBlock Text="📅" VerticalAlignment="Center"/>
+                            <Button.Flyout>
+                                <Flyout x:Name="CalendarFlyout" Placement="Bottom">
+                                    <CalendarView x:Name="CalendarPicker" SelectionMode="Single" SelectedDatesChanged="CalendarPicker_SelectedDatesChanged" />
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
+                        <TextBlock Text="{x:Bind ViewModel.SelectedDate, Converter={StaticResource DateFormatConverter}, Mode=OneWay}" 
+                                   Style="{ThemeResource TitleTextBlockStyle}" FontSize="18" VerticalAlignment="Center" 
+                                   Width="200" TextAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                        
+                        <Button Content="&lt;" Command="{x:Bind ViewModel.PreviousDayCommand}" Background="Transparent" BorderThickness="0" Margin="10,0,0,0"/>
+                        <Button Content="&gt;" Command="{x:Bind ViewModel.NextDayCommand}" IsEnabled="{x:Bind ViewModel.CanGoNext, Mode=OneWay}" Background="Transparent" BorderThickness="0"/>
+                    </StackPanel>
+                </Border>
+                <Button Content="Today" Command="{x:Bind ViewModel.TodayCommand}" VerticalAlignment="Center"/>
             </StackPanel>
 
-            <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.SelectedDate, Mode=OneWay, Converter={StaticResource DateFormatConverter}}" 
-                       VerticalAlignment="Center" HorizontalAlignment="Center" Style="{ThemeResource SubtitleTextBlockStyle}"/>
+            <!-- Zoom Controls -->
+            <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="16">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button Command="{x:Bind ViewModel.ZoomOutCommand}" Content="Zoom Out"/>
+                    <Button Command="{x:Bind ViewModel.ZoomInCommand}" Content="Zoom In"/>
+                </StackPanel>
+            </StackPanel>
         </Grid>
 
         <!-- Timeline Body -->
