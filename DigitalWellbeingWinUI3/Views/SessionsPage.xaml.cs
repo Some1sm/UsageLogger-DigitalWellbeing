@@ -14,6 +14,11 @@ namespace DigitalWellbeingWinUI3.Views
             ViewModel = new SessionsViewModel();
         }
 
+        private void ContainerGrid_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+             ViewModel.UpdateLayoutWidths(e.NewSize.Width);
+        }
+
     }
 
     public class DateFormatConverter : Microsoft.UI.Xaml.Data.IValueConverter

@@ -48,7 +48,7 @@
 
         <!-- Timeline Body -->
         <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
-            <Grid Margin="24,0,24,24">
+            <Grid x:Name="ContainerGrid" Margin="24,0,24,24" SizeChanged="ContainerGrid_SizeChanged">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="60"/> <!-- Labels -->
                     <ColumnDefinition Width="*"/>  <!-- Canvas -->
@@ -63,7 +63,7 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Grid Width="1000"> <!-- Width to span across -->
+                            <Grid Width="{Binding Width}"> <!-- Width to span across -->
                                 <Grid.RenderTransform>
                                     <TranslateTransform Y="{Binding Top}"/>
                                 </Grid.RenderTransform>
@@ -87,7 +87,7 @@
                         <!-- ItemContainerStyle removed, using RenderTransform in Template instead -->
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Grid Height="{Binding Height}" Width="250" ToolTipService.ToolTip="{Binding Title}">
+                                <Grid Height="{Binding Height}" Width="{Binding Width}" ToolTipService.ToolTip="{Binding Title}">
                                     <Grid.RenderTransform>
                                         <TranslateTransform X="{Binding Left}" Y="{Binding Top}" />
                                     </Grid.RenderTransform>
@@ -117,7 +117,7 @@
                     </ItemsControl>
                     
                     <!-- Current Time Indicator -->
-                    <Grid Width="1000" Height="2" Canvas.Left="0" Canvas.Top="{x:Bind ViewModel.CurrentTimeTop, Mode=OneWay}" Visibility="{x:Bind ViewModel.CurrentTimeVisibility, Mode=OneWay}">
+                    <Grid Width="{x:Bind ViewModel.TimelineWidth, Mode=OneWay}" Height="2" Canvas.Left="0" Canvas.Top="{x:Bind ViewModel.CurrentTimeTop, Mode=OneWay}" Visibility="{x:Bind ViewModel.CurrentTimeVisibility, Mode=OneWay}">
                         <Rectangle Fill="#FF5252" />
                         <Ellipse Width="8" Height="8" Fill="#FF5252" HorizontalAlignment="Left" Margin="-4,0,0,0" VerticalAlignment="Center"/>
                     </Grid>

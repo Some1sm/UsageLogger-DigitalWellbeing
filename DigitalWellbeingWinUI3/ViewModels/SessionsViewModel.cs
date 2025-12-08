@@ -82,6 +82,48 @@ namespace DigitalWellbeingWinUI3.ViewModels
         
         public ObservableCollection<DigitalWellbeingWinUI3.Models.TimeGridLine> GridLines { get; } = new ObservableCollection<DigitalWellbeingWinUI3.Models.TimeGridLine>();
 
+        // Responsive Width
+        private double _timelineWidth;
+        public double TimelineWidth
+        {
+            get => _timelineWidth;
+            set 
+            { 
+                if (_timelineWidth != value) 
+                { 
+                    _timelineWidth = value; 
+                    OnPropertyChanged(); 
+                    UpdateItemsWidth();
+                } 
+            }
+        }
+
+        public void UpdateLayoutWidths(double containerWidth)
+        {
+            if (containerWidth < 0) return;
+            // Subtract label column width (60)
+            double available = containerWidth - 60;
+            if (available < 0) available = 0;
+            
+            TimelineWidth = available;
+        }
+
+        private void UpdateItemsWidth()
+        {
+            // Update GridLines width. They span both columns so effectively Full Width (Timeline + 60)
+            double fullWidth = TimelineWidth + 60; 
+            
+            foreach (var line in GridLines)
+            {
+                line.Width = fullWidth;
+            }
+            
+            foreach (var block in SessionBlocks)
+            {
+                block.Width = TimelineWidth;
+            }
+        }
+
         public SessionsViewModel()
         {
             _repository = new AppSessionRepository(ApplicationPath.UsageLogsFolder);
@@ -121,6 +163,8 @@ namespace DigitalWellbeingWinUI3.ViewModels
             int totalMinutes = 24 * 60;
             double pixelsPerMinute = PixelsPerHour / 60.0;
             double rowHeight = stepMinutes * pixelsPerMinute;
+            
+            double fullWidth = TimelineWidth + 60;
 
             for (int i = 0; i < totalMinutes; i += stepMinutes)
             {
@@ -132,7 +176,6 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 if (isHour) text = ts.ToString(@"hh\:mm");
                 else 
                 {
-                    // For minor lines, maybe only show text if enough space?
                     if (rowHeight > 20) text = ts.ToString(@"mm");
                 }
 
@@ -142,7 +185,8 @@ namespace DigitalWellbeingWinUI3.ViewModels
                     Height = rowHeight,
                     Top = (i / 60.0) * _pixelsPerHour,
                     Opacity = isHour ? 0.3 : 0.1,
-                    FontSize = isHour ? 12 : 10
+                    FontSize = isHour ? 12 : 10,
+                    Width = fullWidth
                 });
             }
         }
@@ -196,10 +240,6 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 double top = (totalMinutesFromMidnight / 60.0) * PixelsPerHour;
                 double height = (durationMinutes / 60.0) * PixelsPerHour;
                 
-                // Ensure min height based on zoom? 
-                // At 60px/hr, 1 min = 1px.
-                // At 3600px/hr, 1 sec = 1px.
-                // Let's set min height to 1px so small things exist.
                 if (height < 1) height = 1; 
 
                 var color = AppTagHelper.GetTagColor(AppTagHelper.GetAppTag(s.ProcessName));
@@ -211,6 +251,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
                     Top = top,
                     Height = height,
                     Left = 60, // Space for labels
+                    Width = TimelineWidth,
                     BackgroundColor = color,
                     IsAfk = s.IsAfk,
                     OriginalSession = s
@@ -224,6 +265,4 @@ namespace DigitalWellbeingWinUI3.ViewModels
             PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(name));
         }
     }
-
-
 }
