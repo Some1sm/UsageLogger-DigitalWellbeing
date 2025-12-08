@@ -108,15 +108,22 @@ namespace DigitalWellbeingWinUI3.ViewModels
         private void GenerateTagChart(List<AppUsage> usage)
         {
             Dictionary<AppTag, double> tagDurations = new Dictionary<AppTag, double>();
-            foreach (AppTag tag in Enum.GetValues(typeof(AppTag))) tagDurations[tag] = 0;
-
+            // Initialize with 0 for all known tags (optional, but good for consistent colors if we want to show empty ones)
+            // Better: Just aggregate what we have.
+            
             foreach (var app in usage)
             {
                 if (AppUsageViewModel.IsProcessExcluded(app.ProcessName)) continue;
-                // Min duration check?
                 
                 AppTag tag = AppTagHelper.GetAppTag(app.ProcessName);
-                tagDurations[tag] += app.Duration.TotalMinutes;
+                if (tagDurations.ContainsKey(tag))
+                {
+                    tagDurations[tag] += app.Duration.TotalMinutes;
+                }
+                else
+                {
+                    tagDurations[tag] = app.Duration.TotalMinutes;
+                }
             }
 
             var newSeries = new ObservableCollection<ISeries>();

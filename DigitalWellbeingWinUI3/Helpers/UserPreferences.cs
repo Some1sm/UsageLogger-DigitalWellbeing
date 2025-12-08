@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using DigitalWellbeingWinUI3.Models;
 
 namespace DigitalWellbeingWinUI3.Helpers
 {
@@ -18,6 +19,7 @@ namespace DigitalWellbeingWinUI3.Helpers
         public static string ThemeMode { get; set; } = "System"; // System, Light, Dark
         public static bool MinimizeOnExit { get; set; } = true;
         public static Dictionary<string, int> AppTimeLimits { get; set; } = new Dictionary<string, int>();
+        public static List<CustomAppTag> CustomTags { get; set; } = new List<CustomAppTag>();
 
         static UserPreferences()
         {
@@ -37,7 +39,8 @@ namespace DigitalWellbeingWinUI3.Helpers
                     UserExcludedProcesses,
                     ThemeMode,
                     MinimizeOnExit,
-                    AppTimeLimits
+                    AppTimeLimits,
+                    CustomTags
                 };
 
                 string json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
@@ -64,6 +67,24 @@ namespace DigitalWellbeingWinUI3.Helpers
                     if (data.TryGetProperty(nameof(ThemeMode), out prop)) ThemeMode = prop.GetString();
                     if (data.TryGetProperty(nameof(MinimizeOnExit), out prop)) MinimizeOnExit = prop.GetBoolean();
                     if (data.TryGetProperty(nameof(AppTimeLimits), out prop)) AppTimeLimits = JsonSerializer.Deserialize<Dictionary<string, int>>(prop.GetRawText()) ?? new Dictionary<string, int>();
+                    if (data.TryGetProperty(nameof(CustomTags), out prop)) CustomTags = JsonSerializer.Deserialize<List<CustomAppTag>>(prop.GetRawText()) ?? new List<CustomAppTag>();
+                }
+
+                // Default Initialization
+                if (CustomTags == null || CustomTags.Count == 0)
+                {
+                    CustomTags = new List<CustomAppTag>
+                    {
+                        // Untagged (0) is implicit usually, but good to have explicit if we want a color
+                        new CustomAppTag(0, "Untagged", "#808080"), 
+                        new CustomAppTag(1, "Work", "#1E90FF"),
+                        new CustomAppTag(2, "Education", "#FFA500"),
+                        new CustomAppTag(3, "Entertainment", "#9370DB"),
+                        new CustomAppTag(4, "Social", "#FF1493"),
+                        new CustomAppTag(5, "Utility", "#808080"),
+                        new CustomAppTag(6, "Game", "#DC143C")
+                    };
+                    Save();
                 }
             }
             catch { }

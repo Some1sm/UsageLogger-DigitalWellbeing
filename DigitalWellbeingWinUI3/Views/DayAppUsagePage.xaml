@@ -90,15 +90,10 @@
                     <DataTemplate>
                         <Border CornerRadius="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="15,12" RightTapped="Grid_RightTapped">
                         <Border.ContextFlyout>
-                            <MenuFlyout>
+                            <MenuFlyout Opening="MenuFlyout_Opening">
                                 <MenuFlyoutItem Text="Set Time Limit" Icon="Clock" Click="MenuFlyoutItem_SetTimeLimit_Click" Tag="{Binding ProcessName}"/>
                                 <MenuFlyoutSubItem Text="Set Category" Icon="Tag">
-                                    <MenuFlyoutItem Text="Productivity" Click="MenuFlyoutItem_SetAppTag_Click" Tag="{Binding ProcessName}"/>
-                                    <MenuFlyoutItem Text="Entertainment" Click="MenuFlyoutItem_SetAppTag_Click" Tag="{Binding ProcessName}"/>
-                                    <MenuFlyoutItem Text="Utility" Click="MenuFlyoutItem_SetAppTag_Click" Tag="{Binding ProcessName}"/>
-                                    <MenuFlyoutItem Text="Social" Click="MenuFlyoutItem_SetAppTag_Click" Tag="{Binding ProcessName}"/>
-                                    <MenuFlyoutItem Text="Game" Click="MenuFlyoutItem_SetAppTag_Click" Tag="{Binding ProcessName}"/>
-                                    <MenuFlyoutItem Text="Other" Click="MenuFlyoutItem_SetAppTag_Click" Tag="{Binding ProcessName}"/>
+                                    <!-- Options populated dynamically in MenuFlyout_Opening -->
                                 </MenuFlyoutSubItem>
                                 <MenuFlyoutSeparator/>
                                 <MenuFlyoutItem Text="Exclude App" Icon="Delete" Click="MenuFlyoutItem_ExcludeApp_Click" Tag="{Binding ProcessName}"/>

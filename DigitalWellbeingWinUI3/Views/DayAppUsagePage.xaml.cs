@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Threading.Tasks;
+using System.Linq; // Added for FirstOrDefault
 
 namespace DigitalWellbeingWinUI3.Views
 {
@@ -177,6 +178,28 @@ namespace DigitalWellbeingWinUI3.Views
         // --- Context Menu Handlers (Placeholders or Real) ---
         // For Phase 2, I'll keep them simple or assume they work if Logic Phase passed.
         // I will include the logic just in case user tries to right click.
+        
+        private void MenuFlyout_Opening(object sender, object e)
+        {
+            if (sender is MenuFlyout flyout && flyout.Target is FrameworkElement target && target.DataContext is DigitalWellbeingWinUI3.Models.AppUsageListItem appItem)
+            {
+                var categoryItem = flyout.Items.OfType<MenuFlyoutSubItem>().FirstOrDefault(i => i.Text == "Set Category");
+                if (categoryItem != null)
+                {
+                    categoryItem.Items.Clear();
+                    foreach (var tag in Helpers.UserPreferences.CustomTags)
+                    {
+                        var menuItem = new MenuFlyoutItem { Text = tag.Name, Tag = appItem.ProcessName };
+                        menuItem.Click += MenuFlyoutItem_SetAppTag_Click;
+                        
+                        // Add color circle icon using FontIcon? 
+                        // Simplified: Just use text for now to fix the core issue.
+                        
+                        categoryItem.Items.Add(menuItem);
+                    }
+                }
+            }
+        }
 
         private async void MenuFlyoutItem_SetTimeLimit_Click(object sender, RoutedEventArgs e)
         {
@@ -234,11 +257,13 @@ namespace DigitalWellbeingWinUI3.Views
             
             if (string.IsNullOrEmpty(processName) || string.IsNullOrEmpty(tagStr)) return;
 
-            if (Enum.TryParse(typeof(DigitalWellbeing.Core.Models.AppTag), tagStr, true, out var tagEnum))
+            // Find Tag by Name
+            var customTag = Helpers.UserPreferences.CustomTags.FirstOrDefault(t => t.Name == tagStr);
+            if (customTag != null)
             {
-                 DigitalWellbeingWinUI3.Helpers.AppTagHelper.UpdateAppTag(processName, (DigitalWellbeing.Core.Models.AppTag)tagEnum);
-                 // Refresh
-                 ViewModel.LoadWeeklyData();
+                DigitalWellbeingWinUI3.Helpers.AppTagHelper.UpdateAppTag(processName, (DigitalWellbeing.Core.Models.AppTag)customTag.Id);
+                // Refresh
+                ViewModel.LoadWeeklyData();
             }
         }
 
