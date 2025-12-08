@@ -7,8 +7,7 @@
     xmlns:local="using:DigitalWellbeingWinUI3.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    mc:Ignorable="d">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -25,7 +24,6 @@
             </StackPanel>
         </Grid>
 
-        <!-- Controls -->
         <!-- Controls -->
         <Grid Grid.Row="1" Margin="24,0,24,16" ColumnSpacing="12">
             <Grid.ColumnDefinitions>
@@ -66,85 +64,87 @@
             </StackPanel>
         </Grid>
 
-        <!-- Timeline Body -->
-        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
-            <Grid x:Name="ContainerGrid" Margin="24,0,24,24" SizeChanged="ContainerGrid_SizeChanged">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="60"/> <!-- Labels -->
-                    <ColumnDefinition Width="*"/>  <!-- Canvas -->
-                </Grid.ColumnDefinitions>
+        <!-- Timeline Body (Styled as Bubble) -->
+        <Border Grid.Row="2" Margin="24,0,24,24" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <Grid x:Name="ContainerGrid" Margin="0" SizeChanged="ContainerGrid_SizeChanged">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="60"/> <!-- Labels -->
+                        <ColumnDefinition Width="*"/>  <!-- Canvas -->
+                    </Grid.ColumnDefinitions>
 
-                <!-- Grid Lines & Labels -->
-                <ItemsControl Grid.ColumnSpan="2" ItemsSource="{x:Bind ViewModel.GridLines, Mode=OneWay}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <Canvas />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Width="{Binding Width}"> <!-- Width to span across -->
-                                <Grid.RenderTransform>
-                                    <TranslateTransform Y="{Binding Top}"/>
-                                </Grid.RenderTransform>
-                                
-                                <Border BorderBrush="{ThemeResource SystemControlForegroundBaseLowBrush}" BorderThickness="0,1,0,0" Opacity="{Binding Opacity}" Margin="60,0,0,0" Height="1" VerticalAlignment="Top"/>
-                                <TextBlock Text="{Binding TimeText}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,-10,10,0" Opacity="0.5" FontSize="{Binding FontSize}"/>
-                            </Grid>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-
-                <!-- Sessions -->
-                <!-- 24h * 60px = 1440px Height -->
-                <Canvas Grid.Column="0" Grid.ColumnSpan="2" Height="{x:Bind ViewModel.CanvasHeight, Mode=OneWay}" VerticalAlignment="Top">
-                    <ItemsControl ItemsSource="{x:Bind ViewModel.SessionBlocks, Mode=OneWay}">
+                    <!-- Grid Lines & Labels -->
+                    <ItemsControl Grid.ColumnSpan="2" ItemsSource="{x:Bind ViewModel.GridLines, Mode=OneWay}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <Canvas />
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
-                        <!-- ItemContainerStyle removed, using RenderTransform in Template instead -->
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Grid Height="{Binding Height}" Width="{Binding Width}" ToolTipService.ToolTip="{Binding Title}">
+                                <Grid Width="{Binding Width}"> <!-- Width to span across -->
                                     <Grid.RenderTransform>
-                                        <TranslateTransform X="{Binding Left}" Y="{Binding Top}" />
+                                        <TranslateTransform Y="{Binding Top}"/>
                                     </Grid.RenderTransform>
                                     
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="4"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    
-                                    <!-- Indicator Bar -->
-                                    <Rectangle Grid.Column="0" Fill="{Binding BackgroundColor}" RadiusX="2" RadiusY="2"/>
-                                    
-                                    <!-- Content -->
-                                    <Border Grid.Column="1" Background="{Binding BackgroundColor}" Opacity="0.2" CornerRadius="0,4,4,0"/>
-                                    <StackPanel Grid.Column="1" Padding="8,2" VerticalAlignment="Center">
-                                        <TextBlock Text="{Binding Title}" FontSize="12" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
-                                        <StackPanel Orientation="Horizontal" Spacing="4">
-                                            <TextBlock Text="{Binding DurationText}" FontSize="10" Opacity="0.7"/>
-                                            <Border Background="{ThemeResource SystemFillColorCautionBrush}" CornerRadius="2" Padding="2,0" Visibility="{Binding IsAfk}">
-                                                <TextBlock Text="AFK" FontSize="8" Foreground="Black"/>
-                                            </Border>
-                                        </StackPanel>
-                                    </StackPanel>
+                                    <Border BorderBrush="{ThemeResource SystemControlForegroundBaseLowBrush}" BorderThickness="0,1,0,0" Opacity="{Binding Opacity}" Margin="60,0,0,0" Height="1" VerticalAlignment="Top"/>
+                                    <TextBlock Text="{Binding TimeText}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,-10,10,0" Opacity="0.5" FontSize="{Binding FontSize}"/>
                                 </Grid>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
-                    
-                    <!-- Current Time Indicator -->
-                    <Grid Width="{x:Bind ViewModel.TimelineWidth, Mode=OneWay}" Height="2" Canvas.Left="0" Canvas.Top="{x:Bind ViewModel.CurrentTimeTop, Mode=OneWay}" Visibility="{x:Bind ViewModel.CurrentTimeVisibility, Mode=OneWay}">
-                        <Rectangle Fill="#FF5252" />
-                        <Ellipse Width="8" Height="8" Fill="#FF5252" HorizontalAlignment="Left" Margin="-4,0,0,0" VerticalAlignment="Center"/>
-                    </Grid>
-                </Canvas>
 
-            </Grid>
-        </ScrollViewer>
+                    <!-- Sessions -->
+                    <!-- 24h * 60px = 1440px Height -->
+                    <Canvas Grid.Column="0" Grid.ColumnSpan="2" Height="{x:Bind ViewModel.CanvasHeight, Mode=OneWay}" VerticalAlignment="Top">
+                        <ItemsControl ItemsSource="{x:Bind ViewModel.SessionBlocks, Mode=OneWay}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <Canvas />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <!-- ItemContainerStyle removed, using RenderTransform in Template instead -->
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Height="{Binding Height}" Width="{Binding Width}" ToolTipService.ToolTip="{Binding Title}">
+                                        <Grid.RenderTransform>
+                                            <TranslateTransform X="{Binding Left}" Y="{Binding Top}" />
+                                        </Grid.RenderTransform>
+                                        
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="4"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        
+                                        <!-- Indicator Bar -->
+                                        <Rectangle Grid.Column="0" Fill="{Binding BackgroundColor}" RadiusX="2" RadiusY="2"/>
+                                        
+                                        <!-- Content -->
+                                        <Border Grid.Column="1" Background="{Binding BackgroundColor}" Opacity="0.2" CornerRadius="0,4,4,0"/>
+                                        <StackPanel Grid.Column="1" Padding="8,2" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Title}" FontSize="12" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <TextBlock Text="{Binding DurationText}" FontSize="10" Opacity="0.7"/>
+                                                <Border Background="{ThemeResource SystemFillColorCautionBrush}" CornerRadius="2" Padding="2,0" Visibility="{Binding IsAfk}">
+                                                    <TextBlock Text="AFK" FontSize="8" Foreground="Black"/>
+                                                </Border>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        
+                        <!-- Current Time Indicator -->
+                        <Grid Width="{x:Bind ViewModel.TimelineWidth, Mode=OneWay}" Height="2" Canvas.Left="0" Canvas.Top="{x:Bind ViewModel.CurrentTimeTop, Mode=OneWay}" Visibility="{x:Bind ViewModel.CurrentTimeVisibility, Mode=OneWay}">
+                            <Rectangle Fill="#FF5252" />
+                            <Ellipse Width="8" Height="8" Fill="#FF5252" HorizontalAlignment="Left" Margin="-4,0,0,0" VerticalAlignment="Center"/>
+                        </Grid>
+                    </Canvas>
+
+                </Grid>
+            </ScrollViewer>
+        </Border>
     </Grid>
     
     <Page.Resources>

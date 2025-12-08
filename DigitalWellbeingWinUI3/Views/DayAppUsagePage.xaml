@@ -22,7 +22,7 @@
 
             <!-- Date Header (Verified Good) -->
             <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,20">
-                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="10,5">
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="15,10">
                     <StackPanel Orientation="Horizontal">
                         <Button Background="Transparent" BorderThickness="0" Padding="0" Margin="0,0,10,0" ToolTipService.ToolTip="Select Date">
                             <TextBlock Text="📅" VerticalAlignment="Center"/>
