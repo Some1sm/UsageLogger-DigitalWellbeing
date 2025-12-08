@@ -25,12 +25,14 @@ namespace DigitalWellbeingService.NET4._6
         private AppUsageRepository _repository;
         private List<AppUsage> _cachedUsage;
         private DateTime _lastFlushTime;
+        private SessionManager _sessionManager;
 
         public ActivityLogger()
         {
             folderPath = ApplicationPath.UsageLogsFolder;
             autoRunFilePath = ApplicationPath.autorunFilePath;
             _repository = new AppUsageRepository(folderPath);
+            _sessionManager = new SessionManager(folderPath);
 
             Debug.WriteLine(folderPath);
             Debug.WriteLine(autoRunFilePath);
@@ -68,6 +70,13 @@ namespace DigitalWellbeingService.NET4._6
             catch { return; }
 
             UpdateTimeEntry(proc);
+            
+            // Session / Interval Tracking
+            string programName = ""; 
+            try { programName = ForegroundWindowManager.GetActiveProgramName(proc); } catch {}
+            if (string.IsNullOrEmpty(programName)) programName = "";
+            
+            _sessionManager.Update(proc, programName);
         }
 
         private void UpdateTimeEntry(Process proc)
@@ -139,6 +148,7 @@ namespace DigitalWellbeingService.NET4._6
                 }
 
                 _lastFlushTime = now;
+                _sessionManager.FlushBuffer();
             }
             catch (Exception ex)
             {
@@ -150,6 +160,7 @@ namespace DigitalWellbeingService.NET4._6
         public void SaveOnExit()
         {
             FlushBuffer();
+            _sessionManager.SaveOnExit();
         }
     }
 }

@@ -28,7 +28,14 @@ namespace DigitalWellbeing.Core
 
         public static string APP_LOCATION
         {
-            get => GetFolderPath(applicationPath) + $@"\{applicationFolderName}";
+            get 
+            {
+#if DEBUG
+                return System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DigitalWellbeingDebug");
+#else
+                return GetFolderPath(applicationPath) + $@"\{applicationFolderName}";
+#endif
+            }
         }
 
         public static string autorunFilePath
