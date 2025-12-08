@@ -24,11 +24,8 @@ namespace DigitalWellbeingWinUI3.Helpers
             _execute(parameter);
         }
 
+        #pragma warning disable CS0067
         public event EventHandler CanExecuteChanged;
-
-        public void RaiseCanExecuteChanged()
-        {
-            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
-        }
+        #pragma warning restore CS0067
     }
 }
