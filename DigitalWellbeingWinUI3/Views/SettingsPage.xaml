@@ -65,7 +65,7 @@
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Spacing="2" Margin="0,0,0,10">
                     <TextBlock Text="Time Limits per App" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                    <TextBlock Text="Double-click to set time limit (Not fully implemented in WinUI 3 yet)." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    <TextBlock Text="Double-click to remove time limit." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                 </StackPanel>
                 <ListView Grid.Row="1" x:Name="AppTimeLimitsList" Height="150" DoubleTapped="AppTimeLimitsList_DoubleTapped" BorderThickness="1" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" CornerRadius="4"/>
             </Grid>

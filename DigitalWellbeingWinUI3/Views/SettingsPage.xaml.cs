@@ -79,7 +79,8 @@ namespace DigitalWellbeingWinUI3.Views
         private void LoadAppTimeLimits()
         {
             AppTimeLimitsList.Items.Clear();
-            foreach (var limit in SettingsManager.appTimeLimits)
+            // AppTimeLimitsList.Items.Clear();
+            foreach (var limit in UserPreferences.AppTimeLimits)
             {
                 TimeSpan time = TimeSpan.FromMinutes(limit.Value);
                 AppTimeLimitsList.Items.Add($"{limit.Key}{APP_TIMELIMIT_SEPARATOR}{time.Hours}h {time.Minutes}m");
@@ -112,7 +113,18 @@ namespace DigitalWellbeingWinUI3.Views
 
         private void AppTimeLimitsList_DoubleTapped(object sender, Microsoft.UI.Xaml.Input.DoubleTappedRoutedEventArgs e)
         {
-             // TODO: Edit Dialog
+             if (AppTimeLimitsList.SelectedItem != null)
+             {
+                 string selected = AppTimeLimitsList.SelectedItem.ToString();
+                 // Parse process name (everything before separator)
+                 string processName = selected.Split(new string[] { APP_TIMELIMIT_SEPARATOR }, StringSplitOptions.None)[0];
+                 
+                 if (UserPreferences.AppTimeLimits.ContainsKey(processName))
+                 {
+                     UserPreferences.UpdateAppTimeLimit(processName, TimeSpan.Zero); // Removes it
+                     LoadAppTimeLimits();
+                 }
+             }
         }
 
         private void ApplyButton_Click(object sender, RoutedEventArgs e)

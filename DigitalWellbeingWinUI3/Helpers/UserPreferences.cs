@@ -17,6 +17,7 @@ namespace DigitalWellbeingWinUI3.Helpers
         public static List<string> UserExcludedProcesses { get; set; } = new List<string>();
         public static string ThemeMode { get; set; } = "System"; // System, Light, Dark
         public static bool MinimizeOnExit { get; set; } = true;
+        public static Dictionary<string, int> AppTimeLimits { get; set; } = new Dictionary<string, int>();
 
         static UserPreferences()
         {
@@ -35,7 +36,8 @@ namespace DigitalWellbeingWinUI3.Helpers
                     RefreshIntervalSeconds,
                     UserExcludedProcesses,
                     ThemeMode,
-                    MinimizeOnExit
+                    MinimizeOnExit,
+                    AppTimeLimits
                 };
 
                 string json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
@@ -61,9 +63,35 @@ namespace DigitalWellbeingWinUI3.Helpers
                     if (data.TryGetProperty(nameof(UserExcludedProcesses), out prop)) UserExcludedProcesses = JsonSerializer.Deserialize<List<string>>(prop.GetRawText()) ?? new List<string>();
                     if (data.TryGetProperty(nameof(ThemeMode), out prop)) ThemeMode = prop.GetString();
                     if (data.TryGetProperty(nameof(MinimizeOnExit), out prop)) MinimizeOnExit = prop.GetBoolean();
+                    if (data.TryGetProperty(nameof(AppTimeLimits), out prop)) AppTimeLimits = JsonSerializer.Deserialize<Dictionary<string, int>>(prop.GetRawText()) ?? new Dictionary<string, int>();
                 }
             }
             catch { }
+        }
+
+        public static void UpdateAppTimeLimit(string processName, TimeSpan timeLimit)
+        {
+            int totalMins = (int)timeLimit.TotalMinutes;
+
+            if (totalMins <= 0)
+            {
+                if (AppTimeLimits.ContainsKey(processName))
+                {
+                    AppTimeLimits.Remove(processName);
+                }
+            }
+            else
+            {
+                if (AppTimeLimits.ContainsKey(processName))
+                {
+                    AppTimeLimits[processName] = totalMins;
+                }
+                else
+                {
+                    AppTimeLimits.Add(processName, totalMins);
+                }
+            }
+            Save();
         }
     }
 }

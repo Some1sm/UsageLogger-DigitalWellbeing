@@ -369,3 +369,8 @@ Prerequisites/
 Setup/Setup.back.aip
 Setup/Setup.back*.aip
 Release_Build/
+DigitalWellbeing_Installer.exe
+DigitalWellbeing_Portable.zip
+res_*.txt
+log_*.txt
+restore_log.txt

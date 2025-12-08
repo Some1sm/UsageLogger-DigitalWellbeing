@@ -102,9 +102,9 @@ namespace DigitalWellbeingWinUI3.Views
             NumberBox nbMinutes = new NumberBox { Minimum = 0, Maximum = 59, SpinButtonPlacementMode = NumberBoxSpinButtonPlacementMode.Compact, Header = "Minutes", Value = 0 };
             
             // Load existing
-            if (Helpers.SettingsManager.appTimeLimits.ContainsKey(processName))
+            if (Helpers.UserPreferences.AppTimeLimits.ContainsKey(processName))
             {
-                TimeSpan ts = TimeSpan.FromMinutes(Helpers.SettingsManager.appTimeLimits[processName]);
+                TimeSpan ts = TimeSpan.FromMinutes(Helpers.UserPreferences.AppTimeLimits[processName]);
                 nbHours.Value = ts.Hours;
                 nbMinutes.Value = ts.Minutes;
             }
@@ -128,7 +128,7 @@ namespace DigitalWellbeingWinUI3.Views
             {
                 int h = (int)nbHours.Value;
                 int m = (int)nbMinutes.Value;
-                Helpers.SettingsManager.UpdateAppTimeLimit(processName, new TimeSpan(h, m, 0));
+                Helpers.UserPreferences.UpdateAppTimeLimit(processName, new TimeSpan(h, m, 0));
                 
                 // Refresh list if needed (ViewModel should handle PropertyChanged if logic depends on limits)
                 ViewModel.RefreshDayView(); // Requires exposing a refresh method or triggering it
