@@ -10,6 +10,7 @@ using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.Kernel;
 using SkiaSharp;
 using System;
+using System.Windows.Input;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -119,6 +120,8 @@ namespace DigitalWellbeingWinUI3.ViewModels
         public double PieChartInnerRadius { get; set; }
 
         public bool IsWeeklyDataLoaded = false;
+        
+        public ICommand ChartClickCommand { get; set; }
         #endregion
 
         public AppUsageViewModel()
@@ -129,6 +132,32 @@ namespace DigitalWellbeingWinUI3.ViewModels
             InitAutoRefreshTimer();
             // Start Loading
             LoadWeeklyData();
+            
+            ChartClickCommand = new RelayCommand(OnChartClick);
+        }
+
+        private void OnChartClick(object parameter)
+        {
+            try
+            {
+                // LiveCharts2 passes IEnumerable<ChartPoint> as parameter (usually) or specific args depending on binding
+                // But for DataPointerDown it passes IEnumerable<ChartPoint> of the clicked points.
+                
+                if (parameter is IEnumerable<ChartPoint> points)
+                {
+                    var point = points.FirstOrDefault();
+                    if (point != null)
+                    {
+                         // Index of the point in the series
+                         int index = point.Index;
+                         WeeklyChart_SelectionChanged(index);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Chart Click Error: {ex.Message}");
+            }
         }
 
         private void InitCollections()

@@ -27,7 +27,8 @@
             <!-- Weekly Bar Chart -->
         <Grid Grid.Row="1" Height="200" Margin="0,0,0,20">
              <!-- Background to ensure visibility -->
-            <lvc:CartesianChart x:Name="WeeklyChart" />
+            <lvc:CartesianChart x:Name="WeeklyChart" 
+                                DataPointerDownCommand="{x:Bind ViewModel.ChartClickCommand, Mode=OneWay}"/>
         </Grid>
 
         <!-- Details -->
