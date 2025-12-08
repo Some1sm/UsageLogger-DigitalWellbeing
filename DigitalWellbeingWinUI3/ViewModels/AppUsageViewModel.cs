@@ -203,7 +203,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
             refreshTimer.Tick += (s, e) => TryRefreshData();
         }
 
-        private void LoadUserExcludedProcesses()
+        public void LoadUserExcludedProcesses()
         {
             userExcludedProcesses = UserPreferences.UserExcludedProcesses.ToArray();
         }
