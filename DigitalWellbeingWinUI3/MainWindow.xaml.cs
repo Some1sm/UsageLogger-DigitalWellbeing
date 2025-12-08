@@ -103,6 +103,13 @@ namespace DigitalWellbeingWinUI3
             Microsoft.UI.WindowId windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
             m_AppWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
             
+            // Set Icon
+            string iconPath = Path.Combine(AppContext.BaseDirectory, "Assets", "icon.ico");
+            if (File.Exists(iconPath))
+            {
+                m_AppWindow.SetIcon(iconPath);
+            }
+            
             // Handle Closing
             m_AppWindow.Closing += M_AppWindow_Closing;
 

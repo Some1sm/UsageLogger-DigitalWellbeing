@@ -29,8 +29,12 @@ namespace DigitalWellbeingWinUI3.Helpers
             
             try
             {
-                 // Try to load icon from exe (using System.Drawing which H.NotifyIcon accepts for Icon property)
-                 // TrayIcon.Icon = System.Drawing.Icon.ExtractAssociatedIcon(Process.GetCurrentProcess().MainModule.FileName);
+                 // Try to load icon from Assets
+                 string iconPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "icon.ico");
+                 if (System.IO.File.Exists(iconPath))
+                 {
+                     TrayIcon.Icon = new System.Drawing.Icon(iconPath);
+                 }
             }
             catch 
             {
