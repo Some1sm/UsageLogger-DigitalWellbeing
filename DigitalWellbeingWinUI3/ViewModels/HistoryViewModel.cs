@@ -62,12 +62,18 @@ namespace DigitalWellbeingWinUI3.ViewModels
 
         public async void GenerateChart()
         {
-            if (EndDate < StartDate) return;
+            if (EndDate < StartDate) 
+            {
+                Debug.WriteLine("[HistoryViewModel] EndDate < StartDate");
+                return;
+            }
 
             IsLoading = true;
+            Debug.WriteLine($"[HistoryViewModel] Generating Chart for {StartDate.Date.ToShortDateString()} - {EndDate.Date.ToShortDateString()}");
             try
             {
                 List<AppUsage> allUsage = await LoadDataForDateRange(StartDate.Date, EndDate.Date);
+                Debug.WriteLine($"[HistoryViewModel] Loaded {allUsage.Count} usage records.");
 
                 if (IsTagView)
                 {
@@ -80,7 +86,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
             }
             catch (Exception ex) 
             {
-                Debug.WriteLine($"History GeneratIon Error: {ex}");
+                Debug.WriteLine($"[HistoryViewModel] Generation Error: {ex}");
             }
             finally
             {

@@ -62,19 +62,14 @@ namespace DigitalWellbeingWinUI3
                 var item = args.InvokedItemContainer as NavigationViewItem;
                 if (item != null) 
                 {
+                    System.Diagnostics.Debug.WriteLine($"[Nav] Invoked: {item.Tag}");
                     switch(item.Tag.ToString())
                     {
                         case "Dashboard":
                             ContentFrame.Navigate(typeof(DayAppUsagePage));
                             break;
                          case "History":
-                            // Placeholder for History Page, for now redirect to DateRangeAppUsagePage if ported, or just keep as DayAppUsagePage if not ready
-                            // Actually user said "History button does nothing, seems to load the dashboard" - that's because there was NO case for it.
-                            // I need to check if DateRangeAppUsagePage exists in WinUI 3 yet. 
-                            // It does NOT. So I will add a TODO and navigate to a placeholder or stay on DayAppUsagePage but maybe show a dialog?
-                            // For now, let's create a placeholder History page.
-                            ContentFrame.Navigate(typeof(DayAppUsagePage)); // Re-using Dashboard for now as placeholder is better than nothing? No, user complained it does nothing.
-                            // I will create a simple HistoryPage.xaml next.
+                            // Navigate to History Page
                             ContentFrame.Navigate(typeof(HistoryPage));
                             break;
                          case "Settings":
