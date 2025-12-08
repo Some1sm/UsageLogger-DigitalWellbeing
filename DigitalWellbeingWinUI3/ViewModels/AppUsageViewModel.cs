@@ -249,9 +249,18 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 foreach (List<AppUsage> dayUsage in weekUsage) { WeekAppUsage.Add(dayUsage); }
                 
                 WeeklyChartSeries.Clear();
-                // v3: Deep Blue (Bottom) -> Bright Cyan (Top)
+                
+                // Get System Accent Color
+                var uiSettings = new Windows.UI.ViewManagement.UISettings();
+                var accent = uiSettings.GetColorValue(Windows.UI.ViewManagement.UIColorType.Accent);
+                
+                // Create SKColors from Windows Accent
+                var skAccent = new SKColor(accent.R, accent.G, accent.B, accent.A);
+                var skAccentLight = new SKColor(accent.R, accent.G, accent.B, 180); // Transparent-ish bottom
+                var skAccentDark = new SKColor((byte)Math.Max(0, accent.R - 50), (byte)Math.Max(0, accent.G - 50), (byte)Math.Max(0, accent.B - 50));
+
                 var gradientPaint = new LinearGradientPaint(
-                    new SKColor[] { SKColors.Cyan, SKColors.DeepSkyBlue, SKColors.DarkBlue }, 
+                    new SKColor[] { skAccent, skAccentDark }, 
                     new SKPoint(0.5f, 0), // Top
                     new SKPoint(0.5f, 1)); // Bottom
 

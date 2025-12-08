@@ -119,9 +119,9 @@
                                 <!-- GRADIENT PROGRESS BAR TEST -->
                                 <ProgressBar Value="{Binding Percentage}" Maximum="100" Height="4" CornerRadius="2" HorizontalAlignment="Stretch">
                                     <ProgressBar.Foreground>
-                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                            <GradientStop Color="#00FFFF" Offset="0.0"/>
-                                            <GradientStop Color="#0000FF" Offset="1.0"/>
+                                        <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+                                            <GradientStop Color="{ThemeResource SystemAccentColor}" Offset="0.0"/>
+                                            <GradientStop Color="{ThemeResource SystemAccentColorLight2}" Offset="1.0"/>
                                         </LinearGradientBrush>
                                     </ProgressBar.Foreground>
                                 </ProgressBar>
