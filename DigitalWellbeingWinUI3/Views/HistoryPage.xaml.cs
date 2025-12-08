@@ -28,7 +28,11 @@ namespace DigitalWellbeingWinUI3.Views
                         InitialRotation = -90,
                     };
                     
-                    // Use Binding to handle ViewModel replacing the Collection instance
+                    // IMPORTANT:
+                    // We must use 'SetBinding' here instead of direct assignment (pieChart.Series = ViewModel.ChartSeries).
+                    // REASON: The ViewModel recreates the 'ChartSeries' collection instance (new ObservableCollection) whenever data is refreshed.
+                    // If we just assigned it once, this chart would hold onto the OLD (empty) collection and never update.
+                    // The Binding ensures it always points to the CURRENT property on the ViewModel.
                     var binding = new Microsoft.UI.Xaml.Data.Binding 
                     { 
                         Source = ViewModel, 

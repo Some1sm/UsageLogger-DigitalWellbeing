@@ -32,6 +32,12 @@ namespace DigitalWellbeingWinUI3.Views
         {
             if (ViewModel == null) return;
 
+            // -----------------------------------------------------------------------------------------
+            // CRITICAL STABILITY LOGIC:
+            // LiveCharts2 components can sometimes fail to render or initialize depending on the environment.
+            // Putting them in try-catch blocks ensures the rest of the dashboard (App List) still loads even if charts fail.
+            // -----------------------------------------------------------------------------------------
+
             // 1. Inject Bar Chart (CartesianChart)
             try
             {
@@ -91,7 +97,10 @@ namespace DigitalWellbeingWinUI3.Views
         {
             if (AppListGridView.ItemsPanelRoot is ItemsWrapGrid wrapGrid)
             {
-                // Responsive Logic: Fit items to width
+                // MANUAL RESPONSIVE LAYOUT:
+                // GridView's default UniformGrid doesn't always stretch items efficiently.
+                // We manually calculate the ItemWidth to ensure cards fill the ENTIRE available width, avoiding "Right Gaps".
+                
                 double availableWidth = e.NewSize.Width;
                 double minItemWidth = 400; // Minimum width before creating a new column
 

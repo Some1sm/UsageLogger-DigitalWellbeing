@@ -8,6 +8,12 @@
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <Grid Padding="20">
+            <!-- 
+                 CRITICAL LAYOUT ARCHITECTURE:
+                 1. Full Page Scroll: The root ScrollViewer handles scrolling for the entire page.
+                 2. GridView Scrolling Disabled: The inner GridView must have VerticalScrollMode="Disabled" to avoid dual scrollbars and allow it to expand fully.
+                 3. Chart Row vs List Row: By sharing the same ScrollViewer, both rows align perfectly in width.
+            -->
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -33,7 +39,10 @@
                     <ColumnDefinition Width="1.5*"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- Bar Chart Container -->
+                <!-- Bar Chart Container 
+                     SAFETY NOTE: Charts are NOT defined in XAML to prevent "Class Not Registered" or Parser crashes during InitializeComponent().
+                     Instead, we use a simple ContentControl and inject the Chart object via Code-Behind (Page_Loaded).
+                -->
                 <Border Grid.Column="0" Background="#1AFFFFFF" CornerRadius="12" BorderBrush="#30FFFFFF" BorderThickness="1" Padding="15" Margin="0,0,10,0">
                     <Grid>
                         <Grid.RowDefinitions>
