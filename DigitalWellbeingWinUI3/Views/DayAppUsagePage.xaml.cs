@@ -159,15 +159,62 @@ namespace DigitalWellbeingWinUI3.Views
             string processName = item.Tag as string;
             if (string.IsNullOrEmpty(processName)) return;
 
-            // ... (Logic ommitted for brevity in Phase 2 to minimize risk, but keeping method signature)
+            // Simple Content Dialog for Time Limit
+            var inputTextBox = new TextBox 
+            { 
+                PlaceholderText = "Minutes (e.g., 60)", 
+                InputScope = new Microsoft.UI.Xaml.Input.InputScope { Names = { new Microsoft.UI.Xaml.Input.InputScopeName(Microsoft.UI.Xaml.Input.InputScopeNameValue.Number) } } 
+            };
+            
+            // Should check if existing limit exists? For now, just overwrite
+            if (DigitalWellbeingWinUI3.Helpers.UserPreferences.AppTimeLimits.ContainsKey(processName))
+            {
+               inputTextBox.Text = DigitalWellbeingWinUI3.Helpers.UserPreferences.AppTimeLimits[processName].ToString();
+            }
+
+            var dialog = new ContentDialog
+            {
+                Title = $"Set Time Limit for {processName}",
+                Content = inputTextBox,
+                PrimaryButtonText = "Save",
+                SecondaryButtonText = "Cancel",
+                XamlRoot = this.XamlRoot
+            };
+
+            var result = await dialog.ShowAsync();
+            if (result == ContentDialogResult.Primary)
+            {
+                if (int.TryParse(inputTextBox.Text, out int minutes) && minutes > 0)
+                {
+                    DigitalWellbeingWinUI3.Helpers.UserPreferences.UpdateAppTimeLimit(processName, TimeSpan.FromMinutes(minutes));
+                }
+                else
+                {
+                    // Remove limit if empty or 0
+                    DigitalWellbeingWinUI3.Helpers.UserPreferences.UpdateAppTimeLimit(processName, TimeSpan.Zero);
+                }
+                
+                // Refresh
+                ViewModel.LoadWeeklyData();
+            }
         }
 
-        private async void MenuFlyoutItem_SetAppTag_Click(object sender, RoutedEventArgs e)
+        private void MenuFlyoutItem_SetAppTag_Click(object sender, RoutedEventArgs e)
         {
             var item = sender as MenuFlyoutItem;
             string processName = item.Tag as string;
-            if (string.IsNullOrEmpty(processName)) return;
-            // ...
+            
+            // Extract Tag from Menu Item Text (Productivity, Game, etc.)
+            string tagStr = item.Text; 
+            
+            if (string.IsNullOrEmpty(processName) || string.IsNullOrEmpty(tagStr)) return;
+
+            if (Enum.TryParse(typeof(DigitalWellbeing.Core.Models.AppTag), tagStr, true, out var tagEnum))
+            {
+                 DigitalWellbeingWinUI3.Helpers.AppTagHelper.UpdateAppTag(processName, (DigitalWellbeing.Core.Models.AppTag)tagEnum);
+                 // Refresh
+                 ViewModel.LoadWeeklyData();
+            }
         }
 
         private async void MenuFlyoutItem_ExcludeApp_Click(object sender, RoutedEventArgs e)
@@ -175,7 +222,31 @@ namespace DigitalWellbeingWinUI3.Views
             var item = sender as MenuFlyoutItem;
             string processName = item.Tag as string;
             if (string.IsNullOrEmpty(processName)) return;
-            // ...
+            
+            var dialog = new ContentDialog
+            {
+                Title = "Exclude App?",
+                Content = $"Are you sure you want to hide '{processName}' from the dashboard? You can manage excluded apps in Settings.",
+                PrimaryButtonText = "Exclude",
+                SecondaryButtonText = "Cancel",
+                XamlRoot = this.XamlRoot
+            };
+            
+            var result = await dialog.ShowAsync();
+            
+            if (result == ContentDialogResult.Primary)
+            {
+                // Add to Excluded List
+                if (!DigitalWellbeingWinUI3.Helpers.UserPreferences.UserExcludedProcesses.Contains(processName))
+                {
+                    DigitalWellbeingWinUI3.Helpers.UserPreferences.UserExcludedProcesses.Add(processName);
+                    DigitalWellbeingWinUI3.Helpers.UserPreferences.Save();
+                    
+                    // Force a full refresh which applies exclusion
+                    ViewModel.LoadUserExcludedProcesses(); // Reload global exclusion list into ViewModel static
+                    ViewModel.LoadWeeklyData();
+                }
+            }
         }
     }
 }
