@@ -212,6 +212,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
         {
             SetLoading(true);
             Debug.WriteLine("[AppUsageViewModel] LoadWeeklyData Started");
+            await Helpers.SettingsManager.WaitForInit;
             try
             {
                 DateTime minDate = DateTime.Now.AddDays(-NumberOfDaysToDisplay);

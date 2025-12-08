@@ -25,7 +25,7 @@
                 <Border Background="#20FFFFFF" CornerRadius="8" Padding="10,5">
                     <StackPanel Orientation="Horizontal">
                          <TextBlock Text="📅" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                         <TextBlock Text="{x:Bind ViewModel.StrLoadedDate, Mode=OneWay}" Style="{ThemeResource TitleTextBlockStyle}" FontSize="18" VerticalAlignment="Center"/>
+                         <TextBlock Text="{x:Bind ViewModel.StrLoadedDate, Mode=OneWay}" Style="{ThemeResource TitleTextBlockStyle}" FontSize="18" VerticalAlignment="Center" Width="250" TextAlignment="Center"/>
                          <Button Content="&lt;" Command="{x:Null}" IsEnabled="{x:Bind ViewModel.CanGoPrev, Mode=OneWay}" Click="BtnPrev_Click" Background="Transparent" BorderThickness="0" Margin="10,0,0,0"/>
                          <Button Content="&gt;" Command="{x:Null}" IsEnabled="{x:Bind ViewModel.CanGoNext, Mode=OneWay}" Click="BtnNext_Click" Background="Transparent" BorderThickness="0"/>
                     </StackPanel>
@@ -70,7 +70,7 @@
             <!-- ROW 2: APP LIST (Verified Working) -->
             <GridView Grid.Row="2" x:Name="AppListGridView" 
                       ItemsSource="{x:Bind ViewModel.DayListItems, Mode=OneWay}" 
-                      SelectionMode="None" Margin="0,10,0,0"
+                      SelectionMode="None" Margin="0,10,-6,0" Padding="0"
                       SizeChanged="AppListGridView_SizeChanged"
                       ScrollViewer.VerticalScrollMode="Disabled"
                       ScrollViewer.VerticalScrollBarVisibility="Hidden">

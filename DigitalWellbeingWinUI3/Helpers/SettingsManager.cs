@@ -15,17 +15,18 @@ namespace DigitalWellbeingWinUI3.Helpers
     {
         static string folderPath = ApplicationPath.SettingsFolder;
 
+        public static Task WaitForInit { get; private set; }
+
         static SettingsManager()
         {
-            LoadAppTimeLimits();
-            LoadAppTags();
+            WaitForInit = Task.WhenAll(LoadAppTimeLimits(), LoadAppTags());
         }
 
         #region App Time Limits
         public static Dictionary<string, int> appTimeLimits = new Dictionary<string, int>();
         static string appTimeLimitsFilePath = folderPath + "app-time-limits.txt";
 
-        private static async void LoadAppTimeLimits()
+        private static async Task LoadAppTimeLimits()
         {
             appTimeLimits.Clear();
 
@@ -126,7 +127,7 @@ namespace DigitalWellbeingWinUI3.Helpers
         public static Dictionary<string, AppTag> appTags = new Dictionary<string, AppTag>();
         static string appTagsPath = folderPath + "app-tags.txt";
 
-        private static async void LoadAppTags()
+        private static async Task LoadAppTags()
         {
             appTags.Clear();
 

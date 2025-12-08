@@ -26,6 +26,8 @@ namespace DigitalWellbeingWinUI3.Views
                     {
                         LegendPosition = LiveChartsCore.Measure.LegendPosition.Right,
                         InitialRotation = -90,
+                        Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent),
+                        LegendBackgroundPaint = null
                     };
                     
                     // IMPORTANT:

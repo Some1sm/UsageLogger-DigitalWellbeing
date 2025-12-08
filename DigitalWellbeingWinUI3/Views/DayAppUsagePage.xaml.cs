@@ -49,6 +49,9 @@ namespace DigitalWellbeingWinUI3.Views
                         XAxes = ViewModel.WeeklyChartXAxes,
                         DataPointerDownCommand = ViewModel.ChartClickCommand,
                         TooltipPosition = LiveChartsCore.Measure.TooltipPosition.Top,
+                        Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent),
+                        HorizontalAlignment = Microsoft.UI.Xaml.HorizontalAlignment.Stretch,
+                        VerticalAlignment = Microsoft.UI.Xaml.VerticalAlignment.Stretch
                     };
                     BarChartContainer.Content = barChart;
                 }
@@ -69,6 +72,10 @@ namespace DigitalWellbeingWinUI3.Views
                         Series = ViewModel.DayPieChartSeries,
                         LegendPosition = LiveChartsCore.Measure.LegendPosition.Right,
                         InitialRotation = -90,
+                        Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent),
+                        LegendBackgroundPaint = null,
+                        HorizontalAlignment = Microsoft.UI.Xaml.HorizontalAlignment.Stretch,
+                        VerticalAlignment = Microsoft.UI.Xaml.VerticalAlignment.Stretch
                     };
                     PieChartContainer.Content = pieChart;
                 }
@@ -114,7 +121,7 @@ namespace DigitalWellbeingWinUI3.Views
                 double newWidth = (availableWidth / columns);
                 
                 // Subtracting 1px to avoid rounding errors causing a wrap
-                wrapGrid.ItemWidth = newWidth - 1;
+                wrapGrid.ItemWidth = newWidth - 0.5;
             }
         }
 
