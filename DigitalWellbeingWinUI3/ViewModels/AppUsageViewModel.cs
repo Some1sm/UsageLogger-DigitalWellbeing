@@ -124,10 +124,19 @@ namespace DigitalWellbeingWinUI3.ViewModels
         public ICommand ChartClickCommand { get; set; }
         #endregion
 
+        private Windows.UI.ViewManagement.UISettings uiSettings;
+        private Microsoft.UI.Dispatching.DispatcherQueue dispatcherQueue;
+
         public AppUsageViewModel()
         {
             try
             {
+                dispatcherQueue = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
+
+                // Listen for Accent Color Changes
+                uiSettings = new Windows.UI.ViewManagement.UISettings();
+                uiSettings.ColorValuesChanged += UiSettings_ColorValuesChanged;
+
                 InitCollections();
                 InitFormatters();
                 LoadUserExcludedProcesses();
@@ -145,6 +154,37 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 if (WeeklyChartLabelDates == null) WeeklyChartLabelDates = new DateTime[0];
                 if (DayListItems == null) DayListItems = new ObservableCollection<AppUsageListItem>();
             }
+        }
+
+        private void UiSettings_ColorValuesChanged(Windows.UI.ViewManagement.UISettings sender, object args)
+        {
+            dispatcherQueue.TryEnqueue(() =>
+            {
+                if (WeeklyChartSeries != null && WeeklyChartSeries.Count > 0)
+                {
+                    foreach (var series in WeeklyChartSeries)
+                    {
+                        if (series is ColumnSeries<double> columnSeries)
+                        {
+                            columnSeries.Fill = GetAccentGradientPaint();
+                        }
+                    }
+                }
+            });
+        }
+
+        private LinearGradientPaint GetAccentGradientPaint()
+        {
+            var accent = uiSettings.GetColorValue(Windows.UI.ViewManagement.UIColorType.Accent);
+                
+            // Create SKColors from Windows Accent
+            var skAccent = new SKColor(accent.R, accent.G, accent.B, accent.A);
+            var skAccentDark = new SKColor((byte)Math.Max(0, accent.R - 50), (byte)Math.Max(0, accent.G - 50), (byte)Math.Max(0, accent.B - 50));
+
+            return new LinearGradientPaint(
+                new SKColor[] { skAccent, skAccentDark }, 
+                new SKPoint(0.5f, 0), // Top
+                new SKPoint(0.5f, 1)); // Bottom
         }
 
         private void OnChartClick(object parameter)
@@ -250,19 +290,9 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 
                 WeeklyChartSeries.Clear();
                 
-                // Get System Accent Color
-                var uiSettings = new Windows.UI.ViewManagement.UISettings();
-                var accent = uiSettings.GetColorValue(Windows.UI.ViewManagement.UIColorType.Accent);
+                WeeklyChartSeries.Clear();
                 
-                // Create SKColors from Windows Accent
-                var skAccent = new SKColor(accent.R, accent.G, accent.B, accent.A);
-                var skAccentLight = new SKColor(accent.R, accent.G, accent.B, 180); // Transparent-ish bottom
-                var skAccentDark = new SKColor((byte)Math.Max(0, accent.R - 50), (byte)Math.Max(0, accent.G - 50), (byte)Math.Max(0, accent.B - 50));
-
-                var gradientPaint = new LinearGradientPaint(
-                    new SKColor[] { skAccent, skAccentDark }, 
-                    new SKPoint(0.5f, 0), // Top
-                    new SKPoint(0.5f, 1)); // Bottom
+                var gradientPaint = GetAccentGradientPaint();
 
                 if (hours.Sum() == 0)
                 {
