@@ -39,6 +39,10 @@ namespace DigitalWellbeingWinUI3
             catch { }
             
             InitWindowManagement();
+            
+            // Custom Title Bar
+            ExtendsContentIntoTitleBar = true;
+            SetTitleBar(AppTitleBar);
         }
 
         private void NavView_Loaded(object sender, RoutedEventArgs e)
