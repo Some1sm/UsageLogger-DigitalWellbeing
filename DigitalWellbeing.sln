@@ -5,8 +5,7 @@ VisualStudioVersion = 16.0.31605.320
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{840C416C-B8F3-42BC-B0DD-F6BB14C9F8CB}") = "Setup", "Setup\Setup.aiproj", "{030FEB95-87D8-44FB-94B3-7D116ED7A1E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DigitalWellbeingWPF", "DigitalWellbeingWPF\DigitalWellbeingWPF.csproj", "{42C7648F-81BF-46E3-818C-01B7A2F46B41}"
-EndProject
+
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DigitalWellbeingService.NET4.6", "DigitalWellbeingService.NET4.6\DigitalWellbeingService.NET4.6.csproj", "{B4E54005-C6DC-4003-BFFE-01F0514EB985}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DigitalWellbeing.Core", "DigitalWellbeing.Core\DigitalWellbeing.Core.csproj", "{BB50062A-EC3C-4C04-9608-E4ED18543048}"
@@ -42,30 +41,7 @@ Global
 		{030FEB95-87D8-44FB-94B3-7D116ED7A1E8}.Release|Any CPU.ActiveCfg = DefaultBuild
 		{030FEB95-87D8-44FB-94B3-7D116ED7A1E8}.Release|x64.ActiveCfg = DefaultBuild
 		{030FEB95-87D8-44FB-94B3-7D116ED7A1E8}.Release|x86.ActiveCfg = DefaultBuild
-		{42C7648F-81BF-46E3-818C-01B7A2F46B41}.All|Any CPU.ActiveCfg = Debug|Any CPU
-		{42C7648F-81BF-46E3-818C-01B7A2F46B41}.All|Any CPU.Build.0 = Debug|Any CPU
-		{42C7648F-81BF-46E3-818C-01B7A2F46B41}.All|x64.ActiveCfg = Debug|Any CPU
-		{42C7648F-81BF-46E3-818C-01B7A2F46B41}.All|x64.Build.0 = Debug|Any CPU
-		{42C7648F-81BF-46E3-818C-01B7A2F46B41}.All|x86.ActiveCfg = Debug|Any CPU
-		{42C7648F-81BF-46E3-818C-01B7A2F46B41}.All|x86.Build.0 = Debug|Any CPU
-		{42C7648F-81BF-46E3-818C-01B7A2F46B41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{42C7648F-81BF-46E3-818C-01B7A2F46B41}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{42C7648F-81BF-46E3-818C-01B7A2F46B41}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{42C7648F-81BF-46E3-818C-01B7A2F46B41}.Debug|x64.Build.0 = Debug|Any CPU
-		{42C7648F-81BF-46E3-818C-01B7A2F46B41}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{42C7648F-81BF-46E3-818C-01B7A2F46B41}.Debug|x86.Build.0 = Debug|Any CPU
-		{42C7648F-81BF-46E3-818C-01B7A2F46B41}.Release - AdvancedInstaller|Any CPU.ActiveCfg = Release|Any CPU
-		{42C7648F-81BF-46E3-818C-01B7A2F46B41}.Release - AdvancedInstaller|Any CPU.Build.0 = Release|Any CPU
-		{42C7648F-81BF-46E3-818C-01B7A2F46B41}.Release - AdvancedInstaller|x64.ActiveCfg = Release|Any CPU
-		{42C7648F-81BF-46E3-818C-01B7A2F46B41}.Release - AdvancedInstaller|x64.Build.0 = Release|Any CPU
-		{42C7648F-81BF-46E3-818C-01B7A2F46B41}.Release - AdvancedInstaller|x86.ActiveCfg = Release|Any CPU
-		{42C7648F-81BF-46E3-818C-01B7A2F46B41}.Release - AdvancedInstaller|x86.Build.0 = Release|Any CPU
-		{42C7648F-81BF-46E3-818C-01B7A2F46B41}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{42C7648F-81BF-46E3-818C-01B7A2F46B41}.Release|Any CPU.Build.0 = Release|Any CPU
-		{42C7648F-81BF-46E3-818C-01B7A2F46B41}.Release|x64.ActiveCfg = Release|Any CPU
-		{42C7648F-81BF-46E3-818C-01B7A2F46B41}.Release|x64.Build.0 = Release|Any CPU
-		{42C7648F-81BF-46E3-818C-01B7A2F46B41}.Release|x86.ActiveCfg = Release|Any CPU
-		{42C7648F-81BF-46E3-818C-01B7A2F46B41}.Release|x86.Build.0 = Release|Any CPU
+
 		{B4E54005-C6DC-4003-BFFE-01F0514EB985}.All|Any CPU.ActiveCfg = Debug|Any CPU
 		{B4E54005-C6DC-4003-BFFE-01F0514EB985}.All|Any CPU.Build.0 = Debug|Any CPU
 		{B4E54005-C6DC-4003-BFFE-01F0514EB985}.All|x64.ActiveCfg = Debug|Any CPU
