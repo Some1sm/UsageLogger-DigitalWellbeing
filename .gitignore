@@ -379,3 +379,6 @@ restore_log.txt
 DigitalWellbeing.Setup/*.zip
  DigitalWellbeing.Setup/*.exe
 *.zip
+
+# Agent
+.agent/
