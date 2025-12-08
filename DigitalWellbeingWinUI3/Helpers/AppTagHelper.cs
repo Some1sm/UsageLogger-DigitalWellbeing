@@ -44,5 +44,10 @@ namespace DigitalWellbeingWinUI3.Helpers
         {
             return SettingsManager.GetAppTag(processName);
         }
+
+        public static void UpdateAppTag(string processName, AppTag tag)
+        {
+            SettingsManager.UpdateAppTag(processName, tag);
+        }
     }
 }
