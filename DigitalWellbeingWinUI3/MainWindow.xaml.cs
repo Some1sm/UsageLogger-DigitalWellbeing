@@ -13,6 +13,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Runtime.InteropServices;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using DigitalWellbeingWinUI3.Helpers;
 using DigitalWellbeingWinUI3.Views;
 
 namespace DigitalWellbeingWinUI3
@@ -27,7 +28,7 @@ namespace DigitalWellbeingWinUI3
             // Apply Theme
             try
             {
-                var theme = Helpers.UserPreferences.ThemeMode;
+                var theme = UserPreferences.ThemeMode;
                 if (!string.IsNullOrEmpty(theme) && theme != "System")
                 {
                     if (Enum.TryParse(theme, out ElementTheme rTheme))
@@ -39,10 +40,18 @@ namespace DigitalWellbeingWinUI3
             catch { }
             
             InitWindowManagement();
-            
+
             // Custom Title Bar
             ExtendsContentIntoTitleBar = true;
             SetTitleBar(AppTitleBar);
+
+            this.Activated += MainWindow_Activated;
+        }
+
+        private async void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
+        {
+             // Validate context on activation/loading
+             await AppTagHelper.ValidateAppTags();
         }
 
         private void NavView_Loaded(object sender, RoutedEventArgs e)

@@ -26,6 +26,11 @@ namespace DigitalWellbeingWinUI3.Helpers
         public static Dictionary<string, int> appTimeLimits = new Dictionary<string, int>();
         static string appTimeLimitsFilePath = folderPath + "app-time-limits.txt";
 
+        public static Dictionary<string, AppTag> GetAllAppTags()
+        {
+            return new Dictionary<string, AppTag>(appTags);
+        }
+
         private static async Task LoadAppTimeLimits()
         {
             appTimeLimits.Clear();
