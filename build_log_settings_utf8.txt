@@ -1,0 +1,19 @@
+  Determining projects to restore...
+  Restored H:\Coding\DigitalWellbeing\DigitalWellbeing_myworkGemini2\DigitalWellbeing.Core\DigitalWellbeing.Core.csproj (in 210 ms).
+  Restored H:\Coding\DigitalWellbeing\DigitalWellbeing_myworkGemini2\DigitalWellbeingWinUI3\DigitalWellbeingWinUI3.csproj (in 237 ms).
+  DigitalWellbeing.Core -> H:\Coding\DigitalWellbeing\DigitalWellbeing_myworkGemini2\DigitalWellbeing.Core\bin\Release\net8.0-windows10.0.19041.0\DigitalWellbeing.Core.dll
+H:\Coding\DigitalWellbeing\DigitalWellbeing_myworkGemini2\DigitalWellbeingWinUI3\Views\SettingsPage.xaml.cs(53,13): error CS0103: The name 'EnableAutoRefresh' does not exist in the current context [H:\Coding\DigitalWellbeing\DigitalWellbeing_myworkGemini2\DigitalWellbeingWinUI3\DigitalWellbeingWinUI3.csproj]
+H:\Coding\DigitalWellbeing\DigitalWellbeing_myworkGemini2\DigitalWellbeingWinUI3\Views\SettingsPage.xaml.cs(54,13): error CS0103: The name 'RefreshInterval' does not exist in the current context [H:\Coding\DigitalWellbeing\DigitalWellbeing_myworkGemini2\DigitalWellbeingWinUI3\DigitalWellbeingWinUI3.csproj]
+H:\Coding\DigitalWellbeing\DigitalWellbeing_myworkGemini2\DigitalWellbeingWinUI3\Views\SettingsPage.xaml.cs(159,49): error CS0103: The name 'EnableAutoRefresh' does not exist in the current context [H:\Coding\DigitalWellbeing\DigitalWellbeing_myworkGemini2\DigitalWellbeingWinUI3\DigitalWellbeingWinUI3.csproj]
+C:\Users\ceper\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\buildTransitive\Microsoft.UI.Xaml.Markup.Compiler.interop.targets(841,9): error MSB3073: The command ""C:\Users\ceper\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\buildTransitive\..\tools\net6.0\..\net472\XamlCompiler.exe" "obj\Release\net8.0-windows10.0.19041.0\\input.json" "obj\Release\net8.0-windows10.0.19041.0\\output.json"" exited with code 1. [H:\Coding\DigitalWellbeing\DigitalWellbeing_myworkGemini2\DigitalWellbeingWinUI3\DigitalWellbeingWinUI3.csproj]
+
+Build FAILED.
+
+H:\Coding\DigitalWellbeing\DigitalWellbeing_myworkGemini2\DigitalWellbeingWinUI3\Views\SettingsPage.xaml.cs(53,13): error CS0103: The name 'EnableAutoRefresh' does not exist in the current context [H:\Coding\DigitalWellbeing\DigitalWellbeing_myworkGemini2\DigitalWellbeingWinUI3\DigitalWellbeingWinUI3.csproj]
+H:\Coding\DigitalWellbeing\DigitalWellbeing_myworkGemini2\DigitalWellbeingWinUI3\Views\SettingsPage.xaml.cs(54,13): error CS0103: The name 'RefreshInterval' does not exist in the current context [H:\Coding\DigitalWellbeing\DigitalWellbeing_myworkGemini2\DigitalWellbeingWinUI3\DigitalWellbeingWinUI3.csproj]
+H:\Coding\DigitalWellbeing\DigitalWellbeing_myworkGemini2\DigitalWellbeingWinUI3\Views\SettingsPage.xaml.cs(159,49): error CS0103: The name 'EnableAutoRefresh' does not exist in the current context [H:\Coding\DigitalWellbeing\DigitalWellbeing_myworkGemini2\DigitalWellbeingWinUI3\DigitalWellbeingWinUI3.csproj]
+C:\Users\ceper\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\buildTransitive\Microsoft.UI.Xaml.Markup.Compiler.interop.targets(841,9): error MSB3073: The command ""C:\Users\ceper\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\buildTransitive\..\tools\net6.0\..\net472\XamlCompiler.exe" "obj\Release\net8.0-windows10.0.19041.0\\input.json" "obj\Release\net8.0-windows10.0.19041.0\\output.json"" exited with code 1. [H:\Coding\DigitalWellbeing\DigitalWellbeing_myworkGemini2\DigitalWellbeingWinUI3\DigitalWellbeingWinUI3.csproj]
+    0 Warning(s)
+    4 Error(s)
+
+Time Elapsed 00:00:08.36

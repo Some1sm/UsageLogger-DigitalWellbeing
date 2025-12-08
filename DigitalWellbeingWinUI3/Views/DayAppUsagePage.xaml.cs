@@ -67,6 +67,14 @@ namespace DigitalWellbeingWinUI3.Views
             {
                 if (PieChartContainer.Content == null)
                 {
+                    // THEME DETECTION FOR CHART TEXT
+                    var isDark = this.ActualTheme == Microsoft.UI.Xaml.ElementTheme.Dark;
+                    if (this.ActualTheme == Microsoft.UI.Xaml.ElementTheme.Default)
+                    {
+                        isDark = Microsoft.UI.Xaml.Application.Current.RequestedTheme == Microsoft.UI.Xaml.ApplicationTheme.Dark;
+                    }
+                    var legendColor = isDark ? SkiaSharp.SKColors.White : SkiaSharp.SKColors.Black;
+
                     var pieChart = new LiveChartsCore.SkiaSharpView.WinUI.PieChart
                     {
                         Series = ViewModel.DayPieChartSeries,
@@ -74,6 +82,7 @@ namespace DigitalWellbeingWinUI3.Views
                         InitialRotation = -90,
                         Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent),
                         LegendBackgroundPaint = null,
+                        LegendTextPaint = new LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint(legendColor),
                         HorizontalAlignment = Microsoft.UI.Xaml.HorizontalAlignment.Stretch,
                         VerticalAlignment = Microsoft.UI.Xaml.VerticalAlignment.Stretch
                     };

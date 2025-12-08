@@ -22,12 +22,20 @@ namespace DigitalWellbeingWinUI3.Views
             {
                 if (HistoryChartContainer.Content == null)
                 {
+                    var isDark = this.ActualTheme == Microsoft.UI.Xaml.ElementTheme.Dark;
+                    if (this.ActualTheme == Microsoft.UI.Xaml.ElementTheme.Default)
+                    {
+                        isDark = Microsoft.UI.Xaml.Application.Current.RequestedTheme == Microsoft.UI.Xaml.ApplicationTheme.Dark;
+                    }
+                    var legendColor = isDark ? SkiaSharp.SKColors.White : SkiaSharp.SKColors.Black;
+
                     var pieChart = new LiveChartsCore.SkiaSharpView.WinUI.PieChart
                     {
                         LegendPosition = LiveChartsCore.Measure.LegendPosition.Right,
                         InitialRotation = -90,
                         Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent),
-                        LegendBackgroundPaint = null
+                        LegendBackgroundPaint = null,
+                        LegendTextPaint = new LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint(legendColor)
                     };
                     
                     // IMPORTANT:

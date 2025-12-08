@@ -22,7 +22,7 @@
 
             <!-- Date Header (Verified Good) -->
             <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,20">
-                <Border Background="#20FFFFFF" CornerRadius="8" Padding="10,5">
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="10,5">
                     <StackPanel Orientation="Horizontal">
                          <TextBlock Text="📅" VerticalAlignment="Center" Margin="0,0,10,0"/>
                          <TextBlock Text="{x:Bind ViewModel.StrLoadedDate, Mode=OneWay}" Style="{ThemeResource TitleTextBlockStyle}" FontSize="18" VerticalAlignment="Center" Width="250" TextAlignment="Center"/>
@@ -43,25 +43,25 @@
                      SAFETY NOTE: Charts are NOT defined in XAML to prevent "Class Not Registered" or Parser crashes during InitializeComponent().
                      Instead, we use a simple ContentControl and inject the Chart object via Code-Behind (Page_Loaded).
                 -->
-                <Border Grid.Column="0" Background="#1AFFFFFF" CornerRadius="12" BorderBrush="#30FFFFFF" BorderThickness="1" Padding="15" Margin="0,0,10,0">
+                <Border Grid.Column="0" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="15" Margin="0,0,10,0">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="300"/> <!-- Fixed Height for Chart Content -->
                         </Grid.RowDefinitions>
-                        <TextBlock Text="Daily Activity" FontSize="16" FontWeight="SemiBold" Foreground="#FFFFFFFF" Margin="0,0,0,10"/>
+                        <TextBlock Text="Daily Activity" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
                         <ContentControl x:Name="BarChartContainer" Grid.Row="1" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
                     </Grid>
                 </Border>
 
                 <!-- Pie Chart Container -->
-                <Border Grid.Column="1" Background="#1AFFFFFF" CornerRadius="12" BorderBrush="#30FFFFFF" BorderThickness="1" Padding="15" Margin="10,0,0,0">
+                <Border Grid.Column="1" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="15" Margin="10,0,0,0">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="300"/> <!-- Fixed Height for Chart Content -->
                         </Grid.RowDefinitions>
-                        <TextBlock Text="Usage Summary" FontSize="16" FontWeight="SemiBold" Foreground="#FFFFFFFF" Margin="0,0,0,10"/>
+                        <TextBlock Text="Usage Summary" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
                         <ContentControl x:Name="PieChartContainer" Grid.Row="1" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
                     </Grid>
                 </Border>
@@ -88,7 +88,7 @@
                 </GridView.ItemContainerStyle>
                 <GridView.ItemTemplate>
                     <DataTemplate>
-                        <Border CornerRadius="12" Background="#1AFFFFFF" BorderBrush="#30FFFFFF" BorderThickness="1" Padding="15,12" RightTapped="Grid_RightTapped">
+                        <Border CornerRadius="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="15,12" RightTapped="Grid_RightTapped">
                         <Border.ContextFlyout>
                             <MenuFlyout>
                                 <MenuFlyoutItem Text="Set Time Limit" Icon="Clock" Click="MenuFlyoutItem_SetTimeLimit_Click" Tag="{Binding ProcessName}"/>

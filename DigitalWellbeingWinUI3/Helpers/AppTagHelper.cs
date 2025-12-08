@@ -36,7 +36,7 @@ namespace DigitalWellbeingWinUI3.Helpers
                 case AppTag.Game: return new SolidColorBrush(Colors.Crimson);
                 case AppTag.Untagged:
                 default:
-                    return new SolidColorBrush(Colors.LightGray);
+                    return new SolidColorBrush(Colors.Gray);
             }
         }
 

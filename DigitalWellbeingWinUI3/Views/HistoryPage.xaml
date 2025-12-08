@@ -17,7 +17,7 @@
         </Grid.RowDefinitions>
 
         <!-- Controls Header -->
-        <Border Grid.Row="0" Background="#1AFFFFFF" CornerRadius="12" BorderBrush="#30FFFFFF" BorderThickness="1" Padding="15" Margin="0,0,0,20">
+        <Border Grid.Row="0" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="15" Margin="0,0,0,20">
             <Grid HorizontalAlignment="Center">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -34,32 +34,32 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Start Date -->
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="Start Date" Foreground="#AAFFFFFF" FontSize="12" Margin="0,0,0,5"/>
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Start Date" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" Margin="0,0,0,5"/>
                 <CalendarDatePicker Grid.Row="1" Grid.Column="0" Date="{Binding StartDate, Mode=TwoWay}" Width="150" VerticalAlignment="Top"/>
 
                 <!-- End Date -->
-                <TextBlock Grid.Row="0" Grid.Column="2" Text="End Date" Foreground="#AAFFFFFF" FontSize="12" Margin="0,0,0,5"/>
+                <TextBlock Grid.Row="0" Grid.Column="2" Text="End Date" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" Margin="0,0,0,5"/>
                 <CalendarDatePicker Grid.Row="1" Grid.Column="2" Date="{Binding EndDate, Mode=TwoWay}" Width="150" VerticalAlignment="Top"/>
                 
                 <!-- Generate Button -->
                 <Button Grid.Row="1" Grid.Column="4" Content="Generate Report" Command="{x:Bind ViewModel.GenerateChartCommand}" Width="140" Style="{StaticResource AccentButtonStyle}" VerticalAlignment="Top"/>
 
                 <!-- Toggle -->
-                <TextBlock Grid.Row="0" Grid.Column="6" Text="Group by Category" Foreground="#AAFFFFFF" FontSize="12" Margin="0,0,0,5"/>
+                <TextBlock Grid.Row="0" Grid.Column="6" Text="Group by Category" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" Margin="0,0,0,5"/>
                 <ToggleSwitch Grid.Row="1" Grid.Column="6" IsOn="{Binding IsTagView, Mode=TwoWay}" OnContent="Tags" OffContent="Apps" VerticalAlignment="Top" Margin="0,-5,0,0"/>
             </Grid>
         </Border>
 
         <!-- Chart Area -->
         <Grid Grid.Row="1">
-            <Border Background="#1AFFFFFF" CornerRadius="12" BorderBrush="#30FFFFFF" BorderThickness="1" Padding="20">
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="20">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     
-                    <TextBlock Text="Distribution Analysis" FontSize="18" FontWeight="SemiBold" Foreground="#FFFFFFFF" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <TextBlock Text="Distribution Analysis" FontSize="18" FontWeight="SemiBold" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     
                     <!-- INJECTED CHART CONTAINER -->
                     <ContentControl x:Name="HistoryChartContainer" Grid.Row="1" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" MinHeight="400"/>
