@@ -76,20 +76,36 @@
             <TextBlock Text="Display" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,10,0,5"/>
              <StackPanel Spacing="5">
                 <!-- Days to Show -->
-                <Grid Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0" Spacing="2">
-                        <TextBlock Text="Days to show on graph" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                         <TextBlock Text="Requires restart or Apply." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                    </StackPanel>
-                     <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="10">
-                         <NumberBox x:Name="DaysToShowTextBox" Value="7" SpinButtonPlacementMode="Compact" Width="150"/>
-                         <Button Content="Apply" Click="ApplyButton_Click"/>
+                 <Grid Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
+                     <Grid.ColumnDefinitions>
+                         <ColumnDefinition Width="*"/>
+                         <ColumnDefinition Width="Auto"/>
+                     </Grid.ColumnDefinitions>
+                     <StackPanel Grid.Column="0" Spacing="2">
+                         <TextBlock Text="Days to show on graph" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                          <TextBlock Text="Requires restart or Apply." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                      </StackPanel>
-                </Grid>
+                      <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="10">
+                          <NumberBox x:Name="DaysToShowTextBox" Value="7" SpinButtonPlacementMode="Compact" Width="150" Minimum="1"/>
+                          <Button Content="Apply" Click="ApplyButton_Click"/>
+                      </StackPanel>
+                 </Grid>
+
+                 <!-- Days to Show on Detailed Usage -->
+                 <Grid Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
+                     <Grid.ColumnDefinitions>
+                         <ColumnDefinition Width="*"/>
+                         <ColumnDefinition Width="Auto"/>
+                     </Grid.ColumnDefinitions>
+                     <StackPanel Grid.Column="0" Spacing="2">
+                         <TextBlock Text="Days to show on Detailed usage" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                         <TextBlock Text="Requires restart or Apply (1-7 days)." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                     </StackPanel>
+                     <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="10">
+                         <NumberBox x:Name="DetailedDaysTextBox" Value="1" SpinButtonPlacementMode="Compact" Width="150" Minimum="1" Maximum="7"/>
+                         <Button Content="Apply" Click="ApplyDetailedDays_Click"/>
+                     </StackPanel>
+                 </Grid>
 
                  <!-- Minimum Duration -->
                 <Grid Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">

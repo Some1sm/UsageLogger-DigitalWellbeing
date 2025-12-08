@@ -12,6 +12,7 @@ namespace DigitalWellbeingWinUI3.Helpers
 
         // properties need to be loaded
         public static int DayAmount { get; set; } = 7;
+        public static int DetailedUsageDayCount { get; set; } = 1;
         public static TimeSpan MinumumDuration { get; set; } = TimeSpan.FromSeconds(0);
         public static bool EnableAutoRefresh { get; set; } = true;
         public static int RefreshIntervalSeconds { get; set; } = 60;
@@ -33,6 +34,7 @@ namespace DigitalWellbeingWinUI3.Helpers
                 var data = new
                 {
                     DayAmount,
+                    DetailedUsageDayCount,
                     MinumumDuration,
                     EnableAutoRefresh,
                     RefreshIntervalSeconds,
@@ -60,6 +62,7 @@ namespace DigitalWellbeingWinUI3.Helpers
                     var data = JsonSerializer.Deserialize<JsonElement>(json);
 
                     if (data.TryGetProperty(nameof(DayAmount), out var prop)) DayAmount = prop.GetInt32();
+                    if (data.TryGetProperty(nameof(DetailedUsageDayCount), out prop)) DetailedUsageDayCount = prop.GetInt32();
                     if (data.TryGetProperty(nameof(MinumumDuration), out prop)) MinumumDuration = JsonSerializer.Deserialize<TimeSpan>(prop.GetRawText());
                     if (data.TryGetProperty(nameof(EnableAutoRefresh), out prop)) EnableAutoRefresh = prop.GetBoolean();
                     if (data.TryGetProperty(nameof(RefreshIntervalSeconds), out prop)) RefreshIntervalSeconds = prop.GetInt32();

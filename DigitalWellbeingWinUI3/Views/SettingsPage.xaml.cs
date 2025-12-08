@@ -55,6 +55,12 @@ namespace DigitalWellbeingWinUI3.Views
             // Refresh
             EnableAutoRefresh.IsOn = UserPreferences.EnableAutoRefresh;
             RefreshInterval.Value = UserPreferences.RefreshIntervalSeconds;
+            
+            // Detailed Usage Days
+            DetailedDaysTextBox.Value = UserPreferences.DetailedUsageDayCount;
+            
+            // Detailed Usage Days
+            DetailedDaysTextBox.Value = UserPreferences.DetailedUsageDayCount;
 
             // Theme
             string theme = UserPreferences.ThemeMode;
@@ -141,6 +147,19 @@ namespace DigitalWellbeingWinUI3.Views
             // Simplest is to navigate to Dashboard
             if (App.Current is App myApp && myApp.m_window is MainWindow window)
             {
+                window.NavigateToDashboard();
+            }
+        }
+
+        private void ApplyDetailedDays_Click(object sender, RoutedEventArgs e)
+        {
+            UserPreferences.DetailedUsageDayCount = (int)DetailedDaysTextBox.Value;
+            UserPreferences.Save();
+            
+            if (App.Current is App myApp && myApp.m_window is MainWindow window)
+            {
+                // We'll update the Sessions logic to respect this, likely navigating to it or forcing refresh
+                // For now, navigating to Dashboard acts as a soft reset
                 window.NavigateToDashboard();
             }
         }

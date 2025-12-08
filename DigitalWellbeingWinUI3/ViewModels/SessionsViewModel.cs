@@ -33,32 +33,13 @@ namespace DigitalWellbeingWinUI3.ViewModels
 
         public bool CanGoNext => SelectedDate.Date < DateTime.Now.Date;
 
-        private ObservableCollection<DigitalWellbeingWinUI3.Models.SessionBlock> _sessionBlocks = new ObservableCollection<DigitalWellbeingWinUI3.Models.SessionBlock>();
-        public ObservableCollection<DigitalWellbeingWinUI3.Models.SessionBlock> SessionBlocks
-        {
-            get => _sessionBlocks;
-            set { if (_sessionBlocks != value) { _sessionBlocks = value; OnPropertyChanged(); } }
-        }
+        public ObservableCollection<DayTimelineViewModel> Days { get; } = new ObservableCollection<DayTimelineViewModel>();
 
         public DelegateCommand NextDayCommand { get; }
         public DelegateCommand PreviousDayCommand { get; }
         public DelegateCommand TodayCommand { get; }
         public DelegateCommand ZoomInCommand { get; }
         public DelegateCommand ZoomOutCommand { get; }
-
-        private double _currentTimeTop;
-        public double CurrentTimeTop
-        {
-            get => _currentTimeTop;
-            set { if (_currentTimeTop != value) { _currentTimeTop = value; OnPropertyChanged(); } }
-        }
-
-        private Microsoft.UI.Xaml.Visibility _currentTimeVisibility = Microsoft.UI.Xaml.Visibility.Collapsed;
-        public Microsoft.UI.Xaml.Visibility CurrentTimeVisibility
-        {
-            get => _currentTimeVisibility;
-            set { if (_currentTimeVisibility != value) { _currentTimeVisibility = value; OnPropertyChanged(); } }
-        }
 
         private double _pixelsPerHour = 60.0;
         public double PixelsPerHour
@@ -70,62 +51,12 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 { 
                     _pixelsPerHour = value; 
                     OnPropertyChanged();
-                    OnPropertyChanged(nameof(CanvasHeight));
-                    RefreshLayout();
-                    RefreshGridLines();
-                    UpdateCurrentTime();
+                    UpdateZoom();
                 } 
             }
         }
-
-        public double CanvasHeight => PixelsPerHour * 24;
 
         private DispatcherTimer _timer;
-        private List<AppSession> _cachedSessions = new List<AppSession>();
-        
-        public ObservableCollection<DigitalWellbeingWinUI3.Models.TimeGridLine> GridLines { get; } = new ObservableCollection<DigitalWellbeingWinUI3.Models.TimeGridLine>();
-
-        // Responsive Width
-        private double _timelineWidth;
-        public double TimelineWidth
-        {
-            get => _timelineWidth;
-            set 
-            { 
-                if (_timelineWidth != value) 
-                { 
-                    _timelineWidth = value; 
-                    OnPropertyChanged(); 
-                    UpdateItemsWidth();
-                } 
-            }
-        }
-
-        public void UpdateLayoutWidths(double containerWidth)
-        {
-            if (containerWidth < 0) return;
-            // Subtract label column width (60)
-            double available = containerWidth - 60;
-            if (available < 0) available = 0;
-            
-            TimelineWidth = available;
-        }
-
-        private void UpdateItemsWidth()
-        {
-            // Update GridLines width. They span both columns so effectively Full Width (Timeline + 60)
-            double fullWidth = TimelineWidth + 60; 
-            
-            foreach (var line in GridLines)
-            {
-                line.Width = fullWidth;
-            }
-            
-            foreach (var block in SessionBlocks)
-            {
-                block.Width = TimelineWidth;
-            }
-        }
 
         public SessionsViewModel()
         {
@@ -149,116 +80,64 @@ namespace DigitalWellbeingWinUI3.ViewModels
             _timer.Tick += (s, e) => UpdateCurrentTime();
             _timer.Start();
 
-            RefreshGridLines();
             LoadSessions();
         }
 
-        private void RefreshGridLines()
+        private void UpdateZoom()
         {
-            GridLines.Clear();
-
-            int stepMinutes = 60;
-            if (PixelsPerHour > 1500) stepMinutes = 1;
-            else if (PixelsPerHour > 720) stepMinutes = 5;
-            else if (PixelsPerHour > 240) stepMinutes = 15;
-            else if (PixelsPerHour > 120) stepMinutes = 30;
-
-            int totalMinutes = 24 * 60;
-            double pixelsPerMinute = PixelsPerHour / 60.0;
-            double rowHeight = stepMinutes * pixelsPerMinute;
-            
-            double fullWidth = TimelineWidth + 60;
-
-            for (int i = 0; i < totalMinutes; i += stepMinutes)
+            foreach (var day in Days)
             {
-                TimeSpan ts = TimeSpan.FromMinutes(i);
-                string text = "";
-
-                bool isHour = (i % 60) == 0;
-                
-                if (isHour) text = ts.ToString(@"hh\:mm");
-                else 
-                {
-                    if (rowHeight > 20) text = ts.ToString(@"mm");
-                }
-
-                GridLines.Add(new DigitalWellbeingWinUI3.Models.TimeGridLine
-                {
-                    TimeText = text,
-                    Height = rowHeight,
-                    Top = (i / 60.0) * _pixelsPerHour,
-                    Opacity = isHour ? 0.3 : 0.1,
-                    FontSize = isHour ? 12 : 10,
-                    Width = fullWidth
-                });
+                day.SetZoom(PixelsPerHour);
             }
         }
 
         private void UpdateCurrentTime()
         {
-            if (SelectedDate.Date == DateTime.Now.Date)
+            foreach (var day in Days)
             {
-                CurrentTimeVisibility = Microsoft.UI.Xaml.Visibility.Visible;
-                double totalMinutes = DateTime.Now.TimeOfDay.TotalMinutes;
-                CurrentTimeTop = (totalMinutes / 60.0) * PixelsPerHour; 
-            }
-            else
-            {
-                CurrentTimeVisibility = Microsoft.UI.Xaml.Visibility.Collapsed;
+                day.UpdateCurrentTime(PixelsPerHour);
             }
         }
 
         public async void LoadSessions()
         {
-            _cachedSessions.Clear();
-            List<AppSession> rawSessions = new List<AppSession>();
+            // Number of days setting
+            int daysToShow = UserPreferences.DetailedUsageDayCount; 
+            if (daysToShow < 1) daysToShow = 1;
 
-            await Task.Run(() =>
-            {
-                rawSessions = _repository.GetSessionsForDate(SelectedDate.Date);
-            });
-
-            _cachedSessions = rawSessions;
-            RefreshLayout();
-            UpdateCurrentTime();
-        }
-
-        private void RefreshLayout()
-        {
-            SessionBlocks.Clear();
+            // Prepare VMs
+            // If count matches, reuse VMs? Or clear and recreate?
+            // Recreating is safer for Date changes.
+            // If we are just refreshing data, we could reuse.
+            // Let's clear for now to be safe.
             
-            foreach (var s in _cachedSessions)
+            // However, cleaning clears the UI which might flicker. 
+            // Better strategy: reusing if dates match?
+            // For simplicity, clear.
+            
+            // We can optimize later if needed.
+            
+            // Fetch All data concurrently
+            var tasks = new List<Task<(DateTime Date, List<AppSession> Sessions)>>();
+            for (int i = 0; i < daysToShow; i++)
             {
-                DateTime dayStart = SelectedDate.Date;
-                DateTime dayEnd = dayStart.AddDays(1);
-                
-                DateTime validStart = s.StartTime < dayStart ? dayStart : s.StartTime;
-                DateTime validEnd = s.EndTime > dayEnd ? dayEnd : s.EndTime;
-                
-                if (validEnd <= validStart) continue;
-
-                double totalMinutesFromMidnight = (validStart - dayStart).TotalMinutes;
-                double durationMinutes = (validEnd - validStart).TotalMinutes;
-
-                double top = (totalMinutesFromMidnight / 60.0) * PixelsPerHour;
-                double height = (durationMinutes / 60.0) * PixelsPerHour;
-                
-                if (height < 1) height = 1; 
-
-                var color = AppTagHelper.GetTagColor(AppTagHelper.GetAppTag(s.ProcessName));
-
-                SessionBlocks.Add(new DigitalWellbeingWinUI3.Models.SessionBlock
+                DateTime targetDate = SelectedDate.Date.AddDays(i);
+                tasks.Add(Task.Run(() => 
                 {
-                    Title = string.IsNullOrEmpty(s.ProgramName) ? s.ProcessName : s.ProgramName,
-                    DurationText = $"{durationMinutes:F0}m",
-                    Top = top,
-                    Height = height,
-                    Left = 60, // Space for labels
-                    Width = TimelineWidth,
-                    BackgroundColor = color,
-                    IsAfk = s.IsAfk,
-                    OriginalSession = s
-                });
+                    return (targetDate, _repository.GetSessionsForDate(targetDate));
+                }));
+            }
+
+            var results = await Task.WhenAll(tasks);
+
+            // Update UI on UI Thread
+            Days.Clear();
+            foreach (var result in results)
+            {
+                var dayVM = new DayTimelineViewModel(result.Date);
+                // Load sessions logic inside DayTimelineViewModel handles layout
+                dayVM.LoadSessions(result.Sessions, PixelsPerHour);
+                Days.Add(dayVM);
             }
         }
 

@@ -14,10 +14,7 @@ namespace DigitalWellbeingWinUI3.Views
             ViewModel = new SessionsViewModel();
         }
 
-        private void ContainerGrid_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-             ViewModel.UpdateLayoutWidths(e.NewSize.Width);
-        }
+
 
         private void CalendarPicker_SelectedDatesChanged(CalendarView sender, CalendarViewSelectedDatesChangedEventArgs args)
         {
