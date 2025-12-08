@@ -45,6 +45,11 @@ namespace DigitalWellbeingWinUI3.Helpers
             SettingsManager.UpdateAppTag(processName, tag);
         }
 
+        public static void RemoveTag(int tagId)
+        {
+            SettingsManager.RemoveTag(tagId);
+        }
+
         public static SolidColorBrush GetBrush(string hex)
         {
             return new SolidColorBrush(ColorHelper.GetColorFromHex(hex));

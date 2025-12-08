@@ -225,6 +225,9 @@ namespace DigitalWellbeingWinUI3.Views
                 var tagToRemove = Tags.FirstOrDefault(t => t.Id == id);
                 if (tagToRemove != null)
                 {
+                    // Clean up assigned apps
+                    DigitalWellbeingWinUI3.Helpers.AppTagHelper.RemoveTag(tagToRemove.Id);
+                    
                     Tags.Remove(tagToRemove);
                     SaveTags();
                 }

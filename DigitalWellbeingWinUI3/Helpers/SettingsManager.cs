@@ -219,6 +219,21 @@ namespace DigitalWellbeingWinUI3.Helpers
             SaveAppTags();
         }
 
+        public static void RemoveTag(int tagId)
+        {
+            var keysToUpdate = appTags.Where(kvp => (int)kvp.Value == tagId).Select(kvp => kvp.Key).ToList();
+            
+            foreach (var key in keysToUpdate)
+            {
+                appTags.Remove(key); // Removing means resetting to Untagged (which is absence from list or 0)
+            }
+            
+            if (keysToUpdate.Count > 0)
+            {
+                SaveAppTags();
+            }
+        }
+
         public static AppTag GetAppTag(string processName)
         {
             if (appTags.ContainsKey(processName))
