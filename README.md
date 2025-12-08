@@ -1,87 +1,42 @@
-# Digital Wellbeing For Windows 11
+# Windows Digital Wellbeing
 
-As the project seemengly got abandoned by Christian I will take it over as a personal learning project. I have no idea about coding so this will be fun.
--D
+An App Usage tracker (time tracker) for Windows 11 inspired by Digital Wellbeing in Android. 
+Recently ported to **WinUI 3 / Windows App SDK** for a modern, native Windows 11 look and feel.
 
-OG Releases:
-[![Github All Releases](https://img.shields.io/github/downloads/christiankyle-ching/DigitalWellbeingForWindows/total.svg)](https://github.com/christiankyle-ching/DigitalWellbeingForWindows/releases)
+> **Note**: This is a fork/continuation of the original project, now rewritten for better performance and aesthetics.
 
-My Releases:
-[![Github All Releases](https://img.shields.io/github/downloads/some1sm/DigitalWellbeingForWindows/total.svg)](https://github.com/Some1sm/DigitalWellbeingForWindows/releases)
-
-An App Usage tracker (time tracker) for Windows 11 inspired by Digital Wellbeing in Android. Built with WPF (.NET 4.6), [ModernWpf](https://github.com/Kinnara/ModernWpf) and [Live Charts](https://lvcharts.net/).
-
-**This is only a hobby project. You will experience bugs.** See the [troubleshooting guide](#troubleshooting).
-You can help me fix them by reporting it in the [Issues tab](https://github.com/some1sm/DigitalWellbeingForWindows/issues/new).
-
-There are no warranties associated in using this app.
-
-## Screenshots
-<details>
-  <summary>Click to show screenshots</summary>
-
-  ### Light Mode
-  
-  ![image](https://user-images.githubusercontent.com/57316283/155919727-c0801c34-12bb-47ea-860e-eab5dfb3cc48.png)
-
-  ### Dark Mode
-  ![image](https://user-images.githubusercontent.com/57316283/155919747-6ab542e5-27ef-4704-84be-6eee82442c48.png)
-
-  ### Settings
-  ![image](https://user-images.githubusercontent.com/57316283/155935910-0e63014f-7d7d-44e3-acdb-bff46f7d6ed9.png)
-  
-</details>
-
-## Main Features
+## Features
 - **Weekly Usage**. View past week's total usage time (last 7 days).
 - **Day App Usage**. View daily app usage time (Pie Chart and List).
-- **Alert Notifications**. Set a time limit per app of when to notify you when limit is exceeded, and has the option to close the app directly.
+- **Alert Notifications**. Set a time limit per app of when to notify you when limit is exceeded.
 - **Auto-Start**. Run on Startup option, minimized to tray.
-- **App Tagging**. Tag apps based on their category. See their percentage of usage through your daily PC usage.
-- **Multi-user compatible**. Single installation, but different users have their own usage data.
+- **App Tagging**. Tag apps based on their category.
 - **Exclude Apps**. Set a filter of apps to exclude.
 - **Filter out short time entries**. Set a filter to hide apps that are run less than the set time limit.
 - **Auto-Refresh**. Auto-Refresh charts on intervals.
+- **Design**. Full Dark Mode support and Windows 11 Mica material.
 
 ## Installation
-**Download the .exe** installer of the [latest version / release](https://github.com/some1sm/DigitalWellbeingForWindows/releases/latest).
-
-_Windows Defender SmartScreen will block the installation of this file. Read the source code if you have any doubts, or run a [VirusTotal](https://www.virustotal.com/) scan._
-
-**Additional Notes:**
-- **Restart is required** to start the app monitoring background service.
-- You may have multiple versions of this app installed. Just uninstall older versions via Control Panel / Settings.
-- If you experience any problems, see the troubleshooting guide.
+**Download the .exe** installer from the [Releases](https://github.com/Some1sm/Windows-Digital-Wellbeing/releases) page (coming soon).
 
 ## Troubleshooting
 
 ### App crashing when opened
 If the app crashes upon opening, try:
 1. Uninstall.
-2. Delete the contents of `dailylogs` folder
-  - `WIN + R` to open the Run window.
-  - Paste this then hit enter: `%LOCALAPPDATA%/digital-wellbeing/dailylogs`
-  - Delete all `.log` files
+2. Delete the contents of `%LOCALAPPDATA%/digital-wellbeing/`
 3. Re-install the latest version.
 
-This will remove app usage history, but will mostly fix the issues. If the app is still crashing, go to: 
-```bat
-%LOCALAPPDATA%/digital-wellbeing/internal-logs
-```
-Send me the `.log` file for the current day when the crash happens. This will help me identify the issue.
+## For Developers
 
-### App icons not showing
-Fetching icons from running apps is a hit or miss. For better chances, try running the app in administrator mode. (`Right Click > Run as Administrator`).
+### Solution Projects
+- `DigitalWellbeing.Core` - A class library that has static shared classes.
+- `DigitalWellbeingService.NET4.6` - Background service (Legacy .NET 4.6 for compatibility).
+- `DigitalWellbeingWinUI3` - **New** WinUI 3 Frontend.
+- `DigitalWellbeingWPF` - **Legacy** WPF Frontend (Deprecaated).
+- `DigitalWellbeing.Setup` - Installer logic.
 
-# For Developers
-
-## Solution Projects (Folders)
-- `DigitalWellbeing.Core` - A class library that has static shared classes among the projects.
-- `DigitalWellbeingService.NET4.6` - A console application that monitors current active process.
-- `DigitalWellbeingWPF` - Front-end UI application.
-- `DigitalWellbeing.Setup` - A self-contained C# application that installs the software.
-
-## How to Build
+### How to Build
 To build the installer, run the valid PowerShell script in the root directory:
 ```powershell
 .\publish.ps1
