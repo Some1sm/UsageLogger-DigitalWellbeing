@@ -160,6 +160,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
         {
             dispatcherQueue.TryEnqueue(() =>
             {
+                // Update Weekly Chart (Bar)
                 if (WeeklyChartSeries != null && WeeklyChartSeries.Count > 0)
                 {
                     foreach (var series in WeeklyChartSeries)
@@ -167,6 +168,22 @@ namespace DigitalWellbeingWinUI3.ViewModels
                         if (series is ColumnSeries<double> columnSeries)
                         {
                             columnSeries.Fill = GetAccentGradientPaint();
+                        }
+                    }
+                }
+
+                // Update Day Pie Chart
+                if (DayPieChartSeries != null && DayPieChartSeries.Count > 0)
+                {
+                    var accent = uiSettings.GetColorValue(Windows.UI.ViewManagement.UIColorType.Accent);
+                    var skAccent = new SKColor(accent.R, accent.G, accent.B, accent.A);
+                    var palette = GenerateMultiHuePalette(skAccent, DayPieChartSeries.Count);
+
+                    for (int i = 0; i < DayPieChartSeries.Count; i++)
+                    {
+                        if (DayPieChartSeries[i] is PieSeries<double> pieSeries)
+                        {
+                            pieSeries.Fill = new SolidColorPaint(palette[i % palette.Count]);
                         }
                     }
                 }
@@ -241,6 +258,33 @@ namespace DigitalWellbeingWinUI3.ViewModels
             TimeSpan intervalDuration = TimeSpan.FromSeconds(refreshInterval);
             refreshTimer = new DispatcherTimer() { Interval = intervalDuration };
             refreshTimer.Tick += (s, e) => TryRefreshData();
+        }
+
+        private List<SKColor> GenerateMultiHuePalette(SKColor baseColor, int count)
+        {
+            var palette = new List<SKColor>();
+            baseColor.ToHsl(out float h, out float s, out float l);
+
+            // Ensure count is at least 1
+            if (count < 1) count = 1;
+
+            // Step size: 30 degrees gives a nice analogus/triadic mix without being too rainbow-y if count is low
+            // Or use Golden Ratio for distinctness? 
+            // User asked for "multihue palette *originating* from... accent".
+            // Let's try rotating by 25 degrees.
+            float step = 25f;
+
+            for (int i = 0; i < count; i++)
+            {
+                float newH = (h + (i * step)) % 360f;
+                // Vary lightness slightly to distinguishing boundaries?
+                // float newL = (i % 2 == 0) ? l : Math.Clamp(l * 0.8f, 0, 100); 
+                // SkiaSharp HSL Lightness is 0-100 usually or 0-1? 
+                // ToHsl docs: h [0, 360), s [0, 100], l [0, 100].
+                
+                palette.Add(SKColor.FromHsl(newH, s, l));
+            }
+            return palette;
         }
 
         public void LoadUserExcludedProcesses()
@@ -435,13 +479,24 @@ namespace DigitalWellbeingWinUI3.ViewModels
                         }
                         else
                         {
-                            pieSeriesList.Add(new PieSeries<double>
+                            // Generate Palette
+                            var uiSettings = new Windows.UI.ViewManagement.UISettings();
+                            var accent = uiSettings.GetColorValue(Windows.UI.ViewManagement.UIColorType.Accent);
+                            var skAccent = new SKColor(accent.R, accent.G, accent.B, accent.A);
+                            var palette = GenerateMultiHuePalette(skAccent, filteredUsageList.Count);
+
+                            int index = pieSeriesList.Count; 
+                            // Note: filteredUsageList logic executes sequentially so index matches added items
+                                                    
+                            var series = new PieSeries<double>
                             {
                                 Values = new ObservableCollection<double> { app.Duration.TotalMinutes },
                                 Name = app.ProcessName,
                                 ToolTipLabelFormatter = (point) => $"{point.Context.Series.Name}: {point.Coordinate.PrimaryValue:F1}m",
-                                DataLabelsFormatter = (point) => point.Context.Series.Name
-                            });
+                                DataLabelsFormatter = (point) => point.Context.Series.Name,
+                                Fill = new SolidColorPaint(palette[index % palette.Count])
+                            };
+                            pieSeriesList.Add(series);
                         }
                         
                         listItems.Add(new AppUsageListItem(app.ProcessName, app.ProgramName, app.Duration, percentage, AppTagHelper.GetAppTag(app.ProcessName)));
