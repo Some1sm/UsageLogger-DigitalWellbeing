@@ -21,7 +21,9 @@ namespace DigitalWellbeingWinUI3.Models
         
         public Brush BackgroundColor { get; set; }
         public bool IsAfk { get; set; }
+        public bool ShowDetails { get; set; } = true; // Optimization: Hide text on small blocks
         
+        public string ProcessName { get; set; }
         public DigitalWellbeing.Core.Models.AppSession OriginalSession { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;

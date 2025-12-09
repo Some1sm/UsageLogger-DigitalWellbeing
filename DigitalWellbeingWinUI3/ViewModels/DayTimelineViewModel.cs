@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Linq;
 using DigitalWellbeing.Core.Models;
 using DigitalWellbeingWinUI3.Models;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media;
 
 namespace DigitalWellbeingWinUI3.ViewModels
 {
@@ -97,48 +99,103 @@ namespace DigitalWellbeingWinUI3.ViewModels
 
         private void RefreshSessionLayout(double pixelsPerHour)
         {
-            SessionBlocks.Clear();
             if (_cachedSessions == null) return;
 
-            foreach (var s in _cachedSessions)
+            var newBlocks = new ObservableCollection<SessionBlock>();
+            var processGroups = _cachedSessions.GroupBy(s => !string.IsNullOrEmpty(s.ProgramName) ? s.ProgramName : s.ProcessName);
+            var mergedBlocks = new List<SessionBlock>();
+
+            foreach (var group in processGroups)
             {
-                DateTime dayStart = Date.Date;
-                DateTime dayEnd = dayStart.AddDays(1);
-                
-                DateTime validStart = s.StartTime < dayStart ? dayStart : s.StartTime;
-                DateTime validEnd = s.EndTime > dayEnd ? dayEnd : s.EndTime;
-                
-                if (validEnd <= validStart) continue;
+                var sortedGroup = group.OrderBy(s => s.StartTime).ToList();
+                SessionBlock pendingBlock = null;
+                DateTime? lastEnd = null;
 
-                double totalMinutesFromMidnight = (validStart - dayStart).TotalMinutes;
-                double durationMinutes = (validEnd - validStart).TotalMinutes;
-
-                double top = (totalMinutesFromMidnight / 60.0) * pixelsPerHour;
-                double height = (durationMinutes / 60.0) * pixelsPerHour;
-                
-                if (height < 1) height = 1; 
-
-                var color = DigitalWellbeingWinUI3.Helpers.AppTagHelper.GetTagColor(DigitalWellbeingWinUI3.Helpers.AppTagHelper.GetAppTag(s.ProcessName));
-
-                SessionBlocks.Add(new SessionBlock
+                foreach (var s in sortedGroup)
                 {
-                    Title = string.IsNullOrEmpty(s.ProgramName) ? s.ProcessName : s.ProgramName,
-                    DurationText = $"{durationMinutes:F0}m",
-                    Top = top,
-                    Height = height,
-                    Left = 0, 
-                    Width = ContentWidth, 
-                    BackgroundColor = color,
-                    IsAfk = s.IsAfk,
-                    OriginalSession = s
-                });
+                    DateTime dayStart = Date.Date;
+                    DateTime dayEnd = dayStart.AddDays(1);
+                    
+                    DateTime validStart = s.StartTime < dayStart ? dayStart : s.StartTime;
+                    DateTime validEnd = s.EndTime > dayEnd ? dayEnd : s.EndTime;
+                    
+                    if (validEnd <= validStart) continue;
+
+                    string title = string.IsNullOrEmpty(s.ProgramName) ? s.ProcessName : s.ProgramName;
+                    var color = DigitalWellbeingWinUI3.Helpers.AppTagHelper.GetTagColor(DigitalWellbeingWinUI3.Helpers.AppTagHelper.GetAppTag(s.ProcessName));
+
+                    bool isCompatible = false;
+                    if (pendingBlock != null)
+                    {
+                        // Same process by definition of group
+                        int threshold = DigitalWellbeingWinUI3.Helpers.UserPreferences.TimelineMergeThresholdSeconds;
+                        if (lastEnd.HasValue && (validStart - lastEnd.Value).TotalSeconds < threshold)
+                        {
+                            isCompatible = true;
+                        }
+                    }
+
+                    if (isCompatible)
+                    {
+                        // EXTEND
+                        double newEndMinutes = (validEnd - dayStart).TotalMinutes;
+                        double newHeight = (newEndMinutes * pixelsPerHour / 60.0) - pendingBlock.Top;
+                        if (newHeight < 1) newHeight = 1;
+                        pendingBlock.Height = newHeight;
+                        
+                        // Update duration text
+                        TimeSpan newDuration = validEnd - pendingBlock.OriginalSession.StartTime;
+                        // pendingBlock.DurationText = ... (Optional: Update text if needed, but simple might suffice)
+                         // We are using visual height mostly. 
+                         
+                         lastEnd = validEnd;
+                    }
+                    else
+                    {
+                        // FINALIZE
+                        if (pendingBlock != null) mergedBlocks.Add(pendingBlock);
+
+                        // NEW
+                        double startMinutes = (validStart - dayStart).TotalMinutes;
+                        double top = startMinutes * pixelsPerHour / 60.0;
+                        double durationMinutes = (validEnd - validStart).TotalMinutes;
+                        double height = durationMinutes * pixelsPerHour / 60.0;
+                        if (height < 1) height = 1;
+
+                        pendingBlock = new SessionBlock
+                        {
+                            Top = top,
+                            Height = height,
+                            Left = 0, // Computed later
+                            Width = ContentWidth,
+                            Title = title, // Keep first title? Or generic? First is fine.
+                            ProcessName = s.ProcessName,
+                            BackgroundColor = color,
+                            OriginalSession = s,
+                            IsAfk = false,
+                            ShowDetails = height > 20
+                        };
+                        lastEnd = validEnd;
+                    }
+                }
+                if (pendingBlock != null) mergedBlocks.Add(pendingBlock);
             }
+            
+            // Add all merged blocks to the observable collection
+            // Sort by Top to maintain approximate chronological visual order (though overlaps will happen)
+            newBlocks.Clear(); // Clear any existing blocks from previous logic
+            foreach (var block in mergedBlocks.OrderBy(b => b.Top))
+            {
+               newBlocks.Add(block);
+            }
+            SessionBlocks = newBlocks;
+            OnPropertyChanged(nameof(SessionBlocks));
             UpdateLayoutWidths(); 
         }
 
         private void RefreshGridLines(double pixelsPerHour)
         {
-            GridLines.Clear();
+            var newLines = new ObservableCollection<TimeGridLine>();
 
             int stepMinutes = 60;
             if (pixelsPerHour > 1500) stepMinutes = 1;
@@ -159,7 +216,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 if (isHour) text = ts.ToString(@"hh\:mm");
                 else if (rowHeight > 20) text = ts.ToString(@"mm");
 
-                GridLines.Add(new TimeGridLine
+                newLines.Add(new TimeGridLine
                 {
                     TimeText = text,
                     Height = rowHeight,
@@ -169,6 +226,8 @@ namespace DigitalWellbeingWinUI3.ViewModels
                     Width = ContentWidth
                 });
             }
+            GridLines = newLines;
+            OnPropertyChanged(nameof(GridLines));
         }
         
         public void UpdateCurrentTime(double pixelsPerHour)

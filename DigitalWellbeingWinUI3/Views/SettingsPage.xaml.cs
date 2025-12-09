@@ -58,10 +58,10 @@ namespace DigitalWellbeingWinUI3.Views
             
             // Detailed Usage Days
             DetailedDaysTextBox.Value = UserPreferences.DetailedUsageDayCount;
-            
-            // Detailed Usage Days
-            DetailedDaysTextBox.Value = UserPreferences.DetailedUsageDayCount;
 
+             // Timeline Threshold
+            TimelineThresholdTextBox.Value = UserPreferences.TimelineMergeThresholdSeconds;
+            
             // Theme
             string theme = UserPreferences.ThemeMode;
             foreach (ComboBoxItem item in CBTheme.Items)
@@ -205,6 +205,17 @@ namespace DigitalWellbeingWinUI3.Views
                     Enum.TryParse(theme, out rTheme);
                     (window.Content as FrameworkElement).RequestedTheme = rTheme;
                 }
+            }
+        }
+
+        private void ApplyTimelineThreshold_Click(object sender, RoutedEventArgs e)
+        {
+            UserPreferences.TimelineMergeThresholdSeconds = (int)TimelineThresholdTextBox.Value;
+            UserPreferences.Save();
+
+            if (App.Current is App myApp && myApp.m_window is MainWindow window)
+            {
+                window.NavigateToDashboard();
             }
         }
 

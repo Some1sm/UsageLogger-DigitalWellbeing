@@ -135,25 +135,21 @@ namespace DigitalWellbeingWinUI3.ViewModels
             int daysToShow = UserPreferences.DetailedUsageDayCount; 
             if (daysToShow < 1) daysToShow = 1;
 
-            // Prepare VMs
-            // If count matches, reuse VMs? Or clear and recreate?
-            // Recreating is safer for Date changes.
-            // If we are just refreshing data, we could reuse.
-            // Let's clear for now to be safe.
-            
-            // However, cleaning clears the UI which might flicker. 
-            // Better strategy: reusing if dates match?
-            // For simplicity, clear.
-            
-            // We can optimize later if needed.
+            // Clear immediately to show "loading" state (empty list)
+            // Or we could show a loading spinner property
+            Days.Clear();
             
             // Fetch All data concurrently
             var tasks = new List<Task<(DateTime Date, List<AppSession> Sessions)>>();
+            
+            // Capture current selection to avoid race conditions if user clicks fast
+            var currentSelection = SelectedDate;
+
             for (int i = 0; i < daysToShow; i++)
             {
                 // Calculate date so that the last item (i = daysToShow - 1) is the SelectedDate
                 // and previous items go back in time. Preserves Left->Right chronological order.
-                DateTime targetDate = SelectedDate.Date.AddDays(i - (daysToShow - 1));
+                DateTime targetDate = currentSelection.Date.AddDays(i - (daysToShow - 1));
                 
                 tasks.Add(Task.Run(() => 
                 {
@@ -161,14 +157,19 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 }));
             }
 
+            // Await all background data fetching
             var results = await Task.WhenAll(tasks);
 
+            // Double check if selection changed while loading (basic cancellation)
+            if (currentSelection.Date != SelectedDate.Date) return;
+
             // Update UI on UI Thread
-            Days.Clear();
             foreach (var result in results)
             {
                 var dayVM = new DayTimelineViewModel(result.Date);
                 // Load sessions logic inside DayTimelineViewModel handles layout
+                // We run this synchronous part on UI thread to ensure ViewModels are created safely
+                // but the heavy lifting of sorting sessions was done in GetSessionsForDate (which we ran in background)
                 dayVM.LoadSessions(result.Sessions, PixelsPerHour);
                 Days.Add(dayVM);
             }
