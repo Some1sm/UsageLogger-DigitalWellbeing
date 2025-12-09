@@ -129,7 +129,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
             var newSeries = new ObservableCollection<ISeries>();
             foreach (var kvp in tagDurations.OrderByDescending(k => k.Value))
             {
-                if (kvp.Value > 0)
+                if (kvp.Value >= 1.0) // Filter out < 1 min values which result in "0:00"
                 {
                     try
                     {
@@ -182,6 +182,8 @@ namespace DigitalWellbeingWinUI3.ViewModels
             var newSeries = new ObservableCollection<ISeries>();
             foreach (var kvp in appDurations.OrderByDescending(k => k.Value).Take(15)) // Top 15
             {
+                if (kvp.Value < 1.0) continue; 
+
                 newSeries.Add(new PieSeries<double>
                 {
                     Values = new ObservableCollection<double> { kvp.Value },
