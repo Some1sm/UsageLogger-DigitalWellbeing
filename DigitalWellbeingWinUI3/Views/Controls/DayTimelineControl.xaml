@@ -10,7 +10,7 @@
     d:DesignHeight="1440"
     d:DesignWidth="400">
 
-    <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Margin="6,0,6,24" Padding="15">
+    <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Margin="6,15,6,24" Padding="15">
         <Grid x:Name="ContainerGrid" Margin="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/> <!-- Date Header -->
