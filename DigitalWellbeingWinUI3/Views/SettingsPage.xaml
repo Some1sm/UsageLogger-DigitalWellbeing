@@ -8,7 +8,23 @@
     xmlns:models="using:DigitalWellbeingWinUI3.Models"
     mc:Ignorable="d">
 
-    <ScrollViewer Padding="20">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Unsaved Changes Banner -->
+        <Grid x:Name="UnsavedChangesBanner" Grid.Row="0" Background="{ThemeResource AccentFillColorDefaultBrush}" Visibility="Collapsed" Padding="20,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="You have unsaved changes." VerticalAlignment="Center" Foreground="White" FontWeight="SemiBold"/>
+            <Button Grid.Column="1" Content="Apply Changes" Click="ApplyAll_Click" Background="White" Foreground="Black" BorderThickness="0"/>
+        </Grid>
+
+        <ScrollViewer Grid.Row="1" Padding="20">
         <StackPanel Spacing="10" MaxWidth="800" HorizontalAlignment="Left">
             
             <TextBlock Text="Settings" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,0,0,10"/>
@@ -86,8 +102,7 @@
                           <TextBlock Text="Requires restart or Apply." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                      </StackPanel>
                       <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="10">
-                          <NumberBox x:Name="DaysToShowTextBox" Value="7" SpinButtonPlacementMode="Compact" Width="150" Minimum="1"/>
-                          <Button Content="Apply" Click="ApplyButton_Click"/>
+                          <NumberBox x:Name="DaysToShowTextBox" Value="7" SpinButtonPlacementMode="Compact" Width="150" Minimum="1" ValueChanged="Settings_ValueChanged"/>
                       </StackPanel>
                  </Grid>
 
@@ -102,8 +117,7 @@
                          <TextBlock Text="Requires restart or Apply (1-7 days)." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                      </StackPanel>
                      <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="10">
-                         <NumberBox x:Name="DetailedDaysTextBox" Value="1" SpinButtonPlacementMode="Compact" Width="150" Minimum="1" Maximum="7"/>
-                         <Button Content="Apply" Click="ApplyDetailedDays_Click"/>
+                         <NumberBox x:Name="DetailedDaysTextBox" Value="1" SpinButtonPlacementMode="Compact" Width="150" Minimum="1" Maximum="7" ValueChanged="Settings_ValueChanged"/>
                      </StackPanel>
                  </Grid>
 
@@ -118,8 +132,7 @@
                         <TextBlock Text="Apps with usage less than this will be hidden (default 0s)." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="10">
-                        <NumberBox x:Name="MinDurationTextBox" Value="0" SpinButtonPlacementMode="Compact" Width="150" Minimum="0"/>
-                        <Button Content="Apply" Click="ApplyMinDuration_Click"/>
+                        <NumberBox x:Name="MinDurationTextBox" Value="0" SpinButtonPlacementMode="Compact" Width="150" Minimum="0" ValueChanged="Settings_ValueChanged"/>
                     </StackPanel>
                 </Grid>
 
@@ -150,8 +163,7 @@
                          <TextBlock Text="Lower values show more items but may reduce performance (Default 30s)." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                      </StackPanel>
                      <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="10">
-                         <NumberBox x:Name="TimelineThresholdTextBox" Value="30" SpinButtonPlacementMode="Compact" Width="150" Minimum="0" Maximum="300"/>
-                         <Button Content="Apply" Click="ApplyTimelineThreshold_Click"/>
+                         <NumberBox x:Name="TimelineThresholdTextBox" Value="30" SpinButtonPlacementMode="Compact" Width="150" Minimum="0" Maximum="300" ValueChanged="Settings_ValueChanged"/>
                      </StackPanel>
                  </Grid>
 
@@ -237,5 +249,6 @@
              </StackPanel>
 
         </StackPanel>
-    </ScrollViewer>
+        </ScrollViewer>
+    </Grid>
 </Page>

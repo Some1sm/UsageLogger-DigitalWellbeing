@@ -36,8 +36,26 @@ namespace DigitalWellbeingWinUI3.Views
             LoadAppTimeLimits();
         }
 
+        private bool _isLoading = false;
+        private bool _isDirty = false;
+
+        private void MarkDirty()
+        {
+            if (_isLoading) return;
+            _isDirty = true;
+            UnsavedChangesBanner.Visibility = Visibility.Visible;
+        }
+
+        private void MarkClean()
+        {
+            _isDirty = false;
+            UnsavedChangesBanner.Visibility = Visibility.Collapsed;
+        }
+
         private void LoadCurrentSettings()
         {
+            _isLoading = true;
+
             // Run on Startup
             EnableRunOnStartup.IsOn = SettingsManager.IsRunningOnStartup();
 
@@ -73,6 +91,9 @@ namespace DigitalWellbeingWinUI3.Views
                 }
             }
             if (CBTheme.SelectedItem == null) CBTheme.SelectedIndex = 0; // Default System
+
+            _isLoading = false;
+            MarkClean();
         }
 
 
@@ -100,13 +121,12 @@ namespace DigitalWellbeingWinUI3.Views
 
         private void EnableRunOnStartup_Toggled(object sender, RoutedEventArgs e)
         {
-             SettingsManager.SetRunOnStartup(EnableRunOnStartup.IsOn);
+             MarkDirty();
         }
 
         private void ToggleMinimizeOnExit_Toggled(object sender, RoutedEventArgs e)
         {
-             UserPreferences.MinimizeOnExit = ToggleMinimizeOnExit.IsOn;
-             UserPreferences.Save();
+             MarkDirty();
         }
 
         private void ExcludedAppList_DoubleTapped(object sender, Microsoft.UI.Xaml.Input.DoubleTappedRoutedEventArgs e)
@@ -115,7 +135,7 @@ namespace DigitalWellbeingWinUI3.Views
             {
                 string processName = ExcludedAppList.SelectedItem.ToString();
                 UserPreferences.UserExcludedProcesses.Remove(processName);
-                UserPreferences.Save();
+                UserPreferences.Save(); // Keeping immediate save for lists
                 LoadExcludedProcessItems();
             }
         }
@@ -136,69 +156,27 @@ namespace DigitalWellbeingWinUI3.Views
              }
         }
 
-        private void ApplyButton_Click(object sender, RoutedEventArgs e)
+        private void ApplyAll_Click(object sender, RoutedEventArgs e)
         {
+            // Gather all values
             UserPreferences.DayAmount = (int)DaysToShowTextBox.Value;
-            UserPreferences.Save();
-
-            AppUsageViewModel.NumberOfDaysToDisplay = UserPreferences.DayAmount;
-
-            // Reload Usage Page (Navigate away and back or just reload model?)
-            // Simplest is to navigate to Dashboard
-            if (App.Current is App myApp && myApp.m_window is MainWindow window)
-            {
-                window.NavigateToDashboard();
-            }
-        }
-
-        private void ApplyDetailedDays_Click(object sender, RoutedEventArgs e)
-        {
             UserPreferences.DetailedUsageDayCount = (int)DetailedDaysTextBox.Value;
-            UserPreferences.Save();
-            
-            if (App.Current is App myApp && myApp.m_window is MainWindow window)
-            {
-                // We'll update the Sessions logic to respect this, likely navigating to it or forcing refresh
-                // For now, navigating to Dashboard acts as a soft reset
-                window.NavigateToDashboard();
-            }
-        }
-
-        private void ApplyMinDuration_Click(object sender, RoutedEventArgs e)
-        {
             UserPreferences.MinumumDuration = TimeSpan.FromSeconds(MinDurationTextBox.Value);
-            UserPreferences.Save();
+            UserPreferences.TimelineMergeThresholdSeconds = (int)TimelineThresholdTextBox.Value;
             
-            // Reload
-             if (App.Current is App myApp && myApp.m_window is MainWindow window)
-            {
-                window.NavigateToDashboard();
-            }
-        }
-
-        private void EnableAutoRefresh_Toggled(object sender, RoutedEventArgs e)
-        {
+            UserPreferences.MinimizeOnExit = ToggleMinimizeOnExit.IsOn;
             UserPreferences.EnableAutoRefresh = EnableAutoRefresh.IsOn;
-            UserPreferences.Save();
-        }
+            UserPreferences.RefreshIntervalSeconds = (int)RefreshInterval.Value;
 
-        private void RefreshInterval_ValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
-        {
-            if (Math.Abs(sender.Value - UserPreferences.RefreshIntervalSeconds) > 0.1)
-            {
-                 UserPreferences.RefreshIntervalSeconds = (int)sender.Value;
-                 UserPreferences.Save();
-            }
-        }
+            // Startup
+            SettingsManager.SetRunOnStartup(EnableRunOnStartup.IsOn);
 
-        private void CBTheme_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
+            // Theme
             if (CBTheme.SelectedItem is ComboBoxItem item)
             {
                 string theme = item.Tag.ToString();
                 UserPreferences.ThemeMode = theme;
-                UserPreferences.Save();
-
+                
                 if (App.Current is App myApp && myApp.m_window is MainWindow window)
                 {
                     ElementTheme rTheme = ElementTheme.Default;
@@ -206,17 +184,45 @@ namespace DigitalWellbeingWinUI3.Views
                     (window.Content as FrameworkElement).RequestedTheme = rTheme;
                 }
             }
+
+            // Save
+            UserPreferences.Save();
+            
+            // Update Runtime Models
+            AppUsageViewModel.NumberOfDaysToDisplay = UserPreferences.DayAmount;
+
+            MarkClean();
+
+            // Refresh UX by navigating to Dashboard
+            if (App.Current is App myApp2 && myApp2.m_window is MainWindow window2)
+            {
+                window2.NavigateToDashboard();
+            }
+        }
+
+        private void Settings_ValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
+        {
+            MarkDirty();
+        }
+
+        private void EnableAutoRefresh_Toggled(object sender, RoutedEventArgs e)
+        {
+            MarkDirty();
+        }
+
+        private void RefreshInterval_ValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
+        {
+            MarkDirty();
+        }
+
+        private void CBTheme_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            MarkDirty();
         }
 
         private void ApplyTimelineThreshold_Click(object sender, RoutedEventArgs e)
         {
-            UserPreferences.TimelineMergeThresholdSeconds = (int)TimelineThresholdTextBox.Value;
-            UserPreferences.Save();
-
-            if (App.Current is App myApp && myApp.m_window is MainWindow window)
-            {
-                window.NavigateToDashboard();
-            }
+            // Removed
         }
 
         private void BtnOpenAppFolder_Click(object sender, RoutedEventArgs e)

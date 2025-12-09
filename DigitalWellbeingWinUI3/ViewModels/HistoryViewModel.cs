@@ -141,7 +141,9 @@ namespace DigitalWellbeingWinUI3.ViewModels
                             Values = new ObservableCollection<double> { kvp.Value },
                             Name = AppTagHelper.GetTagDisplayName(kvp.Key),
                             Fill = new SolidColorPaint(skColor),
-                            DataLabelsFormatter = (p) => $"{p.Context.Series.Name}: {TimeSpan.FromMinutes(p.Coordinate.PrimaryValue).TotalHours:F1}h"
+                            DataLabelsPaint = new SolidColorPaint(SKColors.White),
+                            DataLabelsFormatter = (p) => FormatDuration(p.Coordinate.PrimaryValue),
+                            ToolTipLabelFormatter = (p) => FormatDuration(p.Coordinate.PrimaryValue)
                         });
                     }
                     catch
@@ -151,7 +153,9 @@ namespace DigitalWellbeingWinUI3.ViewModels
                         {
                             Values = new ObservableCollection<double> { kvp.Value },
                             Name = AppTagHelper.GetTagDisplayName(kvp.Key),
-                             DataLabelsFormatter = (p) => $"{p.Context.Series.Name}: {TimeSpan.FromMinutes(p.Coordinate.PrimaryValue).TotalHours:F1}h"
+                            DataLabelsPaint = new SolidColorPaint(SKColors.Black),
+                            DataLabelsFormatter = (p) => FormatDuration(p.Coordinate.PrimaryValue),
+                            ToolTipLabelFormatter = (p) => FormatDuration(p.Coordinate.PrimaryValue)
                         });
                     }
                 }
@@ -182,12 +186,23 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 {
                     Values = new ObservableCollection<double> { kvp.Value },
                     Name = kvp.Key,
-                    DataLabelsFormatter = (p) => $"{p.Context.Series.Name}: {TimeSpan.FromMinutes(p.Coordinate.PrimaryValue).TotalHours:F1}h"
+                    DataLabelsPaint = new SolidColorPaint(SKColors.Black),
+                    DataLabelsFormatter = (p) => FormatDuration(p.Coordinate.PrimaryValue),
+                    ToolTipLabelFormatter = (p) => FormatDuration(p.Coordinate.PrimaryValue)
                 });
             }
 
              if (newSeries.Count == 0) AddNoData(newSeries);
-            ChartSeries = newSeries;
+             ChartSeries = newSeries;
+        }
+
+        private string FormatDuration(double totalMinutes)
+        {
+            TimeSpan t = TimeSpan.FromMinutes(totalMinutes);
+            // User requested "hh:ss" ("5:17" for 317.5m). 
+            // 317m = 5h 17m.
+            // Format: H:mm
+            return $"{(int)t.TotalHours}:{t.Minutes:D2}";
         }
 
         private void AddNoData(ObservableCollection<ISeries> series)
