@@ -126,38 +126,38 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 }
             }
 
-            var newSeries = new ObservableCollection<ISeries>();
-            foreach (var kvp in tagDurations.OrderByDescending(k => k.Value))
-            {
-                if (kvp.Value >= 1.0) // Filter out < 1 min values which result in "0:00"
-                {
-                    try
-                    {
-                        var brush = (Microsoft.UI.Xaml.Media.SolidColorBrush)AppTagHelper.GetTagColor(kvp.Key);
-                        var skColor = ConvertColor(brush.Color);
+            var filteredTags = tagDurations.Where(k => k.Value >= 1.0).ToList();
+            double totalDuration = filteredTags.Sum(k => k.Value);
 
-                        newSeries.Add(new PieSeries<double>
-                        {
-                            Values = new ObservableCollection<double> { kvp.Value },
-                            Name = AppTagHelper.GetTagDisplayName(kvp.Key),
-                            Fill = new SolidColorPaint(skColor),
-                            DataLabelsPaint = new SolidColorPaint(SKColors.White),
-                            DataLabelsFormatter = (p) => FormatDuration(p.Coordinate.PrimaryValue),
-                            ToolTipLabelFormatter = (p) => FormatDuration(p.Coordinate.PrimaryValue)
-                        });
-                    }
-                    catch
+            var newSeries = new ObservableCollection<ISeries>();
+            foreach (var kvp in filteredTags.OrderByDescending(k => k.Value))
+            {
+                try
+                {
+                    var brush = (Microsoft.UI.Xaml.Media.SolidColorBrush)AppTagHelper.GetTagColor(kvp.Key);
+                    var skColor = ConvertColor(brush.Color);
+
+                    newSeries.Add(new PieSeries<double>
                     {
-                        // Fallback
-                        newSeries.Add(new PieSeries<double>
-                        {
-                            Values = new ObservableCollection<double> { kvp.Value },
-                            Name = AppTagHelper.GetTagDisplayName(kvp.Key),
-                            DataLabelsPaint = new SolidColorPaint(SKColors.Black),
-                            DataLabelsFormatter = (p) => FormatDuration(p.Coordinate.PrimaryValue),
-                            ToolTipLabelFormatter = (p) => FormatDuration(p.Coordinate.PrimaryValue)
-                        });
-                    }
+                        Values = new ObservableCollection<double> { kvp.Value },
+                        Name = AppTagHelper.GetTagDisplayName(kvp.Key),
+                        Fill = new SolidColorPaint(skColor),
+                        DataLabelsPaint = new SolidColorPaint(SKColors.White),
+                        DataLabelsFormatter = (p) => (p.Coordinate.PrimaryValue / totalDuration > 0.05) ? p.Context.Series.Name : "",
+                        ToolTipLabelFormatter = (p) => FormatDuration(p.Coordinate.PrimaryValue)
+                    });
+                }
+                catch
+                {
+                    // Fallback
+                    newSeries.Add(new PieSeries<double>
+                    {
+                        Values = new ObservableCollection<double> { kvp.Value },
+                        Name = AppTagHelper.GetTagDisplayName(kvp.Key),
+                        DataLabelsPaint = new SolidColorPaint(SKColors.Black),
+                        DataLabelsFormatter = (p) => (p.Coordinate.PrimaryValue / totalDuration > 0.05) ? p.Context.Series.Name : "",
+                        ToolTipLabelFormatter = (p) => FormatDuration(p.Coordinate.PrimaryValue)
+                    });
                 }
             }
 
@@ -179,17 +179,18 @@ namespace DigitalWellbeingWinUI3.ViewModels
                     appDurations[app.ProcessName] = app.Duration.TotalMinutes;
             }
 
-            var newSeries = new ObservableCollection<ISeries>();
-            foreach (var kvp in appDurations.OrderByDescending(k => k.Value).Take(15)) // Top 15
-            {
-                if (kvp.Value < 1.0) continue; 
+            var visibleApps = appDurations.Where(k => k.Value >= 1.0).OrderByDescending(k => k.Value).Take(15).ToList();
+            double totalDuration = visibleApps.Sum(k => k.Value);
 
+            var newSeries = new ObservableCollection<ISeries>();
+            foreach (var kvp in visibleApps)
+            {
                 newSeries.Add(new PieSeries<double>
                 {
                     Values = new ObservableCollection<double> { kvp.Value },
                     Name = kvp.Key,
                     DataLabelsPaint = new SolidColorPaint(SKColors.Black),
-                    DataLabelsFormatter = (p) => FormatDuration(p.Coordinate.PrimaryValue),
+                    DataLabelsFormatter = (p) => (p.Coordinate.PrimaryValue / totalDuration > 0.05) ? p.Context.Series.Name : "",
                     ToolTipLabelFormatter = (p) => FormatDuration(p.Coordinate.PrimaryValue)
                 });
             }
