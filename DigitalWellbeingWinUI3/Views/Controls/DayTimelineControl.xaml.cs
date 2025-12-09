@@ -17,12 +17,6 @@ namespace DigitalWellbeingWinUI3.Views.Controls
             this.InitializeComponent();
         }
 
-        private void ContainerGrid_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            if (ViewModel != null)
-            {
-                ViewModel.TimelineWidth = e.NewSize.Width;
-            }
-        }
+        // SizeChanged removed to avoid fighting with SessionsViewModel which now controls width.
     }
 }

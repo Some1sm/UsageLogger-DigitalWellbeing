@@ -26,10 +26,13 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 {
                     _timelineWidth = value;
                     OnPropertyChanged();
+                    OnPropertyChanged(nameof(ContentWidth)); // Notify derived property
                     UpdateLayoutWidths();
                 }
             }
         }
+
+        public double ContentWidth => TimelineWidth - 30.0 > 0 ? TimelineWidth - 30.0 : 0;
 
         private double _canvasHeight = 1440; // Default 24h
         public double CanvasHeight
@@ -124,7 +127,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
                     Top = top,
                     Height = height,
                     Left = 0, 
-                    Width = TimelineWidth, 
+                    Width = ContentWidth, 
                     BackgroundColor = color,
                     IsAfk = s.IsAfk,
                     OriginalSession = s
@@ -163,7 +166,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
                     Top = (i / 60.0) * pixelsPerHour,
                     Opacity = i == 0 ? 0.0 : (isHour ? 0.3 : 0.1),
                     FontSize = isHour ? 12 : 10,
-                    Width = TimelineWidth
+                    Width = ContentWidth
                 });
             }
         }
@@ -187,12 +190,12 @@ namespace DigitalWellbeingWinUI3.ViewModels
         {
             foreach (var line in GridLines)
             {
-                line.Width = TimelineWidth;
+                line.Width = ContentWidth;
             }
 
             foreach (var block in SessionBlocks)
             {
-                block.Width = TimelineWidth;
+                block.Width = ContentWidth;
             }
         }
 

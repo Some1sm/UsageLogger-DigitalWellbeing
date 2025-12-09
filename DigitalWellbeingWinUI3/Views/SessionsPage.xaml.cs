@@ -38,6 +38,11 @@ namespace DigitalWellbeingWinUI3.Views
             }
         }
 
+        private void TimelineContainer_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            ViewModel.TotalAvailableWidth = e.NewSize.Width - 2; // Subtract border
+        }
+
     }
 
     public class DateFormatConverter : Microsoft.UI.Xaml.Data.IValueConverter

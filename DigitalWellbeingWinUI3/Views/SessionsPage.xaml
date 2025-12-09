@@ -35,9 +35,9 @@
             
             <!-- Date Navigation (Styled) -->
             <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="12">
-                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="10,5" Height="44" VerticalAlignment="Top">
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="10" VerticalAlignment="Center">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <Button Background="Transparent" BorderThickness="0" Padding="0" Margin="0,0,10,0" ToolTipService.ToolTip="Select Date">
+                        <Button Background="Transparent" VerticalAlignment="Center" BorderThickness="0" Padding="0" Margin="0,0,10,0" ToolTipService.ToolTip="Select Date">
                             <TextBlock Text="📅" VerticalAlignment="Center"/>
                             <Button.Flyout>
                                 <Flyout x:Name="CalendarFlyout" Placement="Bottom">
@@ -53,7 +53,6 @@
                         <Button Content="&gt;" Command="{x:Bind ViewModel.NextDayCommand}" IsEnabled="{x:Bind ViewModel.CanGoNext, Mode=OneWay}" Background="Transparent" BorderThickness="0"/>
                     </StackPanel>
                 </Border>
-                <Button Content="Today" Command="{x:Bind ViewModel.TodayCommand}" VerticalAlignment="Center"/>
             </StackPanel>
 
             <!-- Zoom Controls -->
@@ -66,7 +65,7 @@
         </Grid>
 
         <!-- Timeline Body (Styled as Bubble) -->
-        <Border Grid.Row="2" Margin="24,0,24,24" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+        <Border Grid.Row="2" x:Name="TimelineContainer" Margin="24,0,24,24" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" SizeChanged="TimelineContainer_SizeChanged">
             <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto">
                 <ItemsControl ItemsSource="{x:Bind ViewModel.Days, Mode=OneWay}">
                     <ItemsControl.ItemsPanel>
@@ -76,7 +75,7 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <controls:DayTimelineControl Width="350"/>
+                            <controls:DayTimelineControl Width="{Binding TimelineWidth}"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

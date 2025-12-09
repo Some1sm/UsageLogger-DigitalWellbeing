@@ -10,15 +10,15 @@
     d:DesignHeight="1440"
     d:DesignWidth="400">
 
-    <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Margin="6,0,6,24">
-        <Grid x:Name="ContainerGrid" Margin="0" SizeChanged="ContainerGrid_SizeChanged">
+    <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Margin="6,0,6,24" Padding="15">
+        <Grid x:Name="ContainerGrid" Margin="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/> <!-- Date Header -->
                 <RowDefinition Height="*"/>    <!-- Timeline -->
             </Grid.RowDefinitions>
 
             <!-- Optional Date Header for Column -->
-            <TextBlock x:Name="HeaderDate" Grid.Row="0" Text="{x:Bind ViewModel.DateString, Mode=OneWay}" 
+            <TextBlock x:Name="HeaderDate" Grid.Row="0" Text="{Binding DateString, Mode=OneWay}" 
                        Style="{ThemeResource BodyStrongTextBlockStyle}" HorizontalAlignment="Center" Margin="0,12,0,4"
                        Visibility="Visible"/> 
 
@@ -30,7 +30,7 @@
                     </Grid.ColumnDefinitions>
 
                     <!-- Grid Lines & Labels -->
-                    <ItemsControl Grid.ColumnSpan="2" ItemsSource="{x:Bind ViewModel.GridLines, Mode=OneWay}">
+                    <ItemsControl Grid.ColumnSpan="2" ItemsSource="{Binding GridLines, Mode=OneWay}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <Canvas />
@@ -54,8 +54,8 @@
                     </ItemsControl>
 
                     <!-- Sessions -->
-                    <Canvas Grid.Column="0" Grid.ColumnSpan="2" Height="{x:Bind ViewModel.CanvasHeight, Mode=OneWay}" VerticalAlignment="Top">
-                        <ItemsControl ItemsSource="{x:Bind ViewModel.SessionBlocks, Mode=OneWay}">
+                    <Canvas Grid.Column="0" Grid.ColumnSpan="2" Height="{Binding CanvasHeight, Mode=OneWay}" VerticalAlignment="Top">
+                        <ItemsControl ItemsSource="{Binding SessionBlocks, Mode=OneWay}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <Canvas />
@@ -90,7 +90,7 @@
                         </ItemsControl>
 
                         <!-- Indicator -->
-                        <Grid Width="{x:Bind ViewModel.TimelineWidth, Mode=OneWay}" Height="2" Canvas.Left="0" Canvas.Top="{x:Bind ViewModel.CurrentTimeTop, Mode=OneWay}" Visibility="{x:Bind ViewModel.CurrentTimeVisibility, Mode=OneWay}">
+                        <Grid Width="{Binding ContentWidth, Mode=OneWay}" Height="2" Canvas.Left="0" Canvas.Top="{Binding CurrentTimeTop, Mode=OneWay}" Visibility="{Binding CurrentTimeVisibility, Mode=OneWay}">
                             <Rectangle Fill="#FF5252" />
                             <Ellipse Width="8" Height="8" Fill="#FF5252" HorizontalAlignment="Left" Margin="-4,0,0,0" VerticalAlignment="Center"/>
                         </Grid>

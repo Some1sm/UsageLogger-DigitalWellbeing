@@ -56,6 +56,36 @@ namespace DigitalWellbeingWinUI3.ViewModels
             }
         }
 
+        private double _totalAvailableWidth;
+        public double TotalAvailableWidth
+        {
+            get => _totalAvailableWidth;
+            set
+            {
+                if (_totalAvailableWidth != value)
+                {
+                    _totalAvailableWidth = value;
+                    OnPropertyChanged();
+                    UpdateColumnWidths();
+                }
+            }
+        }
+
+        private void UpdateColumnWidths()
+        {
+            if (Days.Count == 0 || _totalAvailableWidth <= 0) return;
+            
+            // Logic: Fill available space, but don't shrink below 350px per day
+            double calculatedWidth = _totalAvailableWidth / Days.Count;
+            if (calculatedWidth < 350) calculatedWidth = 350;
+            
+            // Push to child VMs
+            foreach(var day in Days)
+            {
+                day.TimelineWidth = calculatedWidth;
+            }
+        }
+
         private DispatcherTimer _timer;
 
         public SessionsViewModel()
@@ -121,7 +151,10 @@ namespace DigitalWellbeingWinUI3.ViewModels
             var tasks = new List<Task<(DateTime Date, List<AppSession> Sessions)>>();
             for (int i = 0; i < daysToShow; i++)
             {
-                DateTime targetDate = SelectedDate.Date.AddDays(i);
+                // Calculate date so that the last item (i = daysToShow - 1) is the SelectedDate
+                // and previous items go back in time. Preserves Left->Right chronological order.
+                DateTime targetDate = SelectedDate.Date.AddDays(i - (daysToShow - 1));
+                
                 tasks.Add(Task.Run(() => 
                 {
                     return (targetDate, _repository.GetSessionsForDate(targetDate));
@@ -139,6 +172,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 dayVM.LoadSessions(result.Sessions, PixelsPerHour);
                 Days.Add(dayVM);
             }
+            UpdateColumnWidths();
         }
 
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
