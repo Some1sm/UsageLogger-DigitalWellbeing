@@ -202,10 +202,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
         private string FormatDuration(double totalMinutes)
         {
             TimeSpan t = TimeSpan.FromMinutes(totalMinutes);
-            // User requested "hh:ss" ("5:17" for 317.5m). 
-            // 317m = 5h 17m.
-            // Format: H:mm
-            return $"{(int)t.TotalHours}:{t.Minutes:D2}";
+            return $"{(int)t.TotalHours:D2}:{t.Minutes:D2}:{t.Seconds:D2}";
         }
 
         private void AddNoData(ObservableCollection<ISeries> series)
