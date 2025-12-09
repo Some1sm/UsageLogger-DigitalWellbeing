@@ -56,10 +56,8 @@ namespace DigitalWellbeingWinUI3.ViewModels
         {
             get
             {
-                string output = "";
-                if (TotalDuration.Hours > 0) { output += $"{TotalDuration.Hours} hr, "; }
-                output += $"{TotalDuration.Minutes} min";
-                return output;
+                // Compact format: "5h 30m"
+                return $"{(int)TotalDuration.TotalHours}h {TotalDuration.Minutes}m";
             }
         }
 
