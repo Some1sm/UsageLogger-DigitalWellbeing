@@ -127,9 +127,13 @@
                             <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
                                      <TextBlock Text="{Binding ProcessName}" FontWeight="SemiBold" FontSize="15" Margin="0,0,10,0"/>
-                                     <Border Background="#3000FFFF" CornerRadius="10" Padding="8,2" VerticalAlignment="Center">
-                                         <TextBlock Text="{Binding StrAppTag}" Foreground="{Binding BrushAppTag}" FontSize="11" FontWeight="SemiBold"/>
-                                     </Border>
+                                     <!-- Accent Color Tag Bubble -->
+                                     <Grid VerticalAlignment="Center" CornerRadius="10">
+                                         <Border Background="{ThemeResource SystemControlBackgroundAccentBrush}" Opacity="0.15"/>
+                                         <Border Padding="8,2">
+                                             <TextBlock Text="{Binding StrAppTag}" Foreground="{Binding BrushAppTag}" FontSize="11" FontWeight="SemiBold"/>
+                                         </Border>
+                                     </Grid>
                                 </StackPanel>
                                 <!-- GRADIENT PROGRESS BAR TEST -->
                                 <ProgressBar Value="{Binding Percentage}" Maximum="100" Height="4" CornerRadius="2" HorizontalAlignment="Stretch">
