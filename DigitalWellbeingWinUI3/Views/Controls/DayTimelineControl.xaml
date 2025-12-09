@@ -10,7 +10,7 @@
     d:DesignHeight="1440"
     d:DesignWidth="400">
 
-    <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Margin="6,15,6,24" Padding="15">
+    <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Margin="7.5,15,7.5,15" Padding="15">
         <Grid x:Name="ContainerGrid" Margin="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/> <!-- Date Header -->
@@ -47,7 +47,7 @@
                                     <Border BorderBrush="{ThemeResource SystemControlForegroundBaseLowBrush}" BorderThickness="0,1,0,0" Opacity="{Binding Opacity}" Margin="60,0,0,0" Height="1" VerticalAlignment="Top"/>
                                     
                                     <!-- Label: In first 60px -->
-                                    <TextBlock Text="{Binding TimeText}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,-10,10,0" Opacity="0.5" FontSize="{Binding FontSize}"/>
+                                    <TextBlock Text="{Binding TimeText}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,-10,50,0" Opacity="0.5" FontSize="{Binding FontSize}"/>
                                 </Grid>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
