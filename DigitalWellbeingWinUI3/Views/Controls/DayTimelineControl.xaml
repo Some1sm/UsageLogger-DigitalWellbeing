@@ -29,7 +29,7 @@
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="60"/> <!-- Labels -->
+                        <ColumnDefinition Width="0"/> <!-- Labels (Removed Left Spacing) -->
                         <ColumnDefinition Width="*"/>  <!-- Canvas -->
                     </Grid.ColumnDefinitions>
 
@@ -48,17 +48,17 @@
                                     </Grid.RenderTransform>
                                     
                                     <!-- Line: Spans whole width -->
-                                    <Border BorderBrush="{ThemeResource SystemControlForegroundBaseLowBrush}" BorderThickness="0,1,0,0" Opacity="{Binding Opacity}" Margin="60,0,0,0" Height="1" VerticalAlignment="Top"/>
+                                    <Border BorderBrush="{ThemeResource SystemControlForegroundBaseLowBrush}" BorderThickness="0,1,0,0" Opacity="{Binding Opacity}" Margin="0" Height="1" VerticalAlignment="Top"/>
                                     
-                                    <!-- Label: In first 60px -->
-                                    <TextBlock Text="{Binding TimeText}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,-10,50,0" Opacity="0.5" FontSize="{Binding FontSize}"/>
+                                    <!-- Label: Right Aligned -->
+                                    <TextBlock Text="{Binding TimeText}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,-10,35,0" Opacity="0.5" FontSize="{Binding FontSize}"/>
                                 </Grid>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
 
                     <!-- Sessions -->
-                    <Canvas Grid.Column="0" Grid.ColumnSpan="2" Height="{Binding CanvasHeight, Mode=OneWay}" VerticalAlignment="Top">
+                    <Canvas Grid.Column="1" Grid.ColumnSpan="1" Height="{Binding CanvasHeight, Mode=OneWay}" VerticalAlignment="Top">
                         <ItemsControl ItemsSource="{Binding SessionBlocks, Mode=OneWay}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
@@ -67,47 +67,50 @@
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid Width="{Binding Width}" Height="{Binding Height}" ToolTipService.ToolTip="{Binding Title}">
+                                    <Grid Width="{Binding Width}" Height="{Binding Height}">
                                         <Grid.RenderTransform>
                                             <TranslateTransform X="{Binding Left}" Y="{Binding Top}" />
                                         </Grid.RenderTransform>
                                         
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="Auto"/> <!-- Audio Column -->
-                                        </Grid.ColumnDefinitions>
-
-                                        <!-- MAIN APP -->
-                                        <Grid Grid.Column="0">
+                                        <!-- Global Margin to avoid right-side labels -->
+                                        <Grid Margin="0,0,140,0">
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="4"/>
                                                 <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/> <!-- Audio Column (Right) -->
                                             </Grid.ColumnDefinitions>
-                                            
-                                            <Rectangle Grid.Column="0" Fill="{Binding BackgroundColor}" RadiusX="2" RadiusY="2"/>
-                                            <Border Grid.Column="1" Background="{Binding BackgroundColor}" Opacity="0.2" CornerRadius="0,4,4,0"/>
-                                            <StackPanel Grid.Column="1" Padding="8,2" VerticalAlignment="Center" Visibility="{Binding ShowDetails, Converter={StaticResource BoolToVis}}">
-                                                <TextBlock Text="{Binding Title}" FontSize="12" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
-                                                <StackPanel Orientation="Horizontal" Spacing="4">
-                                                    <TextBlock Text="{Binding DurationText}" FontSize="10" Opacity="0.7"/>
-                                                    <Border Background="{ThemeResource SystemFillColorCautionBrush}" CornerRadius="2" Padding="2,0" Visibility="{Binding IsAfk}">
-                                                        <TextBlock Text="AFK" FontSize="8" Foreground="Black"/>
-                                                    </Border>
-                                                </StackPanel>
-                                            </StackPanel>
-                                        </Grid>
 
-                                        <!-- AUDIO SOURCES -->
-                                        <Grid Grid.Column="1" Width="100" Margin="4,0,0,0" Visibility="{Binding HasAudio, Converter={StaticResource BoolToVis}}">
-                                            <Border Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="4" Opacity="0.8">
-                                                <StackPanel VerticalAlignment="Center" Padding="4">
-                                                    <StackPanel Orientation="Horizontal" Spacing="4" Margin="0,0,0,2">
-                                                        <FontIcon Glyph="&#xE767;" FontSize="10" Opacity="0.6"/> <!-- Volume Icon -->
-                                                        <TextBlock Text="Audio" FontSize="9" Opacity="0.6" FontWeight="SemiBold"/>
+                                            <!-- MAIN APP (Left) -->
+                                            <Grid Grid.Column="0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="4"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                
+                                                <Rectangle Grid.Column="0" Fill="{Binding BackgroundColor}" RadiusX="2" RadiusY="2"/>
+                                                <Border Grid.Column="1" Background="{Binding BackgroundColor}" Opacity="0.2" CornerRadius="0,4,4,0"/>
+                                                <StackPanel Grid.Column="1" Padding="8,2" VerticalAlignment="Center" Visibility="{Binding ShowDetails, Converter={StaticResource BoolToVis}}">
+                                                    <TextBlock Text="{Binding Title}" FontSize="12" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                                                    <StackPanel Orientation="Horizontal" Spacing="4">
+                                                        <TextBlock Text="{Binding DurationText}" FontSize="10" Opacity="0.7"/>
+                                                        <Border Background="{ThemeResource SystemFillColorCautionBrush}" CornerRadius="2" Padding="2,0" Visibility="{Binding IsAfk}">
+                                                            <TextBlock Text="AFK" FontSize="8" Foreground="Black"/>
+                                                        </Border>
                                                     </StackPanel>
-                                                    <TextBlock Text="{Binding AudioSourcesText}" FontSize="10" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" MaxLines="2"/>
                                                 </StackPanel>
-                                            </Border>
+                                            </Grid>
+
+                                            <!-- AUDIO SOURCES (Right) -->
+                                            <Grid Grid.Column="1" Width="100" Margin="4,0,0,0" Visibility="{Binding HasAudio, Converter={StaticResource BoolToVis}}" ToolTipService.ToolTip="{Binding AudioSourcesText}">
+                                                <Border Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="4" Opacity="0.8">
+                                                    <StackPanel VerticalAlignment="Center" Padding="4">
+                                                        <StackPanel Orientation="Horizontal" Spacing="4" Margin="0,0,0,2">
+                                                            <FontIcon Glyph="&#xE767;" FontSize="10" Opacity="0.6"/> <!-- Volume Icon -->
+                                                            <TextBlock Text="Audio" FontSize="9" Opacity="0.6" FontWeight="SemiBold"/>
+                                                        </StackPanel>
+                                                        <TextBlock Text="{Binding AudioSourcesText}" FontSize="10" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" MaxLines="2"/>
+                                                    </StackPanel>
+                                                </Border>
+                                            </Grid>
                                         </Grid>
                                     </Grid>
                                 </DataTemplate>
