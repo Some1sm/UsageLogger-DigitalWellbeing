@@ -17,7 +17,7 @@ namespace DigitalWellbeingService.NET4._6
     public class ActivityLogger
     {
         public static readonly int TIMER_INTERVAL_SEC = 3;
-        private static readonly int BUFFER_FLUSH_INTERVAL_SEC = 60; // Flush every minute
+        private static readonly int BUFFER_FLUSH_INTERVAL_SEC = 300; // Flush every 5 minutes
 
         private string folderPath;
         private string autoRunFilePath;
@@ -33,7 +33,7 @@ namespace DigitalWellbeingService.NET4._6
             autoRunFilePath = ApplicationPath.autorunFilePath;
             _repository = new AppUsageRepository(folderPath);
             _sessionManager = new SessionManager(folderPath);
-
+            
             Debug.WriteLine(folderPath);
             Debug.WriteLine(autoRunFilePath);
 

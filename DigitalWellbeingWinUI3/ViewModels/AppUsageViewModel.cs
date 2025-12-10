@@ -1,6 +1,7 @@
 using DigitalWellbeing.Core;
 using DigitalWellbeing.Core.Helpers;
 using DigitalWellbeing.Core.Models;
+using DigitalWellbeing.Core.Data;
 using DigitalWellbeingWinUI3.Helpers;
 using DigitalWellbeingWinUI3.Models;
 // using DigitalWellbeingWinUI3.Views; // Stubs for now
@@ -561,34 +562,39 @@ namespace DigitalWellbeingWinUI3.ViewModels
 
         public static async Task<List<AppUsage>> GetData(DateTime date)
         {
-             List<AppUsage> appUsageList = new List<AppUsage>();
-             try
+             // Refactored to use Session Repository (Snapshot + Live RAM)
+             // This ensures Dashboard matches the Detailed Timeline and updates in real-time.
+             return await Task.Run(() => 
              {
-                 if(File.Exists($"{folderPath}{date:MM-dd-yyyy}.log"))
+                 var usageMap = new Dictionary<string, AppUsage>();
+                 var repo = new AppSessionRepository(folderPath);
+                 
+                 // GetSessionsForDate now merges Disk + Live MMF
+                 var sessions = repo.GetSessionsForDate(date);
+
+                 foreach (var session in sessions)
                  {
-                      string text = await Task.Run(() => File.ReadAllText($"{folderPath}{date:MM-dd-yyyy}.log"));
-                      string[] lines = text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-                      foreach (string line in lines)
-                      {
-                          if (string.IsNullOrWhiteSpace(line)) continue;
-                          string[] cells = line.Split('\t');
-                          if(cells.Length >= 2)
-                          {
-                              string processName = cells[0];
-                              if(int.TryParse(cells[1], out int seconds))
-                              {
-                                   string programName = cells.Length > 2 ? cells[2] : "";
-                                   appUsageList.Add(new AppUsage(processName, programName, TimeSpan.FromSeconds(seconds)));
-                              }
-                          }
-                      }
+                     // Use ProcessName as key
+                     if (!usageMap.ContainsKey(session.ProcessName))
+                     {
+                         usageMap[session.ProcessName] = new AppUsage(session.ProcessName, session.ProgramName, TimeSpan.Zero);
+                     }
+                     
+                     // Aggregate Duration
+                     // Option: Exclude AFK? 
+                     // Legacy behavior included everything. Keeping it consistent for now.
+                     // (If we want to exclude AFK, just add: if (!session.IsAfk) ...)
+                     usageMap[session.ProcessName].Duration = usageMap[session.ProcessName].Duration.Add(session.Duration);
+                     
+                     // Update Program Name if missing
+                     if (string.IsNullOrEmpty(usageMap[session.ProcessName].ProgramName) && !string.IsNullOrEmpty(session.ProgramName))
+                     {
+                         usageMap[session.ProcessName].ProgramName = session.ProgramName;
+                     }
                  }
-             }
-             catch (Exception ex) 
-             {
-                 AppLogger.WriteLine(ex.Message);
-             }
-             return appUsageList;
+                 
+                 return usageMap.Values.ToList();
+             });
         }
 
         private void SetLoading(bool value)

@@ -80,16 +80,24 @@ namespace DigitalWellbeingService.NET4._6
                     // Extend
                     _currentSession.EndTime = now;
 
-                    // Feature: Real-time update without splitting.
-                    // Update the last entry in the file.
-                    // Optional: Throttle this? Every 3s is okay for a single file on SSD.
-                    _repository.UpdateOrAppend(_currentSession);
+                    // MMF UPDATE (Live RAM Cache)
+                    // Instead of writing to disk every 3s, we write to RAM map
+                    try 
+                    {
+                        DigitalWellbeing.Core.Helpers.LiveSessionCache.Write(_currentSession);
+                    } catch {}
                 }
             }
 
             if (shouldStartNew)
             {
                 _currentSession = new AppSession(processName, programName, now, now, isAfk, audioSources);
+                
+                // Initial Write for new session
+                try 
+                {
+                    DigitalWellbeing.Core.Helpers.LiveSessionCache.Write(_currentSession);
+                } catch {}
             }
         }
 
@@ -99,21 +107,44 @@ namespace DigitalWellbeingService.NET4._6
             
             _currentSession.EndTime = endTime;
             
-            // Final update to disk
+            // Add to BUFFER (RAM)
+            // We do NOT write to disk yet.
             if (_currentSession.Duration.TotalSeconds > 1) 
             {
-                _repository.UpdateOrAppend(_currentSession);
+                _sessionBuffer.Add(_currentSession);
             }
             
             _currentSession = null;
+
+            // Clear Live Cache as there is no active session
+            try 
+            {
+                DigitalWellbeing.Core.Helpers.LiveSessionCache.Clear();
+            } catch {}
         }
 
         public void FlushBuffer()
         {
-            if (_sessionBuffer.Count > 0)
+            try 
             {
-                _repository.AppendSessions(_sessionBuffer);
-                _sessionBuffer.Clear();
+                // 1. Flush Completed Sessions
+                if (_sessionBuffer.Count > 0)
+                {
+                    _repository.AppendSessions(_sessionBuffer);
+                    _sessionBuffer.Clear();
+                }
+
+                // 2. Persist Active Session (Checkpoint)
+                // We update the active session on disk so if we crash, we at least have up to this point.
+                if (_currentSession != null && _currentSession.Duration.TotalSeconds > 1)
+                {
+                    _repository.UpdateOrAppend(_currentSession);
+                }
+            } 
+            catch (Exception ex)
+            {
+               // Log?
+               Console.WriteLine("Flush Error: " + ex.Message);
             }
         }
 
@@ -121,6 +152,11 @@ namespace DigitalWellbeingService.NET4._6
         {
             FinalizeCurrentSession(DateTime.Now);
             FlushBuffer();
+            // Clear cache one last time
+            try 
+            {
+                DigitalWellbeing.Core.Helpers.LiveSessionCache.Clear();
+            } catch {}
         }
     }
 }

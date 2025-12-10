@@ -22,7 +22,44 @@ namespace DigitalWellbeing.Core.Data
             string filePath = GetFilePath(date);
             List<AppSession> sessions = new List<AppSession>();
 
-            if (!File.Exists(filePath)) return sessions;
+            if (!File.Exists(filePath))
+            {
+                // FALLBACK: Try Legacy Usage Log
+                string legacyPath = Path.Combine(_logsFolderPath, $"{date:MM-dd-yyyy}.log");
+                if (File.Exists(legacyPath))
+                {
+                    try 
+                    {
+                        using (var fs = new FileStream(legacyPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                        using (var reader = new StreamReader(fs))
+                        {
+                            string line;
+                            while ((line = reader.ReadLine()) != null)
+                            {
+                                if (string.IsNullOrWhiteSpace(line)) continue;
+
+                                string[] parts = line.Split('\t');
+                                if (parts.Length >= 2)
+                                {
+                                    string processName = parts[0];
+                                    if (int.TryParse(parts[1], out int seconds))
+                                    {
+                                        string programName = parts.Length > 2 ? parts[2] : "";
+                                        // Create Pseudo-Session for legacy data compatibility
+                                        // We just put it at midnight so the Dashboard can calculate the sum.
+                                        // The Timeline will show one block at 00:00, which is acceptable for legacy.
+                                        DateTime start = date.Date;
+                                        DateTime end = start.AddSeconds(seconds);
+                                        sessions.Add(new AppSession(processName, programName, start, end, false, null));
+                                    }
+                                }
+                            }
+                        }
+                    } 
+                    catch { }
+                }
+                return sessions;
+            }
 
             try
             {
@@ -61,6 +98,44 @@ namespace DigitalWellbeing.Core.Data
             catch (Exception ex)
             {
                 Console.WriteLine($"Session Repo Read Error: {ex.Message}");
+            }
+
+            // MERGE LIVE SESSION (from RAM)
+            // This allows the UI to see the currently running session even if it hasn't been flushed to disk yet.
+            if (date.Date == DateTime.Now.Date)
+            {
+                try
+                {
+                    var liveSession = DigitalWellbeing.Core.Helpers.LiveSessionCache.Read();
+                    if (liveSession != null && liveSession.StartTime.Date == date.Date)
+                    {
+                        // Check if we already have this session (partial log on disk)
+                        // Match by Start Time exactly
+                        var existing = sessions.FirstOrDefault(s => s.ProcessName == liveSession.ProcessName && s.StartTime == liveSession.StartTime);
+                        
+                        if (existing != null)
+                        {
+                            // Update it with the fresher data from RAM
+                            existing.EndTime = liveSession.EndTime;
+                            existing.IsAfk = liveSession.IsAfk; 
+                            // Audio sources might change too? Usually session splits on audio change, but if extended, just update.
+                            // If audio logic in Manager splits, then start time would differ.
+                            // If audio logic just extends (logic branch 5), then update.
+                            // But Manager logic: if Audio changes -> Start New. So StartTime would change.
+                            // Thus safe to just update EndTime.
+                        }
+                        else
+                        {
+                            // It's a brand new session not yet on disk
+                            sessions.Add(liveSession);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Ignore IPC read errors
+                    Console.WriteLine("Live Session Merge Error: " + ex.Message);
+                }
             }
 
             return sessions;
