@@ -73,21 +73,42 @@
                                         </Grid.RenderTransform>
                                         
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="4"/>
                                             <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/> <!-- Audio Column -->
                                         </Grid.ColumnDefinitions>
-                                        
-                                        <Rectangle Grid.Column="0" Fill="{Binding BackgroundColor}" RadiusX="2" RadiusY="2"/>
-                                        <Border Grid.Column="1" Background="{Binding BackgroundColor}" Opacity="0.2" CornerRadius="0,4,4,0"/>
-                                        <StackPanel Grid.Column="1" Padding="8,2" VerticalAlignment="Center" Visibility="{Binding ShowDetails, Converter={StaticResource BoolToVis}}">
-                                            <TextBlock Text="{Binding Title}" FontSize="12" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
-                                            <StackPanel Orientation="Horizontal" Spacing="4">
-                                                <TextBlock Text="{Binding DurationText}" FontSize="10" Opacity="0.7"/>
-                                                <Border Background="{ThemeResource SystemFillColorCautionBrush}" CornerRadius="2" Padding="2,0" Visibility="{Binding IsAfk}">
-                                                    <TextBlock Text="AFK" FontSize="8" Foreground="Black"/>
-                                                </Border>
+
+                                        <!-- MAIN APP -->
+                                        <Grid Grid.Column="0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="4"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            
+                                            <Rectangle Grid.Column="0" Fill="{Binding BackgroundColor}" RadiusX="2" RadiusY="2"/>
+                                            <Border Grid.Column="1" Background="{Binding BackgroundColor}" Opacity="0.2" CornerRadius="0,4,4,0"/>
+                                            <StackPanel Grid.Column="1" Padding="8,2" VerticalAlignment="Center" Visibility="{Binding ShowDetails, Converter={StaticResource BoolToVis}}">
+                                                <TextBlock Text="{Binding Title}" FontSize="12" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                                    <TextBlock Text="{Binding DurationText}" FontSize="10" Opacity="0.7"/>
+                                                    <Border Background="{ThemeResource SystemFillColorCautionBrush}" CornerRadius="2" Padding="2,0" Visibility="{Binding IsAfk}">
+                                                        <TextBlock Text="AFK" FontSize="8" Foreground="Black"/>
+                                                    </Border>
+                                                </StackPanel>
                                             </StackPanel>
-                                        </StackPanel>
+                                        </Grid>
+
+                                        <!-- AUDIO SOURCES -->
+                                        <Grid Grid.Column="1" Width="100" Margin="4,0,0,0" Visibility="{Binding HasAudio, Converter={StaticResource BoolToVis}}">
+                                            <Border Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="4" Opacity="0.8">
+                                                <StackPanel VerticalAlignment="Center" Padding="4">
+                                                    <StackPanel Orientation="Horizontal" Spacing="4" Margin="0,0,0,2">
+                                                        <FontIcon Glyph="&#xE767;" FontSize="10" Opacity="0.6"/> <!-- Volume Icon -->
+                                                        <TextBlock Text="Audio" FontSize="9" Opacity="0.6" FontWeight="SemiBold"/>
+                                                    </StackPanel>
+                                                    <TextBlock Text="{Binding AudioSourcesText}" FontSize="10" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" MaxLines="2"/>
+                                                </StackPanel>
+                                            </Border>
+                                        </Grid>
                                     </Grid>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>

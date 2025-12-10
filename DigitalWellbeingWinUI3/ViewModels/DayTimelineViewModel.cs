@@ -127,11 +127,26 @@ namespace DigitalWellbeingWinUI3.ViewModels
                     bool isCompatible = false;
                     if (pendingBlock != null)
                     {
-                        // Same process by definition of group
+                        // Check Time threshold
                         int threshold = DigitalWellbeingWinUI3.Helpers.UserPreferences.TimelineMergeThresholdSeconds;
                         if (lastEnd.HasValue && (validStart - lastEnd.Value).TotalSeconds < threshold)
                         {
-                            isCompatible = true;
+                            // Check Audio Compatibility
+                            var pendingAudio = pendingBlock.AudioSources ?? new List<string>();
+                            var currentAudio = s.AudioSources ?? new List<string>();
+                            
+                            bool audioEqual = false;
+                            if (pendingAudio.Count == currentAudio.Count)
+                            {
+                                var set1 = new HashSet<string>(pendingAudio);
+                                var set2 = new HashSet<string>(currentAudio);
+                                if (set1.SetEquals(set2)) audioEqual = true;
+                            }
+
+                            if (audioEqual)
+                            {
+                                isCompatible = true;
+                            }
                         }
                     }
 
@@ -143,11 +158,6 @@ namespace DigitalWellbeingWinUI3.ViewModels
                         if (newHeight < 1) newHeight = 1;
                         pendingBlock.Height = newHeight;
                         
-                        // Update duration text
-                        TimeSpan newDuration = validEnd - pendingBlock.OriginalSession.StartTime;
-                        // pendingBlock.DurationText = ... (Optional: Update text if needed, but simple might suffice)
-                         // We are using visual height mostly. 
-                         
                          lastEnd = validEnd;
                     }
                     else
@@ -173,7 +183,8 @@ namespace DigitalWellbeingWinUI3.ViewModels
                             BackgroundColor = color,
                             OriginalSession = s,
                             IsAfk = false,
-                            ShowDetails = height > 20
+                            ShowDetails = height > 20,
+                            AudioSources = s.AudioSources != null ? new List<string>(s.AudioSources) : new List<string>()
                         };
                         lastEnd = validEnd;
                     }

@@ -76,7 +76,63 @@ namespace DigitalWellbeingService.NET4._6
             try { programName = ForegroundWindowManager.GetActiveProgramName(proc); } catch {}
             if (string.IsNullOrEmpty(programName)) programName = "";
             
-            _sessionManager.Update(proc, programName);
+            
+            // Audio Tracking with Persistence (Debounce)
+            var currentAudioApps = Helpers.AudioSessionTracker.GetActiveAudioSessions();
+            
+            // DEBUG LOGGING
+            // try 
+            // {
+            //    string debugLog = ApplicationPath.APP_LOCATION + "\\debug_audio.txt";
+            //    string msg = $"{DateTime.Now}: Found {currentAudioApps.Count} apps: {string.Join(", ", currentAudioApps)}";
+            //    File.AppendAllText(debugLog, msg + Environment.NewLine);
+            // } catch {}
+            
+            var validAudioApps = UpdateAudioPersistence(currentAudioApps);
+
+            _sessionManager.Update(proc, programName, validAudioApps);
+        }
+
+        private Dictionary<string, int> _audioPersistenceCounter = new Dictionary<string, int>();
+
+        private List<string> UpdateAudioPersistence(List<string> currentApps)
+        {
+            var validApps = new List<string>();
+
+            // 1. Increment or Reset counters
+            // We need to handle apps that stopped playing
+            var keys = _audioPersistenceCounter.Keys.ToList();
+            foreach (var key in keys)
+            {
+                if (!currentApps.Contains(key))
+                {
+                    _audioPersistenceCounter.Remove(key);
+                }
+            }
+
+            // 2. Process current apps
+            foreach (var app in currentApps)
+            {
+                if (_audioPersistenceCounter.ContainsKey(app))
+                {
+                    _audioPersistenceCounter[app]++;
+                }
+                else
+                {
+                    _audioPersistenceCounter[app] = 1;
+                }
+            }
+
+            // 3. Filter for >= 2 (approx > 3 seconds)
+            foreach (var kvp in _audioPersistenceCounter)
+            {
+                if (kvp.Value >= 2)
+                {
+                    validApps.Add(kvp.Key);
+                }
+            }
+
+            return validApps;
         }
 
         private void UpdateTimeEntry(Process proc)

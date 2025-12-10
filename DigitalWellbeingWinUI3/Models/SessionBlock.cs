@@ -26,6 +26,10 @@ namespace DigitalWellbeingWinUI3.Models
         public string ProcessName { get; set; }
         public DigitalWellbeing.Core.Models.AppSession OriginalSession { get; set; }
 
+        public System.Collections.Generic.List<string> AudioSources { get; set; } = new System.Collections.Generic.List<string>();
+        public bool HasAudio => AudioSources != null && AudioSources.Count > 0;
+        public string AudioSourcesText => HasAudio ? string.Join(", ", AudioSources) : "";
+
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string name = null)
         {

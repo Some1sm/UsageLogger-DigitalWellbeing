@@ -45,7 +45,13 @@ namespace DigitalWellbeing.Core.Data
                                 long endTicks = long.Parse(parts[3]);
                                 bool isAfk = bool.Parse(parts[4]);
 
-                                sessions.Add(new AppSession(processName, programName, new DateTime(startTicks), new DateTime(endTicks), isAfk));
+                                System.Collections.Generic.List<string> audioSources = null;
+                                if (parts.Length >= 6 && !string.IsNullOrEmpty(parts[5]))
+                                {
+                                    audioSources = parts[5].Split(';').ToList();
+                                }
+
+                                sessions.Add(new AppSession(processName, programName, new DateTime(startTicks), new DateTime(endTicks), isAfk, audioSources));
                             }
                         }
                         catch { } // Skip malformed lines
@@ -70,7 +76,8 @@ namespace DigitalWellbeing.Core.Data
             string filePath = GetFilePath(session.StartTime.Date);
             Directory.CreateDirectory(_logsFolderPath);
 
-            string line = $"{session.ProcessName}\t{session.ProgramName}\t{session.StartTime.Ticks}\t{session.EndTime.Ticks}\t{session.IsAfk}";
+            string audioStr = (session.AudioSources != null && session.AudioSources.Count > 0) ? string.Join(";", session.AudioSources) : "";
+            string line = $"{session.ProcessName}\t{session.ProgramName}\t{session.StartTime.Ticks}\t{session.EndTime.Ticks}\t{session.IsAfk}\t{audioStr}";
 
             try
             {
@@ -105,7 +112,8 @@ namespace DigitalWellbeing.Core.Data
                     {
                         foreach (var session in group)
                         {
-                            string line = $"{session.ProcessName}\t{session.ProgramName}\t{session.StartTime.Ticks}\t{session.EndTime.Ticks}\t{session.IsAfk}";
+                            string audioStr = (session.AudioSources != null && session.AudioSources.Count > 0) ? string.Join(";", session.AudioSources) : "";
+                            string line = $"{session.ProcessName}\t{session.ProgramName}\t{session.StartTime.Ticks}\t{session.EndTime.Ticks}\t{session.IsAfk}\t{audioStr}";
                             writer.WriteLine(line);
                         }
                     }
@@ -124,6 +132,9 @@ namespace DigitalWellbeing.Core.Data
                 string filePath = GetFilePath(session.StartTime.Date);
                 Directory.CreateDirectory(_logsFolderPath);
 
+                string audioStr = (session.AudioSources != null && session.AudioSources.Count > 0) ? string.Join(";", session.AudioSources) : "";
+                string newLine = $"{session.ProcessName}\t{session.ProgramName}\t{session.StartTime.Ticks}\t{session.EndTime.Ticks}\t{session.IsAfk}\t{audioStr}";
+
                 using (var fs = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
                 {
                     if (fs.Length == 0)
@@ -131,8 +142,7 @@ namespace DigitalWellbeing.Core.Data
                         // Empty file, just write
                         using (var writer = new StreamWriter(fs))
                         {
-                            string line = $"{session.ProcessName}\t{session.ProgramName}\t{session.StartTime.Ticks}\t{session.EndTime.Ticks}\t{session.IsAfk}";
-                            writer.WriteLine(line);
+                            writer.WriteLine(newLine);
                         }
                         return;
                     }
@@ -209,7 +219,6 @@ namespace DigitalWellbeing.Core.Data
                     }
 
                     // Write
-                    string newLine = $"{session.ProcessName}\t{session.ProgramName}\t{session.StartTime.Ticks}\t{session.EndTime.Ticks}\t{session.IsAfk}";
                     // Need to construct StreamWriter to write from current position
                     // Be careful with encoding/newline. StreamWriter adds newline.
                     using (var writer = new StreamWriter(fs))

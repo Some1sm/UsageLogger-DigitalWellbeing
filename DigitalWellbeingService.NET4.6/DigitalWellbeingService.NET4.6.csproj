@@ -2,13 +2,13 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <Authors>Christian Kyle Ching</Authors>
     <Company>Some1sm</Company>
-    <Product>DigitalWellbeingService.NET4.6</Product>
+    <Product>DigitalWellbeingService</Product>
     <Description>A service needed by Digital Wellbeing For Windows to function properly.</Description>
     <Copyright>© 2025 David Cepero</Copyright>
-    <AssemblyTitle>DigitalWellbeingService.NET4.6</AssemblyTitle>
+    <AssemblyTitle>DigitalWellbeingService</AssemblyTitle>
     <Version>2.1.0.0</Version>
     <AssemblyVersion>2.1.0.0</AssemblyVersion>
     <FileVersion>2.1.0.0</FileVersion>
@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="System.Net.Http" />
+    <PackageReference Include="NAudio.Wasapi" Version="2.2.1" />
   </ItemGroup>
 
 </Project>

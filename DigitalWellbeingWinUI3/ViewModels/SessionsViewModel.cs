@@ -107,7 +107,11 @@ namespace DigitalWellbeingWinUI3.ViewModels
 
             _timer = new DispatcherTimer();
             _timer.Interval = TimeSpan.FromMinutes(1);
-            _timer.Tick += (s, e) => UpdateCurrentTime();
+            _timer.Tick += (s, e) => 
+            {
+                UpdateCurrentTime();
+                RefreshCurrentView();
+            };
             _timer.Start();
 
             LoadSessions();
@@ -160,20 +164,68 @@ namespace DigitalWellbeingWinUI3.ViewModels
             // Await all background data fetching
             var results = await Task.WhenAll(tasks);
 
-            // Double check if selection changed while loading (basic cancellation)
+            // Double check if selection changed
             if (currentSelection.Date != SelectedDate.Date) return;
 
-            // Update UI on UI Thread
-            foreach (var result in results)
+            // Merge with existing UI
+            // This prevents clearing the list which causes UI flicker
+            
+            // 1. Remove days not in result (if day count changed or navigated far? usually navigate resets)
+            // For simplicity in this specific "LoadSessions" triggered by navigations, we can clear if date changed significantly.
+            // But for "Refresh" (timer), we want to keep instances.
+            
+            // Smart Merge:
+            var newDaysDict = results.ToDictionary(r => r.Date.Date, r => r.Sessions);
+            var existingDays = Days.ToList();
+
+            // Remove old
+            foreach(var day in existingDays)
             {
-                var dayVM = new DayTimelineViewModel(result.Date);
-                // Load sessions logic inside DayTimelineViewModel handles layout
-                // We run this synchronous part on UI thread to ensure ViewModels are created safely
-                // but the heavy lifting of sorting sessions was done in GetSessionsForDate (which we ran in background)
-                dayVM.LoadSessions(result.Sessions, PixelsPerHour);
-                Days.Add(dayVM);
+                if (!newDaysDict.ContainsKey(day.Date.Date))
+                {
+                    Days.Remove(day);
+                }
             }
-            UpdateColumnWidths();
+
+            // Add/Update
+             foreach (var result in results)
+            {
+                var existingVM = Days.FirstOrDefault(d => d.Date.Date == result.Date.Date);
+                if (existingVM != null)
+                {
+                    // Update in place
+                    existingVM.LoadSessions(result.Sessions, PixelsPerHour);
+                }
+                else
+                {
+                    // Add new
+                    var dayVM = new DayTimelineViewModel(result.Date);
+                    dayVM.LoadSessions(result.Sessions, PixelsPerHour);
+                    // Insert in order?
+                    // Simple append if we assume chronological generation, but safer to insert.
+                    Days.Add(dayVM); // Simplified for now, usually we want sorted
+                }
+            }
+            
+            // Sort Days if needed (ObservableCollection doesn't support Sort, so we rely on generation order or re-ordering)
+            // Since we generate 'i' from 0 to N, results are ordered.
+            // If we just appended, it might be wrong if mixed. 
+            // Better: Clear if structure changed significantly, Update if just data.
+            
+           UpdateColumnWidths();
+        }
+
+        private async void RefreshCurrentView()
+        {
+            // Only refresh if looking at Today or recent days?
+            // Usually we only care about Today updates.
+            // Check if Today is visible in Days
+            var todayVM = Days.FirstOrDefault(d => d.IsToday);
+            if (todayVM != null)
+            {
+                var sessions = await Task.Run(() => _repository.GetSessionsForDate(DateTime.Now));
+                todayVM.LoadSessions(sessions, PixelsPerHour);
+            }
         }
 
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;

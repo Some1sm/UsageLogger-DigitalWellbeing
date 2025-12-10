@@ -12,13 +12,19 @@ namespace DigitalWellbeing.Core.Models
 
         public TimeSpan Duration => EndTime - StartTime;
 
-        public AppSession(string processName, string programName, DateTime startTime, DateTime endTime, bool isAfk = false)
+        public System.Collections.Generic.List<string> AudioSources { get; set; } = new System.Collections.Generic.List<string>();
+
+        public AppSession(string processName, string programName, DateTime startTime, DateTime endTime, bool isAfk = false, System.Collections.Generic.List<string> audioSources = null)
         {
             ProcessName = processName;
             ProgramName = programName;
             StartTime = startTime;
             EndTime = endTime;
             IsAfk = isAfk;
+            if (audioSources != null)
+            {
+                AudioSources = audioSources;
+            }
         }
 
         public AppSession() { }

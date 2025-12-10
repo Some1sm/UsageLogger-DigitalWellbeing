@@ -17,9 +17,8 @@ Write-Host "Publishing WinUI 3 App..."
 dotnet publish DigitalWellbeingWinUI3/DigitalWellbeingWinUI3.csproj -c Release -r win-x64 --self-contained false -o "$releaseDir/App"
 
 # Service
-dotnet build -c Release DigitalWellbeingService.NET4.6/DigitalWellbeingService.NET4.6.csproj
-if (-not (Test-Path "$releaseDir/Service")) { New-Item -ItemType Directory -Force -Path "$releaseDir/Service" | Out-Null }
-Copy-Item -Recurse "DigitalWellbeingService.NET4.6/bin/Release/net472/*" "$releaseDir/Service"
+# Service
+dotnet publish DigitalWellbeingService.NET4.6/DigitalWellbeingService.NET4.6.csproj -c Release -r win-x64 --self-contained false -o "$releaseDir/Service"
 
 # Organize Files
 Write-Host "Organizing Files..."
