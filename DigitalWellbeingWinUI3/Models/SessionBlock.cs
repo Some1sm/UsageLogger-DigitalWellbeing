@@ -29,6 +29,7 @@ namespace DigitalWellbeingWinUI3.Models
         public System.Collections.Generic.List<string> AudioSources { get; set; } = new System.Collections.Generic.List<string>();
         public bool HasAudio => AudioSources != null && AudioSources.Count > 0;
         public string AudioSourcesText => HasAudio ? string.Join(", ", AudioSources) : "";
+        public string TooltipText => $"{Title} ({DurationText}){(IsAfk ? " [AFK]" : "")}";
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string name = null)

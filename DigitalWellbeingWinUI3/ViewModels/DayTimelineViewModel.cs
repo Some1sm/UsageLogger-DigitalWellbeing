@@ -143,7 +143,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
                                 if (set1.SetEquals(set2)) audioEqual = true;
                             }
 
-                            if (audioEqual)
+                            if (audioEqual && pendingBlock.IsAfk == s.IsAfk)
                             {
                                 isCompatible = true;
                             }
@@ -182,7 +182,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
                             ProcessName = s.ProcessName,
                             BackgroundColor = color,
                             OriginalSession = s,
-                            IsAfk = false,
+                            IsAfk = s.IsAfk,
                             ShowDetails = height > 20,
                             AudioSources = s.AudioSources != null ? new List<string>(s.AudioSources) : new List<string>()
                         };
@@ -197,6 +197,14 @@ namespace DigitalWellbeingWinUI3.ViewModels
             newBlocks.Clear(); // Clear any existing blocks from previous logic
             foreach (var block in mergedBlocks.OrderBy(b => b.Top))
             {
+               // 2-minute threshold rule for AFK visualization
+               // Height = Minutes * (PPH / 60)  =>  Minutes = Height * 60 / PPH
+               double durationMin = block.Height * 60.0 / pixelsPerHour;
+               if (block.IsAfk && durationMin < 2.0) 
+               {
+                   block.IsAfk = false;
+               }
+
                newBlocks.Add(block);
             }
             SessionBlocks = newBlocks;
