@@ -56,16 +56,21 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="400"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="300"/>
                     </Grid.RowDefinitions>
                     
                     <TextBlock Text="Distribution Analysis" FontSize="18" FontWeight="SemiBold" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     
                     <!-- INJECTED CHART CONTAINER -->
-                    <ContentControl x:Name="HistoryChartContainer" Grid.Row="1" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" MinHeight="400"/>
+                    <ContentControl x:Name="HistoryChartContainer" Grid.Row="1" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Margin="0,10,0,0"/>
+
+                    <TextBlock Grid.Row="2" Text="Activity Heatmap" FontSize="18" FontWeight="SemiBold" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,20,0,10"/>
+                    <ContentControl x:Name="HeatMapContainer" Grid.Row="3" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
                     
                     <!-- Loading Indicator -->
-                    <ProgressRing Grid.Row="1" IsActive="{Binding IsLoading}" Width="60" Height="60" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <ProgressRing Grid.RowSpan="4" IsActive="{Binding IsLoading}" Width="60" Height="60" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </Grid>
             </Border>
         </Grid>

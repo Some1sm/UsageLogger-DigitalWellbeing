@@ -122,7 +122,17 @@ namespace DigitalWellbeingWinUI3.ViewModels
                     if (validEnd <= validStart) continue;
 
                     string title = string.IsNullOrEmpty(s.ProgramName) ? s.ProcessName : s.ProgramName;
-                    var color = DigitalWellbeingWinUI3.Helpers.AppTagHelper.GetTagColor(DigitalWellbeingWinUI3.Helpers.AppTagHelper.GetAppTag(s.ProcessName));
+                    var tag = DigitalWellbeingWinUI3.Helpers.AppTagHelper.GetAppTag(s.ProcessName);
+                    var baseBrush = DigitalWellbeingWinUI3.Helpers.AppTagHelper.GetTagColor(tag) as SolidColorBrush;
+                    Brush color = baseBrush;
+
+                    if (baseBrush != null)
+                    {
+                        var c = baseBrush.Color;
+                        // Apply Tint: Opacity 64 (~25%)
+                        var tintedColor = Windows.UI.Color.FromArgb(64, c.R, c.G, c.B);
+                        color = new SolidColorBrush(tintedColor);
+                    }
 
                     bool isCompatible = false;
                     if (pendingBlock != null)

@@ -450,90 +450,135 @@ namespace DigitalWellbeingWinUI3.ViewModels
 
         private void UpdatePieChartAndList(List<AppUsage> appUsageList)
         {
-            SetLoading(true);
-            try
+            var dispatcher = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
+            if (dispatcher == null)
             {
-                List<AppUsage> filteredUsageList = appUsageList.Where(appUsageFilter).ToList();
-                TotalDuration = TimeSpan.Zero;
-                
-                var pieSeriesList = new ObservableCollection<ISeries>();
-                var listItems = new ObservableCollection<AppUsageListItem>();
-
-                double otherProcessesTotalMinutes = 0;
-
-                foreach (AppUsage app in filteredUsageList)
+                // Fallback if we can't find thread dispatcher (e.g. background task) - usually shouldn't happen for ViewModel driven by Page
+                // Try getting from Window? Or just Execute and hope?
+                // For safety, let's assume we might need to access via App reference if needed.
+                // But generally, if this is called, we want to be safe.
+                try 
                 {
-                    TotalDuration = TotalDuration.Add(app.Duration);
-                }
-
-                foreach (AppUsage app in filteredUsageList)
-                {
-                    int percentage = (int)Math.Round(app.Duration.TotalSeconds / TotalDuration.TotalSeconds * 100);
-                    
-                    if (app.Duration > UserPreferences.MinumumDuration)
-                    {
-                        if (percentage <= MinimumPieChartPercentage)
-                        {
-                            otherProcessesTotalMinutes += app.Duration.TotalMinutes;
-                        }
-                        else
-                        {
-                            // Generate Palette
-                            var uiSettings = new Windows.UI.ViewManagement.UISettings();
-                            var accent = uiSettings.GetColorValue(Windows.UI.ViewManagement.UIColorType.Accent);
-                            var skAccent = new SKColor(accent.R, accent.G, accent.B, accent.A);
-                            var palette = GenerateMultiHuePalette(skAccent, filteredUsageList.Count);
-
-                            int index = pieSeriesList.Count; 
-                            // Note: filteredUsageList logic executes sequentially so index matches added items
-                                                    
-                            var series = new PieSeries<double>
-                            {
-                                Values = new ObservableCollection<double> { app.Duration.TotalMinutes },
-                                Name = app.ProcessName,
-                                ToolTipLabelFormatter = (point) => $"{point.Context.Series.Name}: {point.Coordinate.PrimaryValue:F1}m",
-                                DataLabelsFormatter = (point) => point.Context.Series.Name,
-                                Fill = new SolidColorPaint(palette[index % palette.Count])
-                            };
-                            pieSeriesList.Add(series);
-                        }
-                        
-                        listItems.Add(new AppUsageListItem(app.ProcessName, app.ProgramName, app.Duration, percentage, AppTagHelper.GetAppTag(app.ProcessName)));
-                    }
-                }
-
-                 if (otherProcessesTotalMinutes > 0)
-                 {
-                     pieSeriesList.Add(new PieSeries<double> 
-                     { 
-                         Values = new ObservableCollection<double> { otherProcessesTotalMinutes },
-                         Name = "Other Apps",
-                         Fill = new SolidColorPaint(SKColors.Gray)
-                     });
-                 }
-
-                 if (pieSeriesList.Count == 0)
-                 {
-                     pieSeriesList.Add(new PieSeries<double> 
-                     { 
-                         Values = new ObservableCollection<double> { 1 },
-                         Name = "No Data",
-                         Fill = new SolidColorPaint(SKColors.LightGray)
-                     });
-                 }
-
-                 DayPieChartSeries.Clear();
-                 foreach(var s in pieSeriesList) DayPieChartSeries.Add(s);
-
-                 DayListItems.Clear();
-                 foreach(var i in listItems) DayListItems.Add(i);
-
-                 RefreshTagChart(filteredUsageList);
+                     dispatcher = Microsoft.UI.Xaml.Window.Current?.DispatcherQueue; 
+                } catch {}
             }
-            finally
+
+            Action updateAction = () =>
             {
-                NotifyChange();
-                SetLoading(false);
+                SetLoading(true);
+                try
+                {
+                    List<AppUsage> filteredUsageList = appUsageList.Where(appUsageFilter).ToList();
+                    TotalDuration = TimeSpan.Zero;
+                    
+                    var pieSeriesList = new ObservableCollection<ISeries>();
+                    var listItems = new ObservableCollection<AppUsageListItem>();
+
+                    double otherProcessesTotalMinutes = 0;
+
+                    foreach (AppUsage app in filteredUsageList)
+                    {
+                        TotalDuration = TotalDuration.Add(app.Duration);
+                    }
+
+                    foreach (AppUsage app in filteredUsageList)
+                    {
+                        int percentage = (int)Math.Round(app.Duration.TotalSeconds / TotalDuration.TotalSeconds * 100);
+                        
+                        if (app.Duration > UserPreferences.MinumumDuration)
+                        {
+                            if (percentage <= MinimumPieChartPercentage)
+                            {
+                                otherProcessesTotalMinutes += app.Duration.TotalMinutes;
+                            }
+                            else
+                            {
+                                // Generate Palette
+                                var uiSettings = new Windows.UI.ViewManagement.UISettings();
+                                var accent = uiSettings.GetColorValue(Windows.UI.ViewManagement.UIColorType.Accent);
+                                var skAccent = new SKColor(accent.R, accent.G, accent.B, accent.A);
+                                var palette = GenerateMultiHuePalette(skAccent, filteredUsageList.Count);
+
+                                int index = pieSeriesList.Count; 
+                                                        
+                                var series = new PieSeries<double>
+                                {
+                                    Values = new ObservableCollection<double> { app.Duration.TotalMinutes },
+                                    Name = app.ProcessName,
+                                    ToolTipLabelFormatter = (point) => $"{point.Context.Series.Name}: {point.Coordinate.PrimaryValue:F1}m",
+                                    DataLabelsFormatter = (point) => point.Context.Series.Name,
+                                    Fill = new SolidColorPaint(palette[index % palette.Count])
+                                };
+                                pieSeriesList.Add(series);
+                            }
+                            
+                            var listItem = new AppUsageListItem(app.ProcessName, app.ProgramName, app.Duration, percentage, AppTagHelper.GetAppTag(app.ProcessName));
+                            
+                            // Populate Children
+                            if (app.ProgramBreakdown != null && app.ProgramBreakdown.Count > 0)
+                            {
+                                var sortedChildren = app.ProgramBreakdown.OrderByDescending(k => k.Value).ToList();
+                                foreach (var child in sortedChildren)
+                                {
+                                    // Safety check against zero duration total
+                                    double totalSec = app.Duration.TotalSeconds > 1 ? app.Duration.TotalSeconds : 1; 
+                                    int childPct = (int)Math.Round(child.Value.TotalSeconds / totalSec * 100);
+                                    
+                                    listItem.Children.Add(new AppUsageSubItem(child.Key, child.Value, childPct, listItem.IconSource));
+                                }
+                            }
+                            
+                            listItems.Add(listItem);
+                        }
+                    }
+
+                    if (otherProcessesTotalMinutes > 0)
+                    {
+                        pieSeriesList.Add(new PieSeries<double> 
+                        { 
+                            Values = new ObservableCollection<double> { otherProcessesTotalMinutes },
+                            Name = "Other Apps",
+                            Fill = new SolidColorPaint(SKColors.Gray)
+                        });
+                    }
+
+                    if (pieSeriesList.Count == 0)
+                    {
+                        pieSeriesList.Add(new PieSeries<double> 
+                        { 
+                            Values = new ObservableCollection<double> { 1 },
+                            Name = "No Data",
+                            Fill = new SolidColorPaint(SKColors.LightGray)
+                        });
+                    }
+
+                    DayPieChartSeries.Clear();
+                    foreach(var s in pieSeriesList) DayPieChartSeries.Add(s);
+
+                    DayListItems.Clear();
+                    foreach(var i in listItems) DayListItems.Add(i);
+
+                    RefreshTagChart(filteredUsageList);
+
+                    // Load Insights
+                    LoadTrendData(LoadedDate, TotalDuration);
+                    LoadGoalStreaks();
+                }
+                finally
+                {
+                    NotifyChange();
+                    SetLoading(false);
+                }
+            };
+
+            if (dispatcher != null)
+            {
+                dispatcher.TryEnqueue(() => updateAction());
+            }
+            else
+            {
+                // Fallback attempt
+                updateAction();
             }
         }
 
@@ -591,12 +636,209 @@ namespace DigitalWellbeingWinUI3.ViewModels
                      {
                          usageMap[session.ProcessName].ProgramName = session.ProgramName;
                      }
+
+                     // Breakdown by Window Title
+                     string title = !string.IsNullOrEmpty(session.ProgramName) ? session.ProgramName : session.ProcessName;
+                     if (usageMap[session.ProcessName].ProgramBreakdown.ContainsKey(title))
+                     {
+                         usageMap[session.ProcessName].ProgramBreakdown[title] = usageMap[session.ProcessName].ProgramBreakdown[title].Add(session.Duration);
+                     }
+                     else
+                     {
+                         usageMap[session.ProcessName].ProgramBreakdown[title] = session.Duration;
+                     }
                  }
                  
                  return usageMap.Values.ToList();
              });
         }
 
+        #region Trend & Streaks
+        private string _trendPercentage;
+        public string TrendPercentage
+        {
+            get => _trendPercentage;
+            set { _trendPercentage = value; OnPropertyChanged(); }
+        }
+
+        private string _trendDescription;
+        public string TrendDescription
+        {
+            get => _trendDescription;
+            set { _trendDescription = value; OnPropertyChanged(); }
+        }
+        
+        private bool _trendIsGood;
+        public bool TrendIsGood
+        {
+            get => _trendIsGood;
+            set { _trendIsGood = value; OnPropertyChanged(); }
+        }
+
+        public ObservableCollection<GoalStreakItem> GoalStreaks { get; set; } = new ObservableCollection<GoalStreakItem>();
+        #endregion
+
+        // ... Existing methods ...
+
+        private async void LoadTrendData(DateTime currentDate, TimeSpan currentTotal)
+        {
+            await Task.Run(async () =>
+            {
+                // Compare with same day last week
+                DateTime pastDate = currentDate.AddDays(-7);
+                var pastUsageList = await GetData(pastDate);
+                var filtered = pastUsageList.Where(appUsageFilter).ToList();
+                
+                TimeSpan pastTotal = TimeSpan.Zero;
+                foreach (var app in filtered) pastTotal = pastTotal.Add(app.Duration);
+
+                // Calculate
+                double currentMin = currentTotal.TotalMinutes;
+                double pastMin = pastTotal.TotalMinutes;
+
+                string percentage = "";
+                string desc = $"from last {pastDate.ToString("dddd")}";
+                bool isGood = true;
+
+                if (pastMin == 0)
+                {
+                    percentage = currentMin > 0 ? "100%" : "0%";
+                    isGood = currentMin == 0; // If 0 -> 0, good. If 0 -> 100, bad (usage up).
+                }
+                else
+                {
+                    double diff = currentMin - pastMin;
+                    double pct = (diff / pastMin) * 100.0;
+                    
+                    if (pct > 0)
+                    {
+                        percentage = $"↑ {Math.Abs((int)pct)}%";
+                        isGood = false; // Usage UP is "Bad" generally for Wellbeing
+                    }
+                    else
+                    {
+                        percentage = $"↓ {Math.Abs((int)pct)}%";
+                        isGood = true; // Usage DOWN is "Good"
+                    }
+                }
+
+                dispatcherQueue.TryEnqueue(() => 
+                {
+                    TrendPercentage = percentage;
+                    TrendDescription = desc;
+                    TrendIsGood = isGood;
+                });
+            });
+        }
+
+        private async void LoadGoalStreaks()
+        {
+            await Task.Run(async () =>
+            {
+                // 1. Gaming < 1h
+                // 2. Focus (Work/Edu) > 4h
+                // 3. Social < 30m
+
+                int gamingStreak = 0;
+                int focusStreak = 0;
+                int socialStreak = 0;
+
+                DateTime date = DateTime.Now.Date.AddDays(-1); // Start from yesterday for completed days? Or today?
+                // Usually streaks are "completed days".
+                
+                for (int i = 0; i < 30; i++)
+                {
+                    var data = await GetData(date);
+                    
+                    TimeSpan gameDur = TimeSpan.Zero;
+                    TimeSpan workDur = TimeSpan.Zero;
+                    TimeSpan socialDur = TimeSpan.Zero;
+
+                    foreach(var app in data)
+                    {
+                        if (IsProcessExcluded(app.ProcessName)) continue;
+                        
+                        var tag = AppTagHelper.GetAppTag(app.ProcessName);
+                        if (tag == AppTag.Game) gameDur += app.Duration;
+                        if (tag == AppTag.Work || tag == AppTag.Education) workDur += app.Duration;
+                        if (tag == AppTag.Social) socialDur += app.Duration;
+                    }
+
+                    // Check Gaming (< 1h)
+                    if (gameDur.TotalHours < 1) gamingStreak++; else break;
+                    
+                    // Check Focus (> 4h) - this is harder to maintain, maybe check > 1h for testing
+                    // if (workDur.TotalHours >= 4) focusStreak++; else break;
+                    
+                    // Check Social (< 30m)
+                    // if (socialDur.TotalMinutes < 30) socialStreak++; else break;
+
+                    date = date.AddDays(-1);
+                }
+                
+                // Optimized 2nd pass for other streaks (or combine loops carefully)
+                // For simplicity/speed in prototype, just doing Gaming 1st correctly.
+                // Assuming logic holds for others.
+
+                // Refetch/Reset for others or optimize? The GetData is cached? No.
+                // Let's do valid loop once.
+                
+                gamingStreak = 0; focusStreak = 0; socialStreak = 0;
+                bool gFail = false, fFail = false, sFail = false;
+                
+                date = DateTime.Now.Date.AddDays(-1); // Yesterday
+
+                for (int i = 0; i < 30; i++)
+                {
+                    if (gFail && fFail && sFail) break;
+
+                    var data = await GetData(date);
+                     
+                    TimeSpan gameDur = TimeSpan.Zero;
+                    TimeSpan workDur = TimeSpan.Zero;
+                    TimeSpan socialDur = TimeSpan.Zero;
+
+                    foreach(var app in data)
+                    {
+                        if (IsProcessExcluded(app.ProcessName)) continue;
+                        var tag = AppTagHelper.GetAppTag(app.ProcessName);
+                        if (tag == AppTag.Game) gameDur += app.Duration;
+                        if (tag == AppTag.Work || tag == AppTag.Education) workDur += app.Duration;
+                        if (tag == AppTag.Social) socialDur += app.Duration;
+                    }
+
+                    if (!gFail) { if (gameDur.TotalHours < 1) gamingStreak++; else gFail = true; }
+                    if (!fFail) { if (workDur.TotalHours >= 4) focusStreak++; else fFail = true; }
+                    if (!sFail) { if (socialDur.TotalMinutes < 30) socialStreak++; else sFail = true; }
+
+                    date = date.AddDays(-1);
+                }
+
+                dispatcherQueue.TryEnqueue(() => 
+                {
+                    GoalStreaks.Clear();
+                    GoalStreaks.Add(new GoalStreakItem 
+                    { 
+                        Count = gamingStreak.ToString(), 
+                        Label = "days with < 1h Gaming", 
+                        IconColor = new Microsoft.UI.Xaml.Media.SolidColorBrush(Windows.UI.Color.FromArgb(255, 0, 120, 215)) // Blue
+                    });
+                    GoalStreaks.Add(new GoalStreakItem 
+                    { 
+                        Count = focusStreak.ToString(), 
+                        Label = "days meeting Focus Goal (4h)", 
+                        IconColor = new Microsoft.UI.Xaml.Media.SolidColorBrush(Windows.UI.Color.FromArgb(255, 128, 0, 128)) // Purple
+                    });
+                    GoalStreaks.Add(new GoalStreakItem 
+                    { 
+                        Count = socialStreak.ToString(), 
+                        Label = "days for < 30m Social Media", 
+                        IconColor = new Microsoft.UI.Xaml.Media.SolidColorBrush(Windows.UI.Color.FromArgb(255, 128, 128, 128)) // Grey
+                    });
+                });
+            });
+        }
+        
         private void SetLoading(bool value)
         {
             IsLoading = value;

@@ -4,7 +4,9 @@ using DigitalWellbeingWinUI3.Helpers;
 using Microsoft.UI.Xaml.Media;
 using System;
 using System.ComponentModel;
+using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
+using System.Windows.Input;
 
 namespace DigitalWellbeingWinUI3.Models
 {
@@ -21,6 +23,32 @@ namespace DigitalWellbeingWinUI3.Models
         public AppTag _AppTag { get; set; }
         public string StrAppTag { get => AppTagHelper.GetTagDisplayName(this._AppTag); }
         public Brush BrushAppTag { get => AppTagHelper.GetTagColor(this._AppTag); }
+        public Brush BrushAppTagBg 
+        { 
+            get 
+            {
+                var brush = AppTagHelper.GetTagColor(this._AppTag) as SolidColorBrush;
+                if (brush != null)
+                {
+                    var c = brush.Color;
+                    return new SolidColorBrush(Windows.UI.Color.FromArgb(51, c.R, c.G, c.B)); // ~20% Opacity (51/255)
+                }
+                return new SolidColorBrush(Windows.UI.Color.FromArgb(0, 0, 0, 0));
+            } 
+        }
+
+        public ObservableCollection<AppUsageSubItem> Children { get; set; } = new ObservableCollection<AppUsageSubItem>();
+        
+        private bool _isExpanded;
+        public bool IsExpanded
+        {
+            get => _isExpanded;
+            set { if (_isExpanded != value) { _isExpanded = value; OnPropertyChanged(); OnPropertyChanged(nameof(ChevronRotation)); } }
+        }
+
+        public double ChevronRotation => IsExpanded ? 180 : 0;
+
+        public ICommand ToggleExpandCommand { get; private set; }
 
         public AppUsageListItem(string processName, string programName, TimeSpan duration, int percentage, AppTag appTag)
         {
@@ -30,6 +58,8 @@ namespace DigitalWellbeingWinUI3.Models
             Percentage = percentage;
             IconSource = IconManager.GetIconSource(processName);
             _AppTag = appTag;
+            
+            ToggleExpandCommand = new RelayCommand((param) => IsExpanded = !IsExpanded);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -49,9 +79,13 @@ namespace DigitalWellbeingWinUI3.Models
 
             OnPropertyChanged(nameof(_AppTag));
             OnPropertyChanged(nameof(StrAppTag));
+            OnPropertyChanged(nameof(StrAppTag));
             OnPropertyChanged(nameof(BrushAppTag));
+            OnPropertyChanged(nameof(BrushAppTagBg));
             
             // Refresh Icon if needed?
         }
     }
+
+
 }

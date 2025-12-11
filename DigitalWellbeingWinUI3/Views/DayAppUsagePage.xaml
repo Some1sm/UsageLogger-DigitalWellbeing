@@ -37,43 +37,46 @@
                     </StackPanel>
                 </Border>
                 
-                <!-- Total Duration Label -->
+                <!-- Total Duration Label + Trend -->
                 <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="15,10" Margin="10,0,0,0" VerticalAlignment="Center">
                     <StackPanel Orientation="Horizontal" Spacing="8">
                         <TextBlock Text="Total:" Opacity="0.6" VerticalAlignment="Center"/>
                         <TextBlock Text="{x:Bind ViewModel.StrTotalDuration, Mode=OneWay}" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                        
+                        <!-- Trend Indicator -->
+                        <StackPanel Orientation="Horizontal" Margin="12,0,0,0" VerticalAlignment="Center" ToolTipService.ToolTip="{x:Bind ViewModel.TrendDescription, Mode=OneWay}">
+                            <TextBlock Text="{x:Bind ViewModel.TrendPercentage, Mode=OneWay}" FontWeight="Bold" Foreground="{x:Bind GetTrendBrush(ViewModel.TrendIsGood), Mode=OneWay}"/>
+                            <TextBlock Text="{x:Bind ViewModel.TrendDescription, Mode=OneWay}" Opacity="0.6" Margin="6,0,0,0" FontSize="12" VerticalAlignment="Center"/>
+                        </StackPanel>
                     </StackPanel>
                 </Border>
             </StackPanel>
 
-            <!-- ROW 1: CHARTS (Injected via Code-Behind) -->
+            <!-- ROW 1: CHARTS (Side by Side) -->
             <Grid Grid.Row="1" Margin="0,0,0,20">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="1.5*"/>
+                    <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- Bar Chart Container 
-                     SAFETY NOTE: Charts are NOT defined in XAML to prevent "Class Not Registered" or Parser crashes during InitializeComponent().
-                     Instead, we use a simple ContentControl and inject the Chart object via Code-Behind (Page_Loaded).
-                -->
+                <!-- Bar Chart -->
                 <Border Grid.Column="0" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="15" Margin="0,0,10,0">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="300"/> <!-- Fixed Height for Chart Content -->
+                            <RowDefinition Height="250"/> 
                         </Grid.RowDefinitions>
                         <TextBlock Text="Daily Activity" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
                         <ContentControl x:Name="BarChartContainer" Grid.Row="1" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
                     </Grid>
                 </Border>
 
-                <!-- Pie Chart Container -->
+                <!-- Pie Chart -->
                 <Border Grid.Column="1" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="15" Margin="10,0,0,0">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="300"/> <!-- Fixed Height for Chart Content -->
+                            <RowDefinition Height="250"/> 
                         </Grid.RowDefinitions>
                         <TextBlock Text="Usage Summary" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
                         <ContentControl x:Name="PieChartContainer" Grid.Row="1" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
@@ -81,77 +84,89 @@
                 </Border>
             </Grid>
 
-            <!-- ROW 2: APP LIST (Verified Working) -->
-            <GridView Grid.Row="2" x:Name="AppListGridView" 
-                      ItemsSource="{x:Bind ViewModel.DayListItems, Mode=OneWay}" 
-                      SelectionMode="None" Margin="0,10,-6,0" Padding="0"
-                      SizeChanged="AppListGridView_SizeChanged"
-                      ScrollViewer.VerticalScrollMode="Disabled"
-                      ScrollViewer.VerticalScrollBarVisibility="Hidden">
-                <GridView.ItemsPanel>
+            <!-- ROW 2: APP LIST (Was Row 3) -->
+            <ItemsControl Grid.Row="2" x:Name="AppListGridView" ItemsSource="{x:Bind ViewModel.DayListItems, Mode=OneWay}" Margin="0,10,0,0">
+                <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <ItemsWrapGrid Orientation="Horizontal" HorizontalAlignment="Stretch"/>
+                        <StackPanel Spacing="10"/>
                     </ItemsPanelTemplate>
-                </GridView.ItemsPanel>
-                <GridView.ItemContainerStyle>
-                    <Style TargetType="GridViewItem">
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                        <Setter Property="Margin" Value="0,0,6,12"/>
-                    </Style>
-                </GridView.ItemContainerStyle>
-                <GridView.ItemTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border CornerRadius="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="15,12" RightTapped="Grid_RightTapped">
-                        <Border.ContextFlyout>
-                            <MenuFlyout Opening="MenuFlyout_Opening">
-                                <MenuFlyoutItem Text="Set Time Limit" Icon="Clock" Click="MenuFlyoutItem_SetTimeLimit_Click" Tag="{Binding ProcessName}"/>
-                                <MenuFlyoutSubItem Text="Set Category" Icon="Tag">
-                                    <!-- Options populated dynamically in MenuFlyout_Opening -->
-                                </MenuFlyoutSubItem>
-                                <MenuFlyoutSeparator/>
-                                <MenuFlyoutItem Text="Exclude App" Icon="Delete" Click="MenuFlyoutItem_ExcludeApp_Click" Tag="{Binding ProcessName}"/>
-                            </MenuFlyout>
-                        </Border.ContextFlyout>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <!-- ICON -->
-                            <Image Source="{Binding IconSource}" Width="36" Height="36" Margin="0,0,15,0"/>
+                        <Border CornerRadius="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="0">
+                            <Border.ContextFlyout>
+                                <MenuFlyout Opening="MenuFlyout_Opening">
+                                    <MenuFlyoutItem Text="Set Time Limit" Icon="Clock" Click="MenuFlyoutItem_SetTimeLimit_Click" Tag="{Binding ProcessName}"/>
+                                    <MenuFlyoutSubItem Text="Set Category" Icon="Tag">
+                                    </MenuFlyoutSubItem>
+                                    <MenuFlyoutSeparator/>
+                                    <MenuFlyoutItem Text="Exclude App" Icon="Delete" Click="MenuFlyoutItem_ExcludeApp_Click" Tag="{Binding ProcessName}"/>
+                                </MenuFlyout>
+                            </Border.ContextFlyout>
                             
-                            <!-- DETAILS -->
-                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
-                                     <TextBlock Text="{Binding ProcessName}" FontWeight="SemiBold" FontSize="15" Margin="0,0,10,0"/>
-                                     <!-- Accent Color Tag Bubble -->
-                                    <Grid VerticalAlignment="Center" CornerRadius="10">
-                                        <Border Background="{Binding BrushAppTag}" CornerRadius="10" Opacity="0.5"/>
-                                        <Border Padding="8,2">
-                                            <TextBlock Text="{Binding StrAppTag}" Foreground="White" FontSize="11" FontWeight="SemiBold"/>
-                                        </Border>
-                                    </Grid>
-                                </StackPanel>
-                                <!-- GRADIENT PROGRESS BAR TEST -->
-                                <ProgressBar Value="{Binding Percentage}" Maximum="100" Height="4" CornerRadius="2" HorizontalAlignment="Stretch">
-                                    <ProgressBar.Foreground>
-                                        <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
-                                            <GradientStop Color="{ThemeResource SystemAccentColor}" Offset="0.0"/>
-                                            <GradientStop Color="{ThemeResource SystemAccentColorLight2}" Offset="1.0"/>
-                                        </LinearGradientBrush>
-                                    </ProgressBar.Foreground>
-                                </ProgressBar>
+                            <StackPanel>
+                                <Grid Height="60" Padding="15,0" RightTapped="Grid_RightTapped" Background="Transparent" ToolTipService.ToolTip="Click to expand details">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Opacity="0" Grid.ColumnSpan="4" Command="{Binding ToggleExpandCommand}"/>
+
+                                    <Image Source="{Binding IconSource}" Width="32" Height="32" Margin="0,0,15,0" VerticalAlignment="Center" IsHitTestVisible="False"/>
+
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center" IsHitTestVisible="False">
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                            <TextBlock Text="{Binding ProcessName}" FontWeight="SemiBold" FontSize="15" Margin="0,0,10,0"/>
+                                            <Grid VerticalAlignment="Center" CornerRadius="8">
+                                                <Border Background="{Binding BrushAppTagBg}" CornerRadius="8"/>
+                                                <Border Padding="8,2" BorderBrush="{Binding BrushAppTag}" BorderThickness="0">
+                                                    <TextBlock Text="{Binding StrAppTag}" Foreground="{Binding BrushAppTag}" FontSize="11" FontWeight="Bold"/>
+                                                </Border>
+                                            </Grid>
+                                        </StackPanel>
+                                        
+                                        <ProgressBar Value="{Binding Percentage}" Maximum="100" Height="4" CornerRadius="2" HorizontalAlignment="Stretch" Margin="0,0,10,0"/>
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Column="2" Text="{Binding StrDuration}" VerticalAlignment="Center" HorizontalAlignment="Right" FontWeight="SemiBold" FontSize="14" Margin="10,0,10,0" IsHitTestVisible="False"/>
+                                    
+                                    <FontIcon Grid.Column="3" Glyph="&#xE70D;" FontSize="12" Opacity="0.5" VerticalAlignment="Center" IsHitTestVisible="False">
+                                        <FontIcon.RenderTransform>
+                                            <RotateTransform Angle="{Binding ChevronRotation}" CenterX="6" CenterY="6"/>
+                                        </FontIcon.RenderTransform>
+                                    </FontIcon>
+                                </Grid>
+
+                                <ItemsControl ItemsSource="{Binding Children}" Visibility="{Binding IsExpanded, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Padding="60,8,15,8" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="0,1,0,0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="100"/>
+                                                    <ColumnDefinition Width="80"/>
+                                                </Grid.ColumnDefinitions>
+                                                
+                                                <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                                                     <FontIcon Glyph="&#xE774;" FontSize="12" Opacity="0.5"/> 
+                                                     <TextBlock Text="{Binding Title}" FontSize="13" TextTrimming="CharacterEllipsis"/>
+                                                </StackPanel>
+
+                                                <ProgressBar Grid.Column="1" Value="{Binding Percentage}" Maximum="100" Height="3" CornerRadius="1.5" VerticalAlignment="Center" Opacity="0.6"/>
+                                                
+                                                <TextBlock Grid.Column="2" Text="{Binding StrDuration}" FontSize="12" Opacity="0.7" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
                             </StackPanel>
-                            
-                            <!-- DURATION -->
-                            <TextBlock Grid.Column="2" Text="{Binding StrDuration}" VerticalAlignment="Center" HorizontalAlignment="Right" FontWeight="SemiBold" FontSize="14" Margin="15,0,0,0"/>
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-            </GridView.ItemTemplate>
-        </GridView>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </Grid>
     </ScrollViewer>
 </Page>

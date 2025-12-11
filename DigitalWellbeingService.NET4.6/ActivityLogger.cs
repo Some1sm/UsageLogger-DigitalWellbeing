@@ -69,12 +69,25 @@ namespace DigitalWellbeingService.NET4._6
             }
             catch { return; }
 
-            UpdateTimeEntry(proc);
-            
-            // Session / Interval Tracking
-            string programName = ""; 
-            try { programName = ForegroundWindowManager.GetActiveProgramName(proc); } catch {}
+            // Calculate Program Name (Window Title)
+            string programName = "";
+            try 
+            { 
+                string rawTitle = ForegroundWindowManager.GetWindowTitle(handle);
+                // Fallback to Product Name if Title is empty
+                if (string.IsNullOrWhiteSpace(rawTitle))
+                {
+                    programName = ForegroundWindowManager.GetActiveProgramName(proc);
+                }
+                else
+                {
+                     programName = DigitalWellbeing.Core.Helpers.WindowTitleParser.Parse(proc.ProcessName, rawTitle);
+                }
+            } 
+            catch {}
             if (string.IsNullOrEmpty(programName)) programName = "";
+
+            UpdateTimeEntry(proc, programName);
             
             
             // Audio Tracking with Persistence (Debounce)
@@ -135,10 +148,9 @@ namespace DigitalWellbeingService.NET4._6
             return validApps;
         }
 
-        private void UpdateTimeEntry(Process proc)
+        private void UpdateTimeEntry(Process proc, string programName)
         {
             string processName = "";
-            string programName = "";
 
             try
             {
@@ -158,11 +170,12 @@ namespace DigitalWellbeingService.NET4._6
             else
             {
                 // New entry
-                try
-                {
-                    programName = ForegroundWindowManager.GetActiveProgramName(proc);
-                } 
-                catch {}
+                // Program Name is passed in
+                // try
+                // {
+                //     programName = ForegroundWindowManager.GetActiveProgramName(proc);
+                // } 
+                // catch {}
                 
                 // Fallback / Cleanup
                 if (string.IsNullOrEmpty(programName)) programName = "";

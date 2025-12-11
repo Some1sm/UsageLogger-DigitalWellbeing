@@ -12,6 +12,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using DigitalWellbeing.Core;
+using DigitalWellbeing.Core.Data;
+using LiveChartsCore.Defaults;
+using LiveChartsCore.Drawing;
 
 namespace DigitalWellbeingWinUI3.ViewModels
 {
@@ -45,6 +49,13 @@ namespace DigitalWellbeingWinUI3.ViewModels
             set { if (_chartSeries != value) { _chartSeries = value; OnPropertyChanged(); } }
         }
 
+        private ObservableCollection<ISeries> _heatMapSeries;
+        public ObservableCollection<ISeries> HeatMapSeries
+        {
+            get => _heatMapSeries;
+            set { if (_heatMapSeries != value) { _heatMapSeries = value; OnPropertyChanged(); } }
+        }
+
         private bool _isLoading;
         public bool IsLoading
         {
@@ -72,16 +83,22 @@ namespace DigitalWellbeingWinUI3.ViewModels
             Debug.WriteLine($"[HistoryViewModel] Generating Chart for {StartDate.Date.ToShortDateString()} - {EndDate.Date.ToShortDateString()}");
             try
             {
-                List<AppUsage> allUsage = await LoadDataForDateRange(StartDate.Date, EndDate.Date);
-                Debug.WriteLine($"[HistoryViewModel] Loaded {allUsage.Count} usage records.");
+                List<AppSession> allSessions = await LoadSessionsForDateRange(StartDate.Date, EndDate.Date);
+                Debug.WriteLine($"[HistoryViewModel] Loaded {allSessions.Count} sessions.");
+
+                // Generate Heatmap
+                GenerateHeatMap(allSessions);
+
+                // Aggregate for Pie Charts
+                List<AppUsage> aggregatedUsage = AggregateSessions(allSessions);
 
                 if (IsTagView)
                 {
-                    GenerateTagChart(allUsage);
+                    GenerateTagChart(aggregatedUsage);
                 }
                 else
                 {
-                    GenerateAppChart(allUsage);
+                    GenerateAppChart(aggregatedUsage);
                 }
             }
             catch (Exception ex) 
@@ -94,15 +111,105 @@ namespace DigitalWellbeingWinUI3.ViewModels
             }
         }
 
-        private async Task<List<AppUsage>> LoadDataForDateRange(DateTime start, DateTime end)
+        private async Task<List<AppSession>> LoadSessionsForDateRange(DateTime start, DateTime end)
         {
-            List<AppUsage> total = new List<AppUsage>();
-            for (DateTime date = start; date <= end; date = date.AddDays(1))
+            return await Task.Run(() =>
             {
-                var daily = await AppUsageViewModel.GetData(date);
-                total.AddRange(daily);
+                List<AppSession> total = new List<AppSession>();
+                string folder = ApplicationPath.UsageLogsFolder;
+                var repo = new AppSessionRepository(folder);
+
+                for (DateTime date = start; date <= end; date = date.AddDays(1))
+                {
+                    var sessions = repo.GetSessionsForDate(date);
+                    total.AddRange(sessions);
+                }
+                return total;
+            });
+        }
+
+        private List<AppUsage> AggregateSessions(List<AppSession> sessions)
+        {
+             var usageMap = new Dictionary<string, AppUsage>();
+             
+             foreach (var session in sessions)
+             {
+                 if (!usageMap.ContainsKey(session.ProcessName))
+                 {
+                     usageMap[session.ProcessName] = new AppUsage(session.ProcessName, session.ProgramName, TimeSpan.Zero);
+                 }
+                 
+                 usageMap[session.ProcessName].Duration = usageMap[session.ProcessName].Duration.Add(session.Duration);
+                 
+                 if (string.IsNullOrEmpty(usageMap[session.ProcessName].ProgramName) && !string.IsNullOrEmpty(session.ProgramName))
+                 {
+                     usageMap[session.ProcessName].ProgramName = session.ProgramName;
+                 }
+             }
+             return usageMap.Values.ToList();
+        }
+
+        private void GenerateHeatMap(List<AppSession> sessions)
+        {
+            // Grid: 7 Days (0-6) x 24 Hours (0-23)
+            // Y Axis: Days. X Axis: Hours.
+            double[,] grid = new double[7, 24];
+            
+            // Map DayOfWeek (Sun=0...Sat=6) which matches standard Grid (0-6).
+            // Y Axis: 0 (Top) -> Sun, 6 (Bottom) -> Sat? Or reversed?
+            // Heatmap coordinate (x, y) = (hour, day).
+
+            foreach (var s in sessions)
+            {
+                if (AppUsageViewModel.IsProcessExcluded(s.ProcessName)) continue;
+                
+                DateTime t = s.StartTime;
+                while (t < s.EndTime)
+                {
+                    int day = (int)t.DayOfWeek; // 0=Sun, 6=Sat
+                    int hour = t.Hour; // 0-23
+                    
+                    DateTime slotEnd = t.Date.AddHours(hour + 1);
+                    DateTime actualEnd = (s.EndTime < slotEnd) ? s.EndTime : slotEnd;
+                    
+                    double minutes = (actualEnd - t).TotalMinutes;
+                    if (minutes > 0)
+                    {
+                        grid[day, hour] += minutes;
+                    }
+                    
+                    t = actualEnd;
+                    if (t >= s.EndTime) break;
+                }
             }
-            return total;
+
+            var weightedPoints = new ObservableCollection<WeightedPoint>();
+            // Flatten grid
+            for (int d = 0; d < 7; d++)
+            {
+                for (int h = 0; h < 24; h++)
+                {
+                    double val = grid[d, h];
+                    // Always add point to fill grid structure
+                    weightedPoints.Add(new WeightedPoint(h, d, (int)val));
+                }
+            }
+            
+            // Create HeatSeries
+            var series = new HeatSeries<WeightedPoint>
+            {
+                Values = weightedPoints,
+                Name = "Activity",
+                HeatMap = new []
+                {
+                    new LvcColor(240, 248, 255), // AliceBlue
+                    new LvcColor(100, 149, 237), // CornflowerBlue
+                    new LvcColor(0, 0, 255),     // Blue
+                    new LvcColor(0, 0, 139)      // DarkBlue
+                }
+            };
+
+            HeatMapSeries = new ObservableCollection<ISeries> { series };
         }
 
         private void GenerateTagChart(List<AppUsage> usage)

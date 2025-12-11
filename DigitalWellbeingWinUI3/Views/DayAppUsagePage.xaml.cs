@@ -323,5 +323,20 @@ namespace DigitalWellbeingWinUI3.Views
                 }
             }
         }
+
+        public Microsoft.UI.Xaml.Media.Brush GetTrendBrush(bool isGood)
+        {
+            // Green for Good (Usage Down), Red for Bad (Usage Up)
+            if (isGood)
+            {
+                // Hex: #00CC6A
+                return new Microsoft.UI.Xaml.Media.SolidColorBrush(Windows.UI.Color.FromArgb(255, 0, 204, 106));
+            }
+            else
+            {
+                // Hex: #FF4D4F
+                return new Microsoft.UI.Xaml.Media.SolidColorBrush(Windows.UI.Color.FromArgb(255, 255, 77, 79));
+            }
+        }
     }
 }

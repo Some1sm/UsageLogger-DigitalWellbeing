@@ -30,7 +30,7 @@
         <NavigationView x:Name="NavView" Grid.Row="1" Loaded="NavView_Loaded" ItemInvoked="NavView_ItemInvoked">
             <NavigationView.MenuItems>
                 <NavigationViewItem Icon="Home" Content="Dashboard" Tag="Dashboard" />
-                <NavigationViewItem Icon="Calendar" Content="History" Tag="History" />
+                <NavigationViewItem Icon="Calendar" Content="Distribution Analysis" Tag="History" />
                 <NavigationViewItem Icon="List" Content="Detailed Usage" Tag="Sessions" />
             </NavigationView.MenuItems>
 
