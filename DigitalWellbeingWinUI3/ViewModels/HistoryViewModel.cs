@@ -202,10 +202,10 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 Name = "Activity",
                 HeatMap = new []
                 {
-                    new LvcColor(240, 248, 255), // AliceBlue
-                    new LvcColor(100, 149, 237), // CornflowerBlue
-                    new LvcColor(0, 0, 255),     // Blue
-                    new LvcColor(0, 0, 139)      // DarkBlue
+                    new LvcColor(32, 32, 32),    // Dark Gray (Background-ish)
+                    new LvcColor(0, 50, 100),    // Dark Blue
+                    new LvcColor(0, 120, 215),   // System Accent Blue-ish
+                    new LvcColor(100, 200, 255)  // Light Blue / Cyan (High Intensity)
                 }
             };
 

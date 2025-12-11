@@ -31,7 +31,21 @@ namespace DigitalWellbeingWinUI3.Models
                 if (brush != null)
                 {
                     var c = brush.Color;
-                    return new SolidColorBrush(Windows.UI.Color.FromArgb(51, c.R, c.G, c.B)); // ~20% Opacity (51/255)
+                    return new SolidColorBrush(Windows.UI.Color.FromArgb(25, c.R, c.G, c.B)); // ~10% Opacity (Card BG - Less Saturated)
+                }
+                return new SolidColorBrush(Windows.UI.Color.FromArgb(0, 0, 0, 0));
+            } 
+        }
+
+        public Brush BrushAppTagInnerBg 
+        { 
+            get 
+            {
+                var brush = AppTagHelper.GetTagColor(this._AppTag) as SolidColorBrush;
+                if (brush != null)
+                {
+                    var c = brush.Color;
+                    return new SolidColorBrush(Windows.UI.Color.FromArgb(128, c.R, c.G, c.B)); // ~50% Opacity (Tag BG)
                 }
                 return new SolidColorBrush(Windows.UI.Color.FromArgb(0, 0, 0, 0));
             } 
@@ -82,6 +96,7 @@ namespace DigitalWellbeingWinUI3.Models
             OnPropertyChanged(nameof(StrAppTag));
             OnPropertyChanged(nameof(BrushAppTag));
             OnPropertyChanged(nameof(BrushAppTagBg));
+            OnPropertyChanged(nameof(BrushAppTagInnerBg));
             
             // Refresh Icon if needed?
         }

@@ -713,12 +713,12 @@ namespace DigitalWellbeingWinUI3.ViewModels
                     if (pct > 0)
                     {
                         percentage = $"↑ {Math.Abs((int)pct)}%";
-                        isGood = false; // Usage UP is "Bad" generally for Wellbeing
+                        isGood = true; // User requested: Green (Good) when usage goes UP
                     }
                     else
                     {
                         percentage = $"↓ {Math.Abs((int)pct)}%";
-                        isGood = true; // Usage DOWN is "Good"
+                        isGood = false; // User requested: Red (Bad) when usage goes DOWN
                     }
                 }
 
