@@ -87,7 +87,7 @@ namespace DigitalWellbeingWinUI3.Helpers
                         new CustomAppTag(2, "Education", "#FFA500"),
                         new CustomAppTag(3, "Entertainment", "#9370DB"),
                         new CustomAppTag(4, "Social", "#FF1493"),
-                        new CustomAppTag(5, "Utility", "#808080"),
+                        new CustomAppTag(5, "Utility", "#00FF3A"),
                         new CustomAppTag(6, "Game", "#DC143C")
                     };
                     Save();
