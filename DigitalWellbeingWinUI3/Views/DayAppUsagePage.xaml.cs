@@ -110,30 +110,7 @@ namespace DigitalWellbeingWinUI3.Views
             }
         }
 
-        private void AppListGridView_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            if (AppListGridView.ItemsPanelRoot is ItemsWrapGrid wrapGrid)
-            {
-                // MANUAL RESPONSIVE LAYOUT:
-                // GridView's default UniformGrid doesn't always stretch items efficiently.
-                // We manually calculate the ItemWidth to ensure cards fill the ENTIRE available width, avoiding "Right Gaps".
-                
-                double availableWidth = e.NewSize.Width;
-                double minItemWidth = 400; // Minimum width before creating a new column
 
-                // Calculate number of columns
-                int columns = (int)Math.Floor(availableWidth / minItemWidth);
-                if (columns < 1) columns = 1;
-
-                // Set ItemWidth to fill space (minus a tiny margin for safety)
-                // Note: The GridViewItem Margin (0,0,10,10) is handled inside the ItemContainer or Template
-                // ItemsWrapGrid.ItemWidth defines the CELL size.
-                double newWidth = (availableWidth / columns);
-                
-                // Subtracting 1px to avoid rounding errors causing a wrap
-                wrapGrid.ItemWidth = newWidth - 0.5;
-            }
-        }
 
         private void BtnPrev_Click(object sender, RoutedEventArgs e)
         {

@@ -6,14 +6,90 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
+    <Page.Resources>
+        <DataTemplate x:Key="AppUsageItemTemplate">
+            <Border CornerRadius="12" Background="{Binding BrushAppTagBg}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="0" Margin="0,0,10,10">
+                <Border.ContextFlyout>
+                    <MenuFlyout Opening="MenuFlyout_Opening">
+                        <MenuFlyoutItem Text="Set Time Limit" Icon="Clock" Click="MenuFlyoutItem_SetTimeLimit_Click" Tag="{Binding ProcessName}"/>
+                        <MenuFlyoutSubItem Text="Set Category" Icon="Tag">
+                        </MenuFlyoutSubItem>
+                        <MenuFlyoutSeparator/>
+                        <MenuFlyoutItem Text="Exclude App" Icon="Delete" Click="MenuFlyoutItem_ExcludeApp_Click" Tag="{Binding ProcessName}"/>
+                    </MenuFlyout>
+                </Border.ContextFlyout>
+                
+                <StackPanel>
+                    <Grid Height="60" Padding="15,0" RightTapped="Grid_RightTapped" Background="Transparent" ToolTipService.ToolTip="Click to expand details">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Toggle Button (Invisible but clickable overlay) -->
+                        <Button Background="Transparent" BorderThickness="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.ColumnSpan="4" Command="{Binding ToggleExpandCommand}" Margin="-15,0"/>
+
+                        <!-- Icon -->
+                        <Image Source="{Binding IconSource}" Width="32" Height="32" VerticalAlignment="Center" Margin="0,0,15,0" IsHitTestVisible="False"/>
+
+                        <!-- Name & Tag -->
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center" IsHitTestVisible="False">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                <TextBlock Text="{Binding ProcessName}" FontWeight="SemiBold" FontSize="15" Margin="0,0,10,0"/>
+                                <Grid VerticalAlignment="Center" CornerRadius="8">
+                                    <Border Background="{Binding BrushAppTagInnerBg}" CornerRadius="8"/>
+                                    <Border Padding="8,2" BorderBrush="{Binding BrushAppTag}" BorderThickness="0">
+                                        <TextBlock Text="{Binding StrAppTag}" Foreground="White" FontSize="11" FontWeight="Bold"/>
+                                    </Border>
+                                </Grid>
+                            </StackPanel>
+                            
+                            <ProgressBar Value="{Binding Percentage}" Maximum="100" Height="4" CornerRadius="2" HorizontalAlignment="Stretch" Margin="0,0,10,0"/>
+                        </StackPanel>
+
+                        <!-- Duration -->
+                        <TextBlock Grid.Column="2" Text="{Binding StrDuration}" VerticalAlignment="Center" HorizontalAlignment="Right" FontWeight="SemiBold" FontSize="14" Margin="10,0,10,0" IsHitTestVisible="False"/>
+                        
+                        <!-- Expand Chevron -->
+                        <FontIcon Grid.Column="3" Glyph="&#xE70D;" FontSize="12" Opacity="0.5" VerticalAlignment="Center" IsHitTestVisible="False" Visibility="{Binding HasChildren, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <FontIcon.RenderTransform>
+                                <RotateTransform Angle="{Binding ChevronRotation}" CenterX="6" CenterY="6"/>
+                            </FontIcon.RenderTransform>
+                        </FontIcon>
+                    </Grid>
+
+                    <!-- Accordion Body -->
+                    <ItemsControl ItemsSource="{Binding Children}" Visibility="{Binding IsExpanded, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Padding="60,8,15,8" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="0,1,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="80"/>
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                                            <FontIcon Glyph="&#xE774;" FontSize="12" Opacity="0.5"/> 
+                                            <TextBlock Text="{Binding Title}" FontSize="13" TextTrimming="CharacterEllipsis"/>
+                                    </StackPanel>
+
+                                    <ProgressBar Grid.Column="1" Value="{Binding Percentage}" Maximum="100" Height="3" CornerRadius="1.5" VerticalAlignment="Center" Opacity="0.6"/>
+                                    
+                                    <TextBlock Grid.Column="2" Text="{Binding StrDuration}" FontSize="12" Opacity="0.7" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+    </Page.Resources>
+
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <Grid Padding="20">
-            <!-- 
-                 CRITICAL LAYOUT ARCHITECTURE:
-                 1. Full Page Scroll: The root ScrollViewer handles scrolling for the entire page.
-                 2. GridView Scrolling Disabled: The inner GridView must have VerticalScrollMode="Disabled" to avoid dual scrollbars and allow it to expand fully.
-                 3. Chart Row vs List Row: By sharing the same ScrollViewer, both rows align perfectly in width.
-            -->
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -84,89 +160,41 @@
                 </Border>
             </Grid>
 
-            <!-- ROW 2: APP LIST (Was Row 3) -->
-            <ItemsControl Grid.Row="2" x:Name="AppListGridView" ItemsSource="{x:Bind ViewModel.DayListItems, Mode=OneWay}" Margin="0,10,0,0">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Spacing="10"/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Border CornerRadius="12" Background="{Binding BrushAppTagBg}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="0">
-                            <Border.ContextFlyout>
-                                <MenuFlyout Opening="MenuFlyout_Opening">
-                                    <MenuFlyoutItem Text="Set Time Limit" Icon="Clock" Click="MenuFlyoutItem_SetTimeLimit_Click" Tag="{Binding ProcessName}"/>
-                                    <MenuFlyoutSubItem Text="Set Category" Icon="Tag">
-                                    </MenuFlyoutSubItem>
-                                    <MenuFlyoutSeparator/>
-                                    <MenuFlyoutItem Text="Exclude App" Icon="Delete" Click="MenuFlyoutItem_ExcludeApp_Click" Tag="{Binding ProcessName}"/>
-                                </MenuFlyout>
-                            </Border.ContextFlyout>
-                            
-                            <StackPanel>
-                                <Grid Height="60" Padding="15,0" RightTapped="Grid_RightTapped" Background="Transparent" ToolTipService.ToolTip="Click to expand details">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    
-                                    <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Opacity="0" Grid.ColumnSpan="4" Command="{Binding ToggleExpandCommand}"/>
+            <!-- ROW 2: APP LIST (Masonry 3 Columns) -->
+            <Grid Grid.Row="2" Margin="0,10,0,0" ColumnSpacing="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-                                    <Image Source="{Binding IconSource}" Width="32" Height="32" Margin="0,0,15,0" VerticalAlignment="Center" IsHitTestVisible="False"/>
+                <!-- Column 1 -->
+                <ItemsControl Grid.Column="0" ItemsSource="{x:Bind ViewModel.Column1Items, Mode=OneWay}" ItemTemplate="{StaticResource AppUsageItemTemplate}">
+                     <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Spacing="0"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
 
-                                    <StackPanel Grid.Column="1" VerticalAlignment="Center" IsHitTestVisible="False">
-                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
-                                            <TextBlock Text="{Binding ProcessName}" FontWeight="SemiBold" FontSize="15" Margin="0,0,10,0"/>
-                                            <Grid VerticalAlignment="Center" CornerRadius="8">
-                                                <Border Background="{Binding BrushAppTagInnerBg}" CornerRadius="8"/>
-                                                <Border Padding="8,2" BorderBrush="{Binding BrushAppTag}" BorderThickness="0">
-                                                    <TextBlock Text="{Binding StrAppTag}" Foreground="White" FontSize="11" FontWeight="Bold"/>
-                                                </Border>
-                                            </Grid>
-                                        </StackPanel>
-                                        
-                                        <ProgressBar Value="{Binding Percentage}" Maximum="100" Height="4" CornerRadius="2" HorizontalAlignment="Stretch" Margin="0,0,10,0"/>
-                                    </StackPanel>
+                <!-- Column 2 -->
+                <ItemsControl Grid.Column="1" ItemsSource="{x:Bind ViewModel.Column2Items, Mode=OneWay}" ItemTemplate="{StaticResource AppUsageItemTemplate}">
+                     <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Spacing="0"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
 
-                                    <TextBlock Grid.Column="2" Text="{Binding StrDuration}" VerticalAlignment="Center" HorizontalAlignment="Right" FontWeight="SemiBold" FontSize="14" Margin="10,0,10,0" IsHitTestVisible="False"/>
-                                    
-                                    <FontIcon Grid.Column="3" Glyph="&#xE70D;" FontSize="12" Opacity="0.5" VerticalAlignment="Center" IsHitTestVisible="False">
-                                        <FontIcon.RenderTransform>
-                                            <RotateTransform Angle="{Binding ChevronRotation}" CenterX="6" CenterY="6"/>
-                                        </FontIcon.RenderTransform>
-                                    </FontIcon>
-                                </Grid>
-
-                                <ItemsControl ItemsSource="{Binding Children}" Visibility="{Binding IsExpanded, Converter={StaticResource BoolToVisibilityConverter}}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Grid Padding="60,8,15,8" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="0,1,0,0">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*"/>
-                                                    <ColumnDefinition Width="100"/>
-                                                    <ColumnDefinition Width="80"/>
-                                                </Grid.ColumnDefinitions>
-                                                
-                                                <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
-                                                     <FontIcon Glyph="&#xE774;" FontSize="12" Opacity="0.5"/> 
-                                                     <TextBlock Text="{Binding Title}" FontSize="13" TextTrimming="CharacterEllipsis"/>
-                                                </StackPanel>
-
-                                                <ProgressBar Grid.Column="1" Value="{Binding Percentage}" Maximum="100" Height="3" CornerRadius="1.5" VerticalAlignment="Center" Opacity="0.6"/>
-                                                
-                                                <TextBlock Grid.Column="2" Text="{Binding StrDuration}" FontSize="12" Opacity="0.7" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-                                            </Grid>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </StackPanel>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                <!-- Column 3 -->
+                <ItemsControl Grid.Column="2" ItemsSource="{x:Bind ViewModel.Column3Items, Mode=OneWay}" ItemTemplate="{StaticResource AppUsageItemTemplate}">
+                     <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Spacing="0"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </Grid>
         </Grid>
     </ScrollViewer>
 </Page>

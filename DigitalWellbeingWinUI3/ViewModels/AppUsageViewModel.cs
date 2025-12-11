@@ -82,6 +82,9 @@ namespace DigitalWellbeingWinUI3.ViewModels
 
         public ObservableCollection<ISeries> DayPieChartSeries { get; set; }
         public ObservableCollection<AppUsageListItem> DayListItems { get; set; }
+        public ObservableCollection<AppUsageListItem> Column1Items { get; set; } = new ObservableCollection<AppUsageListItem>();
+        public ObservableCollection<AppUsageListItem> Column2Items { get; set; } = new ObservableCollection<AppUsageListItem>();
+        public ObservableCollection<AppUsageListItem> Column3Items { get; set; } = new ObservableCollection<AppUsageListItem>();
         public ObservableCollection<ISeries> TagsChartSeries { get; set; }
         
         public DateTime[] WeeklyChartLabelDates { get; set; }
@@ -121,6 +124,8 @@ namespace DigitalWellbeingWinUI3.ViewModels
         public bool IsWeeklyDataLoaded = false;
         
         public ICommand ChartClickCommand { get; set; }
+
+
         #endregion
 
         private Windows.UI.ViewManagement.UISettings uiSettings;
@@ -555,8 +560,30 @@ namespace DigitalWellbeingWinUI3.ViewModels
                     DayPieChartSeries.Clear();
                     foreach(var s in pieSeriesList) DayPieChartSeries.Add(s);
 
+                    // Distribute into 3 Columns for Masonry Layout
+                    var col1 = new List<AppUsageListItem>();
+                    var col2 = new List<AppUsageListItem>();
+                    var col3 = new List<AppUsageListItem>();
+
+                    for (int i = 0; i < listItems.Count; i++)
+                    {
+                        int colIndex = i % 3;
+                        if (colIndex == 0) col1.Add(listItems[i]);
+                        else if (colIndex == 1) col2.Add(listItems[i]);
+                        else col3.Add(listItems[i]);
+                    }
+
                     DayListItems.Clear();
                     foreach(var i in listItems) DayListItems.Add(i);
+
+                    Column1Items.Clear();
+                    foreach (var i in col1) Column1Items.Add(i);
+
+                    Column2Items.Clear();
+                    foreach (var i in col2) Column2Items.Add(i);
+
+                    Column3Items.Clear();
+                    foreach (var i in col3) Column3Items.Add(i);
 
                     RefreshTagChart(filteredUsageList);
 

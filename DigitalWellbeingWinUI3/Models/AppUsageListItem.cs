@@ -53,6 +53,8 @@ namespace DigitalWellbeingWinUI3.Models
 
         public ObservableCollection<AppUsageSubItem> Children { get; set; } = new ObservableCollection<AppUsageSubItem>();
         
+        public bool HasChildren => Children != null && Children.Count > 0;
+
         private bool _isExpanded;
         public bool IsExpanded
         {
