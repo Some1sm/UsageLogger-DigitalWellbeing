@@ -15,16 +15,23 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using DigitalWellbeingWinUI3.Helpers;
 using DigitalWellbeingWinUI3.Views;
+using System.Windows.Input;
 
 namespace DigitalWellbeingWinUI3
 {
     public sealed partial class MainWindow : Window
     {
+        public ICommand OpenCommand { get; private set; }
+        public ICommand SettingsCommand { get; private set; }
+        public ICommand ExitCommand { get; private set; }
+
         public MainWindow()
         {
             this.InitializeComponent();
             Title = "Digital Wellbeing";
             
+            InitializeCommands();
+
             // Apply Theme
             try
             {
@@ -46,6 +53,26 @@ namespace DigitalWellbeingWinUI3
             SetTitleBar(AppTitleBar);
 
             this.Activated += MainWindow_Activated;
+        }
+
+        private void InitializeCommands()
+        {
+            OpenCommand = new RelayCommand((param) => 
+            {
+                RestoreWindow();
+            });
+
+            SettingsCommand = new RelayCommand((param) => 
+            {
+                RestoreWindow();
+                NavigateToSettings();
+            });
+
+            ExitCommand = new RelayCommand((param) => 
+            {
+                ForceClose();
+                Application.Current.Exit();
+            });
         }
 
         private async void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
@@ -125,7 +152,7 @@ namespace DigitalWellbeingWinUI3
             m_AppWindow.Closing += M_AppWindow_Closing;
 
             // Init Notifier
-            Helpers.Notifier.Init(TrayIcon);
+            Helpers.Notifier.Init(this, TrayIcon);
             Helpers.Notifier.InitNotifierTimer();
         }
 
@@ -197,6 +224,33 @@ namespace DigitalWellbeingWinUI3
                  }
              });
         }
+
+        private void TrayIcon_DoubleTapped(object sender, Microsoft.UI.Xaml.Input.DoubleTappedRoutedEventArgs e)
+        {
+            LogDebug("TrayIcon_DoubleTapped");
+            RestoreWindow();
+        }
+
+        private void Open_Click(object sender, RoutedEventArgs e)
+        {
+            LogDebug("Open_Click");
+            RestoreWindow();
+        }
+
+        private void Settings_Click(object sender, RoutedEventArgs e)
+        {
+            LogDebug("Settings_Click");
+            RestoreWindow();
+            NavigateToSettings();
+        }
+
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
+            LogDebug("Exit_Click");
+            ForceClose();
+            Application.Current.Exit();
+        }
+
         #endregion
     }
 

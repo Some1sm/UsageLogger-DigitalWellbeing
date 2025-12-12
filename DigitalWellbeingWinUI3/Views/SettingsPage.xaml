@@ -61,6 +61,22 @@
 
             <!-- Usage Data -->
             <TextBlock Text="Usage Data" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,10,0,5"/>
+
+            <!-- Incognito Mode -->
+            <Grid Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Spacing="2">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xE72E;" FontFamily="Segoe MDL2 Assets" FontSize="16"/>
+                        <TextBlock Text="Incognito Mode" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                    </StackPanel>
+                    <TextBlock Text="Do not record window titles (e.g. YouTube video names)." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                </StackPanel>
+                <ToggleSwitch x:Name="ToggleIncognitoMode" Grid.Column="1" Toggled="ToggleIncognitoMode_Toggled"/>
+            </Grid>
             
             <!-- Excluded Apps -->
             <Grid Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">

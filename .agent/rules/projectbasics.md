@@ -91,3 +91,5 @@ Build all projects in Release configuration.
 Package the application into a zip.
 Embed the zip into the Installer.
 Generate DigitalWellbeing_Installer.exe in the root directory.
+
+Once the build is done delete all temporary logs/files created to troubleshoot in the workspace.

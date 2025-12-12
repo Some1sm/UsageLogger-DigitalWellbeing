@@ -61,6 +61,9 @@ namespace DigitalWellbeingWinUI3.Views
 
             // Minimize on Exit
             ToggleMinimizeOnExit.IsOn = UserPreferences.MinimizeOnExit;
+            
+            // Incognito
+            ToggleIncognitoMode.IsOn = UserPreferences.IncognitoMode;
 
             // Usage Data
             LoadExcludedProcessItems();
@@ -129,6 +132,11 @@ namespace DigitalWellbeingWinUI3.Views
              MarkDirty();
         }
 
+        private void ToggleIncognitoMode_Toggled(object sender, RoutedEventArgs e)
+        {
+            MarkDirty();
+        }
+
         private void ExcludedAppList_DoubleTapped(object sender, Microsoft.UI.Xaml.Input.DoubleTappedRoutedEventArgs e)
         {
             if (ExcludedAppList.SelectedItem != null)
@@ -165,6 +173,7 @@ namespace DigitalWellbeingWinUI3.Views
             UserPreferences.TimelineMergeThresholdSeconds = (int)TimelineThresholdTextBox.Value;
             
             UserPreferences.MinimizeOnExit = ToggleMinimizeOnExit.IsOn;
+            UserPreferences.IncognitoMode = ToggleIncognitoMode.IsOn;
             UserPreferences.EnableAutoRefresh = EnableAutoRefresh.IsOn;
             UserPreferences.RefreshIntervalSeconds = (int)RefreshInterval.Value;
 

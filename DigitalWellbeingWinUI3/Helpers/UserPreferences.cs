@@ -22,6 +22,7 @@ namespace DigitalWellbeingWinUI3.Helpers
         public static bool MinimizeOnExit { get; set; } = true;
         public static Dictionary<string, int> AppTimeLimits { get; set; } = new Dictionary<string, int>();
         public static List<CustomAppTag> CustomTags { get; set; } = new List<CustomAppTag>();
+        public static bool IncognitoMode { get; set; } = false;
 
         static UserPreferences()
         {
@@ -44,7 +45,8 @@ namespace DigitalWellbeingWinUI3.Helpers
                     ThemeMode,
                     MinimizeOnExit,
                     AppTimeLimits,
-                    CustomTags
+                    CustomTags,
+                    IncognitoMode
                 };
 
                 string json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
@@ -74,6 +76,7 @@ namespace DigitalWellbeingWinUI3.Helpers
                     if (data.TryGetProperty(nameof(MinimizeOnExit), out prop)) MinimizeOnExit = prop.GetBoolean();
                     if (data.TryGetProperty(nameof(AppTimeLimits), out prop)) AppTimeLimits = JsonSerializer.Deserialize<Dictionary<string, int>>(prop.GetRawText()) ?? new Dictionary<string, int>();
                     if (data.TryGetProperty(nameof(CustomTags), out prop)) CustomTags = JsonSerializer.Deserialize<List<CustomAppTag>>(prop.GetRawText()) ?? new List<CustomAppTag>();
+                    if (data.TryGetProperty(nameof(IncognitoMode), out prop)) IncognitoMode = prop.GetBoolean();
                 }
 
                 // Default Initialization

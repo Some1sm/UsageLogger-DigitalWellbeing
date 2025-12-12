@@ -69,22 +69,35 @@ namespace DigitalWellbeingService.NET4._6
             }
             catch { return; }
 
+            CheckIncognitoSettings(); // Poll settings
+
             // Calculate Program Name (Window Title)
             string programName = "";
-            try 
-            { 
-                string rawTitle = ForegroundWindowManager.GetWindowTitle(handle);
-                // Fallback to Product Name if Title is empty
-                if (string.IsNullOrWhiteSpace(rawTitle))
-                {
-                    programName = ForegroundWindowManager.GetActiveProgramName(proc);
-                }
-                else
-                {
-                     programName = DigitalWellbeing.Core.Helpers.WindowTitleParser.Parse(proc.ProcessName, rawTitle);
-                }
-            } 
-            catch {}
+            
+            if (_incognitoMode)
+            {
+                // In Incognito, we SKIP window title parsing.
+                // ProgramName becomes the ProcessName (or pretty version)
+                programName = proc.ProcessName; 
+            }
+            else
+            {
+                try 
+                { 
+                    string rawTitle = ForegroundWindowManager.GetWindowTitle(handle);
+                    // Fallback to Product Name if Title is empty
+                    if (string.IsNullOrWhiteSpace(rawTitle))
+                    {
+                        programName = ForegroundWindowManager.GetActiveProgramName(proc);
+                    }
+                    else
+                    {
+                        programName = DigitalWellbeing.Core.Helpers.WindowTitleParser.Parse(proc.ProcessName, rawTitle);
+                    }
+                } 
+                catch {}
+            }
+            
             if (string.IsNullOrEmpty(programName)) programName = "";
 
             UpdateTimeEntry(proc, programName);
@@ -170,13 +183,6 @@ namespace DigitalWellbeingService.NET4._6
             else
             {
                 // New entry
-                // Program Name is passed in
-                // try
-                // {
-                //     programName = ForegroundWindowManager.GetActiveProgramName(proc);
-                // } 
-                // catch {}
-                
                 // Fallback / Cleanup
                 if (string.IsNullOrEmpty(programName)) programName = "";
 
@@ -231,5 +237,45 @@ namespace DigitalWellbeingService.NET4._6
             FlushBuffer();
             _sessionManager.SaveOnExit();
         }
+
+        #region Incognito Mode
+        private bool _incognitoMode = false;
+        private DateTime _lastSettingsCheck = DateTime.MinValue;
+        private readonly TimeSpan _settingsCheckInterval = TimeSpan.FromSeconds(5);
+        private string _settingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DigitalWellbeing", "user_preferences.json");
+
+        private void CheckIncognitoSettings()
+        {
+            if ((DateTime.Now - _lastSettingsCheck) < _settingsCheckInterval) return;
+
+            _lastSettingsCheck = DateTime.Now;
+            try
+            {
+                if (File.Exists(_settingsPath))
+                {
+                    // Quick read - we only need one property
+                    // Using basic string contains for speed/robustness without full JSON deps if problematic,
+                    // but we are in .NET 8 so simple string parsing is fine or full JSON.
+                    // Let's use string parsing to minimize allocation/locking issues on the file.
+                    string json = "";
+                    using (var fs = new FileStream(_settingsPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                    using (var sr = new StreamReader(fs))
+                    {
+                        json = sr.ReadToEnd();
+                    }
+
+                    if (json.Contains("\"IncognitoMode\": true"))
+                    {
+                        _incognitoMode = true;
+                    }
+                    else
+                    {
+                        _incognitoMode = false;
+                    }
+                }
+            }
+            catch { }
+        }
+        #endregion
     }
 }

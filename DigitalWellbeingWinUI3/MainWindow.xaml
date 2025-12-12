@@ -26,7 +26,16 @@
             </StackPanel>
         </Grid>
 
-        <tb:TaskbarIcon x:Name="TrayIcon" />
+        <tb:TaskbarIcon x:Name="TrayIcon" DoubleClickCommand="{x:Bind OpenCommand}" ToolTipText="Digital Wellbeing">
+            <tb:TaskbarIcon.ContextFlyout>
+                <MenuFlyout>
+                    <MenuFlyoutItem Text="Open" Command="{x:Bind OpenCommand}" />
+                    <MenuFlyoutItem Text="Settings" Command="{x:Bind SettingsCommand}" />
+                    <MenuFlyoutSeparator />
+                    <MenuFlyoutItem Text="Exit" Command="{x:Bind ExitCommand}" />
+                </MenuFlyout>
+            </tb:TaskbarIcon.ContextFlyout>
+        </tb:TaskbarIcon>
         <NavigationView x:Name="NavView" Grid.Row="1" Loaded="NavView_Loaded" ItemInvoked="NavView_ItemInvoked">
             <NavigationView.MenuItems>
                 <NavigationViewItem Icon="Home" Content="Dashboard" Tag="Dashboard" />

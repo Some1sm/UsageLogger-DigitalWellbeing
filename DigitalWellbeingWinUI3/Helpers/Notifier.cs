@@ -2,6 +2,7 @@ using DigitalWellbeing.Core.Helpers;
 using DigitalWellbeing.Core;
 using DigitalWellbeing.Core.Models;
 using DigitalWellbeingWinUI3.ViewModels;
+using DigitalWellbeingWinUI3;
 using H.NotifyIcon;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -23,8 +24,11 @@ namespace DigitalWellbeingWinUI3.Helpers
         private static TimeSpan warningLimit = TimeSpan.FromMinutes(15);
         private static int CHECK_INTERVAL = 60; // Check every 60 seconds
 
-        public static void Init(TaskbarIcon icon)
+        private static MainWindow _mainWindow;
+
+        public static void Init(MainWindow mainWindow, TaskbarIcon icon)
         {
+            _mainWindow = mainWindow;
             TrayIcon = icon;
             
             try
@@ -40,35 +44,9 @@ namespace DigitalWellbeingWinUI3.Helpers
             {
                 // Fallback or ignore
             }
-
-            // Create Context Menu (MenuFlyout)
-            var flyout = new MenuFlyout();
             
-            var itemOpen = new MenuFlyoutItem { Text = "Open" };
-            itemOpen.Click += (s, e) => GetMainWindow()?.RestoreWindow();
-            flyout.Items.Add(itemOpen);
+            // Context Menu is now defined in XAML
 
-            var itemSettings = new MenuFlyoutItem { Text = "Settings" };
-            itemSettings.Click += (s, e) => 
-            {
-                 var w = GetMainWindow();
-                 if (w != null)
-                 {
-                     w.RestoreWindow();
-                     w.NavigateToSettings();
-                 }
-            };
-            flyout.Items.Add(itemSettings);
-
-            var itemExit = new MenuFlyoutItem { Text = "Exit" };
-            itemExit.Click += (s, e) => GetMainWindow()?.ForceClose();
-            flyout.Items.Add(itemExit);
-
-            TrayIcon.ContextFlyout = flyout;
-
-            // Double click to restore
-            TrayIcon.DoubleTapped += (s, e) => GetMainWindow()?.RestoreWindow();
-            
             // Force visibility? 
             TrayIcon.Visibility = Visibility.Visible;
         }
@@ -83,6 +61,8 @@ namespace DigitalWellbeingWinUI3.Helpers
 
         private static MainWindow GetMainWindow()
         {
+            if (_mainWindow != null) return _mainWindow;
+
             if (App.Current is App myApp && myApp.m_window is MainWindow window)
             {
                 return window;
