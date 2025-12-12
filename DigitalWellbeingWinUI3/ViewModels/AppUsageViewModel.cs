@@ -21,6 +21,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml; // For DispatcherTimer
+using Microsoft.UI.Xaml.Media;
 using LiveChartsCore.Measure;
 
 namespace DigitalWellbeingWinUI3.ViewModels
@@ -474,6 +475,10 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 try
                 {
                     List<AppUsage> filteredUsageList = appUsageList.Where(appUsageFilter).ToList();
+                    
+                    // Re-sort
+                    filteredUsageList.Sort(appUsageSorter);
+                    
                     TotalDuration = TimeSpan.Zero;
                     
                     var pieSeriesList = new ObservableCollection<ISeries>();
@@ -483,27 +488,39 @@ namespace DigitalWellbeingWinUI3.ViewModels
 
                     foreach (AppUsage app in filteredUsageList)
                     {
-                        TotalDuration = TotalDuration.Add(app.Duration);
+                        if (app.Duration.TotalSeconds > 0)
+                            TotalDuration = TotalDuration.Add(app.Duration);
                     }
 
                     foreach (AppUsage app in filteredUsageList)
                     {
-                        int percentage = (int)Math.Round(app.Duration.TotalSeconds / TotalDuration.TotalSeconds * 100);
-                        
-                        if (app.Duration > UserPreferences.MinumumDuration)
-                        {
-                            if (percentage <= MinimumPieChartPercentage)
-                            {
-                                otherProcessesTotalMinutes += app.Duration.TotalMinutes;
-                            }
-                            else
-                            {
-                                // Generate Palette
-                                var uiSettings = new Windows.UI.ViewManagement.UISettings();
-                                var accent = uiSettings.GetColorValue(Windows.UI.ViewManagement.UIColorType.Accent);
-                                var skAccent = new SKColor(accent.R, accent.G, accent.B, accent.A);
-                                var palette = GenerateMultiHuePalette(skAccent, filteredUsageList.Count);
+                        // Enforce Minimum Duration Logic explicitly
+                        if (app.Duration < UserPreferences.MinumumDuration) continue;
 
+                        double percentage = 0;
+                        if (TotalDuration.TotalSeconds > 0)
+                        {
+                            percentage = (app.Duration.TotalSeconds / TotalDuration.TotalSeconds) * 100.0;
+                        }
+
+                        // ... (Pie Chart Logic is fine, keep it) ...
+                        // Pie Chart Logic
+                        bool isOther = false;
+                        if (percentage < 1.0) isOther = true; 
+
+                        if (isOther)
+                        {
+                            otherProcessesTotalMinutes += app.Duration.TotalMinutes;
+                        }
+                        else
+                        {
+                            var uiSettings = new Windows.UI.ViewManagement.UISettings();
+                            var accent = uiSettings.GetColorValue(Windows.UI.ViewManagement.UIColorType.Accent);
+                            var skAccent = new SKColor(accent.R, accent.G, accent.B, accent.A);
+                            
+                            if (pieSeriesList.Count < 50) // Cap slices
+                            {
+                                var palette = GenerateMultiHuePalette(skAccent, filteredUsageList.Count);
                                 int index = pieSeriesList.Count; 
                                                         
                                 var series = new PieSeries<double>
@@ -516,25 +533,51 @@ namespace DigitalWellbeingWinUI3.ViewModels
                                 };
                                 pieSeriesList.Add(series);
                             }
-                            
-                            var listItem = new AppUsageListItem(app.ProcessName, app.ProgramName, app.Duration, percentage, AppTagHelper.GetAppTag(app.ProcessName));
-                            
-                            // Populate Children
-                            if (app.ProgramBreakdown != null && app.ProgramBreakdown.Count > 0)
-                            {
-                                var sortedChildren = app.ProgramBreakdown.OrderByDescending(k => k.Value).ToList();
-                                foreach (var child in sortedChildren)
-                                {
-                                    // Safety check against zero duration total
-                                    double totalSec = app.Duration.TotalSeconds > 1 ? app.Duration.TotalSeconds : 1; 
-                                    int childPct = (int)Math.Round(child.Value.TotalSeconds / totalSec * 100);
-                                    
-                                    listItem.Children.Add(new AppUsageSubItem(child.Key, child.Value, childPct, listItem.IconSource));
-                                }
-                            }
-                            
-                            listItems.Add(listItem);
                         }
+
+                        // List Logic (Always add to list if it meets min duration/validity)
+                        
+                        // Resolve Tag (Standard)
+                        AppTag resolvedTag = AppTagHelper.GetAppTag(app.ProcessName);
+                        
+                        var listItem = new AppUsageListItem(app.ProcessName, app.ProgramName, app.Duration, (int)percentage, resolvedTag);
+                        
+                        // Populate Children
+                        if (app.ProgramBreakdown != null && app.ProgramBreakdown.Count > 0)
+                        {
+                            var sortedChildren = app.ProgramBreakdown.OrderByDescending(k => k.Value).ToList();
+                            foreach (var child in sortedChildren)
+                            {
+                                // Apply same min duration filter to sub-items
+                                if (child.Value < UserPreferences.MinumumDuration) continue;
+
+                                double totalSec = app.Duration.TotalSeconds > 1 ? app.Duration.TotalSeconds : 1; 
+                                int childPct = (int)Math.Round(child.Value.TotalSeconds / totalSec * 100);
+                                
+                                // Lookup Title Tag
+                                AppTag childTag = AppTagHelper.GetTitleTag(app.ProcessName, child.Key);
+                                
+                                // Pass null for icon to keep them distinct/clean
+                                var subItem = new AppUsageSubItem(child.Key, app.ProcessName, child.Value, childPct, null, childTag);
+                                
+                                // Set Brushes
+                                if (childTag == AppTag.Untagged)
+                                {
+                                    subItem.TagIndicatorBrush = new SolidColorBrush(Microsoft.UI.Colors.Transparent);
+                                    subItem.TagTextBrush = null;
+                                }
+                                else
+                                {
+                                    var brush = AppTagHelper.GetTagColor(childTag) as SolidColorBrush;
+                                    subItem.TagIndicatorBrush = brush;
+                                    subItem.TagTextBrush = brush;
+                                }
+
+                                listItem.Children.Add(subItem);
+                            }
+                        }
+                        
+                        listItems.Add(listItem);
                     }
 
                     if (otherProcessesTotalMinutes > 0)

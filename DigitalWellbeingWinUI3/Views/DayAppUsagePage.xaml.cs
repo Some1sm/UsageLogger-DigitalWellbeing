@@ -1,4 +1,5 @@
 using DigitalWellbeingWinUI3.ViewModels;
+using DigitalWellbeingWinUI3.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
@@ -297,6 +298,72 @@ namespace DigitalWellbeingWinUI3.Views
                     // Force a full refresh which applies exclusion
                     ViewModel.LoadUserExcludedProcesses(); // Reload global exclusion list into ViewModel static
                     ViewModel.LoadWeeklyData();
+                }
+            }
+        }
+
+        public void SubItem_RightTapped(object sender, Microsoft.UI.Xaml.Input.RightTappedRoutedEventArgs e)
+        {
+            var grid = sender as Grid;
+            var subItem = grid?.DataContext as AppUsageSubItem;
+
+            if (subItem != null)
+            {
+                var flyout = new MenuFlyout();
+                var tagItem = new MenuFlyoutItem { Text = "Set Category (Tag)", Icon = new SymbolIcon(Symbol.Tag) };
+                tagItem.Click += async (s, args) => await OpenTitleTagDialog(subItem);
+                flyout.Items.Add(tagItem);
+                flyout.ShowAt(grid, e.GetPosition(grid));
+                e.Handled = true;
+            }
+        }
+
+        private async Task OpenTitleTagDialog(AppUsageSubItem item)
+        {
+            StackPanel content = new StackPanel { Spacing = 10 };
+            
+            TextBox keywordBox = new TextBox 
+            { 
+                Header = "Window Title Keyword", 
+                Text = item.Title, 
+                Description = "If the window title contains this text, it will be tagged specially." 
+            };
+            
+            ComboBox tagCombo = new ComboBox 
+            { 
+                Header = "Select Category", 
+                HorizontalAlignment = Microsoft.UI.Xaml.HorizontalAlignment.Stretch,
+                DisplayMemberPath = "Key",
+                SelectedValuePath = "Value",
+            };
+
+            var choices = DigitalWellbeingWinUI3.Helpers.AppTagHelper.GetComboBoxChoices();
+            tagCombo.ItemsSource = choices;
+            tagCombo.SelectedValue = 0;
+
+            content.Children.Add(keywordBox);
+            content.Children.Add(tagCombo);
+
+            ContentDialog dialog = new ContentDialog
+            {
+                Title = "Tag Window Title",
+                Content = content,
+                PrimaryButtonText = "Save",
+                CloseButtonText = "Cancel",
+                XamlRoot = this.XamlRoot
+            };
+
+            var result = await dialog.ShowAsync();
+
+            if (result == ContentDialogResult.Primary)
+            {
+                string keyword = keywordBox.Text.Trim();
+                if (string.IsNullOrEmpty(keyword)) return;
+                
+                if (tagCombo.SelectedValue is int tagId)
+                {
+                    DigitalWellbeingWinUI3.Helpers.AppTagHelper.UpdateTitleTag(item.ParentProcessName, keyword, tagId);
+                    ViewModel.RefreshDayView();
                 }
             }
         }

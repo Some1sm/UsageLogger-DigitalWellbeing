@@ -132,120 +132,162 @@ namespace DigitalWellbeingWinUI3.Helpers
         public static Dictionary<string, AppTag> appTags = new Dictionary<string, AppTag>();
         static string appTagsPath = folderPath + "app-tags.txt";
 
+        // Title/Keyword Tags: ProcessName|Keyword -> TagId
+        // Dictionary key format: "ProcessName|Keyword" (separator |)
+        public static Dictionary<string, int> titleTags = new Dictionary<string, int>();
+        static string titleTagsPath = folderPath + "title-tags.txt";
+
         private static async Task LoadAppTags()
         {
+            await LoadTitleTags(); // Load titles too
+
             appTags.Clear();
 
             try
             {
                 string text = await Task.Run(() => File.ReadAllText(appTagsPath));
-
+                // ... existing AppTag loading ...
                 string[] rows = text.Split('\n');
-
                 foreach (string row in rows)
                 {
                     try
                     {
                         string[] cells = row.Split('\t');
-
-                        string processName = cells[0];
-                        AppTag appTag = (AppTag)int.Parse(cells[1]);
-
-                        appTags.Add(processName, appTag);
+                        if (cells.Length >= 2)
+                        {
+                            string processName = cells[0];
+                            AppTag appTag = (AppTag)int.Parse(cells[1]);
+                            if (!appTags.ContainsKey(processName)) appTags.Add(processName, appTag);
+                        }
                     }
-                    catch (IndexOutOfRangeException)
+                    catch { }
+                }
+            }
+            catch (FileNotFoundException) { SaveAppTags(); }
+            catch (DirectoryNotFoundException) { Directory.CreateDirectory(folderPath); }
+            catch { }
+        }
+
+        private static async Task LoadTitleTags()
+        {
+            titleTags.Clear();
+            try
+            {
+                if (File.Exists(titleTagsPath))
+                {
+                    string text = await Task.Run(() => File.ReadAllText(titleTagsPath));
+                    string[] rows = text.Split('\n');
+                    foreach (string row in rows)
                     {
-                        // No indicated cells, possibly last line in txt
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex);
-                        throw;
+                        try
+                        {
+                            // Format: ProcessName \t Keyword \t TagId
+                            string[] cells = row.Split('\t');
+                            if (cells.Length >= 3)
+                            {
+                                string key = cells[0] + "|" + cells[1];
+                                int tagId = int.Parse(cells[2]);
+                                if (!titleTags.ContainsKey(key)) titleTags.Add(key, tagId);
+                            }
+                        }
+                        catch { }
                     }
                 }
             }
-            catch (FileNotFoundException)
-            {
-                // AppLogger.WriteLine($"CANNOT FIND: {appTagsPath}");
-
-                // Saves an empty one
-                SaveAppTags();
-            }
-            catch (DirectoryNotFoundException)
-            {
-                Directory.CreateDirectory(folderPath);
-            }
-            catch (IOException)
-            {
-                Console.WriteLine("Can't read, file is still being used");
-            }
-            catch (Exception ex)
-            {
-                // AppLogger.WriteLine(ex.Message);
-                Debug.WriteLine(ex.Message);
-            }
+            catch { }
         }
 
         private static void SaveAppTags()
         {
             List<string> lines = new List<string>();
-
             foreach (KeyValuePair<string, AppTag> appTag in appTags)
             {
                 lines.Add($"{appTag.Key}\t{(int)appTag.Value}");
             }
-
             File.WriteAllLines(appTagsPath, lines);
+        }
+
+        private static void SaveTitleTags()
+        {
+            List<string> lines = new List<string>();
+            foreach (var kvp in titleTags)
+            {
+                // Key is "Process|Keyword"
+                var parts = kvp.Key.Split('|');
+                if (parts.Length == 2)
+                {
+                    lines.Add($"{parts[0]}\t{parts[1]}\t{kvp.Value}");
+                }
+            }
+            try { File.WriteAllLines(titleTagsPath, lines); } catch { }
         }
 
         public static void UpdateAppTag(string processName, AppTag appTag)
         {
-            // Remove tag if set to NONE
             if (appTag == AppTag.Untagged)
             {
-                if (appTags.ContainsKey(processName))
-                {
-                    appTags.Remove(processName);
-                }
+                if (appTags.ContainsKey(processName)) appTags.Remove(processName);
             }
-            // Else, update or add new
             else
             {
-                if (appTags.ContainsKey(processName))
-                {
-                    appTags[processName] = appTag;
-                }
-                else
-                {
-                    appTags.Add(processName, appTag);
-                }
+                if (appTags.ContainsKey(processName)) appTags[processName] = appTag;
+                else appTags.Add(processName, appTag);
             }
-
             SaveAppTags();
+        }
+
+        public static void UpdateTitleTag(string processName, string keyword, int tagId)
+        {
+            string key = processName + "|" + keyword;
+            
+            if (tagId == 0) // Untagged/Remove
+            {
+                if (titleTags.ContainsKey(key)) titleTags.Remove(key);
+            }
+            else
+            {
+                if (titleTags.ContainsKey(key)) titleTags[key] = tagId;
+                else titleTags.Add(key, tagId);
+            }
+            SaveTitleTags();
         }
 
         public static void RemoveTag(int tagId)
         {
+            // Remove from Apps
             var keysToUpdate = appTags.Where(kvp => (int)kvp.Value == tagId).Select(kvp => kvp.Key).ToList();
-            
-            foreach (var key in keysToUpdate)
-            {
-                appTags.Remove(key); // Removing means resetting to Untagged (which is absence from list or 0)
-            }
-            
-            if (keysToUpdate.Count > 0)
-            {
-                SaveAppTags();
-            }
+            foreach (var key in keysToUpdate) appTags.Remove(key);
+            if (keysToUpdate.Count > 0) SaveAppTags();
+
+            // Remove from Titles
+            var titlesToUpdate = titleTags.Where(kvp => kvp.Value == tagId).Select(kvp => kvp.Key).ToList();
+            foreach (var key in titlesToUpdate) titleTags.Remove(key);
+            if (titlesToUpdate.Count > 0) SaveTitleTags();
         }
 
         public static AppTag GetAppTag(string processName)
         {
-            if (appTags.ContainsKey(processName))
-            {
-                return appTags[processName];
-            }
+            if (appTags.ContainsKey(processName)) return appTags[processName];
             return AppTag.Untagged;
+        }
+
+        // New lookup method
+        public static int? GetTitleTagId(string processName, string title)
+        {
+            // Simple keyword matching against dictionary keys?
+            // "Process|Keyword".
+            // Since we can't efficiently search "Contains" on 1000 dictionary keys every frame, we should cache or optimize.
+            // But usually titleTags count is small (<50).
+            
+            foreach (var kvp in titleTags)
+            {
+                var parts = kvp.Key.Split('|');
+                if (parts[0] == processName && title.IndexOf(parts[1], StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    return kvp.Value;
+                }
+            }
+            return null;
         }
 
         #endregion

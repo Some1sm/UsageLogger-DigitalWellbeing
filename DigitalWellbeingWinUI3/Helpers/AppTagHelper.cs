@@ -46,6 +46,18 @@ namespace DigitalWellbeingWinUI3.Helpers
             SettingsManager.UpdateAppTag(processName, tag);
         }
 
+        public static void UpdateTitleTag(string processName, string keyword, int tagId)
+        {
+            SettingsManager.UpdateTitleTag(processName, keyword, tagId);
+        }
+        
+        public static AppTag GetTitleTag(string processName, string title)
+        {
+            int? id = SettingsManager.GetTitleTagId(processName, title);
+            if (id.HasValue) return (AppTag)id.Value;
+            return AppTag.Untagged;
+        }
+
         public static void RemoveTag(int tagId)
         {
             SettingsManager.RemoveTag(tagId);

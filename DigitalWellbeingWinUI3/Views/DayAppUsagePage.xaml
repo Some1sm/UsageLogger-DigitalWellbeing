@@ -61,28 +61,44 @@
                     </Grid>
 
                     <!-- Accordion Body -->
-                    <ItemsControl ItemsSource="{Binding Children}" Visibility="{Binding IsExpanded, Converter={StaticResource BoolToVisibilityConverter}}">
-                        <ItemsControl.ItemTemplate>
+                    <!-- Accordion Body -->
+                    <!-- Accordion Body -->
+                    <!-- Removed redundant ScrollViewer -->
+                    <ListView ItemsSource="{Binding Children}" SelectionMode="Single" MaxHeight="250"
+                              Visibility="{Binding IsExpanded, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Padding" Value="0"/>
+                                <Setter Property="MinHeight" Value="0"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.ItemTemplate>
                             <DataTemplate>
-                                <Grid Padding="60,8,15,8" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="0,1,0,0">
+                                <Grid Padding="60,4,15,4" RightTapped="SubItem_RightTapped" Background="Transparent" ToolTipService.ToolTip="Right-click to Tag">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="100"/>
                                         <ColumnDefinition Width="80"/>
                                     </Grid.ColumnDefinitions>
                                     
-                                    <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
-                                            <FontIcon Glyph="&#xE774;" FontSize="12" Opacity="0.5"/> 
-                                            <TextBlock Text="{Binding Title}" FontSize="13" TextTrimming="CharacterEllipsis"/>
+                                    <StackPanel Orientation="Horizontal" Grid.Column="0" Spacing="8">
+                                        <Rectangle Width="4" Height="16" Fill="{Binding TagIndicatorBrush}" RadiusX="2" RadiusY="2" VerticalAlignment="Center"/>
+                                        
+                                        <!-- No icon for subitems -->
+                                        <!-- <Image Source="{Binding IconSource}" Width="16" Height="16" VerticalAlignment="Center"/> -->
+                                        
+                                        <TextBlock Text="{Binding Title}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" FontSize="12"
+                                                   Foreground="{Binding TagTextBrush}"/> 
                                     </StackPanel>
 
-                                    <ProgressBar Grid.Column="1" Value="{Binding Percentage}" Maximum="100" Height="3" CornerRadius="1.5" VerticalAlignment="Center" Opacity="0.6"/>
-                                    
-                                    <TextBlock Grid.Column="2" Text="{Binding StrDuration}" FontSize="12" Opacity="0.7" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                                    <ProgressBar Grid.Column="1" Value="{Binding Percentage}" Maximum="100" Height="4" VerticalAlignment="Center" Margin="10,0"/>
+
+                                    <TextBlock Grid.Column="2" Text="{Binding StrDuration}" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="12" Opacity="0.7"/>
                                 </Grid>
                             </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
+                        </ListView.ItemTemplate>
+                    </ListView>
                 </StackPanel>
             </Border>
         </DataTemplate>
