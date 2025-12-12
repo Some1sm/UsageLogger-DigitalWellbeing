@@ -1,6 +1,7 @@
 
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace DigitalWellbeing.Core.Helpers
 {
@@ -27,6 +28,10 @@ namespace DigitalWellbeing.Core.Helpers
 
         private static string ParseBrowserTitle(string title)
         {
+            // 0. Clean Notification Counts: "(1) Instagram" -> "Instagram"
+            // Matches (1), (20), (99+)
+            title = Regex.Replace(title, @"^\(\d+\+?\)\s*", "");
+
             // Pattern: "Page Title - Browser Name" or "Page Title - Profile - Browser Name"
             // Example: "YouTube - Google Chrome"
             

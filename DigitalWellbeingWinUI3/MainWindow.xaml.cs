@@ -251,6 +251,11 @@ namespace DigitalWellbeingWinUI3
             Application.Current.Exit();
         }
 
+        private void LogDebug(string message)
+        {
+            System.Diagnostics.Debug.WriteLine($"[MainWindow] {message}");
+        }
+
         #endregion
     }
 
