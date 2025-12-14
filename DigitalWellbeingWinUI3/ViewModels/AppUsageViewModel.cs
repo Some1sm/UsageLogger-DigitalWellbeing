@@ -398,7 +398,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
             }
         }
 
-        public void WeeklyChart_SelectionChanged(int index)
+        public async void WeeklyChart_SelectionChanged(int index)
         {
             try
             {
@@ -415,6 +415,12 @@ namespace DigitalWellbeingWinUI3.ViewModels
                     LoadedDate = selectedDate;
                     TryRefreshData();
                     UpdatePieChartAndList(WeekAppUsage.ElementAt(index));
+                    
+                    // Load background audio for the selected date
+                    List<AppUsage> backgroundAudioList = await GetBackgroundAudioData(selectedDate);
+                    List<AppUsage> filteredBackgroundAudio = backgroundAudioList.Where(appUsageFilter).ToList();
+                    filteredBackgroundAudio.Sort(appUsageSorter);
+                    UpdateBackgroundAudioList(filteredBackgroundAudio);
                 }
             }
             catch { }
