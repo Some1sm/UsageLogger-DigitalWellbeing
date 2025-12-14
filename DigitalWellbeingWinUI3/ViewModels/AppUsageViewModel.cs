@@ -269,7 +269,13 @@ namespace DigitalWellbeingWinUI3.ViewModels
             int refreshInterval = UserPreferences.RefreshIntervalSeconds;
             TimeSpan intervalDuration = TimeSpan.FromSeconds(refreshInterval);
             refreshTimer = new DispatcherTimer() { Interval = intervalDuration };
-            refreshTimer.Tick += (s, e) => TryRefreshData();
+            refreshTimer.Tick += (s, e) => TryRefreshData(force: true); // force=true to bypass date check
+            
+            // Start timer if auto-refresh is enabled
+            if (UserPreferences.EnableAutoRefresh)
+            {
+                refreshTimer.Start();
+            }
         }
 
         private List<SKColor> GenerateMultiHuePalette(SKColor baseColor, int count)
