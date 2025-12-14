@@ -526,7 +526,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
                                 var series = new PieSeries<double>
                                 {
                                     Values = new ObservableCollection<double> { app.Duration.TotalMinutes },
-                                    Name = app.ProcessName,
+                                    Name = UserPreferences.GetDisplayName(app.ProcessName),
                                     ToolTipLabelFormatter = (point) => $"{point.Context.Series.Name}: {point.Coordinate.PrimaryValue:F1}m",
                                     DataLabelsFormatter = (point) => point.Context.Series.Name,
                                     Fill = new SolidColorPaint(palette[index % palette.Count])

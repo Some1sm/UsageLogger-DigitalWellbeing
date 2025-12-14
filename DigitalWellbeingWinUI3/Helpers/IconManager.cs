@@ -44,13 +44,31 @@ namespace DigitalWellbeingWinUI3.Helpers
         {
             CreateAppDirectories();
 
-            // Try to get cached image
+            // PRIORITY 1: Check for custom icon
+            string customIconPath = UserPreferences.GetCustomIconPath(appName);
+            if (!string.IsNullOrEmpty(customIconPath) && File.Exists(customIconPath))
+            {
+                try
+                {
+                    BitmapImage img = new BitmapImage();
+                    img.UriSource = new Uri(customIconPath);
+                    return img;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"CUSTOM ICON - FAILED to load: {ex}");
+                    // Fall through to cached/extracted icon
+                }
+            }
+
+            // PRIORITY 2: Try to get cached image
             BitmapImage cachedImage = GetCachedImage(appName);
             if (cachedImage != null)
             {
                 return cachedImage;
             }
 
+            // PRIORITY 3: Extract from running process
             try
             {
                 Process[] processes = Process.GetProcessesByName(appName);
@@ -156,6 +174,62 @@ namespace DigitalWellbeingWinUI3.Helpers
                     return true;
                 }
             } catch {}
+            return false;
+        }
+
+        /// <summary>
+        /// Copies a user-selected icon file to the CustomIcons directory and returns the new path.
+        /// </summary>
+        public static string CopyCustomIcon(string sourceFilePath, string processName)
+        {
+            try
+            {
+                // Create CustomIcons directory if it doesn't exist
+                string customIconsDir = ApplicationPath.GetCustomIconsLocation();
+                Directory.CreateDirectory(customIconsDir);
+
+                // Always save as PNG for consistency
+                string destFileName = $"{processName}.png";
+                string destFilePath = Path.Combine(customIconsDir, destFileName);
+
+                // Load and convert the source image
+                using (var sourceImage = Image.FromFile(sourceFilePath))
+                {
+                    // Save as PNG
+                    sourceImage.Save(destFilePath, ImageFormat.Png);
+                }
+
+                Debug.WriteLine($"Custom icon copied: {sourceFilePath} -> {destFilePath}");
+                return destFilePath;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"CUSTOM ICON - COPY FAILED: {ex}");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Deletes a custom icon file for the specified process.
+        /// </summary>
+        public static bool DeleteCustomIcon(string processName)
+        {
+            try
+            {
+                string customIconsDir = ApplicationPath.GetCustomIconsLocation();
+                string iconPath = Path.Combine(customIconsDir, $"{processName}.png");
+
+                if (File.Exists(iconPath))
+                {
+                    File.Delete(iconPath);
+                    Debug.WriteLine($"Custom icon deleted: {iconPath}");
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"CUSTOM ICON - DELETE FAILED: {ex}");
+            }
             return false;
         }
     }

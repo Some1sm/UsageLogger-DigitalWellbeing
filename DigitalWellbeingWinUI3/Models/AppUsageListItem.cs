@@ -16,6 +16,7 @@ namespace DigitalWellbeingWinUI3.Models
 
         public string ProcessName { get; set; }
         public string ProgramName { get; set; }
+        public string DisplayName => UserPreferences.GetDisplayName(ProcessName);
         public TimeSpan Duration { get; set; }
         public string StrDuration { get => StringHelper.TimeSpanToString(Duration); }
         public ImageSource IconSource { get; set; }
@@ -88,6 +89,7 @@ namespace DigitalWellbeingWinUI3.Models
         public void Refresh()
         {
             OnPropertyChanged(nameof(ProcessName));
+            OnPropertyChanged(nameof(DisplayName));
             OnPropertyChanged(nameof(Percentage));
 
             OnPropertyChanged(nameof(Duration));

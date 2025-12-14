@@ -15,6 +15,12 @@
                         <MenuFlyoutSubItem Text="Set Category" Icon="Tag">
                         </MenuFlyoutSubItem>
                         <MenuFlyoutSeparator/>
+                        <MenuFlyoutItem Text="Set Display Name..." Icon="Rename" Click="MenuFlyoutItem_SetDisplayName_Click" Tag="{Binding ProcessName}"/>
+                        <MenuFlyoutItem Text="Set Custom Icon..." Click="MenuFlyoutItem_SetCustomIcon_Click" Tag="{Binding ProcessName}">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE8B9;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
                         <MenuFlyoutItem Text="Exclude App" Icon="Delete" Click="MenuFlyoutItem_ExcludeApp_Click" Tag="{Binding ProcessName}"/>
                     </MenuFlyout>
                 </Border.ContextFlyout>
@@ -37,7 +43,7 @@
                         <!-- Name & Tag -->
                         <StackPanel Grid.Column="1" VerticalAlignment="Center" IsHitTestVisible="False">
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
-                                <TextBlock Text="{Binding ProcessName}" FontWeight="SemiBold" FontSize="15" Margin="0,0,10,0"/>
+                                <TextBlock Text="{Binding DisplayName}" FontWeight="SemiBold" FontSize="15" Margin="0,0,10,0"/>
                                 <Grid VerticalAlignment="Center" CornerRadius="8">
                                     <Border Background="{Binding BrushAppTagInnerBg}" CornerRadius="8"/>
                                     <Border Padding="8,2" BorderBrush="{Binding BrushAppTag}" BorderThickness="0">

@@ -64,6 +64,11 @@ namespace DigitalWellbeing.Core
             if (appName != "") { location += $"{appName}.ico"; }
             return location;
         }
+
+        public static string GetCustomIconsLocation()
+        {
+            return APP_LOCATION + @"\CustomIcons\";
+        }
     }
 
 }

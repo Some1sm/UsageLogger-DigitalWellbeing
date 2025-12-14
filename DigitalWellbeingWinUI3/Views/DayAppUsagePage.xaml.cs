@@ -302,6 +302,170 @@ namespace DigitalWellbeingWinUI3.Views
             }
         }
 
+        private async void MenuFlyoutItem_SetDisplayName_Click(object sender, RoutedEventArgs e)
+        {
+            var item = sender as MenuFlyoutItem;
+            string processName = item.Tag as string;
+            if (string.IsNullOrEmpty(processName)) return;
+
+            // Get current display name if one exists
+            string currentDisplayName = DigitalWellbeingWinUI3.Helpers.UserPreferences.GetDisplayName(processName);
+            bool hasCustomName = currentDisplayName != processName;
+
+            var inputTextBox = new TextBox 
+            { 
+                PlaceholderText = $"Enter display name for {processName}", 
+                Text = hasCustomName ? currentDisplayName : ""
+            };
+            
+            var dialog = new ContentDialog
+            {
+                Title = $"Set Display Name for {processName}",
+                Content = new StackPanel
+                {
+                    Children =
+                    {
+                        new TextBlock 
+                        { 
+                            Text = "Set a custom display name for this process. The original process name will still be used for tracking.",
+                            TextWrapping = Microsoft.UI.Xaml.TextWrapping.Wrap,
+                            Margin = new Microsoft.UI.Xaml.Thickness(0, 0, 0, 12)
+                        },
+                        inputTextBox
+                    }
+                },
+                PrimaryButtonText = "Save",
+                SecondaryButtonText = hasCustomName ? "Remove" : "Cancel",
+                CloseButtonText = "Cancel",
+                XamlRoot = this.XamlRoot
+            };
+
+            var result = await dialog.ShowAsync();
+            if (result == ContentDialogResult.Primary)
+            {
+                // Save the new display name
+                string newDisplayName = inputTextBox.Text.Trim();
+                if (!string.IsNullOrWhiteSpace(newDisplayName) && newDisplayName != processName)
+                {
+                    DigitalWellbeingWinUI3.Helpers.UserPreferences.SetDisplayName(processName, newDisplayName);
+                }
+                else
+                {
+                    // If empty or same as process name, remove the custom display name
+                    DigitalWellbeingWinUI3.Helpers.UserPreferences.RemoveDisplayName(processName);
+                }
+                
+                // Refresh the view
+                ViewModel.RefreshDayView();
+            }
+            else if (result == ContentDialogResult.Secondary && hasCustomName)
+            {
+                // Remove the display name
+                DigitalWellbeingWinUI3.Helpers.UserPreferences.RemoveDisplayName(processName);
+                ViewModel.RefreshDayView();
+            }
+        }
+
+        private async void MenuFlyoutItem_SetCustomIcon_Click(object sender, RoutedEventArgs e)
+        {
+            var item = sender as MenuFlyoutItem;
+            string processName = item.Tag as string;
+            if (string.IsNullOrEmpty(processName)) return;
+
+            // Check if already has a custom icon
+            string currentCustomIconPath = DigitalWellbeingWinUI3.Helpers.UserPreferences.GetCustomIconPath(processName);
+            bool hasCustomIcon = !string.IsNullOrEmpty(currentCustomIconPath);
+
+            // Create file picker
+            var picker = new Windows.Storage.Pickers.FileOpenPicker();
+            
+            // Get the window handle for the picker
+            var window = (Application.Current as App)?.m_window;
+            var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
+            WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
+
+            // Configure picker
+            picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.PicturesLibrary;
+            picker.FileTypeFilter.Add(".png");
+            picker.FileTypeFilter.Add(".jpg");
+            picker.FileTypeFilter.Add(".jpeg");
+            picker.FileTypeFilter.Add(".ico");
+            picker.FileTypeFilter.Add(".bmp");
+
+            // Show dialog with option to remove if custom icon exists
+            if (hasCustomIcon)
+            {
+                var confirmDialog = new ContentDialog
+                {
+                    Title = $"Custom Icon for {processName}",
+                    Content = "This process already has a custom icon. What would you like to do?",
+                    PrimaryButtonText = "Change Icon",
+                    SecondaryButtonText = "Remove Custom Icon",
+                    CloseButtonText = "Cancel",
+                    XamlRoot = this.XamlRoot
+                };
+
+                var result = await confirmDialog.ShowAsync();
+                
+                if (result == ContentDialogResult.Secondary)
+                {
+                    // Remove custom icon
+                    DigitalWellbeingWinUI3.Helpers.IconManager.DeleteCustomIcon(processName);
+                    DigitalWellbeingWinUI3.Helpers.UserPreferences.RemoveCustomIconPath(processName);
+                    ViewModel.RefreshDayView();
+                    return;
+                }
+                else if (result != ContentDialogResult.Primary)
+                {
+                    return; // Cancelled
+                }
+            }
+
+            // Pick file
+            var file = await picker.PickSingleFileAsync();
+            if (file != null)
+            {
+                try
+                {
+                    // Copy icon to custom icons folder
+                    string newIconPath = DigitalWellbeingWinUI3.Helpers.IconManager.CopyCustomIcon(file.Path, processName);
+                    
+                    if (!string.IsNullOrEmpty(newIconPath))
+                    {
+                        // Save to preferences
+                        DigitalWellbeingWinUI3.Helpers.UserPreferences.SetCustomIconPath(processName, newIconPath);
+                        
+                        // Refresh UI
+                        ViewModel.RefreshDayView();
+                    }
+                    else
+                    {
+                        // Show error
+                        var errorDialog = new ContentDialog
+                        {
+                            Title = "Error",
+                            Content = "Failed to copy icon file. Please try a different image.",
+                            CloseButtonText = "OK",
+                            XamlRoot = this.XamlRoot
+                        };
+                        await errorDialog.ShowAsync();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Custom icon upload error: {ex}");
+                    var errorDialog = new ContentDialog
+                    {
+                        Title = "Error",
+                        Content = $"Failed to set custom icon: {ex.Message}",
+                        CloseButtonText = "OK",
+                        XamlRoot = this.XamlRoot
+                    };
+                    await errorDialog.ShowAsync();
+                }
+            }
+        }
+
         public void SubItem_RightTapped(object sender, Microsoft.UI.Xaml.Input.RightTappedRoutedEventArgs e)
         {
             var grid = sender as Grid;

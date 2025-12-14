@@ -8,7 +8,7 @@ namespace DigitalWellbeingWinUI3.Helpers
 {
     public static class UserPreferences
     {
-        private static string SettingsPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DigitalWellbeing", "user_preferences.json");
+        private static string SettingsPath => Path.Combine(DigitalWellbeing.Core.ApplicationPath.APP_LOCATION, "user_preferences.json");
 
         // properties need to be loaded
         public static int DayAmount { get; set; } = 7;
@@ -23,6 +23,8 @@ namespace DigitalWellbeingWinUI3.Helpers
         public static Dictionary<string, int> AppTimeLimits { get; set; } = new Dictionary<string, int>();
         public static List<CustomAppTag> CustomTags { get; set; } = new List<CustomAppTag>();
         public static bool IncognitoMode { get; set; } = false;
+        public static Dictionary<string, string> ProcessDisplayNames { get; set; } = new Dictionary<string, string>();
+        public static Dictionary<string, string> CustomIconPaths { get; set; } = new Dictionary<string, string>();
 
         static UserPreferences()
         {
@@ -46,7 +48,9 @@ namespace DigitalWellbeingWinUI3.Helpers
                     MinimizeOnExit,
                     AppTimeLimits,
                     CustomTags,
-                    IncognitoMode
+                    IncognitoMode,
+                    ProcessDisplayNames,
+                    CustomIconPaths
                 };
 
                 string json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
@@ -77,6 +81,8 @@ namespace DigitalWellbeingWinUI3.Helpers
                     if (data.TryGetProperty(nameof(AppTimeLimits), out prop)) AppTimeLimits = JsonSerializer.Deserialize<Dictionary<string, int>>(prop.GetRawText()) ?? new Dictionary<string, int>();
                     if (data.TryGetProperty(nameof(CustomTags), out prop)) CustomTags = JsonSerializer.Deserialize<List<CustomAppTag>>(prop.GetRawText()) ?? new List<CustomAppTag>();
                     if (data.TryGetProperty(nameof(IncognitoMode), out prop)) IncognitoMode = prop.GetBoolean();
+                    if (data.TryGetProperty(nameof(ProcessDisplayNames), out prop)) ProcessDisplayNames = JsonSerializer.Deserialize<Dictionary<string, string>>(prop.GetRawText()) ?? new Dictionary<string, string>();
+                    if (data.TryGetProperty(nameof(CustomIconPaths), out prop)) CustomIconPaths = JsonSerializer.Deserialize<Dictionary<string, string>>(prop.GetRawText()) ?? new Dictionary<string, string>();
                 }
 
                 // Default Initialization
@@ -122,6 +128,106 @@ namespace DigitalWellbeingWinUI3.Helpers
                 }
             }
             Save();
+        }
+
+        /// <summary>
+        /// Gets the display name for a process. Returns the custom display name if set, otherwise returns the original process name.
+        /// </summary>
+        public static string GetDisplayName(string processName)
+        {
+            if (string.IsNullOrWhiteSpace(processName))
+                return processName;
+
+            if (ProcessDisplayNames.ContainsKey(processName))
+            {
+                var displayName = ProcessDisplayNames[processName];
+                if (!string.IsNullOrWhiteSpace(displayName))
+                    return displayName;
+            }
+
+            return processName;
+        }
+
+        /// <summary>
+        /// Sets a custom display name for a process. If displayName is null or empty, the mapping is removed.
+        /// </summary>
+        public static void SetDisplayName(string processName, string displayName)
+        {
+            if (string.IsNullOrWhiteSpace(processName))
+                return;
+
+            if (string.IsNullOrWhiteSpace(displayName))
+            {
+                RemoveDisplayName(processName);
+                return;
+            }
+
+            ProcessDisplayNames[processName] = displayName;
+            Save();
+        }
+
+        /// <summary>
+        /// Removes the custom display name for a process.
+        /// </summary>
+        public static void RemoveDisplayName(string processName)
+        {
+            if (string.IsNullOrWhiteSpace(processName))
+                return;
+
+            if (ProcessDisplayNames.ContainsKey(processName))
+            {
+                ProcessDisplayNames.Remove(processName);
+                Save();
+            }
+        }
+
+        /// <summary>
+        /// Gets the custom icon path for a process. Returns null if no custom icon is set.
+        /// </summary>
+        public static string GetCustomIconPath(string processName)
+        {
+            if (string.IsNullOrWhiteSpace(processName))
+                return null;
+
+            if (CustomIconPaths.ContainsKey(processName))
+            {
+                return CustomIconPaths[processName];
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Sets a custom icon path for a process.
+        /// </summary>
+        public static void SetCustomIconPath(string processName, string iconPath)
+        {
+            if (string.IsNullOrWhiteSpace(processName))
+                return;
+
+            if (string.IsNullOrWhiteSpace(iconPath))
+            {
+                RemoveCustomIconPath(processName);
+                return;
+            }
+
+            CustomIconPaths[processName] = iconPath;
+            Save();
+        }
+
+        /// <summary>
+        /// Removes the custom icon path for a process.
+        /// </summary>
+        public static void RemoveCustomIconPath(string processName)
+        {
+            if (string.IsNullOrWhiteSpace(processName))
+                return;
+
+            if (CustomIconPaths.ContainsKey(processName))
+            {
+                CustomIconPaths.Remove(processName);
+                Save();
+            }
         }
     }
 }
