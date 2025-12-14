@@ -546,5 +546,11 @@ namespace DigitalWellbeingWinUI3.Views
                 return new Microsoft.UI.Xaml.Media.SolidColorBrush(Windows.UI.Color.FromArgb(255, 255, 77, 79));
             }
         }
+
+        // Helper method for background audio empty state
+        public Visibility IsBackgroundAudioEmpty(int count)
+        {
+            return count == 0 ? Visibility.Visible : Visibility.Collapsed;
+        }
     }
 }

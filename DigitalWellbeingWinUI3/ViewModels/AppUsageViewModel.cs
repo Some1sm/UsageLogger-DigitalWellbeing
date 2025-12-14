@@ -86,6 +86,13 @@ namespace DigitalWellbeingWinUI3.ViewModels
         public ObservableCollection<AppUsageListItem> Column1Items { get; set; } = new ObservableCollection<AppUsageListItem>();
         public ObservableCollection<AppUsageListItem> Column2Items { get; set; } = new ObservableCollection<AppUsageListItem>();
         public ObservableCollection<AppUsageListItem> Column3Items { get; set; } = new ObservableCollection<AppUsageListItem>();
+        
+        // Background Audio Collections
+        public ObservableCollection<AppUsageListItem> BackgroundAudioItems { get; set; } = new ObservableCollection<AppUsageListItem>();
+        public ObservableCollection<AppUsageListItem> BackgroundAudioColumn1 { get; set; } = new ObservableCollection<AppUsageListItem>();
+        public ObservableCollection<AppUsageListItem> BackgroundAudioColumn2 { get; set; } = new ObservableCollection<AppUsageListItem>();
+        public ObservableCollection<AppUsageListItem> BackgroundAudioColumn3 { get; set; } = new ObservableCollection<AppUsageListItem>();
+        
         public ObservableCollection<ISeries> TagsChartSeries { get; set; }
         
         public DateTime[] WeeklyChartLabelDates { get; set; }
@@ -430,6 +437,8 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 try
                 {
                     List<AppUsage> appUsageList = await GetData(LoadedDate.Date);
+                    List<AppUsage> backgroundAudioList = await GetBackgroundAudioData(LoadedDate.Date);
+                    
                     // Update week usage if it exists for this day
                     int weekIndex = -1;
                     for(int i=0; i<WeeklyChartLabelDates.Length; i++)
@@ -449,6 +458,11 @@ namespace DigitalWellbeingWinUI3.ViewModels
                     List<AppUsage> filteredUsageList = appUsageList.Where(appUsageFilter).ToList();
                     filteredUsageList.Sort(appUsageSorter);
                     UpdatePieChartAndList(filteredUsageList);
+                    
+                    // Update background audio list
+                    List<AppUsage> filteredBackgroundAudio = backgroundAudioList.Where(appUsageFilter).ToList();
+                    filteredBackgroundAudio.Sort(appUsageSorter);
+                    UpdateBackgroundAudioList(filteredBackgroundAudio);
                 }
                 catch { }
             }
@@ -652,6 +666,67 @@ namespace DigitalWellbeingWinUI3.ViewModels
             }
         }
 
+        private void UpdateBackgroundAudioList(List<AppUsage> backgroundAudioList)
+        {
+            var dispatcher = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
+            
+            Action updateAction = () =>
+            {
+                try
+                {
+                    BackgroundAudioItems.Clear();
+                    BackgroundAudioColumn1.Clear();
+                    BackgroundAudioColumn2.Clear();
+                    BackgroundAudioColumn3.Clear();
+                    
+                    foreach (AppUsage app in backgroundAudioList)
+                    {
+                        // Enforce minimum duration
+                        if (app.Duration < UserPreferences.MinumumDuration) continue;
+                        
+                        // Background audio doesn't contribute to percentage (since it's not counted in total)
+                        int percentage = 0;
+                        
+                        AppTag resolvedTag = AppTagHelper.GetAppTag(app.ProcessName);
+                        var listItem = new AppUsageListItem(app.ProcessName, app.ProgramName, app.Duration, percentage, resolvedTag);
+                        
+                        BackgroundAudioItems.Add(listItem);
+                    }
+                    
+                    // Split into 3 columns (masonry layout)
+                    var col1 = new List<AppUsageListItem>();
+                    var col2 = new List<AppUsageListItem>();
+                    var col3 = new List<AppUsageListItem>();
+
+                    int index = 0;
+                    foreach (var item in BackgroundAudioItems)
+                    {
+                        if (index % 3 == 0) col1.Add(item);
+                        else if (index % 3 == 1) col2.Add(item);
+                        else col3.Add(item);
+                        index++;
+                    }
+
+                    foreach (var i in col1) BackgroundAudioColumn1.Add(i);
+                    foreach (var i in col2) BackgroundAudioColumn2.Add(i);
+                    foreach (var i in col3) BackgroundAudioColumn3.Add(i);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Background Audio List Error: {ex.Message}");
+                }
+            };
+
+            if (dispatcher != null)
+            {
+                dispatcher.TryEnqueue(() => updateAction());
+            }
+            else
+            {
+                updateAction();
+            }
+        }
+
         private void RefreshTagChart(List<AppUsage> usageList)
         {
             // Porting logic for StackedRowSeries -> StackedRowSeries<double>
@@ -721,6 +796,52 @@ namespace DigitalWellbeingWinUI3.ViewModels
                  
                  return usageMap.Values.ToList();
              });
+        }
+
+        /// <summary>
+        /// Gets background audio usage - apps that were playing audio but were NOT the active window.
+        /// This prevents double-counting in total screen time.
+        /// </summary>
+        public static async Task<List<AppUsage>> GetBackgroundAudioData(DateTime date)
+        {
+            return await Task.Run(() =>
+            {
+                var backgroundAudioMap = new Dictionary<string, TimeSpan>();
+                var repo = new AppSessionRepository(folderPath);
+                
+                var sessions = repo.GetSessionsForDate(date);
+
+                foreach (var session in sessions)
+                {
+                    // Skip if no audio sources
+                    if (session.AudioSources == null || session.AudioSources.Count == 0)
+                        continue;
+
+                    // Check each audio app
+                    foreach (var audioApp in session.AudioSources)
+                    {
+                        // Only count if audio app is NOT the active window
+                        if (audioApp != session.ProcessName)
+                        {
+                            // This is background audio!
+                            if (!backgroundAudioMap.ContainsKey(audioApp))
+                            {
+                                backgroundAudioMap[audioApp] = TimeSpan.Zero;
+                            }
+                            backgroundAudioMap[audioApp] = backgroundAudioMap[audioApp].Add(session.Duration);
+                        }
+                    }
+                }
+
+                // Convert to AppUsage list
+                var result = new List<AppUsage>();
+                foreach (var kvp in backgroundAudioMap)
+                {
+                    result.Add(new AppUsage(kvp.Key, kvp.Key, kvp.Value)); // Use process name as program name
+                }
+
+                return result;
+            });
         }
 
         #region Trend & Streaks
