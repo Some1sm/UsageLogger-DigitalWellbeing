@@ -1,5 +1,6 @@
 using DigitalWellbeingWinUI3.ViewModels;
 using DigitalWellbeingWinUI3.Models;
+using DigitalWellbeingWinUI3.Helpers;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
@@ -551,6 +552,32 @@ namespace DigitalWellbeingWinUI3.Views
         public Visibility IsBackgroundAudioEmpty(int count)
         {
             return count == 0 ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private void ViewModeToggle_Click(object sender, RoutedEventArgs e)
+        {
+            bool showCombined = ViewModeToggle.IsChecked == true;
+            UpdateViewMode(showCombined);
+            UserPreferences.ShowCombinedAudioView = showCombined;
+            UserPreferences.Save();
+        }
+
+        private void UpdateViewMode(bool showCombined)
+        {
+            if (showCombined)
+            {
+                TabViewMode.Visibility = Visibility.Collapsed;
+                CombinedViewMode.Visibility = Visibility.Visible;
+                ViewModeToggle.IsChecked = true;
+                ViewModeText.Text = "Combined";
+            }
+            else
+            {
+                TabViewMode.Visibility = Visibility.Visible;
+                CombinedViewMode.Visibility = Visibility.Collapsed;
+                ViewModeToggle.IsChecked = false;
+                ViewModeText.Text = "Tabs";
+            }
         }
     }
 }

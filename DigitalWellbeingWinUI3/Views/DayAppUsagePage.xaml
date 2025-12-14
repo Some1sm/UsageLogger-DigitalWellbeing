@@ -148,6 +148,19 @@
                         </StackPanel>
                     </StackPanel>
                 </Border>
+                
+                <!-- View Mode Toggle -->
+                <ToggleButton x:Name="ViewModeToggle" 
+                             Margin="10,0,0,0" 
+                             VerticalAlignment="Center"
+                             IsChecked="False"
+                             Click="ViewModeToggle_Click"
+                             ToolTipService.ToolTip="Toggle view">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <FontIcon Glyph="&#xE89A;" FontSize="14"/>
+                        <TextBlock x:Name="ViewModeText" Text="Tabs" FontSize="12"/>
+                    </StackPanel>
+                </ToggleButton>
             </StackPanel>
 
             <!-- ROW 1: CHARTS (Side by Side) -->
@@ -182,8 +195,9 @@
                 </Border>
             </Grid>
 
-            <!-- ROW 2: TAB VIEW - Active Windows vs Background Audio -->
-            <TabView Grid.Row="2" Margin="0,10,0,0" 
+            <!-- ROW 2: TAB VIEW -->
+            <TabView x:Name="TabViewMode"
+                     Grid.Row="2" Margin="0,10,0,0" 
                      CanDragTabs="False" 
                      CanReorderTabs="False" 
                      IsAddTabButtonVisible="False" 
@@ -294,6 +308,36 @@
                     </TabViewItem>
                 </TabView.TabItems>
             </TabView>
+            
+            <!-- Combined View -->
+            <StackPanel x:Name="CombinedViewMode" Grid.Row="2" Margin="0,10,0,0" Spacing="30" Visibility="Collapsed">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="Active Windows" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                    <Grid ColumnSpacing="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <ItemsControl Grid.Column="0" ItemsSource="{x:Bind ViewModel.Column1Items, Mode=OneWay}" ItemTemplate="{StaticResource AppUsageItemTemplate}"><ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Spacing="0"/></ItemsPanelTemplate></ItemsControl.ItemsPanel></ItemsControl>
+                        <ItemsControl Grid.Column="1" ItemsSource="{x:Bind ViewModel.Column2Items, Mode=OneWay}" ItemTemplate="{StaticResource AppUsageItemTemplate}"><ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Spacing="0"/></ItemsPanelTemplate></ItemsControl.ItemsPanel></ItemsControl>
+                        <ItemsControl Grid.Column="2" ItemsSource="{x:Bind ViewModel.Column3Items, Mode=OneWay}" ItemTemplate="{StaticResource AppUsageItemTemplate}"><ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Spacing="0"/></ItemsPanelTemplate></ItemsControl.ItemsPanel></ItemsControl>
+                    </Grid>
+                </StackPanel>
+                <StackPanel Spacing="10">
+                    <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,0,0,10">
+                        <TextBlock Text="Background Audio" FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                        <TextBlock Text="(not counted)" Opacity="0.5" FontSize="14" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <Grid ColumnSpacing="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <ItemsControl Grid.Column="0" ItemsSource="{x:Bind ViewModel.BackgroundAudioColumn1, Mode=OneWay}" ItemTemplate="{StaticResource AppUsageItemTemplate}"><ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Spacing="0"/></ItemsPanelTemplate></ItemsControl.ItemsPanel></ItemsControl>
+                        <ItemsControl Grid.Column="1" ItemsSource="{x:Bind ViewModel.BackgroundAudioColumn2, Mode=OneWay}" ItemTemplate="{StaticResource AppUsageItemTemplate}"><ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Spacing="0"/></ItemsPanelTemplate></ItemsControl.ItemsPanel></ItemsControl>
+                        <ItemsControl Grid.Column="2" ItemsSource="{x:Bind ViewModel.BackgroundAudioColumn3, Mode=OneWay}" ItemTemplate="{StaticResource AppUsageItemTemplate}"><ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Spacing="0"/></ItemsPanelTemplate></ItemsControl.ItemsPanel></ItemsControl>
+                        <TextBlock Grid.ColumnSpan="3" Text="No audio detected" Opacity="0.4" HorizontalAlignment="Center" Margin="0,40,0,0" FontSize="16" Visibility="{x:Bind IsBackgroundAudioEmpty(ViewModel.BackgroundAudioItems.Count), Mode=OneWay}"/>
+                    </Grid>
+                </StackPanel>
+            </StackPanel>
         </Grid>
     </ScrollViewer>
 </Page>
