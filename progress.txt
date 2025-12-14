@@ -1,9 +1,0 @@
-feat: Add combined view toggle (Steps 1-5 without lambda)
-
-- Step 1: UserPreferences.ShowCombinedAudioView ✓
-- Step 2: Toggle button UI ✓ (will apply)
-- Step 3: x:Name + Click handler ✓ (will apply)
-- Step 4: Combined view layout ✓ (will apply)  
-- Step 5: Toggle logic WITHOUT lambda ✓ (will apply)
-
-Testing approach: Constructor initialization instead of lambda

@@ -1,8 +1,0 @@
-# Apply Steps 1-4 changes
-# This is just documentation of changes
-Step 1: UserPreferences.cs - Add ShowCombinedAudioView setting
-Step 2: DayAppUsagePage.xaml - Add toggle button  
-Step 3: DayAppUsagePage.xaml - Add x:Name and Click handler + stub in .cs
-Step 4: DayAppUsagePage.xaml - Add combined view layout
-
-# Apply via git patch or manual edits

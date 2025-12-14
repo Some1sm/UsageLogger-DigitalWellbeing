@@ -148,19 +148,6 @@
                         </StackPanel>
                     </StackPanel>
                 </Border>
-                
-                <!-- View Mode Toggle -->
-                <ToggleButton x:Name="ViewModeToggle" 
-                             Margin="10,0,0,0" 
-                             VerticalAlignment="Center"
-                             IsChecked="False"
-                             Click="ViewModeToggle_Click"
-                             ToolTipService.ToolTip="Toggle view">
-                    <StackPanel Orientation="Horizontal" Spacing="6">
-                        <FontIcon Glyph="&#xE89A;" FontSize="14"/>
-                        <TextBlock x:Name="ViewModeText" Text="Tabs" FontSize="12"/>
-                    </StackPanel>
-                </ToggleButton>
             </StackPanel>
 
             <!-- ROW 1: CHARTS (Side by Side) -->

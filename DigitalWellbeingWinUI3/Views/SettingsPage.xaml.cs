@@ -95,6 +95,9 @@ namespace DigitalWellbeingWinUI3.Views
             }
             if (CBTheme.SelectedItem == null) CBTheme.SelectedIndex = 0; // Default System
 
+            // Combined Audio View
+            ToggleCombinedAudioView.IsOn = UserPreferences.ShowCombinedAudioView;
+
             _isLoading = false;
             MarkClean();
         }
@@ -227,6 +230,13 @@ namespace DigitalWellbeingWinUI3.Views
         private void CBTheme_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             MarkDirty();
+        }
+
+        private void ToggleCombinedAudioView_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (_isLoading) return;
+            UserPreferences.ShowCombinedAudioView = ToggleCombinedAudioView.IsOn;
+            UserPreferences.Save();
         }
 
         private void ApplyTimelineThreshold_Click(object sender, RoutedEventArgs e)

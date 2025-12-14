@@ -198,6 +198,19 @@
                         <ComboBoxItem Content="Dark" Tag="Dark"/>
                     </ComboBox>
                 </Grid>
+                
+                <!-- Combined Audio View -->
+                <Grid Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Spacing="2">
+                        <TextBlock Text="Combined Audio View" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                        <TextBlock Text="Show Active Windows and Background Audio on same page instead of tabs." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    </StackPanel>
+                    <ToggleSwitch x:Name="ToggleCombinedAudioView" Grid.Column="1" Toggled="ToggleCombinedAudioView_Toggled"/>
+                </Grid>
              </StackPanel>
 
             <!-- Data -->
