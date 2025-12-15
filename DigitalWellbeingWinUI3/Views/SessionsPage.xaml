@@ -75,7 +75,7 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <controls:DayTimelineControl Width="{Binding TimelineWidth}"/>
+                            <controls:SkiaTimelineControl Width="{Binding TimelineWidth}"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

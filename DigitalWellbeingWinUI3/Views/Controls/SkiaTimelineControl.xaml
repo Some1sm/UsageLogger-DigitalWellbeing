@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="DigitalWellbeingWinUI3.Views.Controls.SkiaTimelineControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:skia="using:SkiaSharp.Views.Windows"
+    mc:Ignorable="d"
+    d:DesignHeight="1440"
+    d:DesignWidth="400">
+
+    <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
+            CornerRadius="12" 
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" 
+            BorderThickness="1" 
+            Margin="7.5,15,7.5,15" 
+            Padding="15">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/> <!-- Date Header -->
+                <RowDefinition Height="*"/>    <!-- Timeline Canvas -->
+            </Grid.RowDefinitions>
+
+            <!-- Date Header -->
+            <TextBlock x:Name="HeaderText" 
+                       Grid.Row="0" 
+                       Style="{ThemeResource BodyStrongTextBlockStyle}" 
+                       HorizontalAlignment="Center" 
+                       Margin="0,12,0,4"/>
+
+            <!-- ScrollViewer containing the SkiaSharp canvas -->
+            <ScrollViewer x:Name="MainScrollViewer" Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <Canvas x:Name="ContentGrid" MinHeight="1440">
+                    <!-- SKXamlCanvas and tooltip will be added programmatically -->
+                </Canvas>
+            </ScrollViewer>
+        </Grid>
+    </Border>
+</UserControl>
