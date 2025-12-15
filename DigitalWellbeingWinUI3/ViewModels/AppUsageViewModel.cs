@@ -640,33 +640,29 @@ namespace DigitalWellbeingWinUI3.ViewModels
                         });
                     }
 
-                    DayPieChartSeries.Clear();
-                    foreach(var s in pieSeriesList) DayPieChartSeries.Add(s);
+                    // IN-PLACE UPDATE for pie chart: Match by Name and update values
+                    UpdatePieChartInPlace(DayPieChartSeries, pieSeriesList);
 
-                    // Distribute into 3 Columns for Masonry Layout
+                    // IN-PLACE UPDATE: Match by ProcessName and update values instead of clearing
+                    // This preserves expanded state and prevents UI rebuild
+                    UpdateListInPlace(DayListItems, listItems);
+                    
+                    // Update column items too
                     var col1 = new List<AppUsageListItem>();
                     var col2 = new List<AppUsageListItem>();
                     var col3 = new List<AppUsageListItem>();
 
-                    for (int i = 0; i < listItems.Count; i++)
+                    for (int i = 0; i < DayListItems.Count; i++)
                     {
                         int colIndex = i % 3;
-                        if (colIndex == 0) col1.Add(listItems[i]);
-                        else if (colIndex == 1) col2.Add(listItems[i]);
-                        else col3.Add(listItems[i]);
+                        if (colIndex == 0) col1.Add(DayListItems[i]);
+                        else if (colIndex == 1) col2.Add(DayListItems[i]);
+                        else col3.Add(DayListItems[i]);
                     }
 
-                    DayListItems.Clear();
-                    foreach(var i in listItems) DayListItems.Add(i);
-
-                    Column1Items.Clear();
-                    foreach (var i in col1) Column1Items.Add(i);
-
-                    Column2Items.Clear();
-                    foreach (var i in col2) Column2Items.Add(i);
-
-                    Column3Items.Clear();
-                    foreach (var i in col3) Column3Items.Add(i);
+                    UpdateListInPlace(Column1Items, col1);
+                    UpdateListInPlace(Column2Items, col2);
+                    UpdateListInPlace(Column3Items, col3);
 
                     RefreshTagChart(filteredUsageList);
 
@@ -689,6 +685,96 @@ namespace DigitalWellbeingWinUI3.ViewModels
             {
                 // Fallback attempt
                 updateAction();
+            }
+        }
+
+        /// <summary>
+        /// Updates an ObservableCollection in-place by matching items by ProcessName.
+        /// This preserves UI state (expanded items, scroll position, etc.)
+        /// </summary>
+        private void UpdateListInPlace(ObservableCollection<AppUsageListItem> existingList, IList<AppUsageListItem> newItems)
+        {
+            // Build dictionary of new items for quick lookup
+            var newDict = new Dictionary<string, AppUsageListItem>();
+            foreach (var item in newItems)
+            {
+                if (!newDict.ContainsKey(item.ProcessName))
+                    newDict[item.ProcessName] = item;
+            }
+
+            // Update existing items or remove if not in new list
+            for (int i = existingList.Count - 1; i >= 0; i--)
+            {
+                var existing = existingList[i];
+                if (newDict.TryGetValue(existing.ProcessName, out var newItem))
+                {
+                    // Update in place - preserve IsExpanded state
+                    existing.Duration = newItem.Duration;
+                    existing.Percentage = newItem.Percentage;
+                    // Don't update Children here - that would reset them
+                    // Mark as processed
+                    newDict.Remove(existing.ProcessName);
+                }
+                else
+                {
+                    // Item no longer exists
+                    existingList.RemoveAt(i);
+                }
+            }
+
+            // Add new items that didn't exist before
+            foreach (var newItem in newDict.Values)
+            {
+                existingList.Add(newItem);
+            }
+        }
+
+        /// <summary>
+        /// Updates pie chart series in-place by matching by Name.
+        /// This prevents the animation from resetting on each update.
+        /// </summary>
+        private void UpdatePieChartInPlace(ObservableCollection<ISeries> existingSeries, IList<ISeries> newSeries)
+        {
+            // Build dictionary of new series for quick lookup
+            var newDict = new Dictionary<string, ISeries>();
+            foreach (var s in newSeries)
+            {
+                if (!string.IsNullOrEmpty(s.Name) && !newDict.ContainsKey(s.Name))
+                    newDict[s.Name] = s;
+            }
+
+            // Update existing series or remove if not in new list
+            for (int i = existingSeries.Count - 1; i >= 0; i--)
+            {
+                var existing = existingSeries[i];
+                if (!string.IsNullOrEmpty(existing.Name) && newDict.TryGetValue(existing.Name, out var newS))
+                {
+                    // Update value in-place if it's a PieSeries<double>
+                    if (existing is PieSeries<double> existingPie && newS is PieSeries<double> newPie)
+                    {
+                        var existingValues = existingPie.Values as ObservableCollection<double>;
+                        var newValues = newPie.Values as IEnumerable<double>;
+                        if (existingValues != null && newValues != null)
+                        {
+                            var newValList = newValues.ToList();
+                            if (existingValues.Count > 0 && newValList.Count > 0)
+                            {
+                                existingValues[0] = newValList[0];
+                            }
+                        }
+                    }
+                    newDict.Remove(existing.Name);
+                }
+                else
+                {
+                    existingSeries.RemoveAt(i);
+                }
+            }
+
+            // Add new series that didn't exist before
+            foreach (var newS in newDict.Values)
+            {
+                existingSeries.Add(newS);
             }
         }
 

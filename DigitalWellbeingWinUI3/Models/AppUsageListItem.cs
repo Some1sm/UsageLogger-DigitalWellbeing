@@ -12,12 +12,24 @@ namespace DigitalWellbeingWinUI3.Models
 {
     public class AppUsageListItem : INotifyPropertyChanged
     {
-        public int Percentage { get; set; }
+        private int _percentage;
+        public int Percentage 
+        { 
+            get => _percentage; 
+            set { if (_percentage != value) { _percentage = value; OnPropertyChanged(); } }
+        }
 
         public string ProcessName { get; set; }
         public string ProgramName { get; set; }
         public string DisplayName => UserPreferences.GetDisplayName(ProcessName);
-        public TimeSpan Duration { get; set; }
+        
+        private TimeSpan _duration;
+        public TimeSpan Duration 
+        { 
+            get => _duration; 
+            set { if (_duration != value) { _duration = value; OnPropertyChanged(); OnPropertyChanged(nameof(StrDuration)); } }
+        }
+        
         public string StrDuration { get => StringHelper.TimeSpanToString(Duration); }
         public ImageSource IconSource { get; set; }
 
