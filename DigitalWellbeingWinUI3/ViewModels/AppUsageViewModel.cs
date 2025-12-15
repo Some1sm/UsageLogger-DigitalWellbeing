@@ -36,6 +36,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
         #region Temporary 
         private readonly static string folderPath = ApplicationPath.UsageLogsFolder;
         private DispatcherTimer refreshTimer;
+        private ObservableCollection<double> weeklyHours; // Store for updating bar chart
         #endregion
 
         #region Formatters
@@ -321,6 +322,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
 
                 List<List<AppUsage>> weekUsage = new List<List<AppUsage>>();
                 ObservableCollection<double> hours = new ObservableCollection<double>();
+                weeklyHours = hours; // Store reference for later updates
                 List<string> labels = new List<string>();
                 List<DateTime> loadedDates = new List<DateTime>();
 
@@ -469,6 +471,18 @@ namespace DigitalWellbeingWinUI3.ViewModels
 
                     List<AppUsage> filteredUsageList = appUsageList.Where(appUsageFilter).ToList();
                     filteredUsageList.Sort(appUsageSorter);
+                    
+                    // Update bar chart value for real-time display
+                    if (weekIndex != -1 && weeklyHours != null && weekIndex < weeklyHours.Count)
+                    {
+                        TimeSpan totalDuration = TimeSpan.Zero;
+                        foreach (AppUsage app in filteredUsageList)
+                        {
+                            totalDuration = totalDuration.Add(app.Duration);
+                        }
+                        weeklyHours[weekIndex] = totalDuration.TotalHours;
+                    }
+                    
                     UpdatePieChartAndList(filteredUsageList);
                     
                     // Update background audio list

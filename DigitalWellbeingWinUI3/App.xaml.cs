@@ -47,6 +47,9 @@ namespace DigitalWellbeingWinUI3
         {
             try
             {
+                // Load user preferences before initializing UI
+                Helpers.UserPreferences.Load();
+                
                 m_window = new MainWindow();
                 m_window.Activate();
             }

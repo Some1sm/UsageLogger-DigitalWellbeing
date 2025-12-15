@@ -100,40 +100,35 @@ namespace DigitalWellbeing.Core.Data
                 Console.WriteLine($"Session Repo Read Error: {ex.Message}");
             }
 
-            // MERGE LIVE SESSION (from RAM)
-            // This allows the UI to see the currently running session even if it hasn't been flushed to disk yet.
+            // MERGE ALL LIVE SESSIONS (from RAM)
+            // This allows the UI to see ALL sessions (buffer + current) even if not flushed to disk yet.
             if (date.Date == DateTime.Now.Date)
             {
                 try
                 {
-                    var liveSession = DigitalWellbeing.Core.Helpers.LiveSessionCache.Read();
-                    if (liveSession != null && liveSession.StartTime.Date == date.Date)
+                    var ramSessions = DigitalWellbeing.Core.Helpers.LiveSessionCache.ReadAll();
+                    foreach (var ramSession in ramSessions)
                     {
-                        // Check if we already have this session (partial log on disk)
-                        // Match by Start Time exactly
-                        var existing = sessions.FirstOrDefault(s => s.ProcessName == liveSession.ProcessName && s.StartTime == liveSession.StartTime);
+                        if (ramSession == null || ramSession.StartTime.Date != date.Date) continue;
+                        
+                        // Check if we already have this session on disk
+                        var existing = sessions.FirstOrDefault(s => s.ProcessName == ramSession.ProcessName && s.StartTime == ramSession.StartTime);
                         
                         if (existing != null)
                         {
-                            // Update it with the fresher data from RAM
-                            existing.EndTime = liveSession.EndTime;
-                            existing.IsAfk = liveSession.IsAfk; 
-                            // Audio sources might change too? Usually session splits on audio change, but if extended, just update.
-                            // If audio logic in Manager splits, then start time would differ.
-                            // If audio logic just extends (logic branch 5), then update.
-                            // But Manager logic: if Audio changes -> Start New. So StartTime would change.
-                            // Thus safe to just update EndTime.
+                            // Update with fresher RAM data
+                            existing.EndTime = ramSession.EndTime;
+                            existing.IsAfk = ramSession.IsAfk;
                         }
                         else
                         {
-                            // It's a brand new session not yet on disk
-                            sessions.Add(liveSession);
+                            // New session not yet on disk
+                            sessions.Add(ramSession);
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    // Ignore IPC read errors
                     Console.WriteLine("Live Session Merge Error: " + ex.Message);
                 }
             }

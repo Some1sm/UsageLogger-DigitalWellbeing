@@ -4,6 +4,7 @@ using DigitalWellbeingService.NET4._6.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace DigitalWellbeingService.NET4._6
 {
@@ -12,7 +13,7 @@ namespace DigitalWellbeingService.NET4._6
         private const int AFK_THRESHOLD_MS = 2 * 60 * 1000; // 2 minutes
 
         private AppSessionRepository _repository;
-        private List<AppSession> _sessionBuffer;
+        private List<AppSession> _sessionBuffer; // Completed sessions not yet on disk
         
         private AppSession _currentSession;
         private DateTime _lastFlushTime;
@@ -63,7 +64,6 @@ namespace DigitalWellbeingService.NET4._6
                 }
                 else
                 {
-                    // Check contents (Ignoring order? usually order is consistent from tracker but HashSet is safer)
                     var set1 = new HashSet<string>(currentAudio);
                     var set2 = new HashSet<string>(audioSources);
                     if (!set1.SetEquals(set2)) audioChanged = true;
@@ -79,26 +79,36 @@ namespace DigitalWellbeingService.NET4._6
                 {
                     // Extend
                     _currentSession.EndTime = now;
-
-                    // MMF UPDATE (Live RAM Cache)
-                    // Instead of writing to disk every 3s, we write to RAM map
-                    try 
-                    {
-                        DigitalWellbeing.Core.Helpers.LiveSessionCache.Write(_currentSession);
-                    } catch {}
                 }
             }
 
             if (shouldStartNew)
             {
                 _currentSession = new AppSession(processName, programName, now, now, isAfk, audioSources);
-                
-                // Initial Write for new session
-                try 
-                {
-                    DigitalWellbeing.Core.Helpers.LiveSessionCache.Write(_currentSession);
-                } catch {}
             }
+
+            // Write ALL sessions (buffer + current) to RAM for real-time UI updates
+            UpdateRAMCache();
+        }
+
+        /// <summary>
+        /// Write ALL sessions (completed buffer + current) to RAM cache.
+        /// This allows UI to read real-time data without disk access.
+        /// </summary>
+        private void UpdateRAMCache()
+        {
+            try 
+            {
+                // Build list of all sessions for today
+                var allSessions = new List<AppSession>(_sessionBuffer);
+                if (_currentSession != null)
+                {
+                    allSessions.Add(_currentSession);
+                }
+                
+                DigitalWellbeing.Core.Helpers.LiveSessionCache.WriteAll(allSessions);
+            } 
+            catch {}
         }
 
         private void FinalizeCurrentSession(DateTime endTime)
@@ -107,27 +117,21 @@ namespace DigitalWellbeingService.NET4._6
             
             _currentSession.EndTime = endTime;
             
-            // Add to BUFFER (RAM)
-            // We do NOT write to disk yet.
+            // Add to BUFFER (RAM) - will be flushed to disk every 5 min
             if (_currentSession.Duration.TotalSeconds > 1) 
             {
                 _sessionBuffer.Add(_currentSession);
             }
             
             _currentSession = null;
-
-            // Clear Live Cache as there is no active session
-            try 
-            {
-                DigitalWellbeing.Core.Helpers.LiveSessionCache.Clear();
-            } catch {}
+            // Note: Don't clear RAM cache here - UpdateRAMCache will update it
         }
 
         public void FlushBuffer()
         {
             try 
             {
-                // 1. Flush Completed Sessions
+                // 1. Flush Completed Sessions to disk
                 if (_sessionBuffer.Count > 0)
                 {
                     _repository.AppendSessions(_sessionBuffer);
@@ -135,15 +139,16 @@ namespace DigitalWellbeingService.NET4._6
                 }
 
                 // 2. Persist Active Session (Checkpoint)
-                // We update the active session on disk so if we crash, we at least have up to this point.
                 if (_currentSession != null && _currentSession.Duration.TotalSeconds > 1)
                 {
                     _repository.UpdateOrAppend(_currentSession);
                 }
+                
+                // Update RAM cache (buffer is now empty, only current remains)
+                UpdateRAMCache();
             } 
             catch (Exception ex)
             {
-               // Log?
                Console.WriteLine("Flush Error: " + ex.Message);
             }
         }
@@ -152,7 +157,7 @@ namespace DigitalWellbeingService.NET4._6
         {
             FinalizeCurrentSession(DateTime.Now);
             FlushBuffer();
-            // Clear cache one last time
+            // Clear RAM cache on exit
             try 
             {
                 DigitalWellbeing.Core.Helpers.LiveSessionCache.Clear();
