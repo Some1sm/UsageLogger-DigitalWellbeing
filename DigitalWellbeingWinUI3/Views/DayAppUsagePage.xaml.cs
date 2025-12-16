@@ -268,10 +268,31 @@ namespace DigitalWellbeingWinUI3.Views
             var customTag = Helpers.UserPreferences.CustomTags.FirstOrDefault(t => t.Name == tagStr);
             if (customTag != null)
             {
-                DigitalWellbeingWinUI3.Helpers.AppTagHelper.UpdateAppTag(processName, (DigitalWellbeing.Core.Models.AppTag)customTag.Id);
-                // Refresh
-                ViewModel.LoadWeeklyData();
+                var newTag = (DigitalWellbeing.Core.Models.AppTag)customTag.Id;
+                DigitalWellbeingWinUI3.Helpers.AppTagHelper.UpdateAppTag(processName, newTag);
+                
+                // Update the item in-place instead of full reload
+                UpdateItemTag(processName, newTag);
             }
+        }
+        
+        private void UpdateItemTag(string processName, DigitalWellbeing.Core.Models.AppTag newTag)
+        {
+            // Find in DayListItems
+            var dayItem = ViewModel.DayListItems.FirstOrDefault(x => x.ProcessName == processName);
+            if (dayItem != null) dayItem._AppTag = newTag;
+            
+            // Find in Column1Items
+            var col1Item = ViewModel.Column1Items.FirstOrDefault(x => x.ProcessName == processName);
+            if (col1Item != null) col1Item._AppTag = newTag;
+            
+            // Find in Column2Items
+            var col2Item = ViewModel.Column2Items.FirstOrDefault(x => x.ProcessName == processName);
+            if (col2Item != null) col2Item._AppTag = newTag;
+            
+            // Find in Column3Items
+            var col3Item = ViewModel.Column3Items.FirstOrDefault(x => x.ProcessName == processName);
+            if (col3Item != null) col3Item._AppTag = newTag;
         }
 
         private async void MenuFlyoutItem_ExcludeApp_Click(object sender, RoutedEventArgs e)

@@ -33,7 +33,23 @@ namespace DigitalWellbeingWinUI3.Models
         public string StrDuration { get => StringHelper.TimeSpanToString(Duration); }
         public ImageSource IconSource { get; set; }
 
-        public AppTag _AppTag { get; set; }
+        private AppTag _appTag;
+        public AppTag _AppTag 
+        { 
+            get => _appTag; 
+            set 
+            { 
+                if (_appTag != value) 
+                { 
+                    _appTag = value; 
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(StrAppTag));
+                    OnPropertyChanged(nameof(BrushAppTag));
+                    OnPropertyChanged(nameof(BrushAppTagBg));
+                    OnPropertyChanged(nameof(BrushAppTagInnerBg));
+                } 
+            }
+        }
         public string StrAppTag { get => AppTagHelper.GetTagDisplayName(this._AppTag); }
         public Brush BrushAppTag { get => AppTagHelper.GetTagColor(this._AppTag); }
         public Brush BrushAppTagBg 
