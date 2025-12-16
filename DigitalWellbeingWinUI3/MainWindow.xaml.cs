@@ -129,6 +129,35 @@ namespace DigitalWellbeingWinUI3
              NavView.SelectedItem = NavView.SettingsItem;
              ContentFrame.Navigate(typeof(SettingsPage));
         }
+        
+        // Property for external navigation access
+        public Frame RootFrame => ContentFrame;
+        
+        // Navigate to Sessions page with a specific date
+        private DateTime? _pendingSessionDate;
+        public void NavigateToSessionsWithDate(DateTime date)
+        {
+            _pendingSessionDate = date;
+            
+            // Find and select Sessions nav item
+            foreach (var item in NavView.MenuItems)
+            {
+                if (item is NavigationViewItem navItem && navItem.Tag?.ToString() == "Sessions")
+                {
+                    NavView.SelectedItem = navItem;
+                    break;
+                }
+            }
+            
+            ContentFrame.Navigate(typeof(SessionsPage), date);
+        }
+        
+        public DateTime? GetPendingSessionDate()
+        {
+            var date = _pendingSessionDate;
+            _pendingSessionDate = null;
+            return date;
+        }
 
         #region Window Management & Notifier
 

@@ -51,6 +51,7 @@ namespace DigitalWellbeingWinUI3
                 Helpers.UserPreferences.Load();
                 
                 m_window = new MainWindow();
+                MainWindow = (MainWindow)m_window;
                 m_window.Activate();
             }
             catch (Exception ex)
@@ -73,6 +74,7 @@ namespace DigitalWellbeingWinUI3
             catch { }
         }
 
+        public static MainWindow MainWindow { get; private set; }
         public Window m_window;
     }
 }

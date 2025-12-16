@@ -19,7 +19,6 @@ namespace DigitalWellbeingWinUI3.Views.Controls
         private DayTimelineViewModel _subscribedViewModel;
         private Border _tooltipBorder;
         private TextBlock _tooltipText;
-        private bool _pendingInvalidate = false;
 
         public SkiaTimelineControl()
         {

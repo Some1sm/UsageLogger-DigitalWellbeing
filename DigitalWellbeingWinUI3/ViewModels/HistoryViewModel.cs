@@ -16,6 +16,7 @@ using DigitalWellbeing.Core;
 using DigitalWellbeing.Core.Data;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.SkiaSharpView.Painting.Effects;
 
 namespace DigitalWellbeingWinUI3.ViewModels
 {
@@ -56,6 +57,58 @@ namespace DigitalWellbeingWinUI3.ViewModels
             set { if (_heatMapSeries != value) { _heatMapSeries = value; OnPropertyChanged(); } }
         }
 
+        // Heatmap cell details for tooltips and navigation
+        private Dictionary<(int day, int hour), HeatmapCellData> _heatmapCellDetails = new();
+        
+        // Trend chart series (day-by-day bar chart)
+        private ObservableCollection<ISeries> _trendSeries;
+        public ObservableCollection<ISeries> TrendSeries
+        {
+            get => _trendSeries;
+            set { if (_trendSeries != value) { _trendSeries = value; OnPropertyChanged(); } }
+        }
+        
+        // Trend X-Axis labels (dates)
+        private Axis[] _trendXAxes;
+        public Axis[] TrendXAxes
+        {
+            get => _trendXAxes;
+            set { if (_trendXAxes != value) { _trendXAxes = value; OnPropertyChanged(); } }
+        }
+        
+        // KPI: Total hours and % change
+        private string _totalHoursText;
+        public string TotalHoursText
+        {
+            get => _totalHoursText;
+            set { if (_totalHoursText != value) { _totalHoursText = value; OnPropertyChanged(); } }
+        }
+        
+        private string _totalChangeText;
+        public string TotalChangeText
+        {
+            get => _totalChangeText;
+            set { if (_totalChangeText != value) { _totalChangeText = value; OnPropertyChanged(); } }
+        }
+        
+        private bool _totalChangePositive;
+        public bool TotalChangePositive
+        {
+            get => _totalChangePositive;
+            set { if (_totalChangePositive != value) { _totalChangePositive = value; OnPropertyChanged(); } }
+        }
+        
+        // Previous period average line value (for trend chart)
+        private double _previousPeriodAverage;
+        public double PreviousPeriodAverage
+        {
+            get => _previousPeriodAverage;
+            set { if (_previousPeriodAverage != value) { _previousPeriodAverage = value; OnPropertyChanged(); } }
+        }
+        
+        // Navigation event for heatmap cell click
+        public event Action<DateTime> NavigateToDate;
+
         private bool _isLoading;
         public bool IsLoading
         {
@@ -68,6 +121,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
         public HistoryViewModel()
         {
             ChartSeries = new ObservableCollection<ISeries>();
+            TrendSeries = new ObservableCollection<ISeries>();
             GenerateChartCommand = new DelegateCommand(GenerateChart);
         }
 
@@ -83,11 +137,21 @@ namespace DigitalWellbeingWinUI3.ViewModels
             Debug.WriteLine($"[HistoryViewModel] Generating Chart for {StartDate.Date.ToShortDateString()} - {EndDate.Date.ToShortDateString()}");
             try
             {
+                // Load current period
                 List<AppSession> allSessions = await LoadSessionsForDateRange(StartDate.Date, EndDate.Date);
                 Debug.WriteLine($"[HistoryViewModel] Loaded {allSessions.Count} sessions.");
 
-                // Generate Heatmap
+                // Load previous period for comparison
+                int dayCount = (EndDate.Date - StartDate.Date).Days + 1;
+                DateTime prevStart = StartDate.Date.AddDays(-dayCount);
+                DateTime prevEnd = StartDate.Date.AddDays(-1);
+                List<AppSession> prevSessions = await LoadSessionsForDateRange(prevStart, prevEnd);
+
+                // Generate Heatmap with cell details
                 GenerateHeatMap(allSessions);
+
+                // Generate Trend Chart (day-by-day bars with previous period average line)
+                GenerateTrendChart(allSessions, prevSessions, StartDate.Date, EndDate.Date);
 
                 // Aggregate for Pie Charts
                 List<AppUsage> aggregatedUsage = AggregateSessions(allSessions);
@@ -152,12 +216,13 @@ namespace DigitalWellbeingWinUI3.ViewModels
         private void GenerateHeatMap(List<AppSession> sessions)
         {
             // Grid: 7 Days (0-6) x 24 Hours (0-23)
-            // Y Axis: Days. X Axis: Hours.
             double[,] grid = new double[7, 24];
+            var cellApps = new Dictionary<(int day, int hour), Dictionary<string, double>>();
             
-            // Map DayOfWeek (Sun=0...Sat=6) which matches standard Grid (0-6).
-            // Y Axis: 0 (Top) -> Sun, 6 (Bottom) -> Sat? Or reversed?
-            // Heatmap coordinate (x, y) = (hour, day).
+            // Initialize cell app dictionaries
+            for (int d = 0; d < 7; d++)
+                for (int h = 0; h < 24; h++)
+                    cellApps[(d, h)] = new Dictionary<string, double>();
 
             foreach (var s in sessions)
             {
@@ -166,8 +231,8 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 DateTime t = s.StartTime;
                 while (t < s.EndTime)
                 {
-                    int day = (int)t.DayOfWeek; // 0=Sun, 6=Sat
-                    int hour = t.Hour; // 0-23
+                    int day = (int)t.DayOfWeek;
+                    int hour = t.Hour;
                     
                     DateTime slotEnd = t.Date.AddHours(hour + 1);
                     DateTime actualEnd = (s.EndTime < slotEnd) ? s.EndTime : slotEnd;
@@ -176,6 +241,12 @@ namespace DigitalWellbeingWinUI3.ViewModels
                     if (minutes > 0)
                     {
                         grid[day, hour] += minutes;
+                        
+                        // Track app breakdown per cell
+                        var apps = cellApps[(day, hour)];
+                        string name = UserPreferences.GetDisplayName(s.ProcessName);
+                        if (apps.ContainsKey(name)) apps[name] += minutes;
+                        else apps[name] = minutes;
                     }
                     
                     t = actualEnd;
@@ -183,33 +254,154 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 }
             }
 
+            // Store cell details for tooltips
+            _heatmapCellDetails.Clear();
+            string[] dayNames = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+            
             var weightedPoints = new ObservableCollection<WeightedPoint>();
-            // Flatten grid
             for (int d = 0; d < 7; d++)
             {
                 for (int h = 0; h < 24; h++)
                 {
                     double val = grid[d, h];
-                    // Always add point to fill grid structure
                     weightedPoints.Add(new WeightedPoint(h, d, (int)val));
+                    
+                    // Get top app for this cell
+                    var topApp = cellApps[(d, h)].OrderByDescending(x => x.Value).FirstOrDefault();
+                    _heatmapCellDetails[(d, h)] = new HeatmapCellData
+                    {
+                        DayName = dayNames[d],
+                        Hour = h,
+                        TotalMinutes = val,
+                        TopAppName = topApp.Key ?? "No activity",
+                        TopAppMinutes = topApp.Value
+                    };
                 }
             }
             
-            // Create HeatSeries
+            // Create HeatSeries with custom tooltip
             var series = new HeatSeries<WeightedPoint>
             {
                 Values = weightedPoints,
                 Name = "Activity",
-                HeatMap = new []
+                HeatMap = new[]
                 {
-                    new LvcColor(32, 32, 32),    // Dark Gray (Background-ish)
-                    new LvcColor(0, 50, 100),    // Dark Blue
-                    new LvcColor(0, 120, 215),   // System Accent Blue-ish
-                    new LvcColor(100, 200, 255)  // Light Blue / Cyan (High Intensity)
+                    new LvcColor(32, 32, 32),
+                    new LvcColor(0, 50, 100),
+                    new LvcColor(0, 120, 215),
+                    new LvcColor(100, 200, 255)
+                },
+                YToolTipLabelFormatter = (chartPoint) =>
+                {
+                    // Access the actual WeightedPoint model directly
+                    if (chartPoint.Model is WeightedPoint wp)
+                    {
+                        int hour = (int)(wp.X ?? 0);  // X = hour (0-23)
+                        int day = (int)(wp.Y ?? 0);   // Y = day (0-6)
+                        
+                        if (_heatmapCellDetails.TryGetValue((day, hour), out var cell))
+                        {
+                            string timeStr = $"{hour:D2}:00";
+                            string totalStr = FormatDuration(cell.TotalMinutes);
+                            return $"{cell.DayName} at {timeStr} • {totalStr} • Top: {cell.TopAppName}";
+                        }
+                        return $"{wp.Weight:F0} min";
+                    }
+                    return "";
                 }
             };
 
             HeatMapSeries = new ObservableCollection<ISeries> { series };
+        }
+
+        private void GenerateTrendChart(List<AppSession> currentSessions, List<AppSession> prevSessions, DateTime start, DateTime end)
+        {
+            // Group current period by date
+            var dailyTotals = new Dictionary<DateTime, double>();
+            for (var d = start; d <= end; d = d.AddDays(1))
+                dailyTotals[d.Date] = 0;
+
+            foreach (var s in currentSessions)
+            {
+                if (AppUsageViewModel.IsProcessExcluded(s.ProcessName)) continue;
+                if (dailyTotals.ContainsKey(s.StartTime.Date))
+                    dailyTotals[s.StartTime.Date] += s.Duration.TotalMinutes;
+            }
+
+            // Calculate previous period average
+            double prevTotal = prevSessions
+                .Where(s => !AppUsageViewModel.IsProcessExcluded(s.ProcessName))
+                .Sum(s => s.Duration.TotalMinutes);
+            int prevDays = (int)(start - start.AddDays(-(end - start).Days - 1)).Days;
+            if (prevDays <= 0) prevDays = 1;
+            double prevAvg = prevTotal / prevDays;
+            PreviousPeriodAverage = prevAvg;
+
+            // Calculate KPIs
+            double currentTotal = dailyTotals.Values.Sum();
+            TotalHoursText = FormatDuration(currentTotal);
+            
+            if (prevTotal > 0)
+            {
+                double changePercent = ((currentTotal - prevTotal) / prevTotal) * 100;
+                TotalChangePositive = changePercent >= 0;
+                string arrow = TotalChangePositive ? "↑" : "↓";
+                TotalChangeText = $"{arrow} {Math.Abs(changePercent):F0}% vs previous {prevDays} days";
+            }
+            else
+            {
+                TotalChangeText = "No previous data";
+                TotalChangePositive = true;
+            }
+
+            // Create bar chart
+            var barValues = dailyTotals.OrderBy(x => x.Key).Select(x => x.Value / 60.0).ToList(); // Hours
+            var dateLabels = dailyTotals.OrderBy(x => x.Key).Select(x => x.Key.ToString("MM/dd")).ToArray();
+
+            var barSeries = new ColumnSeries<double>
+            {
+                Values = barValues,
+                Name = "Daily Usage",
+                Fill = new SolidColorPaint(new SKColor(0, 120, 215)),
+                MaxBarWidth = 30
+            };
+
+            // Previous period average line
+            var avgLine = new LineSeries<double>
+            {
+                Values = Enumerable.Repeat(prevAvg / 60.0, barValues.Count).ToList(),
+                Name = $"Prev Period Avg ({FormatDuration(prevAvg)})",
+                Stroke = new SolidColorPaint(new SKColor(255, 180, 0)) { StrokeThickness = 2, PathEffect = new DashEffect(new float[] { 6, 4 }) },
+                Fill = null,
+                GeometrySize = 0,
+                LineSmoothness = 0
+            };
+
+            TrendSeries = new ObservableCollection<ISeries> { barSeries, avgLine };
+            TrendXAxes = new Axis[]
+            {
+                new Axis
+                {
+                    Labels = dateLabels,
+                    LabelsRotation = 45,
+                    TextSize = 10,
+                    LabelsPaint = new SolidColorPaint(SKColors.Gray)
+                }
+            };
+        }
+        
+        // Method for heatmap cell click -> navigate to that day
+        public void OnHeatmapCellClicked(int dayOfWeek, int hour)
+        {
+            // Find the actual date for this day of week within the selected range
+            for (var d = StartDate.Date; d <= EndDate.Date; d = d.AddDays(1))
+            {
+                if ((int)d.DayOfWeek == dayOfWeek)
+                {
+                    NavigateToDate?.Invoke(d);
+                    return;
+                }
+            }
         }
 
         private void GenerateTagChart(List<AppUsage> usage)
@@ -356,5 +548,14 @@ namespace DigitalWellbeingWinUI3.ViewModels
         #pragma warning disable CS0067
         public event EventHandler CanExecuteChanged;
         #pragma warning restore CS0067
+    }
+
+    public class HeatmapCellData
+    {
+        public string DayName { get; set; }
+        public int Hour { get; set; }
+        public double TotalMinutes { get; set; }
+        public string TopAppName { get; set; }
+        public double TopAppMinutes { get; set; }
     }
 }

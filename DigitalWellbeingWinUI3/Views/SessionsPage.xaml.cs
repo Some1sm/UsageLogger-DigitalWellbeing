@@ -1,6 +1,7 @@
 using DigitalWellbeingWinUI3.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 
 namespace DigitalWellbeingWinUI3.Views
 {
@@ -12,6 +13,17 @@ namespace DigitalWellbeingWinUI3.Views
         {
             this.InitializeComponent();
             ViewModel = new SessionsViewModel();
+        }
+        
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            
+            // Handle date parameter from heatmap navigation
+            if (e.Parameter is System.DateTime date)
+            {
+                ViewModel.SelectedDate = date;
+            }
         }
 
 
