@@ -190,7 +190,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 {
                     var accent = uiSettings.GetColorValue(Windows.UI.ViewManagement.UIColorType.Accent);
                     var skAccent = new SKColor(accent.R, accent.G, accent.B, accent.A);
-                    var palette = GenerateMultiHuePalette(skAccent, DayPieChartSeries.Count);
+                    var palette = ChartFactory.GenerateMultiHuePalette(skAccent, DayPieChartSeries.Count);
 
                     for (int i = 0; i < DayPieChartSeries.Count; i++)
                     {
@@ -206,15 +206,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
         private LinearGradientPaint GetAccentGradientPaint()
         {
             var accent = uiSettings.GetColorValue(Windows.UI.ViewManagement.UIColorType.Accent);
-                
-            // Create SKColors from Windows Accent
-            var skAccent = new SKColor(accent.R, accent.G, accent.B, accent.A);
-            var skAccentDark = new SKColor((byte)Math.Max(0, accent.R - 50), (byte)Math.Max(0, accent.G - 50), (byte)Math.Max(0, accent.B - 50));
-
-            return new LinearGradientPaint(
-                new SKColor[] { skAccent, skAccentDark }, 
-                new SKPoint(0.5f, 0), // Top
-                new SKPoint(0.5f, 1)); // Bottom
+            return ChartFactory.CreateAccentGradient(accent);
         }
 
         private void OnChartClick(object parameter)
@@ -279,32 +271,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
             }
         }
 
-        private List<SKColor> GenerateMultiHuePalette(SKColor baseColor, int count)
-        {
-            var palette = new List<SKColor>();
-            baseColor.ToHsl(out float h, out float s, out float l);
-
-            // Ensure count is at least 1
-            if (count < 1) count = 1;
-
-            // Step size: 30 degrees gives a nice analogus/triadic mix without being too rainbow-y if count is low
-            // Or use Golden Ratio for distinctness? 
-            // User asked for "multihue palette *originating* from... accent".
-            // Let's try rotating by 25 degrees.
-            float step = 25f;
-
-            for (int i = 0; i < count; i++)
-            {
-                float newH = (h + (i * step)) % 360f;
-                // Vary lightness slightly to distinguishing boundaries?
-                // float newL = (i % 2 == 0) ? l : Math.Clamp(l * 0.8f, 0, 100); 
-                // SkiaSharp HSL Lightness is 0-100 usually or 0-1? 
-                // ToHsl docs: h [0, 360), s [0, 100], l [0, 100].
-                
-                palette.Add(SKColor.FromHsl(newH, s, l));
-            }
-            return palette;
-        }
+        // GenerateMultiHuePalette is now in ChartFactory.GenerateMultiHuePalette
 
         public void LoadUserExcludedProcesses()
         {
@@ -320,39 +287,58 @@ namespace DigitalWellbeingWinUI3.ViewModels
             {
                 DateTime minDate = DateTime.Now.AddDays(-NumberOfDaysToDisplay);
 
-                List<List<AppUsage>> weekUsage = new List<List<AppUsage>>();
-                ObservableCollection<double> hours = new ObservableCollection<double>();
-                weeklyHours = hours; // Store reference for later updates
-                List<string> labels = new List<string>();
-                List<DateTime> loadedDates = new List<DateTime>();
-
+                // Build list of dates to load
+                var datesToLoad = new List<DateTime>();
                 for (int i = 1; i <= NumberOfDaysToDisplay; i++)
                 {
-                    DateTime date = minDate.AddDays(i).Date;
-                    
-                    List<AppUsage> appUsageList = await GetData(date);
-                    List<AppUsage> filteredUsageList = appUsageList.Where(appUsageFilter).ToList();
-                    filteredUsageList.Sort(appUsageSorter);
+                    datesToLoad.Add(minDate.AddDays(i).Date);
+                }
 
-                    weekUsage.Add(filteredUsageList);
+                // PARALLEL LOADING: Load all days concurrently
+                var loadTasks = datesToLoad.Select(async date =>
+                {
+                    var appUsageList = await GetData(date);
+                    var filteredUsageList = appUsageList.Where(appUsageFilter).ToList();
+                    filteredUsageList.Sort(appUsageSorter);
                     
-                     TimeSpan totalDuration = TimeSpan.Zero;
-                    foreach (AppUsage app in filteredUsageList)
+                    TimeSpan totalDuration = TimeSpan.Zero;
+                    foreach (var app in filteredUsageList)
                     {
                         totalDuration = totalDuration.Add(app.Duration);
                     }
-                    hours.Add(totalDuration.TotalHours);
                     
-                    labels.Add(date.ToString("ddd"));
-                    loadedDates.Add(date);
-                    
-                    Debug.WriteLine($"[AppUsageViewModel] Loaded {date.ToShortDateString()}: {filteredUsageList.Count} apps, {totalDuration.TotalHours:F2} hrs");
+                    return new
+                    {
+                        Date = date,
+                        Usage = filteredUsageList,
+                        Hours = totalDuration.TotalHours,
+                        Label = date.ToString("ddd")
+                    };
+                }).ToList();
+
+                var results = await Task.WhenAll(loadTasks);
+                
+                // Sort results by date (parallel execution may return out of order)
+                var orderedResults = results.OrderBy(r => r.Date).ToList();
+
+                // Build collections from parallel results
+                var weekUsage = new List<List<AppUsage>>();
+                var hours = new ObservableCollection<double>();
+                weeklyHours = hours;
+                var labels = new List<string>();
+                var loadedDates = new List<DateTime>();
+
+                foreach (var result in orderedResults)
+                {
+                    weekUsage.Add(result.Usage);
+                    hours.Add(result.Hours);
+                    labels.Add(result.Label);
+                    loadedDates.Add(result.Date);
+                    Debug.WriteLine($"[AppUsageViewModel] Loaded {result.Date.ToShortDateString()}: {result.Usage.Count} apps, {result.Hours:F2} hrs");
                 }
 
-                WeekAppUsage.Clear(); // Ensure clear
+                WeekAppUsage.Clear();
                 foreach (List<AppUsage> dayUsage in weekUsage) { WeekAppUsage.Add(dayUsage); }
-                
-                WeeklyChartSeries.Clear();
                 
                 WeeklyChartSeries.Clear();
                 
@@ -363,7 +349,6 @@ namespace DigitalWellbeingWinUI3.ViewModels
                     Debug.WriteLine("[DEBUG] No real data found. Injecting Dummy Data for Verification.");
                     hours.Clear();
                     labels.Clear();
-                    // Inject Dummy Data
                     hours.Add(2.5); labels.Add("Mon");
                     hours.Add(4.0); labels.Add("Tue");
                     hours.Add(3.0); labels.Add("Wed");
@@ -373,16 +358,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
                     hours.Add(4.5); labels.Add("Sun");
                 }
 
-                WeeklyChartSeries.Add(new ColumnSeries<double> 
-                { 
-                    Values = hours,
-                    Name = "Usage",
-                    YToolTipLabelFormatter = (point) => $"{point.Coordinate.PrimaryValue:F1} hours",
-                    Fill = gradientPaint,
-                    Rx = 10,
-                    Ry = 10,
-                    MaxBarWidth = 35 // Slightly wider for premium look
-                });
+                WeeklyChartSeries.Add(ChartFactory.CreateColumnSeries(hours, "Usage", gradientPaint));
                 
                 Debug.WriteLine($"[DEBUG] Loaded Weekly Data: {weekUsage.Count} days, {hours.Count} points.");
 
@@ -560,7 +536,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
                             
                             if (pieSeriesList.Count < 50) // Cap slices
                             {
-                                var palette = GenerateMultiHuePalette(skAccent, filteredUsageList.Count);
+                                var palette = ChartFactory.GenerateMultiHuePalette(skAccent, filteredUsageList.Count);
                                 int index = pieSeriesList.Count; 
                                                         
                                 var series = new PieSeries<double>
