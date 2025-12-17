@@ -25,12 +25,10 @@ namespace DigitalWellbeingService.NET4._6
             _lastFlushTime = DateTime.Now;
         }
 
-        public void Update(Process process, string programName, List<string> audioSources = null)
+        public void Update(string processName, string programName, List<string> audioSources = null)
         {
+            if (string.IsNullOrEmpty(processName)) return;
             if (audioSources == null) audioSources = new List<string>();
-
-            string processName = "";
-            try { processName = process.ProcessName; } catch { return; }
 
             uint idleTime = UserInputInfo.GetIdleTime();
             bool isAfk = idleTime > AFK_THRESHOLD_MS;
@@ -53,6 +51,7 @@ namespace DigitalWellbeingService.NET4._6
             else
             {
                 bool appChanged = _currentSession.ProcessName != processName;
+                bool programChanged = _currentSession.ProgramName != programName; // Detect incognito mode changes
                 bool stateChanged = _currentSession.IsAfk != isAfk;
                 
                 // Audio Change Check
@@ -69,7 +68,7 @@ namespace DigitalWellbeingService.NET4._6
                     if (!set1.SetEquals(set2)) audioChanged = true;
                 }
 
-                if (appChanged || stateChanged || audioChanged)
+                if (appChanged || programChanged || stateChanged || audioChanged)
                 {
                     // Close current
                     FinalizeCurrentSession(now);

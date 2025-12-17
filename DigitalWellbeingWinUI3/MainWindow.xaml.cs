@@ -204,14 +204,14 @@ namespace DigitalWellbeingWinUI3
             this.PreMinimize();
             // WinUI 3 doesn't hide window easily without using Win32 ShowWindow
              IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
-             PInvoke.ShowWindow(hWnd, 0); // SW_HIDE
+             NativeMethods.ShowWindow(hWnd, NativeMethods.SW_HIDE);
         }
 
         public void RestoreWindow()
         {
              IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
-             PInvoke.ShowWindow(hWnd, 9); // SW_RESTORE
-             PInvoke.SetForegroundWindow(hWnd);
+             NativeMethods.ShowWindow(hWnd, NativeMethods.SW_RESTORE);
+             NativeMethods.SetForegroundWindow(hWnd);
              this.PostRestore();
         }
         
@@ -286,15 +286,5 @@ namespace DigitalWellbeingWinUI3
         }
 
         #endregion
-    }
-
-    // Simple PInitialoke wrapper class
-    internal static class PInvoke
-    {
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
-        public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
-        public static extern bool SetForegroundWindow(IntPtr hWnd);
     }
 }

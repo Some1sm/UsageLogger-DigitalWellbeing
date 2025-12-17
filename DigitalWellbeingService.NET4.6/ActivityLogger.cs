@@ -62,6 +62,7 @@ namespace DigitalWellbeingService.NET4._6
             uint currProcessId = ForegroundWindowManager.GetForegroundProcessId(handle);
             
             // Handle edge case where handle is invalid or process exited
+            // Use using block to properly dispose Process handle and prevent leaks
             Process proc = null;
             try 
             {
@@ -69,54 +70,55 @@ namespace DigitalWellbeingService.NET4._6
             }
             catch { return; }
 
-            CheckIncognitoSettings(); // Poll settings
-
-            // Calculate Program Name (Window Title)
-            string programName = "";
-            
-            if (_incognitoMode)
+            // Wrap all process usage in try-finally to ensure disposal
+            try
             {
-                // In Incognito, we SKIP window title parsing.
-                // ProgramName becomes the ProcessName (or pretty version)
-                programName = proc.ProcessName; 
+                CheckIncognitoSettings(); // Poll settings
+
+                // Calculate Program Name (Window Title)
+                string programName = "";
+                string processName = proc.ProcessName;
+                
+                if (_incognitoMode)
+                {
+                    // In Incognito, we SKIP window title parsing.
+                    // ProgramName becomes the ProcessName (or pretty version)
+                    programName = processName; 
+                }
+                else
+                {
+                    try 
+                    { 
+                        string rawTitle = ForegroundWindowManager.GetWindowTitle(handle);
+                        // Fallback to Product Name if Title is empty
+                        if (string.IsNullOrWhiteSpace(rawTitle))
+                        {
+                            programName = ForegroundWindowManager.GetActiveProgramName(proc);
+                        }
+                        else
+                        {
+                            programName = DigitalWellbeing.Core.Helpers.WindowTitleParser.Parse(processName, rawTitle);
+                        }
+                    } 
+                    catch {}
+                }
+                
+                if (string.IsNullOrEmpty(programName)) programName = "";
+
+                UpdateTimeEntry(processName, programName);
+                
+                
+                // Audio Tracking with Persistence (Debounce)
+                var currentAudioApps = Helpers.AudioSessionTracker.GetActiveAudioSessions();
+                
+                var validAudioApps = UpdateAudioPersistence(currentAudioApps);
+
+                _sessionManager.Update(processName, programName, validAudioApps);
             }
-            else
+            finally
             {
-                try 
-                { 
-                    string rawTitle = ForegroundWindowManager.GetWindowTitle(handle);
-                    // Fallback to Product Name if Title is empty
-                    if (string.IsNullOrWhiteSpace(rawTitle))
-                    {
-                        programName = ForegroundWindowManager.GetActiveProgramName(proc);
-                    }
-                    else
-                    {
-                        programName = DigitalWellbeing.Core.Helpers.WindowTitleParser.Parse(proc.ProcessName, rawTitle);
-                    }
-                } 
-                catch {}
+                proc?.Dispose();
             }
-            
-            if (string.IsNullOrEmpty(programName)) programName = "";
-
-            UpdateTimeEntry(proc, programName);
-            
-            
-            // Audio Tracking with Persistence (Debounce)
-            var currentAudioApps = Helpers.AudioSessionTracker.GetActiveAudioSessions();
-            
-            // DEBUG LOGGING
-            // try 
-            // {
-            //    string debugLog = ApplicationPath.APP_LOCATION + "\\debug_audio.txt";
-            //    string msg = $"{DateTime.Now}: Found {currentAudioApps.Count} apps: {string.Join(", ", currentAudioApps)}";
-            //    File.AppendAllText(debugLog, msg + Environment.NewLine);
-            // } catch {}
-            
-            var validAudioApps = UpdateAudioPersistence(currentAudioApps);
-
-            _sessionManager.Update(proc, programName, validAudioApps);
         }
 
         private Dictionary<string, int> _audioPersistenceCounter = new Dictionary<string, int>();
@@ -124,19 +126,19 @@ namespace DigitalWellbeingService.NET4._6
         private List<string> UpdateAudioPersistence(List<string> currentApps)
         {
             var validApps = new List<string>();
+            // Use HashSet for O(1) lookup instead of O(n) List.Contains
+            var currentAppsSet = new HashSet<string>(currentApps);
 
-            // 1. Increment or Reset counters
-            // We need to handle apps that stopped playing
-            var keys = _audioPersistenceCounter.Keys.ToList();
-            foreach (var key in keys)
+            // 1. Remove apps that stopped playing
+            var keysToRemove = _audioPersistenceCounter.Keys
+                .Where(key => !currentAppsSet.Contains(key))
+                .ToList();
+            foreach (var key in keysToRemove)
             {
-                if (!currentApps.Contains(key))
-                {
-                    _audioPersistenceCounter.Remove(key);
-                }
+                _audioPersistenceCounter.Remove(key);
             }
 
-            // 2. Process current apps
+            // 2. Increment or add current apps
             foreach (var app in currentApps)
             {
                 if (_audioPersistenceCounter.ContainsKey(app))
@@ -161,17 +163,9 @@ namespace DigitalWellbeingService.NET4._6
             return validApps;
         }
 
-        private void UpdateTimeEntry(Process proc, string programName)
+        private void UpdateTimeEntry(string processName, string programName)
         {
-            string processName = "";
-
-            try
-            {
-                processName = proc.ProcessName;
-                // Optimization: Don't fetch Program Name every time if we already have it in cache? 
-                // For now, keep it simple or fetch if missing.
-            }
-            catch { return; }
+            if (string.IsNullOrEmpty(processName)) return;
 
             // Find in cache
             var existingEntry = _cachedUsage.FirstOrDefault(u => u.ProcessName == processName);
@@ -241,8 +235,9 @@ namespace DigitalWellbeingService.NET4._6
         #region Incognito Mode
         private bool _incognitoMode = false;
         private DateTime _lastSettingsCheck = DateTime.MinValue;
+        private DateTime _lastFileWriteTime = DateTime.MinValue;
         private readonly TimeSpan _settingsCheckInterval = TimeSpan.FromSeconds(5);
-        private string _settingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DigitalWellbeing", "user_preferences.json");
+        private string _settingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "digital-wellbeing", "user_preferences.json");
 
         private void CheckIncognitoSettings()
         {
@@ -251,28 +246,22 @@ namespace DigitalWellbeingService.NET4._6
             _lastSettingsCheck = DateTime.Now;
             try
             {
-                if (File.Exists(_settingsPath))
-                {
-                    // Quick read - we only need one property
-                    // Using basic string contains for speed/robustness without full JSON deps if problematic,
-                    // but we are in .NET 8 so simple string parsing is fine or full JSON.
-                    // Let's use string parsing to minimize allocation/locking issues on the file.
-                    string json = "";
-                    using (var fs = new FileStream(_settingsPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                    using (var sr = new StreamReader(fs))
-                    {
-                        json = sr.ReadToEnd();
-                    }
+                if (!File.Exists(_settingsPath)) return;
 
-                    if (json.Contains("\"IncognitoMode\": true"))
-                    {
-                        _incognitoMode = true;
-                    }
-                    else
-                    {
-                        _incognitoMode = false;
-                    }
+                // Skip file read if file hasn't been modified since last check
+                var currentWriteTime = File.GetLastWriteTime(_settingsPath);
+                if (currentWriteTime == _lastFileWriteTime) return;
+                _lastFileWriteTime = currentWriteTime;
+
+                // Read file only when it has changed
+                string json;
+                using (var fs = new FileStream(_settingsPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                using (var sr = new StreamReader(fs))
+                {
+                    json = sr.ReadToEnd();
                 }
+
+                _incognitoMode = json.Contains("\"IncognitoMode\": true");
             }
             catch { }
         }
