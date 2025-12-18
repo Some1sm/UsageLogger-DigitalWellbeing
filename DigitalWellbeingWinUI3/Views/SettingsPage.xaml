@@ -274,6 +274,8 @@
              <TextBlock Text="About" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,10,0,5"/>
              <StackPanel Spacing="5">
                   <TextBlock x:Name="TxtCurrentVersion" Text="App Version: ..." Style="{ThemeResource BodyTextBlockStyle}"/>
+                  <TextBlock Text="Created by David Cepero" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                  <TextBlock Text="Copyright © 2025. All rights reserved." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                   <HyperlinkButton Content="Source Code (GitHub)" NavigateUri="https://github.com/dcepero/DigitalWellbeing"/>
              </StackPanel>
 
