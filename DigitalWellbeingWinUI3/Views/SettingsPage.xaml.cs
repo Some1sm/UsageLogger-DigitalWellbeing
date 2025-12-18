@@ -138,6 +138,9 @@ namespace DigitalWellbeingWinUI3.Views
         private void ToggleIncognitoMode_Toggled(object sender, RoutedEventArgs e)
         {
             MarkDirty();
+            // Update watermark immediately for visual feedback
+            UserPreferences.IncognitoMode = ToggleIncognitoMode.IsOn;
+            App.MainWindow?.UpdateIncognitoWatermark();
         }
 
         private void ExcludedAppList_DoubleTapped(object sender, Microsoft.UI.Xaml.Input.DoubleTappedRoutedEventArgs e)

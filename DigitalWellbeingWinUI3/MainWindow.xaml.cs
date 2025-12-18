@@ -85,6 +85,18 @@ namespace DigitalWellbeingWinUI3
         {
             NavView.SelectedItem = NavView.MenuItems[0];
             ContentFrame.Navigate(typeof(DayAppUsagePage));
+            UpdateIncognitoWatermark();
+        }
+
+        /// <summary>
+        /// Updates the incognito watermark visibility based on the setting.
+        /// Call this when the window loads or settings change.
+        /// </summary>
+        public void UpdateIncognitoWatermark()
+        {
+            IncognitoWatermark.Visibility = UserPreferences.IncognitoMode 
+                ? Visibility.Visible 
+                : Visibility.Collapsed;
         }
 
         private void NavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
@@ -224,6 +236,8 @@ namespace DigitalWellbeingWinUI3
              {
                  page.ViewModel?.RefreshDayView();
              }
+             // Update incognito watermark in case setting changed
+             UpdateIncognitoWatermark();
         }
 
         public void ForceClose()

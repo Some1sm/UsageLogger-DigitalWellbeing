@@ -160,11 +160,11 @@
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0" Spacing="2">
                         <TextBlock Text="Auto-Refresh Interval (s)" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                         <TextBlock Text="Minimum 30 seconds." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                         <TextBlock Text="Minimum 6 seconds." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     </StackPanel>
                      <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="10">
                          <ToggleSwitch x:Name="EnableAutoRefresh" Toggled="EnableAutoRefresh_Toggled"/>
-                         <NumberBox x:Name="RefreshInterval" Width="150" SpinButtonPlacementMode="Compact" Minimum="1" Maximum="600" ValueChanged="RefreshInterval_ValueChanged" IsEnabled="{x:Bind EnableAutoRefresh.IsOn, Mode=OneWay}"/>
+                         <NumberBox x:Name="RefreshInterval" Width="150" SpinButtonPlacementMode="Compact" Minimum="6" Maximum="600" ValueChanged="RefreshInterval_ValueChanged" IsEnabled="{x:Bind EnableAutoRefresh.IsOn, Mode=OneWay}"/>
                      </StackPanel>
                 </Grid>
 

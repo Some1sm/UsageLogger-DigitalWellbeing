@@ -36,14 +36,34 @@
                 </MenuFlyout>
             </tb:TaskbarIcon.ContextFlyout>
         </tb:TaskbarIcon>
-        <NavigationView x:Name="NavView" Grid.Row="1" Loaded="NavView_Loaded" ItemInvoked="NavView_ItemInvoked">
+        <NavigationView x:Name="NavView" Grid.Row="1" IsBackButtonVisible="Collapsed" Loaded="NavView_Loaded" ItemInvoked="NavView_ItemInvoked">
             <NavigationView.MenuItems>
                 <NavigationViewItem Icon="Home" Content="Dashboard" Tag="Dashboard" />
                 <NavigationViewItem Icon="Calendar" Content="Distribution Analysis" Tag="History" />
                 <NavigationViewItem Icon="List" Content="Detailed Usage" Tag="Sessions" />
             </NavigationView.MenuItems>
 
-            <Frame x:Name="ContentFrame" />
+            <Grid>
+                <Frame x:Name="ContentFrame" />
+                
+                <!-- Incognito Mode Watermark -->
+                <!-- Incognito Mode Watermark -->
+                <Viewbox x:Name="IncognitoWatermark" Visibility="Collapsed" Width="200" Height="200" 
+                         Opacity="0.08" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False">
+                    <Canvas Width="100" Height="100">
+                        <!-- Hat Top -->
+                        <Path Data="M22 42 L32 12 Q35 5 50 5 Q65 5 68 12 L78 42 Z" Fill="{ThemeResource TextFillColorPrimaryBrush}"/>
+                        <!-- Hat Brim -->
+                        <Rectangle Canvas.Left="5" Canvas.Top="42" Width="90" Height="10" RadiusX="5" RadiusY="5" Fill="{ThemeResource TextFillColorPrimaryBrush}"/>
+                        <!-- Left Eye -->
+                        <Ellipse Canvas.Left="13" Canvas.Top="55" Width="34" Height="34" Fill="{ThemeResource TextFillColorPrimaryBrush}"/>
+                        <!-- Right Eye -->
+                        <Ellipse Canvas.Left="53" Canvas.Top="55" Width="34" Height="34" Fill="{ThemeResource TextFillColorPrimaryBrush}"/>
+                        <!-- Bridge -->
+                        <Rectangle Canvas.Left="42" Canvas.Top="69" Width="16" Height="6" Fill="{ThemeResource TextFillColorPrimaryBrush}"/>
+                    </Canvas>
+                </Viewbox>
+            </Grid>
         </NavigationView>
     </Grid>
 </Window>
