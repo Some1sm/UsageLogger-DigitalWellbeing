@@ -26,8 +26,8 @@ Write-Host "Organizing Files..."
 $finalDir = "$releaseDir/DigitalWellbeing"
 New-Item -ItemType Directory -Force -Path $finalDir | Out-Null
 
-Copy-Item -Recurse "$releaseDir/App/*" "$finalDir"
-Copy-Item -Recurse "$releaseDir/Service/*" "$finalDir"
+Copy-Item -Recurse "$releaseDir/App/*" "$finalDir" -Exclude "*.pdb", "*.xml"
+Copy-Item -Recurse "$releaseDir/Service/*" "$finalDir" -Exclude "*.pdb", "*.xml"
 
 
 # Create Manifest / Readme
