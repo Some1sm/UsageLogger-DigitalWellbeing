@@ -6,7 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{840C416C-B8F3-42BC-B0DD-F6BB14C9F8CB}") = "Setup", "Setup\Setup.aiproj", "{030FEB95-87D8-44FB-94B3-7D116ED7A1E8}"
 EndProject
 
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DigitalWellbeingService.NET4.6", "DigitalWellbeingService.NET4.6\DigitalWellbeingService.NET4.6.csproj", "{B4E54005-C6DC-4003-BFFE-01F0514EB985}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DigitalWellbeingService", "DigitalWellbeingService\DigitalWellbeingService.csproj", "{B4E54005-C6DC-4003-BFFE-01F0514EB985}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DigitalWellbeing.Core", "DigitalWellbeing.Core\DigitalWellbeing.Core.csproj", "{BB50062A-EC3C-4C04-9608-E4ED18543048}"
 EndProject

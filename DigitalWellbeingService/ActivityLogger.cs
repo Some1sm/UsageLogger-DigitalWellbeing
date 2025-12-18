@@ -1,7 +1,7 @@
 ﻿using DigitalWellbeing.Core;
 using DigitalWellbeing.Core.Data;
 using DigitalWellbeing.Core.Models;
-using DigitalWellbeingService.NET4._6.Helpers;
+using DigitalWellbeingService.Helpers;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Environment;
 
-namespace DigitalWellbeingService.NET4._6
+namespace DigitalWellbeingService
 {
     public class ActivityLogger
     {

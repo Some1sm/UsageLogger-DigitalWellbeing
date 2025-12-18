@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
-    <Authors>Christian Kyle Ching</Authors>
+    <Authors>David Cepero López</Authors>
     <Company>Some1sm</Company>
     <Product>DigitalWellbeingService</Product>
     <Description>A service needed by Digital Wellbeing For Windows to function properly.</Description>

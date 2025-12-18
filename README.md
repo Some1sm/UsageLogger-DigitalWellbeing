@@ -31,7 +31,7 @@ If the app crashes upon opening, try:
 
 ### Solution Projects
 - `DigitalWellbeing.Core` - A class library that has static shared classes.
-- `DigitalWellbeingService.NET4.6` - Background service (Legacy .NET 4.6 for compatibility).
+- `DigitalWellbeingService` - Background service (Core logic).
 - `DigitalWellbeingWinUI3` - **New** WinUI 3 Frontend.
 - `DigitalWellbeingWPF` - **Legacy** WPF Frontend (Deprecaated).
 - `DigitalWellbeing.Setup` - Installer logic.

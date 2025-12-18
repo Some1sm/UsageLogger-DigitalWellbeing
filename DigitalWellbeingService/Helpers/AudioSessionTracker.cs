@@ -4,7 +4,7 @@ using System.Diagnostics;
 using NAudio.CoreAudioApi;
 using NAudio.CoreAudioApi.Interfaces;
 
-namespace DigitalWellbeingService.NET4._6.Helpers
+namespace DigitalWellbeingService.Helpers
 {
     public static class AudioSessionTracker
     {

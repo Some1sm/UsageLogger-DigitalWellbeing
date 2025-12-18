@@ -1,12 +1,12 @@
 using DigitalWellbeing.Core.Data;
 using DigitalWellbeing.Core.Models;
-using DigitalWellbeingService.NET4._6.Helpers;
+using DigitalWellbeingService.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace DigitalWellbeingService.NET4._6
+namespace DigitalWellbeingService
 {
     public class SessionManager
     {

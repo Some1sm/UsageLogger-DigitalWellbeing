@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DigitalWellbeingService.NET4._6.Helpers
+namespace DigitalWellbeingService.Helpers
 {
     /// <summary>
     /// Tracks audio session persistence with debouncing logic.

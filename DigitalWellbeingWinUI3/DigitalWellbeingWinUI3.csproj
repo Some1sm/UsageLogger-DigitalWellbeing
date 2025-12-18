@@ -12,7 +12,7 @@
     <WindowsPackageType>None</WindowsPackageType>
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
     <EnableMsixTooling>true</EnableMsixTooling>
-    <Authors>Christian Kyle Ching</Authors>
+    <Authors>David Cepero López</Authors>
     <Company>Some1sm</Company>
     <Product>Digital Wellbeing For Windows</Product>
     <Version>2.1.0.0</Version>

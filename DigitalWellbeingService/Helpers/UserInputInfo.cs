@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace DigitalWellbeingService.NET4._6.Helpers
+namespace DigitalWellbeingService.Helpers
 {
     public static class UserInputInfo
     {

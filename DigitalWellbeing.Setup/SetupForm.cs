@@ -164,7 +164,7 @@ namespace DigitalWellbeing.Setup
 
             UpdateStatus("Stopping application...");
             foreach (var proc in Process.GetProcessesByName("DigitalWellbeingWinUI3")) { try { proc.Kill(); } catch { } }
-            foreach (var proc in Process.GetProcessesByName("DigitalWellbeingService.NET4.6")) { try { proc.Kill(); } catch { } }
+            foreach (var proc in Process.GetProcessesByName("DigitalWellbeingService")) { try { proc.Kill(); } catch { } }
             await Task.Delay(1000);
 
             UpdateStatus("Extracting files...");
@@ -216,7 +216,7 @@ namespace DigitalWellbeing.Setup
                 CreateShortcut(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "DigitalWellbeing.lnk", exePath, installPath);
                 
                 // Service Shortcut (Critical for data logging)
-                string serviceExePath = Path.Combine(installPath, "DigitalWellbeingService.NET4.6.exe");
+                string serviceExePath = Path.Combine(installPath, "DigitalWellbeingService.exe");
                 CreateShortcut(Environment.GetFolderPath(Environment.SpecialFolder.Startup), "DigitalWellbeing Service.lnk", serviceExePath, installPath);
 
                 string infoPrograms = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Programs), AppName);
@@ -230,7 +230,7 @@ namespace DigitalWellbeing.Setup
             UpdateStatus("Starting application...");
             
             // Start Service
-            string servicePath = Path.Combine(installPath, "DigitalWellbeingService.NET4.6.exe");
+            string servicePath = Path.Combine(installPath, "DigitalWellbeingService.exe");
             if (File.Exists(servicePath))
             {
                 ProcessStartInfo serviceInfo = new ProcessStartInfo(servicePath);
@@ -260,7 +260,7 @@ namespace DigitalWellbeing.Setup
             UpdateStatus("Stopping application...");
             
             foreach (var proc in Process.GetProcessesByName("DigitalWellbeingWinUI3")) { try { proc.Kill(); } catch { } }
-            foreach (var proc in Process.GetProcessesByName("DigitalWellbeingService.NET4.6")) { try { proc.Kill(); } catch { } }
+            foreach (var proc in Process.GetProcessesByName("DigitalWellbeingService")) { try { proc.Kill(); } catch { } }
 
             await Task.Delay(2000);
 

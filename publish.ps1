@@ -18,7 +18,7 @@ dotnet publish DigitalWellbeingWinUI3/DigitalWellbeingWinUI3.csproj -c Release -
 
 # Service
 # Service
-dotnet publish DigitalWellbeingService.NET4.6/DigitalWellbeingService.NET4.6.csproj -c Release -r win-x64 --self-contained false -o "$releaseDir/Service"
+dotnet publish DigitalWellbeingService/DigitalWellbeingService.csproj -c Release -r win-x64 --self-contained false -o "$releaseDir/Service"
 
 # Organize Files
 Write-Host "Organizing Files..."
@@ -37,7 +37,7 @@ DigitalWellbeing Portable
 
 Usage:
 1. Run 'DigitalWellbeingWinUI3.exe' to start the application.
-2. The background service 'DigitalWellbeingService.NET4.6.exe' should start automatically or be managed by the app.
+2. The background service 'DigitalWellbeingService.exe' should start automatically or be managed by the app.
 
 Requirements:
 - .NET Framework 4.7.2

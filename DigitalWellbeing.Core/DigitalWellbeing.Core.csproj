@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net472;net8.0-windows10.0.19041.0</TargetFrameworks>
-    <Authors>Christian Kyle Ching</Authors>
+    <Authors>David Cepero López</Authors>
     <Company>Some1sm</Company>
     <Product>DigitalWellbeing.Core</Product>
     <Description>Needed libraries for Digital Wellbeing for Windows</Description>

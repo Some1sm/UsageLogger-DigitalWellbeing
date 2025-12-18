@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DigitalWellbeingService.NET4._6
+namespace DigitalWellbeingService
 {
     class Program
     {
