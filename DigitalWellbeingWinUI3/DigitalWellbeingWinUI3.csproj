@@ -15,7 +15,7 @@
     <Authors>David Cepero López</Authors>
     <Company>Some1sm</Company>
     <Product>Digital Wellbeing For Windows</Product>
-    <Version>2.1.0.0</Version>
+    <Version>0.8.0.0</Version>
     <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
   </PropertyGroup>
 

@@ -8,9 +8,9 @@
     <Description>Needed libraries for Digital Wellbeing for Windows</Description>
     <Copyright>© 2025 David Cepero</Copyright>
     <AssemblyTitle>DigitalWellbeing.Core</AssemblyTitle>
-    <Version>2.1.0.0</Version>
-    <AssemblyVersion>2.1.0.0</AssemblyVersion>
-    <FileVersion>2.1.0.0</FileVersion>
+    <Version>0.8.0.0</Version>
+    <AssemblyVersion>0.8.0.0</AssemblyVersion>
+    <FileVersion>0.8.0.0</FileVersion>
     <UseWPF>false</UseWPF>
     <UseWindowsForms>false</UseWindowsForms>
   </PropertyGroup>
