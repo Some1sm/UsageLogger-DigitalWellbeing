@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net472;net8.0-windows10.0.19041.0</TargetFrameworks>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <Authors>David Cepero López</Authors>
     <Company>Some1sm</Company>
     <Product>DigitalWellbeing.Core</Product>
