@@ -722,6 +722,17 @@ namespace DigitalWellbeingWinUI3.ViewModels
             {
                 existingList.Add(newItem);
             }
+            
+            // Re-sort by Duration descending to ensure correct order after day change
+            var sorted = existingList.OrderByDescending(x => x.Duration).ToList();
+            for (int i = 0; i < sorted.Count; i++)
+            {
+                int currentIndex = existingList.IndexOf(sorted[i]);
+                if (currentIndex != i)
+                {
+                    existingList.Move(currentIndex, i);
+                }
+            }
         }
 
         /// <summary>
