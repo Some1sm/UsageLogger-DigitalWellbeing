@@ -487,7 +487,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 newSeries.Add(new PieSeries<double>
                 {
                     Values = new ObservableCollection<double> { kvp.Value },
-                    Name = kvp.Key,
+                    Name = UserPreferences.GetDisplayName(kvp.Key),
                     DataLabelsPaint = new SolidColorPaint(SKColors.Black),
                     DataLabelsFormatter = (p) => (p.Coordinate.PrimaryValue / totalDuration > 0.05) ? p.Context.Series.Name : "",
                     ToolTipLabelFormatter = (p) => FormatDuration(p.Coordinate.PrimaryValue)
