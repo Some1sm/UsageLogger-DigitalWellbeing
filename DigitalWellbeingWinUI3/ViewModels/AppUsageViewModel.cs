@@ -687,7 +687,26 @@ namespace DigitalWellbeingWinUI3.ViewModels
                     // Update in place - preserve IsExpanded state
                     existing.Duration = newItem.Duration;
                     existing.Percentage = newItem.Percentage;
-                    // Don't update Children here - that would reset them
+                    
+                    // Update Children if they changed (different day or data changed)
+                    // Compare by checking if children count differs or first child differs
+                    bool childrenChanged = existing.Children.Count != newItem.Children.Count;
+                    if (!childrenChanged && existing.Children.Count > 0 && newItem.Children.Count > 0)
+                    {
+                        // Quick check: compare first child's title and duration
+                        childrenChanged = existing.Children[0].Title != newItem.Children[0].Title ||
+                                          existing.Children[0].Duration != newItem.Children[0].Duration;
+                    }
+                    
+                    if (childrenChanged)
+                    {
+                        existing.Children.Clear();
+                        foreach (var child in newItem.Children)
+                        {
+                            existing.Children.Add(child);
+                        }
+                    }
+                    
                     // Mark as processed
                     newDict.Remove(existing.ProcessName);
                 }
