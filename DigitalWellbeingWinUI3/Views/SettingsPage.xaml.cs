@@ -252,7 +252,11 @@ namespace DigitalWellbeingWinUI3.Views
 
         private void BtnOpenAppFolder_Click(object sender, RoutedEventArgs e)
         {
-             Process.Start(new ProcessStartInfo(ApplicationPath.APP_LOCATION) { UseShellExecute = true });
+             string logFolder = ApplicationPath.UsageLogsFolder;
+             if (System.IO.Directory.Exists(logFolder))
+             {
+                 Process.Start(new ProcessStartInfo(logFolder) { UseShellExecute = true });
+             }
         }
         public ObservableCollection<CustomAppTag> Tags { get; set; } = new ObservableCollection<CustomAppTag>();
 
@@ -382,6 +386,15 @@ namespace DigitalWellbeingWinUI3.Views
             
             // Restart Service
             RestartBackgroundService();
+        }
+
+        private void BtnOpenLogFolder_Click(object sender, RoutedEventArgs e)
+        {
+            string logFolder = ApplicationPath.UsageLogsFolder;
+            if (System.IO.Directory.Exists(logFolder))
+            {
+                Process.Start(new ProcessStartInfo(logFolder) { UseShellExecute = true });
+            }
         }
 
         private void RestartBackgroundService()
