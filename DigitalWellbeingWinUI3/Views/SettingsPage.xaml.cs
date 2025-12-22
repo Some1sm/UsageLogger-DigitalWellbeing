@@ -98,6 +98,9 @@ namespace DigitalWellbeingWinUI3.Views
             // Combined Audio View
             ToggleCombinedAudioView.IsOn = UserPreferences.ShowCombinedAudioView;
 
+            // Log Location
+            LoadLogLocation();
+
             _isLoading = false;
             MarkClean();
         }
@@ -341,6 +344,69 @@ namespace DigitalWellbeingWinUI3.Views
         public Microsoft.UI.Xaml.Media.SolidColorBrush GetBrush(string hex)
         {
             return new Microsoft.UI.Xaml.Media.SolidColorBrush(DigitalWellbeingWinUI3.Helpers.ColorHelper.GetColorFromHex(hex));
+        }
+
+        // ===== Log Location =====
+        private void LoadLogLocation()
+        {
+            string customPath = ApplicationPath.GetCustomLogsFolderRaw();
+            TxtLogLocation.Text = string.IsNullOrEmpty(customPath) ? ApplicationPath.UsageLogsFolder : customPath;
+        }
+
+        private async void BtnBrowseLogLocation_Click(object sender, RoutedEventArgs e)
+        {
+            var picker = new Windows.Storage.Pickers.FolderPicker();
+            picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary;
+            picker.FileTypeFilter.Add("*");
+            
+            // Initialize with window handle for WinUI 3
+            var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(App.MainWindow);
+            WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
+
+            var folder = await picker.PickSingleFolderAsync();
+            if (folder != null)
+            {
+                string newPath = folder.Path;
+                ApplicationPath.SetCustomLogsFolder(newPath);
+                TxtLogLocation.Text = newPath;
+                
+                // Restart Service
+                RestartBackgroundService();
+            }
+        }
+
+        private void BtnResetLogLocation_Click(object sender, RoutedEventArgs e)
+        {
+            ApplicationPath.ClearCustomLogsFolder();
+            TxtLogLocation.Text = ApplicationPath.UsageLogsFolder;
+            
+            // Restart Service
+            RestartBackgroundService();
+        }
+
+        private void RestartBackgroundService()
+        {
+            try
+            {
+                // Find and kill existing service process
+                var processes = Process.GetProcessesByName("DigitalWellbeingService");
+                foreach (var proc in processes)
+                {
+                    proc.Kill();
+                    proc.WaitForExit(3000);
+                }
+
+                // Start new instance
+                string servicePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Service", "DigitalWellbeingService.exe");
+                if (System.IO.File.Exists(servicePath))
+                {
+                    Process.Start(new ProcessStartInfo(servicePath) { UseShellExecute = true, WindowStyle = ProcessWindowStyle.Hidden });
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Service restart failed: {ex.Message}");
+            }
         }
     }
 }

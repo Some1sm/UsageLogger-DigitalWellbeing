@@ -45,7 +45,53 @@ namespace DigitalWellbeing.Core
 
         public static string UsageLogsFolder
         {
-            get => APP_LOCATION + $@"\{dailyLogsFolderName}\";
+            get
+            {
+                // Check for custom path
+                string customPathFile = System.IO.Path.Combine(APP_LOCATION, "custom_log_path.txt");
+                if (System.IO.File.Exists(customPathFile))
+                {
+                    try
+                    {
+                        string customPath = System.IO.File.ReadAllText(customPathFile).Trim();
+                        if (!string.IsNullOrEmpty(customPath) && System.IO.Directory.Exists(customPath))
+                        {
+                            return customPath.EndsWith("\\") ? customPath : customPath + "\\";
+                        }
+                    }
+                    catch { }
+                }
+                // Default
+                return APP_LOCATION + $@"\{dailyLogsFolderName}\";
+            }
+        }
+
+        public static void SetCustomLogsFolder(string path)
+        {
+            string customPathFile = System.IO.Path.Combine(APP_LOCATION, "custom_log_path.txt");
+            System.IO.Directory.CreateDirectory(APP_LOCATION);
+            System.IO.File.WriteAllText(customPathFile, path ?? "");
+        }
+
+        public static void ClearCustomLogsFolder()
+        {
+            string customPathFile = System.IO.Path.Combine(APP_LOCATION, "custom_log_path.txt");
+            if (System.IO.File.Exists(customPathFile))
+                System.IO.File.Delete(customPathFile);
+        }
+
+        public static string GetCustomLogsFolderRaw()
+        {
+            string customPathFile = System.IO.Path.Combine(APP_LOCATION, "custom_log_path.txt");
+            if (System.IO.File.Exists(customPathFile))
+            {
+                try
+                {
+                    return System.IO.File.ReadAllText(customPathFile).Trim();
+                }
+                catch { }
+            }
+            return null;
         }
 
         public static string SettingsFolder
