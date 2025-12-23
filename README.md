@@ -1,20 +1,21 @@
 # Windows Digital Wellbeing
 
-An App Usage tracker (time tracker) for Windows 11 inspired by Digital Wellbeing in Android. 
-Recently ported to **WinUI 3 / Windows App SDK** for a modern, native Windows 11 look and feel.
-
-> **Note**: This is a fork/continuation of the original project, now rewritten for better performance and aesthetics.
+A modern App Usage tracker (time tracker) for Windows 11 inspired by Digital Wellbeing in Android. 
+Built with **WinUI 3 / Windows App SDK** for a beautiful, native Windows 11 look and feel.
 
 ## Features
-- **Weekly Usage**. View past week's total usage time (last 7 days).
-- **Day App Usage**. View daily app usage time (Pie Chart and List).
-- **Alert Notifications**. Set a time limit per app of when to notify you when limit is exceeded.
-- **Auto-Start**. Run on Startup option, minimized to tray.
-- **App Tagging**. Tag apps based on their category.
-- **Exclude Apps**. Set a filter of apps to exclude.
-- **Filter out short time entries**. Set a filter to hide apps that are run less than the set time limit.
-- **Auto-Refresh**. Auto-Refresh charts on intervals.
-- **Design**. Full Dark Mode support and Windows 11 Mica material.
+- **Weekly Usage**: View usage trends for the past 7 days.
+- **Day App Usage**: Detailed daily breakdown with Pie Charts and Lists.
+- **Sub-App Tracking**: Track time for specific window titles (e.g., individual browser tabs, sub-windows) separately.
+- **Time Limits**: Set time limits per app or sub-app.
+    - **Enforcement**: receive notifications and optional blocking prompts (Ignore, +5min, Close App) when limits are exceeded.
+- **App Tagging**: Organize apps into categories (Work, Social, Games, etc.) with custom colors.
+    - **Sub-Tagging**: Assign different categories to specific sub-apps (e.g., "YouTube" as *Entertainment* vs "Docs" as *Work* within the same browser).
+- **Auto-Refresh**: Live UI updates including duration counters.
+- **Exclude Apps**: Filter out specific apps or helper processes.
+- **Incognito Mode**: Option to pause detailed tracking.
+- **Auto-Start**: Can run on startup, minimized to system tray.
+- **Design**: Fully supports Light/Dark themes and uses Windows 11 Mica materials.
 
 ## Installation
 **Download the .exe** installer from the [Releases](https://github.com/Some1sm/Windows-Digital-Wellbeing/releases) page (coming soon).
@@ -30,11 +31,10 @@ If the app crashes upon opening, try:
 ## For Developers
 
 ### Solution Projects
-- `DigitalWellbeing.Core` - A class library that has static shared classes.
-- `DigitalWellbeingService` - Background service (Core logic).
-- `DigitalWellbeingWinUI3` - **New** WinUI 3 Frontend.
-- `DigitalWellbeingWPF` - **Legacy** WPF Frontend (Deprecaated).
-- `DigitalWellbeing.Setup` - Installer logic.
+- `DigitalWellbeing.Core` - Static shared class library.
+- `DigitalWellbeingService` - Background service (Core tracking logic, .NET Framework 4.7.2).
+- `DigitalWellbeingWinUI3` - Modern Frontend (.NET 8, WinUI 3).
+- `DigitalWellbeing.Setup` - Installer generation logic.
 
 ### How to Build
 To build the installer, run the valid PowerShell script in the root directory:
