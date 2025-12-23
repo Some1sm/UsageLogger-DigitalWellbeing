@@ -490,21 +490,38 @@ namespace DigitalWellbeingWinUI3.Views
                 }
             }
         }
+        // Field to store the current sub-item for context menu operations
+        private AppUsageSubItem _currentSubItem;
 
+        private void SubItemMenuFlyout_Opening(object sender, object e)
+        {
+            if (sender is MenuFlyout flyout && flyout.Target is FrameworkElement target && target.DataContext is AppUsageSubItem subItem)
+            {
+                _currentSubItem = subItem;
+                
+                // Write to file for debugging
+                try
+                {
+                    string logPath = System.IO.Path.Combine(DigitalWellbeing.Core.ApplicationPath.APP_LOCATION, "debug_titletag.log");
+                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: SubItem menu opened - ParentProcess={subItem.ParentProcessName}, Title={subItem.Title}\n");
+                }
+                catch { }
+            }
+        }
+
+        private async void SubItemMenuFlyoutItem_SetTag_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currentSubItem != null)
+            {
+                await OpenTitleTagDialog(_currentSubItem);
+            }
+        }
+
+        // Keep old handler for backwards compatibility but it shouldn't be used anymore
         public void SubItem_RightTapped(object sender, Microsoft.UI.Xaml.Input.RightTappedRoutedEventArgs e)
         {
-            var grid = sender as Grid;
-            var subItem = grid?.DataContext as AppUsageSubItem;
-
-            if (subItem != null)
-            {
-                var flyout = new MenuFlyout();
-                var tagItem = new MenuFlyoutItem { Text = "Set Category (Tag)", Icon = new SymbolIcon(Symbol.Tag) };
-                tagItem.Click += async (s, args) => await OpenTitleTagDialog(subItem);
-                flyout.Items.Add(tagItem);
-                flyout.ShowAt(grid, e.GetPosition(grid));
-                e.Handled = true;
-            }
+            // This should no longer be called since we're using ContextFlyout instead
+            e.Handled = true;
         }
 
         private async Task OpenTitleTagDialog(AppUsageSubItem item)
@@ -551,7 +568,43 @@ namespace DigitalWellbeingWinUI3.Views
                 
                 if (tagCombo.SelectedValue is int tagId)
                 {
+                    // DEBUG: Show what we're about to save
+                    var debugMsg = $"Saving Title Tag:\n\nParentProcess: {item.ParentProcessName}\nKeyword: {keyword}\nTagId: {tagId}";
+                    System.Diagnostics.Debug.WriteLine($"[TitleTag] {debugMsg}");
+                    
+                    // Write to file for debugging
+                    try
+                    {
+                        string logPath = System.IO.Path.Combine(DigitalWellbeing.Core.ApplicationPath.APP_LOCATION, "debug_titletag.log");
+                        System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {debugMsg.Replace("\n", " | ")}\n");
+                    }
+                    catch { }
+                    
+                    // Actually save as title tag (NOT app tag)
                     DigitalWellbeingWinUI3.Helpers.AppTagHelper.UpdateTitleTag(item.ParentProcessName, keyword, tagId);
+                    
+                    // Update the sub-item's brushes directly for immediate UI feedback
+                    if (tagId != 0)
+                    {
+                        var newTag = (DigitalWellbeing.Core.Models.AppTag)tagId;
+                        var brush = DigitalWellbeingWinUI3.Helpers.AppTagHelper.GetTagColor(newTag) as Microsoft.UI.Xaml.Media.SolidColorBrush;
+                        if (brush != null)
+                        {
+                            item.TagIndicatorBrush = brush;
+                            item.TagTextBrush = brush;
+                            var bgColor = brush.Color;
+                            bgColor.A = 128;
+                            item.BackgroundBrush = new Microsoft.UI.Xaml.Media.SolidColorBrush(bgColor);
+                        }
+                    }
+                    else
+                    {
+                        item.TagIndicatorBrush = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent);
+                        item.TagTextBrush = null;
+                        item.BackgroundBrush = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent);
+                    }
+                    
+                    // Trigger property change notifications on the parent
                     ViewModel.RefreshDayView();
                 }
             }

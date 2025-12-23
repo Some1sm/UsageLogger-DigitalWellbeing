@@ -581,12 +581,21 @@ namespace DigitalWellbeingWinUI3.ViewModels
                                 {
                                     subItem.TagIndicatorBrush = new SolidColorBrush(Microsoft.UI.Colors.Transparent);
                                     subItem.TagTextBrush = null;
+                                    subItem.BackgroundBrush = new SolidColorBrush(Microsoft.UI.Colors.Transparent);
                                 }
                                 else
                                 {
                                     var brush = AppTagHelper.GetTagColor(childTag) as SolidColorBrush;
                                     subItem.TagIndicatorBrush = brush;
                                     subItem.TagTextBrush = brush;
+                                    
+                                    // Set semi-transparent background (50% opacity)
+                                    if (brush != null)
+                                    {
+                                        var bgColor = brush.Color;
+                                        bgColor.A = 128; // 50% opacity
+                                        subItem.BackgroundBrush = new SolidColorBrush(bgColor);
+                                    }
                                 }
 
                                 listItem.Children.Add(subItem);

@@ -219,7 +219,16 @@ namespace DigitalWellbeingWinUI3.Helpers
                     lines.Add($"{parts[0]}\t{parts[1]}\t{kvp.Value}");
                 }
             }
-            try { File.WriteAllLines(titleTagsPath, lines); } catch { }
+            try 
+            { 
+                Directory.CreateDirectory(Path.GetDirectoryName(titleTagsPath));
+                File.WriteAllLines(titleTagsPath, lines);
+                Debug.WriteLine($"[SettingsManager] Saved {lines.Count} title tags to {titleTagsPath}");
+            } 
+            catch (Exception ex) 
+            { 
+                Debug.WriteLine($"[SettingsManager] SaveTitleTags ERROR: {ex.Message}");
+            }
         }
 
         public static void UpdateAppTag(string processName, AppTag appTag)
@@ -239,6 +248,7 @@ namespace DigitalWellbeingWinUI3.Helpers
         public static void UpdateTitleTag(string processName, string keyword, int tagId)
         {
             string key = processName + "|" + keyword;
+            Debug.WriteLine($"[SettingsManager] UpdateTitleTag: key={key}, tagId={tagId}");
             
             if (tagId == 0) // Untagged/Remove
             {
@@ -249,6 +259,7 @@ namespace DigitalWellbeingWinUI3.Helpers
                 if (titleTags.ContainsKey(key)) titleTags[key] = tagId;
                 else titleTags.Add(key, tagId);
             }
+            Debug.WriteLine($"[SettingsManager] titleTags count after update: {titleTags.Count}");
             SaveTitleTags();
         }
 

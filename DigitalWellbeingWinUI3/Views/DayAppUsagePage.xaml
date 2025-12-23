@@ -81,7 +81,12 @@
                         </ListView.ItemContainerStyle>
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <Grid Padding="60,4,15,4" RightTapped="SubItem_RightTapped" Background="Transparent" ToolTipService.ToolTip="Right-click to Tag">
+                                <Grid Padding="60,4,15,4" Background="{Binding BackgroundBrush}" CornerRadius="4" Margin="4,2" ToolTipService.ToolTip="Right-click to Tag">
+                                    <Grid.ContextFlyout>
+                                        <MenuFlyout Opening="SubItemMenuFlyout_Opening">
+                                            <MenuFlyoutItem x:Name="SubItemTagMenuItem" Text="Set Category (Tag)" Icon="Tag" Click="SubItemMenuFlyoutItem_SetTag_Click"/>
+                                        </MenuFlyout>
+                                    </Grid.ContextFlyout>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="100"/>
