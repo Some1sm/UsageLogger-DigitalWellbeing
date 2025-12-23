@@ -6,6 +6,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -20,9 +21,21 @@ namespace DigitalWellbeing.Setup
         private Button btnUninstall;
         private string[] _args;
 
+        // Install scope UI
+        private RadioButton rbDeviceInstall;
+        private RadioButton rbUserInstall;
+        private TextBox txtInstallPath;
+        private Button btnBrowse;
+        private Label lblInstallPath;
+
         private const string AppName = "DigitalWellbeing";
         private const string PublisherName = "David Cepero";
         private const string RegistryKeyPath = @"Software\Microsoft\Windows\CurrentVersion\Uninstall\" + AppName;
+
+        private bool IsDeviceInstall => rbDeviceInstall.Checked;
+        
+        private string DefaultDevicePath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), AppName);
+        private string DefaultUserPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), AppName);
 
         public SetupForm(string[] args)
         {
@@ -33,27 +46,63 @@ namespace DigitalWellbeing.Setup
         private void InitializeComponent()
         {
             this.Text = "DigitalWellbeing Setup";
-            this.Size = new Size(400, 200);
+            this.Size = new Size(450, 280);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
 
             statusLabel = new Label();
-            statusLabel.Text = "Checking system...";
-            statusLabel.Location = new Point(20, 20);
+            statusLabel.Text = "Choose installation type:";
+            statusLabel.Location = new Point(20, 15);
             statusLabel.AutoSize = true;
             this.Controls.Add(statusLabel);
 
+            // Install scope radio buttons
+            rbDeviceInstall = new RadioButton();
+            rbDeviceInstall.Text = "Install for all users (recommended)";
+            rbDeviceInstall.Location = new Point(20, 40);
+            rbDeviceInstall.AutoSize = true;
+            rbDeviceInstall.Checked = true;
+            rbDeviceInstall.CheckedChanged += InstallScope_Changed;
+            this.Controls.Add(rbDeviceInstall);
+
+            rbUserInstall = new RadioButton();
+            rbUserInstall.Text = "Install for current user only";
+            rbUserInstall.Location = new Point(20, 65);
+            rbUserInstall.AutoSize = true;
+            rbUserInstall.CheckedChanged += InstallScope_Changed;
+            this.Controls.Add(rbUserInstall);
+
+            // Install path
+            lblInstallPath = new Label();
+            lblInstallPath.Text = "Install location:";
+            lblInstallPath.Location = new Point(20, 95);
+            lblInstallPath.AutoSize = true;
+            this.Controls.Add(lblInstallPath);
+
+            txtInstallPath = new TextBox();
+            txtInstallPath.Location = new Point(20, 115);
+            txtInstallPath.Size = new Size(320, 25);
+            txtInstallPath.Text = DefaultDevicePath;
+            this.Controls.Add(txtInstallPath);
+
+            btnBrowse = new Button();
+            btnBrowse.Text = "Browse...";
+            btnBrowse.Location = new Point(345, 113);
+            btnBrowse.Size = new Size(80, 25);
+            btnBrowse.Click += BtnBrowse_Click;
+            this.Controls.Add(btnBrowse);
+
             progressBar = new ProgressBar();
-            progressBar.Location = new Point(20, 50);
-            progressBar.Size = new Size(340, 30);
+            progressBar.Location = new Point(20, 150);
+            progressBar.Size = new Size(405, 25);
             progressBar.Style = ProgressBarStyle.Marquee;
             progressBar.Visible = false; 
             this.Controls.Add(progressBar);
 
             // Buttons
-            int btnY = 100;
-            int btnHeight = 30;
+            int btnY = 190;
+            int btnHeight = 35;
             int btnWidth = 100;
 
             btnInstall = new Button();
@@ -80,6 +129,27 @@ namespace DigitalWellbeing.Setup
             this.Load += SetupForm_Load;
         }
 
+        private void InstallScope_Changed(object sender, EventArgs e)
+        {
+            if (rbDeviceInstall.Checked)
+                txtInstallPath.Text = DefaultDevicePath;
+            else
+                txtInstallPath.Text = DefaultUserPath;
+        }
+
+        private void BtnBrowse_Click(object sender, EventArgs e)
+        {
+            using (FolderBrowserDialog fbd = new FolderBrowserDialog())
+            {
+                fbd.Description = "Select installation folder";
+                fbd.SelectedPath = txtInstallPath.Text;
+                if (fbd.ShowDialog() == DialogResult.OK)
+                {
+                    txtInstallPath.Text = fbd.SelectedPath;
+                }
+            }
+        }
+
         private async void SetupForm_Load(object sender, EventArgs e)
         {
             try
@@ -87,6 +157,7 @@ namespace DigitalWellbeing.Setup
                 if (_args != null && _args.Contains("/uninstall"))
                 {
                     this.Text = "DigitalWellbeing Uninstall";
+                    HideInstallOptions();
                     ToggleButtons(false);
                     progressBar.Visible = true;
                     await RunUninstall();
@@ -102,37 +173,106 @@ namespace DigitalWellbeing.Setup
             }
         }
 
+        private void HideInstallOptions()
+        {
+            rbDeviceInstall.Visible = false;
+            rbUserInstall.Visible = false;
+            txtInstallPath.Visible = false;
+            btnBrowse.Visible = false;
+            lblInstallPath.Visible = false;
+        }
+
         private void CheckInstallationState()
         {
-            bool isInstalled = IsAppInstalled();
+            bool isInstalled = IsAppInstalled(out string existingPath, out bool isUserInstall);
 
             if (isInstalled)
             {
                 statusLabel.Text = "DigitalWellbeing is currently installed.";
+                HideInstallOptions();
                 btnInstall.Visible = false;
-                btnRepair.Visible = true;
+                
+                // For user installs, don't allow modifications (repair)
+                btnRepair.Visible = !isUserInstall;
                 btnUninstall.Visible = true;
             }
             else
             {
-                statusLabel.Text = "Ready to install DigitalWellbeing.";
+                statusLabel.Text = "Choose installation type:";
                 btnInstall.Visible = true;
                 btnRepair.Visible = false;
                 btnUninstall.Visible = false;
             }
         }
 
-        private bool IsAppInstalled()
+        private bool IsAppInstalled(out string installPath, out bool isUserInstall)
         {
+            installPath = null;
+            isUserInstall = false;
+
+            // Check HKCU first (user install)
             using (RegistryKey key = Registry.CurrentUser.OpenSubKey(RegistryKeyPath))
             {
-                return key != null;
+                if (key != null)
+                {
+                    installPath = key.GetValue("InstallLocation") as string;
+                    isUserInstall = true;
+                    return true;
+                }
+            }
+
+            // Check HKLM (device install)
+            using (RegistryKey key = Registry.LocalMachine.OpenSubKey(RegistryKeyPath))
+            {
+                if (key != null)
+                {
+                    installPath = key.GetValue("InstallLocation") as string;
+                    isUserInstall = false;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private bool IsAppInstalled()
+        {
+            return IsAppInstalled(out _, out _);
+        }
+
+        private bool IsRunningAsAdmin()
+        {
+            using (WindowsIdentity identity = WindowsIdentity.GetCurrent())
+            {
+                WindowsPrincipal principal = new WindowsPrincipal(identity);
+                return principal.IsInRole(WindowsBuiltInRole.Administrator);
+            }
+        }
+
+        private void RestartAsAdmin()
+        {
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+            startInfo.FileName = Process.GetCurrentProcess().MainModule.FileName;
+            startInfo.UseShellExecute = true;
+            startInfo.Verb = "runas";
+            startInfo.Arguments = "/device \"" + txtInstallPath.Text + "\"";
+            
+            try
+            {
+                Process.Start(startInfo);
+                Application.Exit();
+            }
+            catch (System.ComponentModel.Win32Exception)
+            {
+                // User cancelled UAC
+                MessageBox.Show("Administrator privileges are required to install for all users.", "Elevation Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
         private async Task StartOperation(Func<Task> operation, string statusText)
         {
             ToggleButtons(false);
+            HideInstallOptions();
             progressBar.Visible = true;
             statusLabel.Text = statusText;
 
@@ -143,7 +283,6 @@ namespace DigitalWellbeing.Setup
             catch (Exception ex)
             {
                 ShowError(ex);
-                // Reset UI on error if we didn't exit
                 progressBar.Visible = false;
                 CheckInstallationState(); 
             }
@@ -158,7 +297,16 @@ namespace DigitalWellbeing.Setup
 
         private async Task RunInstall()
         {
-            string installPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), AppName);
+            string installPath = txtInstallPath.Text.Trim();
+            bool isDeviceInstall = IsDeviceInstall;
+
+            // Require elevation for device install
+            if (isDeviceInstall && !IsRunningAsAdmin())
+            {
+                RestartAsAdmin();
+                return;
+            }
+
             string exePath = Path.Combine(installPath, "DigitalWellbeingWinUI3.exe");
             string uninstallExePath = Path.Combine(installPath, "Uninstall.exe");
 
@@ -170,7 +318,6 @@ namespace DigitalWellbeing.Setup
             UpdateStatus("Extracting files...");
             await Task.Run(() => 
             {
-                // Try clean install, but don't fail if we can't delete (we will overwrite)
                 if (Directory.Exists(installPath))
                 {
                     try { Directory.Delete(installPath, true); } catch { }
@@ -193,7 +340,6 @@ namespace DigitalWellbeing.Setup
                         if (!Directory.Exists(destinationDirectory))
                             Directory.CreateDirectory(destinationDirectory);
 
-                        // If it's a directory entry, ignore (created above)
                         if (entry.Name == "") continue;
 
                         entry.ExtractToFile(destinationPath, true);
@@ -201,7 +347,6 @@ namespace DigitalWellbeing.Setup
                 }
 
                 string currentExe = Process.GetCurrentProcess().MainModule.FileName;
-                // Only copy if we are not running from the target location (self-copy)
                 if (!string.Equals(currentExe, uninstallExePath, StringComparison.OrdinalIgnoreCase))
                 {
                      try { File.Copy(currentExe, uninstallExePath, true); } catch { }
@@ -211,35 +356,37 @@ namespace DigitalWellbeing.Setup
             UpdateStatus("Creating shortcuts...");
             await Task.Run(() =>
             {
-                // UI Shortcuts
-                CreateShortcut(Environment.GetFolderPath(Environment.SpecialFolder.Startup), "DigitalWellbeing.lnk", exePath, installPath);
-                CreateShortcut(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "DigitalWellbeing.lnk", exePath, installPath);
-                
-                // Service Shortcut (Critical for data logging)
-                string serviceExePath = Path.Combine(installPath, "DigitalWellbeingService.exe");
-                CreateShortcut(Environment.GetFolderPath(Environment.SpecialFolder.Startup), "DigitalWellbeing Service.lnk", serviceExePath, installPath);
+                // Choose appropriate folders based on install scope
+                Environment.SpecialFolder startupFolder = isDeviceInstall ? Environment.SpecialFolder.CommonStartup : Environment.SpecialFolder.Startup;
+                Environment.SpecialFolder desktopFolder = isDeviceInstall ? Environment.SpecialFolder.CommonDesktopDirectory : Environment.SpecialFolder.DesktopDirectory;
+                Environment.SpecialFolder programsFolder = isDeviceInstall ? Environment.SpecialFolder.CommonPrograms : Environment.SpecialFolder.Programs;
 
-                string infoPrograms = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Programs), AppName);
+                // UI Shortcuts
+                CreateShortcut(Environment.GetFolderPath(startupFolder), "DigitalWellbeing.lnk", exePath, installPath);
+                CreateShortcut(Environment.GetFolderPath(desktopFolder), "DigitalWellbeing.lnk", exePath, installPath);
+                
+                // Service Shortcut
+                string serviceExePath = Path.Combine(installPath, "DigitalWellbeingService.exe");
+                CreateShortcut(Environment.GetFolderPath(startupFolder), "DigitalWellbeing Service.lnk", serviceExePath, installPath);
+
+                string infoPrograms = Path.Combine(Environment.GetFolderPath(programsFolder), AppName);
                 if (!Directory.Exists(infoPrograms)) Directory.CreateDirectory(infoPrograms);
                 CreateShortcut(infoPrograms, "DigitalWellbeing.lnk", exePath, installPath);
             });
 
             UpdateStatus("Registering app...");
-            RegisterUninstaller(installPath, uninstallExePath);
+            RegisterUninstaller(installPath, uninstallExePath, isDeviceInstall);
 
             UpdateStatus("Starting application...");
             
-            // Start Service
             string servicePath = Path.Combine(installPath, "DigitalWellbeingService.exe");
             if (File.Exists(servicePath))
             {
                 ProcessStartInfo serviceInfo = new ProcessStartInfo(servicePath);
                 serviceInfo.WorkingDirectory = Path.GetDirectoryName(servicePath);
-                // serviceInfo.WindowStyle = ProcessWindowStyle.Hidden; // WinExe handles this automatically but explicit doesn't hurt
                 Process.Start(serviceInfo);
             }
 
-            // Start UI
             if (File.Exists(exePath))
             {
                 ProcessStartInfo startInfo = new ProcessStartInfo(exePath);
@@ -264,23 +411,69 @@ namespace DigitalWellbeing.Setup
 
             await Task.Delay(2000);
 
+            // Determine install type from registry
+            bool isDeviceInstall = false;
+            string installPath = null;
+
+            using (RegistryKey key = Registry.LocalMachine.OpenSubKey(RegistryKeyPath))
+            {
+                if (key != null)
+                {
+                    isDeviceInstall = true;
+                    installPath = key.GetValue("InstallLocation") as string;
+                }
+            }
+
+            if (installPath == null)
+            {
+                using (RegistryKey key = Registry.CurrentUser.OpenSubKey(RegistryKeyPath))
+                {
+                    if (key != null)
+                    {
+                        installPath = key.GetValue("InstallLocation") as string;
+                    }
+                }
+            }
+
+            if (installPath == null)
+            {
+                installPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), AppName);
+            }
+
             UpdateStatus("Removing shortcuts...");
-            string startupLnk = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), "DigitalWellbeing.lnk");
-            string startupServiceLnk = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), "DigitalWellbeing Service.lnk");
-            string desktopLnk = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "DigitalWellbeing.lnk");
             
-            if (File.Exists(startupLnk)) File.Delete(startupLnk);
-            if (File.Exists(startupServiceLnk)) File.Delete(startupServiceLnk);
-            if (File.Exists(desktopLnk)) File.Delete(desktopLnk);
+            // Remove from both possible locations
+            string[] startupPaths = new[] {
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), "DigitalWellbeing.lnk"),
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), "DigitalWellbeing Service.lnk"),
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup), "DigitalWellbeing.lnk"),
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup), "DigitalWellbeing Service.lnk")
+            };
+
+            string[] desktopPaths = new[] {
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "DigitalWellbeing.lnk"),
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonDesktopDirectory), "DigitalWellbeing.lnk")
+            };
+
+            foreach (var path in startupPaths.Concat(desktopPaths))
+            {
+                if (File.Exists(path)) try { File.Delete(path); } catch { }
+            }
             
-            string infoPrograms = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Programs), AppName);
-            if (Directory.Exists(infoPrograms)) Directory.Delete(infoPrograms, true);
+            string[] programPaths = new[] {
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Programs), AppName),
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonPrograms), AppName)
+            };
+
+            foreach (var path in programPaths)
+            {
+                if (Directory.Exists(path)) try { Directory.Delete(path, true); } catch { }
+            }
 
             UpdateStatus("Unregistering...");
-            RemoveUninstallerRegistry();
+            RemoveUninstallerRegistry(isDeviceInstall);
 
             UpdateStatus("Removing files...");
-            string installPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), AppName);
 
             ProcessStartInfo info = new ProcessStartInfo();
             info.FileName = "cmd.exe";
@@ -292,11 +485,13 @@ namespace DigitalWellbeing.Setup
             Application.Exit();
         }
 
-        private void RegisterUninstaller(string installLocation, string uninstallExePath)
+        private void RegisterUninstaller(string installLocation, string uninstallExePath, bool isDeviceInstall)
         {
             try
             {
-                using (RegistryKey parent = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Uninstall", true))
+                RegistryKey root = isDeviceInstall ? Registry.LocalMachine : Registry.CurrentUser;
+                
+                using (RegistryKey parent = root.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Uninstall", true))
                 {
                     if (parent == null) return;
 
@@ -322,14 +517,19 @@ namespace DigitalWellbeing.Setup
             }
         }
 
-        private void RemoveUninstallerRegistry()
+        private void RemoveUninstallerRegistry(bool isDeviceInstall)
         {
             try
             {
+                // Try both locations
                 using (RegistryKey parent = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Uninstall", true))
                 {
-                    if (parent == null) return;
-                    parent.DeleteSubKeyTree(AppName, false);
+                    parent?.DeleteSubKeyTree(AppName, false);
+                }
+
+                using (RegistryKey parent = Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Uninstall", true))
+                {
+                    parent?.DeleteSubKeyTree(AppName, false);
                 }
             }
             catch (Exception ex)
