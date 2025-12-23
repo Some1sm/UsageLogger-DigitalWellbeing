@@ -96,6 +96,9 @@ namespace DigitalWellbeingWinUI3.ViewModels
         
         public ObservableCollection<ISeries> TagsChartSeries { get; set; }
         
+        // Category durations (aggregated with sub-app splitting)
+        public Dictionary<AppTag, TimeSpan> CategoryDurations { get; set; } = new Dictionary<AppTag, TimeSpan>();
+        
         public DateTime[] WeeklyChartLabelDates { get; set; }
         #endregion
 
@@ -932,11 +935,52 @@ namespace DigitalWellbeingWinUI3.ViewModels
 
         private void RefreshTagChart(List<AppUsage> usageList)
         {
-            // Porting logic for StackedRowSeries -> StackedRowSeries<double>
-             var stackSeries = new List<ISeries>();
-             // ... Logic similar to original but adapted to LiveCharts2 ...
-             // Skipping for brevity in this step, focusing on main charts.
-             TagsChartSeries.Clear();
+            // Aggregate duration by category, accounting for sub-app tags
+            var tagDurations = new Dictionary<AppTag, TimeSpan>();
+
+            foreach (var app in usageList)
+            {
+                AppTag parentTag = AppTagHelper.GetAppTag(app.ProcessName);
+                TimeSpan remainingDuration = app.Duration;
+
+                // Process sub-apps first - if they have different tags, count them separately
+                if (app.ProgramBreakdown != null && app.ProgramBreakdown.Count > 0)
+                {
+                    foreach (var child in app.ProgramBreakdown)
+                    {
+                        string titleKey = $"{app.ProcessName}|{child.Key}";
+                        AppTag childTag = AppTagHelper.GetTitleTag(app.ProcessName, child.Key);
+
+                        if (childTag != AppTag.Untagged && childTag != parentTag)
+                        {
+                            // This sub-app has a different tag - count it separately
+                            if (!tagDurations.ContainsKey(childTag))
+                                tagDurations[childTag] = TimeSpan.Zero;
+                            tagDurations[childTag] += child.Value;
+
+                            // Subtract from parent's remaining duration
+                            remainingDuration -= child.Value;
+                            if (remainingDuration < TimeSpan.Zero)
+                                remainingDuration = TimeSpan.Zero;
+                        }
+                    }
+                }
+
+                // Add remaining duration to parent's tag
+                if (remainingDuration > TimeSpan.Zero)
+                {
+                    if (!tagDurations.ContainsKey(parentTag))
+                        tagDurations[parentTag] = TimeSpan.Zero;
+                    tagDurations[parentTag] += remainingDuration;
+                }
+            }
+
+            // Update TagsChartSeries (if UI exists for it)
+            TagsChartSeries.Clear();
+            // TODO: Add stacked bar/pie chart series if needed
+            // For now, store the aggregated data for potential future use
+            CategoryDurations = tagDurations;
+            OnPropertyChanged(nameof(CategoryDurations));
         }
 
         public void NotifyChange()

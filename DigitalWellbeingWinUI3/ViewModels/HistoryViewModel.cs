@@ -407,21 +407,48 @@ namespace DigitalWellbeingWinUI3.ViewModels
         private void GenerateTagChart(List<AppUsage> usage)
         {
             Dictionary<AppTag, double> tagDurations = new Dictionary<AppTag, double>();
-            // Initialize with 0 for all known tags (optional, but good for consistent colors if we want to show empty ones)
-            // Better: Just aggregate what we have.
             
             foreach (var app in usage)
             {
                 if (AppUsageViewModel.IsProcessExcluded(app.ProcessName)) continue;
                 
-                AppTag tag = AppTagHelper.GetAppTag(app.ProcessName);
-                if (tagDurations.ContainsKey(tag))
+                AppTag parentTag = AppTagHelper.GetAppTag(app.ProcessName);
+                double remainingMinutes = app.Duration.TotalMinutes;
+
+                // 1. Process Sub-Apps
+                if (app.ProgramBreakdown != null && app.ProgramBreakdown.Count > 0)
                 {
-                    tagDurations[tag] += app.Duration.TotalMinutes;
+                    foreach (var child in app.ProgramBreakdown)
+                    {
+                        AppTag childTag = AppTagHelper.GetTitleTag(app.ProcessName, child.Key);
+                        
+                        // Only split if child has a specific tag DIFFERENT from parent (or serves as a sub-category)
+                        // If child is Untagged, it inherits parent tag (so we keep it in remainingMinutes)
+                        if (childTag != AppTag.Untagged && childTag != parentTag)
+                        {
+                            double childMinutes = child.Value.TotalMinutes;
+                            
+                            if (tagDurations.ContainsKey(childTag))
+                                tagDurations[childTag] += childMinutes;
+                            else
+                                tagDurations[childTag] = childMinutes;
+
+                            remainingMinutes -= childMinutes;
+                        }
+                    }
                 }
-                else
+                
+                // 2. Add remaining duration to Parent Tag
+                if (remainingMinutes > 0)
                 {
-                    tagDurations[tag] = app.Duration.TotalMinutes;
+                    if (tagDurations.ContainsKey(parentTag))
+                    {
+                        tagDurations[parentTag] += remainingMinutes;
+                    }
+                    else
+                    {
+                        tagDurations[parentTag] = remainingMinutes;
+                    }
                 }
             }
 

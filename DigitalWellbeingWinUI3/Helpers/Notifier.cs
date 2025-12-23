@@ -91,88 +91,19 @@ namespace DigitalWellbeingWinUI3.Helpers
              // TrayIcon.TrayBalloonTipClicked += (s,e) => { clickHandler?.Invoke(s,e); };
         }
 
-        #region App Time Limit Checker
+        #region App Time Limit Checker (DEPRECATED - Moved to TimeLimitEnforcer.cs)
 
-        private static DispatcherTimer notifierTimer;
-        private static List<string> notifiedApps = new List<string>();
-        private static List<string> warnNotifiedApps = new List<string>();
+        // Legacy checker removed to avoid duplicate alerts.
+        // Logic handled by TimeLimitEnforcer.CheckTimeLimitsAsync called from AppUsageViewModel.
 
         public static void InitNotifierTimer()
         {
-            TimeSpan intervalDuration = TimeSpan.FromSeconds(CHECK_INTERVAL);
-
-            notifierTimer = new DispatcherTimer() { Interval = intervalDuration };
-            notifierTimer.Tick += (s, e) => CheckForExceedingAppTimeLimits();
-
-            notifierTimer.Start();
-        }
-
-        private static async void CheckForExceedingAppTimeLimits()
-        {
-            try
-            {
-                // Get Source Data
-                List<AppUsage> todayUsage = await AppUsageViewModel.GetData(DateTime.Now);
-                var _limits = UserPreferences.AppTimeLimits; // Used SettingsManager in WPF, but here UserPreferences seems to hold settings?
-                // Wait, UserPreferences.cs handles exclusions.
-                // Does it handle TimeLimits? I need to check SettingsPage.
-                // SettingsPage.xaml.cs used 'UserPreferences.AppTimeLimits' (List)? 
-                // Or maybe SettingsManager was ported?
-                // I need to verify where TimeLimits are stored in WinUI 3.
-                // In a previous turn I viewed UserPreferences.cs and it had ExcludedApps.
-                // I suspect AppTimeLimits might be missing or I missed it.
-                // I'll check UserPreferences.cs AFTER writing this stub, and fix if needed.
-                // For now assuming UserPreferences.AppTimeLimits exists (Dictionary<string, int>).
-
-                if (_limits == null) return;
-
-                // Get Active Process / Program
-                IntPtr _hnd = ForegroundWindowManager.GetForegroundWindow();
-                uint _procId = ForegroundWindowManager.GetForegroundProcessId(_hnd);
-                Process _proc = Process.GetProcessById((int)_procId);
-                string activeProcessName = ForegroundWindowManager.GetActiveProcessName(_proc);
-
-                AppUsage currApp = todayUsage.SingleOrDefault(app => app.ProcessName == activeProcessName);
-
-                if (currApp == null) return;
-
-                // Skip if already notified
-                if (notifiedApps.Contains(currApp.ProcessName)) return;
-
-                // If app has time limit
-                if (_limits.ContainsKey(currApp.ProcessName))
-                {
-                    TimeSpan timeLimit = TimeSpan.FromMinutes(_limits[currApp.ProcessName]);
-
-                    bool reachedWarnLimit = currApp.Duration > (timeLimit - warningLimit);
-                    bool reachedTimeLimit = currApp.Duration > timeLimit;
-
-                    if (reachedTimeLimit && !notifiedApps.Contains(currApp.ProcessName))
-                    {
-                        warnNotifiedApps.Add(currApp.ProcessName);
-                        notifiedApps.Add(currApp.ProcessName);
-
-                        GetMainWindow()?.ShowAlertUsage(currApp, timeLimit);
-                    }
-                    else if (reachedWarnLimit && !warnNotifiedApps.Contains(currApp.ProcessName))
-                    {
-                        warnNotifiedApps.Add(currApp.ProcessName);
-
-                        GetMainWindow()?.ShowAlertUsage(currApp, timeLimit, true);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                 // Ignore errors
-                 Debug.WriteLine($"Notifier Error: {ex.Message}");
-            }
+            // No-op
         }
 
         public static void ResetNotificationForApp(string processName)
         {
-            notifiedApps.RemoveAll(p => p == processName);
-            warnNotifiedApps.RemoveAll(p => p == processName);
+            // No-op
         }
         #endregion
     }

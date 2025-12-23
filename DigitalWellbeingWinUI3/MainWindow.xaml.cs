@@ -246,27 +246,7 @@ namespace DigitalWellbeingWinUI3
             Application.Current.Exit();
         }
 
-        public void ShowAlertUsage(DigitalWellbeing.Core.Models.AppUsage app, TimeSpan timeLimit, bool warnOnly = false)
-        {
-             this.DispatcherQueue.TryEnqueue(() =>
-             {
-                 if (warnOnly)
-                 {
-                     Helpers.Notifier.ShowNotification(
-                         $"Warning for {app.ProgramName}",
-                         $"You have less than 15m left. Used: {DigitalWellbeing.Core.Helpers.StringHelper.TimeSpanToShortString(app.Duration)}.",
-                         (s, e) => RestoreWindow(),
-                         null
-                     );
-                 }
-                 else
-                 {
-                     RestoreWindow();
-                     AlertWindow alert = new AlertWindow(app, timeLimit);
-                     alert.Activate();
-                 }
-             });
-        }
+        // ShowAlertUsage removed - replaced by TimeLimitEnforcer logic in AppUsageViewModel
 
         private void TrayIcon_DoubleTapped(object sender, Microsoft.UI.Xaml.Input.DoubleTappedRoutedEventArgs e)
         {
