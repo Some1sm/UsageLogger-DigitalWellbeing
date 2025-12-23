@@ -118,11 +118,20 @@ namespace DigitalWellbeingWinUI3.Views
         private void LoadAppTimeLimits()
         {
             AppTimeLimitsList.Items.Clear();
-            // AppTimeLimitsList.Items.Clear();
+            
+            // App time limits
             foreach (var limit in UserPreferences.AppTimeLimits)
             {
                 TimeSpan time = TimeSpan.FromMinutes(limit.Value);
                 AppTimeLimitsList.Items.Add($"{limit.Key}{APP_TIMELIMIT_SEPARATOR}{time.Hours}h {time.Minutes}m");
+            }
+            
+            // Title/Sub-app time limits (with [Sub] prefix)
+            foreach (var limit in UserPreferences.TitleTimeLimits)
+            {
+                TimeSpan time = TimeSpan.FromMinutes(limit.Value);
+                // Format: "[Sub] ProcessName|Title → 1h 30m"
+                AppTimeLimitsList.Items.Add($"[Sub] {limit.Key}{APP_TIMELIMIT_SEPARATOR}{time.Hours}h {time.Minutes}m");
             }
         }
 
@@ -162,13 +171,25 @@ namespace DigitalWellbeingWinUI3.Views
              if (AppTimeLimitsList.SelectedItem != null)
              {
                  string selected = AppTimeLimitsList.SelectedItem.ToString();
-                 // Parse process name (everything before separator)
-                 string processName = selected.Split(new string[] { APP_TIMELIMIT_SEPARATOR }, StringSplitOptions.None)[0];
                  
-                 if (UserPreferences.AppTimeLimits.ContainsKey(processName))
+                 // Check if it's a sub-app time limit
+                 if (selected.StartsWith("[Sub] "))
                  {
-                     UserPreferences.UpdateAppTimeLimit(processName, TimeSpan.Zero); // Removes it
+                     // Remove "[Sub] " prefix and parse key
+                     string withoutPrefix = selected.Substring(6);
+                     string key = withoutPrefix.Split(new string[] { APP_TIMELIMIT_SEPARATOR }, StringSplitOptions.None)[0];
+                     UserPreferences.UpdateTitleTimeLimit(key, TimeSpan.Zero);
                      LoadAppTimeLimits();
+                 }
+                 else
+                 {
+                     // Regular app time limit
+                     string processName = selected.Split(new string[] { APP_TIMELIMIT_SEPARATOR }, StringSplitOptions.None)[0];
+                     if (UserPreferences.AppTimeLimits.ContainsKey(processName))
+                     {
+                         UserPreferences.UpdateAppTimeLimit(processName, TimeSpan.Zero);
+                         LoadAppTimeLimits();
+                     }
                  }
              }
         }

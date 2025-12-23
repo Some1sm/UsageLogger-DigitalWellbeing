@@ -18,9 +18,31 @@ namespace DigitalWellbeingWinUI3.Models
 
         public string Title { get; set; }
         public string ParentProcessName { get; set; }
-        public TimeSpan Duration { get; set; }
+        
+        private TimeSpan _duration;
+        public TimeSpan Duration 
+        { 
+            get => _duration;
+            set 
+            { 
+                if (_duration != value)
+                {
+                    _duration = value; 
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(StrDuration));
+                }
+            }
+        }
+        
         public string StrDuration { get => StringHelper.TimeSpanToString(Duration); }
-        public int Percentage { get; set; }
+        
+        private int _percentage;
+        public int Percentage 
+        { 
+            get => _percentage;
+            set { _percentage = value; OnPropertyChanged(); }
+        }
+        
         public ImageSource IconSource { get; set; }
         public AppTag ItemTag { get; set; }
         
@@ -49,8 +71,8 @@ namespace DigitalWellbeingWinUI3.Models
         {
             Title = title;
             ParentProcessName = parentProcessName;
-            Duration = duration;
-            Percentage = percentage;
+            _duration = duration;  // Set backing field directly to avoid notification during construction
+            _percentage = percentage;
             IconSource = icon;
             ItemTag = tag;
         }

@@ -35,6 +35,9 @@ namespace DigitalWellbeingWinUI3.Views
         {
             if (ViewModel == null) return;
             
+            // Set XamlRoot for dialogs
+            ViewModel.XamlRoot = this.XamlRoot;
+            
             // Initialize view mode from saved preference
             UpdateViewMode(UserPreferences.ShowCombinedAudioView);
 
@@ -514,6 +517,138 @@ namespace DigitalWellbeingWinUI3.Views
             if (_currentSubItem != null)
             {
                 await OpenTitleTagDialog(_currentSubItem);
+            }
+        }
+
+        private async void SubItemMenuFlyoutItem_SetDisplayName_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currentSubItem == null) return;
+            
+            string title = _currentSubItem.Title;
+            string key = $"{_currentSubItem.ParentProcessName}|{title}";
+            
+            // Get current display name if one exists
+            string currentDisplayName = UserPreferences.GetTitleDisplayName(key);
+            bool hasCustomName = currentDisplayName != title;
+            
+            var inputTextBox = new TextBox 
+            { 
+                PlaceholderText = $"Enter display name for '{title}'", 
+                Text = hasCustomName ? currentDisplayName : ""
+            };
+            
+            var dialog = new ContentDialog
+            {
+                Title = "Set Display Name for Sub-App",
+                Content = new StackPanel
+                {
+                    Children =
+                    {
+                        new TextBlock 
+                        { 
+                            Text = $"Original: {title}",
+                            TextWrapping = Microsoft.UI.Xaml.TextWrapping.Wrap,
+                            Margin = new Microsoft.UI.Xaml.Thickness(0, 0, 0, 12),
+                            Opacity = 0.7
+                        },
+                        inputTextBox
+                    }
+                },
+                PrimaryButtonText = "Save",
+                SecondaryButtonText = hasCustomName ? "Remove" : "Cancel",
+                CloseButtonText = "Cancel",
+                XamlRoot = this.XamlRoot
+            };
+
+            var result = await dialog.ShowAsync();
+            if (result == ContentDialogResult.Primary)
+            {
+                string newDisplayName = inputTextBox.Text.Trim();
+                if (!string.IsNullOrWhiteSpace(newDisplayName) && newDisplayName != title)
+                {
+                    UserPreferences.SetTitleDisplayName(key, newDisplayName);
+                }
+                else
+                {
+                    UserPreferences.RemoveTitleDisplayName(key);
+                }
+                ViewModel.RefreshDayView();
+            }
+            else if (result == ContentDialogResult.Secondary && hasCustomName)
+            {
+                UserPreferences.RemoveTitleDisplayName(key);
+                ViewModel.RefreshDayView();
+            }
+        }
+
+        private async void SubItemMenuFlyoutItem_SetTimeLimit_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currentSubItem == null) return;
+            
+            string title = _currentSubItem.Title;
+            string key = $"{_currentSubItem.ParentProcessName}|{title}";
+            
+            var inputTextBox = new TextBox 
+            { 
+                PlaceholderText = "Minutes (e.g., 60)", 
+                InputScope = new Microsoft.UI.Xaml.Input.InputScope { Names = { new Microsoft.UI.Xaml.Input.InputScopeName(Microsoft.UI.Xaml.Input.InputScopeNameValue.Number) } } 
+            };
+            
+            // Check if existing limit exists
+            if (UserPreferences.TitleTimeLimits.ContainsKey(key))
+            {
+               inputTextBox.Text = UserPreferences.TitleTimeLimits[key].ToString();
+            }
+
+            var dialog = new ContentDialog
+            {
+                Title = $"Set Time Limit for '{title}'",
+                Content = inputTextBox,
+                PrimaryButtonText = "Save",
+                SecondaryButtonText = "Cancel",
+                XamlRoot = this.XamlRoot
+            };
+
+            var result = await dialog.ShowAsync();
+            if (result == ContentDialogResult.Primary)
+            {
+                if (int.TryParse(inputTextBox.Text, out int minutes) && minutes > 0)
+                {
+                    UserPreferences.UpdateTitleTimeLimit(key, TimeSpan.FromMinutes(minutes));
+                }
+                else
+                {
+                    UserPreferences.UpdateTitleTimeLimit(key, TimeSpan.Zero);
+                }
+            }
+        }
+
+        private async void SubItemMenuFlyoutItem_Exclude_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currentSubItem == null) return;
+            
+            string title = _currentSubItem.Title;
+            string key = $"{_currentSubItem.ParentProcessName}|{title}";
+            
+            var dialog = new ContentDialog
+            {
+                Title = "Exclude Sub-App?",
+                Content = $"Are you sure you want to hide '{title}' from the dashboard? You can manage excluded items in Settings.",
+                PrimaryButtonText = "Exclude",
+                SecondaryButtonText = "Cancel",
+                XamlRoot = this.XamlRoot
+            };
+            
+            var result = await dialog.ShowAsync();
+            
+            if (result == ContentDialogResult.Primary)
+            {
+                if (!UserPreferences.ExcludedTitles.Contains(key))
+                {
+                    UserPreferences.ExcludedTitles.Add(key);
+                    UserPreferences.Save();
+                    ViewModel.RefreshDayView();
+                }
             }
         }
 

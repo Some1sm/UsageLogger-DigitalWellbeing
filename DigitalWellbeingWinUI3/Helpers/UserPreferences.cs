@@ -26,6 +26,11 @@ namespace DigitalWellbeingWinUI3.Helpers
         public static bool ShowCombinedAudioView { get; set; } = false;
         public static Dictionary<string, string> ProcessDisplayNames { get; set; } = new Dictionary<string, string>();
         public static Dictionary<string, string> CustomIconPaths { get; set; } = new Dictionary<string, string>();
+        
+        // Title/Sub-app specific settings (key format: "ProcessName|Title")
+        public static Dictionary<string, string> TitleDisplayNames { get; set; } = new Dictionary<string, string>();
+        public static Dictionary<string, int> TitleTimeLimits { get; set; } = new Dictionary<string, int>();
+        public static List<string> ExcludedTitles { get; set; } = new List<string>();
 
         static UserPreferences()
         {
@@ -52,7 +57,10 @@ namespace DigitalWellbeingWinUI3.Helpers
                     IncognitoMode,
                     ShowCombinedAudioView,
                     ProcessDisplayNames,
-                    CustomIconPaths
+                    CustomIconPaths,
+                    TitleDisplayNames,
+                    TitleTimeLimits,
+                    ExcludedTitles
                 };
 
                 string json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
@@ -86,6 +94,9 @@ namespace DigitalWellbeingWinUI3.Helpers
                     if (data.TryGetProperty(nameof(ShowCombinedAudioView), out prop)) ShowCombinedAudioView = prop.GetBoolean();
                     if (data.TryGetProperty(nameof(ProcessDisplayNames), out prop)) ProcessDisplayNames = JsonSerializer.Deserialize<Dictionary<string, string>>(prop.GetRawText()) ?? new Dictionary<string, string>();
                     if (data.TryGetProperty(nameof(CustomIconPaths), out prop)) CustomIconPaths = JsonSerializer.Deserialize<Dictionary<string, string>>(prop.GetRawText()) ?? new Dictionary<string, string>();
+                    if (data.TryGetProperty(nameof(TitleDisplayNames), out prop)) TitleDisplayNames = JsonSerializer.Deserialize<Dictionary<string, string>>(prop.GetRawText()) ?? new Dictionary<string, string>();
+                    if (data.TryGetProperty(nameof(TitleTimeLimits), out prop)) TitleTimeLimits = JsonSerializer.Deserialize<Dictionary<string, int>>(prop.GetRawText()) ?? new Dictionary<string, int>();
+                    if (data.TryGetProperty(nameof(ExcludedTitles), out prop)) ExcludedTitles = JsonSerializer.Deserialize<List<string>>(prop.GetRawText()) ?? new List<string>();
                 }
 
                 // Default Initialization
@@ -232,5 +243,75 @@ namespace DigitalWellbeingWinUI3.Helpers
                 Save();
             }
         }
+
+        #region Title/Sub-App Settings
+
+        /// <summary>
+        /// Gets the display name for a title. Returns custom name if set, otherwise original title.
+        /// Key format: "ProcessName|Title"
+        /// </summary>
+        public static string GetTitleDisplayName(string key)
+        {
+            if (string.IsNullOrWhiteSpace(key))
+                return key;
+
+            if (TitleDisplayNames.TryGetValue(key, out string displayName))
+                return displayName;
+
+            // Return the title portion (after the |)
+            int pipeIndex = key.IndexOf('|');
+            return pipeIndex >= 0 ? key.Substring(pipeIndex + 1) : key;
+        }
+
+        /// <summary>
+        /// Sets a custom display name for a title.
+        /// </summary>
+        public static void SetTitleDisplayName(string key, string displayName)
+        {
+            if (string.IsNullOrWhiteSpace(key) || string.IsNullOrWhiteSpace(displayName))
+                return;
+
+            TitleDisplayNames[key] = displayName;
+            Save();
+        }
+
+        /// <summary>
+        /// Removes the custom display name for a title.
+        /// </summary>
+        public static void RemoveTitleDisplayName(string key)
+        {
+            if (string.IsNullOrWhiteSpace(key))
+                return;
+
+            if (TitleDisplayNames.ContainsKey(key))
+            {
+                TitleDisplayNames.Remove(key);
+                Save();
+            }
+        }
+
+        /// <summary>
+        /// Updates the time limit for a title.
+        /// </summary>
+        public static void UpdateTitleTimeLimit(string key, TimeSpan timeLimit)
+        {
+            int totalMins = (int)timeLimit.TotalMinutes;
+
+            if (totalMins <= 0)
+            {
+                if (TitleTimeLimits.ContainsKey(key))
+                {
+                    TitleTimeLimits.Remove(key);
+                    Save();
+                }
+            }
+            else
+            {
+                TitleTimeLimits[key] = totalMins;
+                Save();
+            }
+        }
+
+        #endregion
     }
 }

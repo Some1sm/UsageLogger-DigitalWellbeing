@@ -139,6 +139,9 @@ namespace DigitalWellbeingWinUI3.ViewModels
 
         private Windows.UI.ViewManagement.UISettings uiSettings;
         private Microsoft.UI.Dispatching.DispatcherQueue dispatcherQueue;
+        
+        // XamlRoot for showing dialogs (set by the Page)
+        public XamlRoot XamlRoot { get; set; }
 
         public AppUsageViewModel()
         {
@@ -566,6 +569,19 @@ namespace DigitalWellbeingWinUI3.ViewModels
                             {
                                 // Apply same min duration filter to sub-items
                                 if (child.Value < UserPreferences.MinumumDuration) continue;
+                                
+                                // Build the key for title-specific settings
+                                string titleKey = $"{app.ProcessName}|{child.Key}";
+                                
+                                // Skip excluded titles
+                                if (UserPreferences.ExcludedTitles.Contains(titleKey)) continue;
+                                
+                                // Get display name (with * prefix if custom)
+                                string displayTitle = child.Key;
+                                if (UserPreferences.TitleDisplayNames.TryGetValue(titleKey, out string customName))
+                                {
+                                    displayTitle = "* " + customName;
+                                }
 
                                 double totalSec = app.Duration.TotalSeconds > 1 ? app.Duration.TotalSeconds : 1; 
                                 int childPct = (int)Math.Round(child.Value.TotalSeconds / totalSec * 100);
@@ -574,7 +590,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
                                 AppTag childTag = AppTagHelper.GetTitleTag(app.ProcessName, child.Key);
                                 
                                 // Pass null for icon to keep them distinct/clean
-                                var subItem = new AppUsageSubItem(child.Key, app.ProcessName, child.Value, childPct, null, childTag);
+                                var subItem = new AppUsageSubItem(displayTitle, app.ProcessName, child.Value, childPct, null, childTag);
                                 
                                 // Set Brushes
                                 if (childTag == AppTag.Untagged)
@@ -654,6 +670,12 @@ namespace DigitalWellbeingWinUI3.ViewModels
                     // Load Insights
                     LoadTrendData(LoadedDate, TotalDuration);
                     LoadGoalStreaks();
+                    
+                    // Check time limits (only for today to avoid spamming when looking at history)
+                    if (LoadedDate.Date == DateTime.Now.Date && XamlRoot != null)
+                    {
+                        _ = CheckTimeLimitsForCurrentDataAsync(filteredUsageList);
+                    }
                 }
                 finally
                 {
@@ -670,6 +692,44 @@ namespace DigitalWellbeingWinUI3.ViewModels
             {
                 // Fallback attempt
                 updateAction();
+            }
+        }
+
+        /// <summary>
+        /// Collects usage data and triggers time limit checks.
+        /// </summary>
+        private async Task CheckTimeLimitsForCurrentDataAsync(List<AppUsage> appUsages)
+        {
+            try
+            {
+                // Build app usage dictionary
+                var appUsageDict = new Dictionary<string, TimeSpan>();
+                var titleUsageDict = new Dictionary<string, TimeSpan>();
+
+                foreach (var app in appUsages)
+                {
+                    if (!appUsageDict.ContainsKey(app.ProcessName))
+                        appUsageDict[app.ProcessName] = TimeSpan.Zero;
+                    appUsageDict[app.ProcessName] += app.Duration;
+
+                    // Collect title usage
+                    if (app.ProgramBreakdown != null)
+                    {
+                        foreach (var child in app.ProgramBreakdown)
+                        {
+                            string key = $"{app.ProcessName}|{child.Key}";
+                            if (!titleUsageDict.ContainsKey(key))
+                                titleUsageDict[key] = TimeSpan.Zero;
+                            titleUsageDict[key] += child.Value;
+                        }
+                    }
+                }
+
+                await TimeLimitEnforcer.CheckTimeLimitsAsync(appUsageDict, titleUsageDict, XamlRoot);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Time limit check failed: {ex.Message}");
             }
         }
 
@@ -700,19 +760,35 @@ namespace DigitalWellbeingWinUI3.ViewModels
                     // Update Children if they changed (different day or data changed)
                     // Compare by checking if children count differs or first child differs
                     bool childrenChanged = existing.Children.Count != newItem.Children.Count;
-                    if (!childrenChanged && existing.Children.Count > 0 && newItem.Children.Count > 0)
-                    {
-                        // Quick check: compare first child's title and duration
-                        childrenChanged = existing.Children[0].Title != newItem.Children[0].Title ||
-                                          existing.Children[0].Duration != newItem.Children[0].Duration;
-                    }
                     
                     if (childrenChanged)
                     {
+                        // Count changed - rebuild children list
                         existing.Children.Clear();
                         foreach (var child in newItem.Children)
                         {
                             existing.Children.Add(child);
+                        }
+                    }
+                    else
+                    {
+                        // Same count - update durations in place by matching titles
+                        foreach (var existingChild in existing.Children)
+                        {
+                            var matchingNew = newItem.Children.FirstOrDefault(c => c.Title == existingChild.Title);
+                            if (matchingNew != null)
+                            {
+                                existingChild.Duration = matchingNew.Duration;
+                                existingChild.Percentage = matchingNew.Percentage;
+                            }
+                        }
+                        // Add any new children that didn't exist
+                        foreach (var newChild in newItem.Children)
+                        {
+                            if (!existing.Children.Any(c => c.Title == newChild.Title))
+                            {
+                                existing.Children.Add(newChild);
+                            }
                         }
                     }
                     

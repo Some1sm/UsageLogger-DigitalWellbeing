@@ -84,7 +84,11 @@
                                 <Grid Padding="60,4,15,4" Background="{Binding BackgroundBrush}" CornerRadius="4" Margin="4,2" ToolTipService.ToolTip="Right-click to Tag">
                                     <Grid.ContextFlyout>
                                         <MenuFlyout Opening="SubItemMenuFlyout_Opening">
-                                            <MenuFlyoutItem x:Name="SubItemTagMenuItem" Text="Set Category (Tag)" Icon="Tag" Click="SubItemMenuFlyoutItem_SetTag_Click"/>
+                                            <MenuFlyoutItem Text="Set Category (Tag)" Icon="Tag" Click="SubItemMenuFlyoutItem_SetTag_Click"/>
+                                            <MenuFlyoutItem Text="Set Display Name..." Icon="Rename" Click="SubItemMenuFlyoutItem_SetDisplayName_Click"/>
+                                            <MenuFlyoutItem Text="Set Time Limit" Icon="Clock" Click="SubItemMenuFlyoutItem_SetTimeLimit_Click"/>
+                                            <MenuFlyoutSeparator/>
+                                            <MenuFlyoutItem Text="Exclude" Icon="Delete" Click="SubItemMenuFlyoutItem_Exclude_Click"/>
                                         </MenuFlyout>
                                     </Grid.ContextFlyout>
                                     <Grid.ColumnDefinitions>
