@@ -53,6 +53,42 @@ namespace DigitalWellbeingWinUI3
             SetTitleBar(AppTitleBar);
 
             this.Activated += MainWindow_Activated;
+
+            EnsureServiceRunning();
+        }
+
+        private void EnsureServiceRunning()
+        {
+            try
+            {
+                var processes = System.Diagnostics.Process.GetProcessesByName("DigitalWellbeingService");
+                if (processes.Length > 0) return;
+
+                string[] possiblePaths = new string[]
+                {
+                    System.IO.Path.Combine(AppContext.BaseDirectory, "DigitalWellbeingService.exe"),
+                    System.IO.Path.Combine(AppContext.BaseDirectory, "Service", "DigitalWellbeingService.exe")
+                };
+
+                string servicePath = possiblePaths.FirstOrDefault(p => System.IO.File.Exists(p));
+
+                if (!string.IsNullOrEmpty(servicePath))
+                {
+                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(servicePath) 
+                    { 
+                        UseShellExecute = true, 
+                        WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden 
+                    });
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"Service not found. Checked: {string.Join(", ", possiblePaths)}");
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Service start failed: {ex.Message}");
+            }
         }
 
         private void InitializeCommands()

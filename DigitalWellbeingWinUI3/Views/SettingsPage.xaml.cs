@@ -431,10 +431,22 @@ namespace DigitalWellbeingWinUI3.Views
                 }
 
                 // Start new instance
-                string servicePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Service", "DigitalWellbeingService.exe");
-                if (System.IO.File.Exists(servicePath))
+                // Start new instance
+                string[] possiblePaths = new string[]
+                {
+                    System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DigitalWellbeingService.exe"),
+                    System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Service", "DigitalWellbeingService.exe")
+                };
+
+                string servicePath = possiblePaths.FirstOrDefault(p => System.IO.File.Exists(p));
+
+                if (!string.IsNullOrEmpty(servicePath))
                 {
                     Process.Start(new ProcessStartInfo(servicePath) { UseShellExecute = true, WindowStyle = ProcessWindowStyle.Hidden });
+                }
+                else
+                {
+                     Debug.WriteLine($"Service restart failed: Executable not found. Checked: {string.Join(", ", possiblePaths)}");
                 }
             }
             catch (Exception ex)
