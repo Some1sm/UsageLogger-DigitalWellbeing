@@ -203,11 +203,23 @@ namespace DigitalWellbeingWinUI3.ViewModels
                      usageMap[session.ProcessName] = new AppUsage(session.ProcessName, session.ProgramName, TimeSpan.Zero);
                  }
                  
-                 usageMap[session.ProcessName].Duration = usageMap[session.ProcessName].Duration.Add(session.Duration);
+                 var appUsage = usageMap[session.ProcessName];
+                 appUsage.Duration = appUsage.Duration.Add(session.Duration);
                  
-                 if (string.IsNullOrEmpty(usageMap[session.ProcessName].ProgramName) && !string.IsNullOrEmpty(session.ProgramName))
+                 if (string.IsNullOrEmpty(appUsage.ProgramName) && !string.IsNullOrEmpty(session.ProgramName))
                  {
-                     usageMap[session.ProcessName].ProgramName = session.ProgramName;
+                     appUsage.ProgramName = session.ProgramName;
+                 }
+
+                 // Aggregate Sub-App / Title breakdown
+                 string title = !string.IsNullOrEmpty(session.ProgramName) ? session.ProgramName : session.ProcessName;
+                 if (appUsage.ProgramBreakdown.ContainsKey(title))
+                 {
+                     appUsage.ProgramBreakdown[title] = appUsage.ProgramBreakdown[title].Add(session.Duration);
+                 }
+                 else
+                 {
+                     appUsage.ProgramBreakdown[title] = session.Duration;
                  }
              }
              return usageMap.Values.ToList();
