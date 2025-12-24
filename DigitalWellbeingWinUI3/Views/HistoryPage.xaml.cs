@@ -103,7 +103,8 @@ namespace DigitalWellbeingWinUI3.Views
                         InitialRotation = -90,
                         Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent),
                         LegendBackgroundPaint = null,
-                        LegendTextPaint = new LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint(legendColor)
+                        LegendTextPaint = new LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint(legendColor),
+                        LegendTextSize = 11
                     };
                     
                     var binding = new Microsoft.UI.Xaml.Data.Binding 

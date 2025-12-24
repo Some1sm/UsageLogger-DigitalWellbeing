@@ -92,6 +92,7 @@ namespace DigitalWellbeingWinUI3.Views
                         Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent),
                         LegendBackgroundPaint = null,
                         LegendTextPaint = new LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint(legendColor),
+                        LegendTextSize = 11,
                         HorizontalAlignment = Microsoft.UI.Xaml.HorizontalAlignment.Stretch,
                         VerticalAlignment = Microsoft.UI.Xaml.VerticalAlignment.Stretch
                     };
