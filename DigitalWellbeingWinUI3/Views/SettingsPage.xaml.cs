@@ -228,6 +228,23 @@ namespace DigitalWellbeingWinUI3.Views
                 }
             }
 
+            // Log Location
+            string newLogPath = TxtLogLocation.Text?.Trim();
+            string currentPath = ApplicationPath.GetCustomLogsFolderRaw() ?? "";
+            if (newLogPath != currentPath)
+            {
+                if (string.IsNullOrEmpty(newLogPath) || newLogPath == ApplicationPath.UsageLogsFolder.TrimEnd('\\'))
+                {
+                    ApplicationPath.ClearCustomLogsFolder();
+                }
+                else if (System.IO.Directory.Exists(newLogPath))
+                {
+                    ApplicationPath.SetCustomLogsFolder(newLogPath);
+                }
+                // Restart service to pick up new path
+                RestartBackgroundService();
+            }
+
             // Save
             UserPreferences.Save();
             
@@ -418,6 +435,11 @@ namespace DigitalWellbeingWinUI3.Views
                 };
                 await dialog.ShowAsync();
             }
+        }
+
+        private void TxtLogLocation_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            MarkDirty();
         }
 
         private void BtnResetLogLocation_Click(object sender, RoutedEventArgs e)

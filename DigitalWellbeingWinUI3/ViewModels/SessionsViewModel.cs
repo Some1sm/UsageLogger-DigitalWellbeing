@@ -135,6 +135,9 @@ namespace DigitalWellbeingWinUI3.ViewModels
 
         public async void LoadSessions()
         {
+            // Create fresh repository to pick up any path changes
+            _repository = new AppSessionRepository(ApplicationPath.UsageLogsFolder);
+            
             // Number of days setting
             int daysToShow = UserPreferences.DetailedUsageDayCount; 
             if (daysToShow < 1) daysToShow = 1;

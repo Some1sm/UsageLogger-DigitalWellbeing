@@ -34,7 +34,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
         #endregion
 
         #region Temporary 
-        private readonly static string folderPath = ApplicationPath.UsageLogsFolder;
+        private static string folderPath => ApplicationPath.UsageLogsFolder;
         private DispatcherTimer refreshTimer;
         private ObservableCollection<double> weeklyHours; // Store for updating bar chart
         #endregion

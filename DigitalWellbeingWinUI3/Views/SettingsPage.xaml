@@ -232,7 +232,7 @@
                              <ColumnDefinition Width="Auto"/>
                              <ColumnDefinition Width="Auto"/>
                          </Grid.ColumnDefinitions>
-                         <TextBox x:Name="TxtLogLocation" Grid.Column="0" IsReadOnly="True" PlaceholderText="Default Location" Margin="0,0,10,0"/>
+                         <TextBox x:Name="TxtLogLocation" Grid.Column="0" PlaceholderText="Default Location" Margin="0,0,10,0" MaxWidth="400" TextWrapping="NoWrap" AcceptsReturn="False" TextChanged="TxtLogLocation_TextChanged"/>
                          <Button Grid.Column="1" Content="Open" Click="BtnOpenAppFolder_Click" Margin="0,0,5,0"/>
                          <Button Grid.Column="2" Content="Browse..." Click="BtnBrowseLogLocation_Click" Margin="0,0,5,0"/>
                          <Button Grid.Column="3" Content="Reset" Click="BtnResetLogLocation_Click"/>
