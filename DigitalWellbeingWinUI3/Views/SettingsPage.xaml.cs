@@ -399,41 +399,24 @@ namespace DigitalWellbeingWinUI3.Views
             TxtLogLocation.Text = string.IsNullOrEmpty(customPath) ? ApplicationPath.UsageLogsFolder : customPath;
         }
 
-        private async void BtnBrowseLogLocation_Click(object sender, RoutedEventArgs e)
+        private void BtnBrowseLogLocation_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                var picker = new Windows.Storage.Pickers.FolderPicker();
-                picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary;
-                picker.FileTypeFilter.Add("*");
-                
-                // Initialize with window handle for WinUI 3 (required for unpackaged apps)
+                // Use COM IFileOpenDialog which is more reliable for unpackaged apps
+                var dialog = new NativeFolderDialog();
                 var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(App.MainWindow);
-                WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
-
-                var folder = await picker.PickSingleFolderAsync();
-                if (folder != null)
+                
+                string selectedPath = dialog.ShowDialog(hwnd, TxtLogLocation.Text);
+                if (!string.IsNullOrEmpty(selectedPath))
                 {
-                    string newPath = folder.Path;
-                    ApplicationPath.SetCustomLogsFolder(newPath);
-                    TxtLogLocation.Text = newPath;
-                    
-                    // Restart Service
-                    RestartBackgroundService();
+                    TxtLogLocation.Text = selectedPath;
+                    MarkDirty();
                 }
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"FolderPicker failed: {ex.Message}");
-                // Fallback: Show a dialog asking user to paste path manually
-                var dialog = new ContentDialog
-                {
-                    Title = "Folder Picker Error",
-                    Content = $"Could not open folder picker. Error: {ex.Message}\n\nYou can manually type a path in the text box.",
-                    CloseButtonText = "OK",
-                    XamlRoot = this.XamlRoot
-                };
-                await dialog.ShowAsync();
             }
         }
 
