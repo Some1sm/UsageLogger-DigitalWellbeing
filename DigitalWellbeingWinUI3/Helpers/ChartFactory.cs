@@ -71,12 +71,21 @@ namespace DigitalWellbeingWinUI3.Helpers
             {
                 Values = values,
                 Name = name,
-                YToolTipLabelFormatter = (point) => $"{point.Coordinate.PrimaryValue:F1} hours",
+                YToolTipLabelFormatter = (point) => FormatHours(point.Coordinate.PrimaryValue),
                 Fill = fill,
                 Rx = 10,
                 Ry = 10,
                 MaxBarWidth = 35
             };
+        }
+
+        /// <summary>
+        /// Formats hours as "Xh Ym Zs" for consistent tooltip display.
+        /// </summary>
+        private static string FormatHours(double hours)
+        {
+            TimeSpan t = TimeSpan.FromHours(hours);
+            return $"{(int)t.TotalHours}h {t.Minutes}m {t.Seconds}s";
         }
 
         /// <summary>
@@ -91,10 +100,19 @@ namespace DigitalWellbeingWinUI3.Helpers
             {
                 Values = new ObservableCollection<double> { value },
                 Name = name,
-                ToolTipLabelFormatter = (point) => $"{point.Context.Series.Name}: {point.Coordinate.PrimaryValue:F1}m",
+                ToolTipLabelFormatter = (point) => $"{point.Context.Series.Name}: {FormatMinutes(point.Coordinate.PrimaryValue)}",
                 DataLabelsFormatter = (point) => point.Context.Series.Name,
                 Fill = new SolidColorPaint(fill)
             };
+        }
+
+        /// <summary>
+        /// Formats minutes as "HH:MM:SS" for consistent tooltip display.
+        /// </summary>
+        private static string FormatMinutes(double totalMinutes)
+        {
+            TimeSpan t = TimeSpan.FromMinutes(totalMinutes);
+            return $"{(int)t.TotalHours:D2}:{t.Minutes:D2}:{t.Seconds:D2}";
         }
 
         /// <summary>

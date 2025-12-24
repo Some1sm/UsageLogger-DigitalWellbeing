@@ -20,8 +20,17 @@ using LiveChartsCore.SkiaSharpView.Painting.Effects;
 
 namespace DigitalWellbeingWinUI3.ViewModels
 {
+    public enum ChartViewMode
+    {
+        Categories = 0,
+        Apps = 1,
+        SubApps = 2
+    }
+
     public class HistoryViewModel : INotifyPropertyChanged
     {
+        // View mode options for ComboBox binding
+        public List<string> ViewModeOptions { get; } = new List<string> { "Categories", "Apps", "Sub-Apps" };
         private DateTimeOffset _startDate = DateTime.Now.AddDays(-7);
         public DateTimeOffset StartDate
         {
@@ -36,12 +45,14 @@ namespace DigitalWellbeingWinUI3.ViewModels
             set { if (_endDate != value) { _endDate = value; OnPropertyChanged(); } }
         }
 
-        private bool _isTagView = true;
-        public bool IsTagView
+        private int _selectedViewModeIndex = 0;
+        public int SelectedViewModeIndex
         {
-            get => _isTagView;
-            set { if (_isTagView != value) { _isTagView = value; OnPropertyChanged(); GenerateChart(); } }
+            get => _selectedViewModeIndex;
+            set { if (_selectedViewModeIndex != value) { _selectedViewModeIndex = value; OnPropertyChanged(); GenerateChart(); } }
         }
+
+        public ChartViewMode CurrentViewMode => (ChartViewMode)_selectedViewModeIndex;
 
         private ObservableCollection<ISeries> _chartSeries;
         public ObservableCollection<ISeries> ChartSeries
@@ -156,13 +167,17 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 // Aggregate for Pie Charts
                 List<AppUsage> aggregatedUsage = AggregateSessions(allSessions);
 
-                if (IsTagView)
+                switch (CurrentViewMode)
                 {
-                    GenerateTagChart(aggregatedUsage);
-                }
-                else
-                {
-                    GenerateAppChart(aggregatedUsage);
+                    case ChartViewMode.Categories:
+                        GenerateTagChart(aggregatedUsage);
+                        break;
+                    case ChartViewMode.Apps:
+                        GenerateAppChart(aggregatedUsage);
+                        break;
+                    case ChartViewMode.SubApps:
+                        GenerateSubAppChart(aggregatedUsage);
+                        break;
                 }
             }
             catch (Exception ex) 
@@ -317,7 +332,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
                             string totalStr = FormatDuration(cell.TotalMinutes);
                             return $"{cell.DayName} at {timeStr} • {totalStr} • Top: {cell.TopAppName}";
                         }
-                        return $"{wp.Weight:F0} min";
+                        return FormatDuration(wp.Weight ?? 0);
                     }
                     return "";
                 }
@@ -375,7 +390,8 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 Values = barValues,
                 Name = "Daily Usage",
                 Fill = new SolidColorPaint(new SKColor(0, 120, 215)),
-                MaxBarWidth = 30
+                MaxBarWidth = 30,
+                YToolTipLabelFormatter = (point) => FormatHours(point.Model)
             };
 
             // Previous period average line
@@ -386,7 +402,8 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 Stroke = new SolidColorPaint(new SKColor(255, 180, 0)) { StrokeThickness = 2, PathEffect = new DashEffect(new float[] { 6, 4 }) },
                 Fill = null,
                 GeometrySize = 0,
-                LineSmoothness = 0
+                LineSmoothness = 0,
+                YToolTipLabelFormatter = (point) => FormatHours(point.Model)
             };
 
             TrendSeries = new ObservableCollection<ISeries> { barSeries, avgLine };
@@ -526,7 +543,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 newSeries.Add(new PieSeries<double>
                 {
                     Values = new ObservableCollection<double> { kvp.Value },
-                    Name = UserPreferences.GetDisplayName(kvp.Key),
+                    Name = TruncateName(UserPreferences.GetDisplayName(kvp.Key)),
                     DataLabelsPaint = new SolidColorPaint(SKColors.Black),
                     DataLabelsFormatter = (p) => (p.Coordinate.PrimaryValue / totalDuration > 0.05) ? p.Context.Series.Name : "",
                     ToolTipLabelFormatter = (p) => FormatDuration(p.Coordinate.PrimaryValue)
@@ -537,10 +554,104 @@ namespace DigitalWellbeingWinUI3.ViewModels
              ChartSeries = newSeries;
         }
 
+        private void GenerateSubAppChart(List<AppUsage> usage)
+        {
+            // Dictionary to hold sub-app durations: key = "ProcessName|SubAppTitle" or "ProcessName" for apps without breakdown
+            Dictionary<string, (string DisplayName, double Minutes)> subAppDurations = new Dictionary<string, (string, double)>();
+
+            foreach (var app in usage)
+            {
+                if (AppUsageViewModel.IsProcessExcluded(app.ProcessName)) continue;
+
+                string parentDisplayName = UserPreferences.GetDisplayName(app.ProcessName);
+
+                // Check if this app has sub-app breakdown
+                if (app.ProgramBreakdown != null && app.ProgramBreakdown.Count > 0)
+                {
+                    // Add each sub-app as its own entry
+                    foreach (var subApp in app.ProgramBreakdown)
+                    {
+                        string titleKey = $"{app.ProcessName}|{subApp.Key}";
+                        
+                        // Skip excluded titles
+                        if (UserPreferences.ExcludedTitles.Contains(titleKey)) continue;
+                        
+                        // Get custom display name for sub-app if it exists
+                        string subAppDisplayName;
+                        if (UserPreferences.TitleDisplayNames.TryGetValue(titleKey, out string customName))
+                        {
+                            subAppDisplayName = customName;
+                        }
+                        else
+                        {
+                            // Use the sub-app title directly (it's usually already parsed like "YouTube", "Google")
+                            subAppDisplayName = subApp.Key;
+                        }
+
+                        // Add or update in dictionary
+                        if (subAppDurations.ContainsKey(titleKey))
+                        {
+                            var existing = subAppDurations[titleKey];
+                            subAppDurations[titleKey] = (existing.DisplayName, existing.Minutes + subApp.Value.TotalMinutes);
+                        }
+                        else
+                        {
+                            subAppDurations[titleKey] = (subAppDisplayName, subApp.Value.TotalMinutes);
+                        }
+                    }
+                }
+                else
+                {
+                    // No breakdown - add the app as a whole
+                    if (subAppDurations.ContainsKey(app.ProcessName))
+                    {
+                        var existing = subAppDurations[app.ProcessName];
+                        subAppDurations[app.ProcessName] = (existing.DisplayName, existing.Minutes + app.Duration.TotalMinutes);
+                    }
+                    else
+                    {
+                        subAppDurations[app.ProcessName] = (parentDisplayName, app.Duration.TotalMinutes);
+                    }
+                }
+            }
+
+            var visibleApps = subAppDurations.Where(k => k.Value.Minutes >= 1.0).OrderByDescending(k => k.Value.Minutes).Take(20).ToList();
+            double totalDuration = visibleApps.Sum(k => k.Value.Minutes);
+
+            var newSeries = new ObservableCollection<ISeries>();
+            foreach (var kvp in visibleApps)
+            {
+                newSeries.Add(new PieSeries<double>
+                {
+                    Values = new ObservableCollection<double> { kvp.Value.Minutes },
+                    Name = TruncateName(kvp.Value.DisplayName),
+                    DataLabelsPaint = new SolidColorPaint(SKColors.Black),
+                    DataLabelsFormatter = (p) => (p.Coordinate.PrimaryValue / totalDuration > 0.05) ? p.Context.Series.Name : "",
+                    ToolTipLabelFormatter = (p) => FormatDuration(p.Coordinate.PrimaryValue)
+                });
+            }
+
+             if (newSeries.Count == 0) AddNoData(newSeries);
+             ChartSeries = newSeries;
+        }
+
+        private string TruncateName(string name, int maxLength = 30)
+        {
+            if (string.IsNullOrEmpty(name)) return name;
+            if (name.Length <= maxLength) return name;
+            return name.Substring(0, maxLength - 3) + "...";
+        }
+
         private string FormatDuration(double totalMinutes)
         {
             TimeSpan t = TimeSpan.FromMinutes(totalMinutes);
             return $"{(int)t.TotalHours:D2}:{t.Minutes:D2}:{t.Seconds:D2}";
+        }
+
+        private string FormatHours(double hours)
+        {
+            TimeSpan t = TimeSpan.FromHours(hours);
+            return $"{(int)t.TotalHours}h {t.Minutes}m {t.Seconds}s";
         }
 
         private void AddNoData(ObservableCollection<ISeries> series)
