@@ -238,6 +238,13 @@
                          <Button Grid.Column="3" Content="Reset" Click="BtnResetLogLocation_Click"/>
                      </Grid>
                  </StackPanel>
+
+                 <!-- Data Flush Interval -->
+                 <StackPanel Grid.Row="1" Spacing="5">
+                     <TextBlock Text="Data Flush Interval (seconds)" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                     <TextBlock Text="How often usage data in RAM is saved to disk. Lower values = more disk writes but better recovery on crash (Default 300s = 5 min)." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
+                     <NumberBox x:Name="DataFlushIntervalTextBox" Value="300" SpinButtonPlacementMode="Compact" Width="150" Minimum="60" Maximum="1800" HorizontalAlignment="Left" ValueChanged="Settings_ValueChanged"/>
+                 </StackPanel>
               </Grid>
 
              <!-- App Tags -->

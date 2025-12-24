@@ -18,7 +18,56 @@ namespace DigitalWellbeingService
     public class ActivityLogger
     {
         public static readonly int TIMER_INTERVAL_SEC = 3;
-        private static readonly int BUFFER_FLUSH_INTERVAL_SEC = 300; // Flush every 5 minutes
+        private static int _bufferFlushIntervalSec = 300; // Default: 5 minutes
+        private static DateTime _lastSettingsRead = DateTime.MinValue;
+        private static DateTime _lastFileWriteTime = DateTime.MinValue;
+        private static readonly string _settingsPath = Path.Combine(
+            Environment.GetFolderPath(SpecialFolder.LocalApplicationData),
+            "digital-wellbeing",
+            "user_preferences.json");
+
+        private int GetBufferFlushInterval()
+        {
+            // Re-check settings file every 30 seconds
+            if ((DateTime.Now - _lastSettingsRead).TotalSeconds < 30)
+                return _bufferFlushIntervalSec;
+
+            _lastSettingsRead = DateTime.Now;
+            
+            try
+            {
+                if (!File.Exists(_settingsPath)) return _bufferFlushIntervalSec;
+
+                var currentWriteTime = File.GetLastWriteTime(_settingsPath);
+                if (currentWriteTime == _lastFileWriteTime) return _bufferFlushIntervalSec;
+                _lastFileWriteTime = currentWriteTime;
+
+                string json;
+                using (var fs = new FileStream(_settingsPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                using (var sr = new StreamReader(fs))
+                {
+                    json = sr.ReadToEnd();
+                }
+
+                // Simple JSON parse for "DataFlushIntervalSeconds": <value>
+                int startIdx = json.IndexOf("\"DataFlushIntervalSeconds\":");
+                if (startIdx >= 0)
+                {
+                    int colonIdx = json.IndexOf(':', startIdx);
+                    int endIdx = json.IndexOf(',', colonIdx);
+                    if (endIdx < 0) endIdx = json.IndexOf('}', colonIdx);
+                    
+                    string valueStr = json.Substring(colonIdx + 1, endIdx - colonIdx - 1).Trim();
+                    if (int.TryParse(valueStr, out int val) && val >= 60)
+                    {
+                        _bufferFlushIntervalSec = val;
+                    }
+                }
+            }
+            catch { }
+
+            return _bufferFlushIntervalSec;
+        }
 
         private string folderPath;
         private string autoRunFilePath;
@@ -149,7 +198,7 @@ namespace DigitalWellbeingService
             }
 
             // Check if we should flush to disk
-            if ((DateTime.Now - _lastFlushTime).TotalSeconds >= BUFFER_FLUSH_INTERVAL_SEC)
+            if ((DateTime.Now - _lastFlushTime).TotalSeconds >= GetBufferFlushInterval())
             {
                 FlushBuffer();
             }

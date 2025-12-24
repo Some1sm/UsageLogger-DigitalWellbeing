@@ -82,6 +82,9 @@ namespace DigitalWellbeingWinUI3.Views
 
              // Timeline Threshold
             TimelineThresholdTextBox.Value = UserPreferences.TimelineMergeThresholdSeconds;
+
+            // Data Flush Interval
+            DataFlushIntervalTextBox.Value = UserPreferences.DataFlushIntervalSeconds;
             
             // Theme
             string theme = UserPreferences.ThemeMode;
@@ -206,6 +209,7 @@ namespace DigitalWellbeingWinUI3.Views
             UserPreferences.IncognitoMode = ToggleIncognitoMode.IsOn;
             UserPreferences.EnableAutoRefresh = EnableAutoRefresh.IsOn;
             UserPreferences.RefreshIntervalSeconds = (int)RefreshInterval.Value;
+            UserPreferences.DataFlushIntervalSeconds = (int)DataFlushIntervalTextBox.Value;
 
             // Startup
             SettingsManager.SetRunOnStartup(EnableRunOnStartup.IsOn);
