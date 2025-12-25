@@ -361,13 +361,15 @@ namespace DigitalWellbeing.Setup
                 Environment.SpecialFolder desktopFolder = isDeviceInstall ? Environment.SpecialFolder.CommonDesktopDirectory : Environment.SpecialFolder.DesktopDirectory;
                 Environment.SpecialFolder programsFolder = isDeviceInstall ? Environment.SpecialFolder.CommonPrograms : Environment.SpecialFolder.Programs;
 
-                // UI Shortcuts
-                CreateShortcut(Environment.GetFolderPath(startupFolder), "DigitalWellbeing.lnk", exePath, installPath);
+                // Desktop shortcut for UI app
                 CreateShortcut(Environment.GetFolderPath(desktopFolder), "DigitalWellbeing.lnk", exePath, installPath);
                 
-                // Service Shortcut
+                // Service Startup Shortcut (background service always runs on startup)
                 string serviceExePath = Path.Combine(installPath, "DigitalWellbeingService.exe");
                 CreateShortcut(Environment.GetFolderPath(startupFolder), "DigitalWellbeing Service.lnk", serviceExePath, installPath);
+                
+                // NOTE: UI app startup is managed through Settings > "Run on Startup" toggle (uses registry)
+                // This prevents duplicate startup entries
 
                 string infoPrograms = Path.Combine(Environment.GetFolderPath(programsFolder), AppName);
                 if (!Directory.Exists(infoPrograms)) Directory.CreateDirectory(infoPrograms);
