@@ -38,9 +38,21 @@
         </tb:TaskbarIcon>
         <NavigationView x:Name="NavView" Grid.Row="1" IsBackButtonVisible="Collapsed" Loaded="NavView_Loaded" ItemInvoked="NavView_ItemInvoked">
             <NavigationView.MenuItems>
-                <NavigationViewItem Icon="Home" Content="Dashboard" Tag="Dashboard" />
-                <NavigationViewItem Icon="Calendar" Content="Distribution Analysis" Tag="History" />
-                <NavigationViewItem Icon="List" Content="Detailed Usage" Tag="Sessions" />
+                <NavigationViewItem Content="Dashboard" Tag="Dashboard">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE80F;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="Distribution Analysis" Tag="History">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE9D9;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="Detailed Usage" Tag="Sessions">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE9F9;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
             </NavigationView.MenuItems>
 
             <Grid>

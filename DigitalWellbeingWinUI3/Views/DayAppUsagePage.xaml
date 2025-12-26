@@ -11,17 +11,32 @@
             <Border CornerRadius="12" Background="{Binding BrushAppTagBg}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="0" Margin="0,0,10,10">
                 <Border.ContextFlyout>
                     <MenuFlyout Opening="MenuFlyout_Opening">
-                        <MenuFlyoutItem Text="Set Time Limit" Icon="Clock" Click="MenuFlyoutItem_SetTimeLimit_Click" Tag="{Binding ProcessName}"/>
-                        <MenuFlyoutSubItem Text="Set Category" Icon="Tag">
+                        <MenuFlyoutItem Text="Set Time Limit" Click="MenuFlyoutItem_SetTimeLimit_Click" Tag="{Binding ProcessName}">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE823;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutSubItem Text="Set Category">
+                            <MenuFlyoutSubItem.Icon>
+                                <FontIcon Glyph="&#xE8EC;"/>
+                            </MenuFlyoutSubItem.Icon>
                         </MenuFlyoutSubItem>
                         <MenuFlyoutSeparator/>
-                        <MenuFlyoutItem Text="Set Display Name..." Icon="Rename" Click="MenuFlyoutItem_SetDisplayName_Click" Tag="{Binding ProcessName}"/>
+                        <MenuFlyoutItem Text="Set Display Name..." Click="MenuFlyoutItem_SetDisplayName_Click" Tag="{Binding ProcessName}">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE8AC;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
                         <MenuFlyoutItem Text="Set Custom Icon..." Click="MenuFlyoutItem_SetCustomIcon_Click" Tag="{Binding ProcessName}">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE8B9;"/>
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="Exclude App" Icon="Delete" Click="MenuFlyoutItem_ExcludeApp_Click" Tag="{Binding ProcessName}"/>
+                        <MenuFlyoutItem Text="Exclude App" Click="MenuFlyoutItem_ExcludeApp_Click" Tag="{Binding ProcessName}">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE74D;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
                     </MenuFlyout>
                 </Border.ContextFlyout>
                 
@@ -84,11 +99,27 @@
                                 <Grid Padding="60,4,15,4" Background="{Binding BackgroundBrush}" CornerRadius="4" Margin="4,2" ToolTipService.ToolTip="Right-click to Tag">
                                     <Grid.ContextFlyout>
                                         <MenuFlyout Opening="SubItemMenuFlyout_Opening">
-                                            <MenuFlyoutItem Text="Set Category (Tag)" Icon="Tag" Click="SubItemMenuFlyoutItem_SetTag_Click"/>
-                                            <MenuFlyoutItem Text="Set Display Name..." Icon="Rename" Click="SubItemMenuFlyoutItem_SetDisplayName_Click"/>
-                                            <MenuFlyoutItem Text="Set Time Limit" Icon="Clock" Click="SubItemMenuFlyoutItem_SetTimeLimit_Click"/>
+                                            <MenuFlyoutItem Text="Set Category (Tag)" Click="SubItemMenuFlyoutItem_SetTag_Click">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE8EC;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutItem Text="Set Display Name..." Click="SubItemMenuFlyoutItem_SetDisplayName_Click">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE8AC;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutItem Text="Set Time Limit" Click="SubItemMenuFlyoutItem_SetTimeLimit_Click">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE823;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
                                             <MenuFlyoutSeparator/>
-                                            <MenuFlyoutItem Text="Exclude" Icon="Delete" Click="SubItemMenuFlyoutItem_Exclude_Click"/>
+                                            <MenuFlyoutItem Text="Exclude" Click="SubItemMenuFlyoutItem_Exclude_Click">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE74D;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
                                         </MenuFlyout>
                                     </Grid.ContextFlyout>
                                     <Grid.ColumnDefinitions>
