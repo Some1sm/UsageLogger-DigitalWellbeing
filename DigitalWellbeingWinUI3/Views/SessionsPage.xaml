@@ -47,7 +47,7 @@
                         </Button>
                         <TextBlock Text="{x:Bind ViewModel.SelectedDate, Converter={StaticResource DateFormatConverter}, Mode=OneWay}" 
                                    Style="{ThemeResource TitleTextBlockStyle}" FontSize="18" VerticalAlignment="Center" 
-                                   Width="200" TextAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                   Width="250" TextAlignment="Center" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap"/>
                         
                         <Button Content="&lt;" Command="{x:Bind ViewModel.PreviousDayCommand}" Background="Transparent" BorderThickness="0" Margin="10,0,0,0"/>
                         <Button Content="&gt;" Command="{x:Bind ViewModel.NextDayCommand}" IsEnabled="{x:Bind ViewModel.CanGoNext, Mode=OneWay}" Background="Transparent" BorderThickness="0"/>
