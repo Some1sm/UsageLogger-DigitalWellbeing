@@ -1,29 +1,32 @@
 # Digital Wellbeing for Windows v0.8.1 (Alpha Preview) 🚀
 
-**Welcome to the first public preview of Digital Wellbeing for Windows.**
+**This update brings a major visual overhaul to the Distribution Analysis and critical bug fixes across the entire application.**
 
-This application brings the insights of mobile digital wellbeing to your desktop. Track your usage, visualize your habits, and regain control of your digital life—all with a native, modern Windows 11 design.
+## ✨ What's New
 
-⚠️ **Pre-release / Alpha**: This is an early testing build. Features are functional but you may encounter bugs. Your feedback is highly appreciated!
+### 🗺️ New Treemap Visualization
+We've completely replaced the old Pie Charts with a modern **Treemap** for analyzing your app usage.
+- **Hierarchical View**: Visualize your usage by Categories, Apps, and Sub-Apps (window titles) in a single compact view.
+- **Auto-Contrast**: Text labels intelligently switch between black and white to ensure readability on any background color.
+- **System Integration**: The chart now uses a **monochromatic palette** derived from your Windows accent color.
+- **Maximize Space**: The layout algorithm has been rewritten to use 100% of the available screen real estate.
 
-## ✨ Key Features
+### 🖱️ Interactvity & Management
+- **Context Menus Restored**: Right-click any app in the list to set **Time Limits**, apply **Tags**, or **Exclude** it from tracking.
+- **Heatmap Navigation**: You can now click on any cell in the "Activity Map" to jump directly to the detailed timeline for that specific day.
+- **Tray Icon**: Fixed an issue where the system tray menu items (Open, Settings, Exit) were unresponsive.
 
-### 📊 Comprehensive Dashboard
-- **Daily Usage**: See exactly how much time you spend on each app.
-- **Visual Timelines**: Interactive charts showing your activity distribution throughout the day.
-- **History & Trends**: Analyze your usage patterns over the week.
+### ⚙️ Settings & UI Improvements
+- **"Apply Changes" Banner**: Now appears smoothly as an overlay without shifting the entire page down.
+- **Visual Improvements**: Fixed Settings page background color and improved padding on the Daily Timeline view.
+- **Instant Feedback**: Typing in number fields now immediately triggers the "Apply" prompt.
 
-### 🕵️ Incognito Mode
-- **Privacy First**: Toggle "Incognito Mode" to stop tracking detailed window titles (e.g., website names or document titles).
-- **Visual Feedback**: A subtle "Spy" watermark (Hat & Glasses) appears to confirm when you are off the record.
-
-### ⚡ Real-Time Monitoring
-- **Live Updates**: The dashboard refreshes every **6 seconds**, giving you near-instant feedback on your current session.
-- **Lightweight**: Runs efficiently in the background without draining system resources.
-
-### 🎨 Modern Windows UI
-- **Native Look & Feel**: Designed with WinUI 3 to fit perfectly into Windows 11.
-- **Dark Mode Support**: Fully compatible with your system theme.
+### 🐛 Bug Fixes & Refinements
+- **Historical Data**: Fixed rendering for legacy log files, ensuring your past history (pre-Dec 2025) is visible.
+- **Sub-App Tagging**: Fixed a bug where tagging a specific window title (e.g., a specific website) would incorrectly tag the entire browser.
+- **Foreign Characters**: Fixed an issue where window titles with emojis or non-English characters weren't displaying correctly (UTF-8 encoding fix).
+- **Time Formatting**: Standardized time displays to the cleaner `1h 27m 20s` format.
+- **Build System**: Resolved build errors preventing the creation of a working installer.
 
 ---
 ### 📥 Installation 
