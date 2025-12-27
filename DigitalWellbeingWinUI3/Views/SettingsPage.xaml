@@ -118,7 +118,7 @@
                           <TextBlock Text="Number of days shown in the Dashboard weekly bar chart." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                      </StackPanel>
                       <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="10">
-                          <NumberBox x:Name="DaysToShowTextBox" Value="7" SpinButtonPlacementMode="Compact" Width="150" Minimum="1" ValueChanged="Settings_ValueChanged"/>
+                          <NumberBox x:Name="DaysToShowTextBox" Value="7" SpinButtonPlacementMode="Compact" Width="150" Minimum="1" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp"/>
                       </StackPanel>
                  </Grid>
 
@@ -133,7 +133,7 @@
                          <TextBlock Text="Number of timeline columns in the Detailed Usage page (1-7 days)." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                      </StackPanel>
                      <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="10">
-                         <NumberBox x:Name="DetailedDaysTextBox" Value="1" SpinButtonPlacementMode="Compact" Width="150" Minimum="1" Maximum="7" ValueChanged="Settings_ValueChanged"/>
+                         <NumberBox x:Name="DetailedDaysTextBox" Value="1" SpinButtonPlacementMode="Compact" Width="150" Minimum="1" Maximum="7" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp"/>
                      </StackPanel>
                  </Grid>
 
@@ -148,7 +148,7 @@
                         <TextBlock Text="Apps with usage less than this will be hidden (default 0s)." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="10">
-                        <NumberBox x:Name="MinDurationTextBox" Value="0" SpinButtonPlacementMode="Compact" Width="150" Minimum="0" ValueChanged="Settings_ValueChanged"/>
+                        <NumberBox x:Name="MinDurationTextBox" Value="0" SpinButtonPlacementMode="Compact" Width="150" Minimum="0" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp"/>
                     </StackPanel>
                 </Grid>
 
@@ -164,7 +164,7 @@
                     </StackPanel>
                      <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="10">
                          <ToggleSwitch x:Name="EnableAutoRefresh" Toggled="EnableAutoRefresh_Toggled"/>
-                         <NumberBox x:Name="RefreshInterval" Width="150" SpinButtonPlacementMode="Compact" Minimum="6" Maximum="600" ValueChanged="RefreshInterval_ValueChanged" IsEnabled="{x:Bind EnableAutoRefresh.IsOn, Mode=OneWay}"/>
+                         <NumberBox x:Name="RefreshInterval" Width="150" SpinButtonPlacementMode="Compact" Minimum="6" Maximum="600" ValueChanged="RefreshInterval_ValueChanged" IsEnabled="{x:Bind EnableAutoRefresh.IsOn, Mode=OneWay}" KeyUp="Settings_KeyUp"/>
                      </StackPanel>
                 </Grid>
 
@@ -179,7 +179,7 @@
                          <TextBlock Text="Lower values show more items but may reduce performance (Default 30s)." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                      </StackPanel>
                      <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="10">
-                         <NumberBox x:Name="TimelineThresholdTextBox" Value="30" SpinButtonPlacementMode="Compact" Width="150" Minimum="0" Maximum="300" ValueChanged="Settings_ValueChanged"/>
+                         <NumberBox x:Name="TimelineThresholdTextBox" Value="30" SpinButtonPlacementMode="Compact" Width="150" Minimum="0" Maximum="300" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp"/>
                      </StackPanel>
                  </Grid>
 
@@ -243,7 +243,7 @@
                  <StackPanel Grid.Row="1" Spacing="5">
                      <TextBlock Text="Data Flush Interval (seconds)" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
                      <TextBlock Text="How often usage data in RAM is saved to disk. Lower values = more disk writes but better recovery on crash (Default 300s = 5 min)." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
-                     <NumberBox x:Name="DataFlushIntervalTextBox" Value="300" SpinButtonPlacementMode="Compact" Width="150" Minimum="60" Maximum="1800" HorizontalAlignment="Left" ValueChanged="Settings_ValueChanged"/>
+                     <NumberBox x:Name="DataFlushIntervalTextBox" Value="300" SpinButtonPlacementMode="Compact" Width="150" Minimum="60" Maximum="1800" HorizontalAlignment="Left" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp"/>
                  </StackPanel>
               </Grid>
 

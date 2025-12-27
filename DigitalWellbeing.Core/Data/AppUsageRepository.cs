@@ -30,7 +30,7 @@ namespace DigitalWellbeing.Core.Data
             try
             {
                 using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                using (var reader = new StreamReader(fs))
+                using (var reader = new StreamReader(fs, System.Text.Encoding.UTF8))
                 {
                     string line;
                     while ((line = reader.ReadLine()) != null)
@@ -80,7 +80,7 @@ namespace DigitalWellbeing.Core.Data
             try 
             {
                 using (var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.Read))
-                using (var writer = new StreamWriter(fs))
+                using (var writer = new StreamWriter(fs, System.Text.Encoding.UTF8))
                 {
                     foreach (var line in lines)
                     {

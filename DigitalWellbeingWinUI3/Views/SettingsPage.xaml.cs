@@ -275,6 +275,11 @@ namespace DigitalWellbeingWinUI3.Views
             MarkDirty();
         }
 
+        private void Settings_KeyUp(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
+        {
+            MarkDirty();
+        }
+
         private void CBTheme_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             MarkDirty();
