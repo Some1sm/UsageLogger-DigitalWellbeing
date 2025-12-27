@@ -50,7 +50,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
         public string StrLoadedDate
         {
             get => (LoadedDate.Date == DateTime.Now.Date) ?
-                "Today, " + this.LoadedDate.ToString("dddd") :
+                LocalizationHelper.GetString("Today") + ", " + this.LoadedDate.ToString("dddd") :
                 this.LoadedDate.ToString("dddd, MMM dd yyyy");
         }
 
@@ -1141,7 +1141,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 double pastMin = pastTotal.TotalMinutes;
 
                 string percentage = "";
-                string desc = $"from last {pastDate.ToString("dddd")}";
+                string desc = $"{LocalizationHelper.GetString("FromLast")} {pastDate.ToString("dddd")}";
                 bool isGood = true;
 
                 if (pastMin == 0)
