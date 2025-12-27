@@ -29,26 +29,26 @@
         <tb:TaskbarIcon x:Name="TrayIcon" DoubleClickCommand="{x:Bind OpenCommand}" ToolTipText="Digital Wellbeing">
             <tb:TaskbarIcon.ContextFlyout>
                 <MenuFlyout>
-                    <MenuFlyoutItem Text="Open" Command="{x:Bind OpenCommand}" />
-                    <MenuFlyoutItem Text="Settings" Command="{x:Bind SettingsCommand}" />
+                    <MenuFlyoutItem x:Uid="Tray_Open" Command="{x:Bind OpenCommand}" />
+                    <MenuFlyoutItem x:Uid="Tray_Settings" Command="{x:Bind SettingsCommand}" />
                     <MenuFlyoutSeparator />
-                    <MenuFlyoutItem Text="Exit" Command="{x:Bind ExitCommand}" />
+                    <MenuFlyoutItem x:Uid="Tray_Exit" Command="{x:Bind ExitCommand}" />
                 </MenuFlyout>
             </tb:TaskbarIcon.ContextFlyout>
         </tb:TaskbarIcon>
         <NavigationView x:Name="NavView" Grid.Row="1" IsBackButtonVisible="Collapsed" Loaded="NavView_Loaded" ItemInvoked="NavView_ItemInvoked">
             <NavigationView.MenuItems>
-                <NavigationViewItem Content="Dashboard" Tag="Dashboard">
+                <NavigationViewItem x:Uid="Nav_Dashboard" Tag="Dashboard">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE80F;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Content="Distribution Analysis" Tag="History">
+                <NavigationViewItem x:Uid="Nav_History" Tag="History">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE9D9;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Content="Detailed Usage" Tag="Sessions">
+                <NavigationViewItem x:Uid="Nav_Sessions" Tag="Sessions">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE9F9;"/>
                     </NavigationViewItem.Icon>

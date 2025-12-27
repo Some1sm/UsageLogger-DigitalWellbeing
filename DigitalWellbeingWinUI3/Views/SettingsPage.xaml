@@ -20,17 +20,17 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="You have unsaved changes." VerticalAlignment="Center" Foreground="White" FontWeight="SemiBold"/>
-            <Button Grid.Column="1" Content="Apply Changes" Click="ApplyAll_Click" Background="White" Foreground="Black" BorderThickness="0"/>
+            <TextBlock x:Uid="Settings_UnsavedChanges" Foreground="White" FontWeight="SemiBold"/>
+            <Button Grid.Column="1" x:Uid="Settings_ApplyChanges" Click="ApplyAll_Click" Background="White" Foreground="Black" BorderThickness="0"/>
         </Grid>
 
         <ScrollViewer Grid.Row="1" Padding="20">
         <StackPanel Spacing="10" MaxWidth="800" HorizontalAlignment="Left">
             
-            <TextBlock Text="Settings" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,0,0,10"/>
+            <TextBlock x:Uid="Settings_Title" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,0,0,10"/>
 
             <!-- App Runtime -->
-            <TextBlock Text="App Runtime" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,10,0,5"/>
+            <TextBlock x:Uid="Settings_AppRuntime" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,10,0,5"/>
             <StackPanel Spacing="5">
                 <!-- Run on Startup -->
                 <Grid Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
@@ -39,8 +39,8 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0" Spacing="2">
-                        <TextBlock Text="Run on Startup" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                        <TextBlock Text="Runs this app on startup." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock x:Uid="Settings_RunOnStartup" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                        <TextBlock x:Uid="Settings_RunOnStartupDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     </StackPanel>
                     <ToggleSwitch x:Name="EnableRunOnStartup" Grid.Column="1" Toggled="EnableRunOnStartup_Toggled"/>
                 </Grid>
@@ -52,15 +52,15 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0" Spacing="2">
-                        <TextBlock Text="Minimize On Exit" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                        <TextBlock Text="Minimize the app to tray on exit instead of closing." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock x:Uid="Settings_MinimizeOnExit" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                        <TextBlock x:Uid="Settings_MinimizeOnExitDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     </StackPanel>
                     <ToggleSwitch x:Name="ToggleMinimizeOnExit" Grid.Column="1" Toggled="ToggleMinimizeOnExit_Toggled"/>
                 </Grid>
             </StackPanel>
 
             <!-- Usage Data -->
-            <TextBlock Text="Usage Data" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,10,0,5"/>
+            <TextBlock x:Uid="Settings_UsageData" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,10,0,5"/>
 
             <!-- Incognito Mode -->
             <Grid Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
@@ -71,9 +71,9 @@
                 <StackPanel Grid.Column="0" Spacing="2">
                     <StackPanel Orientation="Horizontal" Spacing="8">
                         <FontIcon Glyph="&#xE72E;" FontFamily="Segoe MDL2 Assets" FontSize="16"/>
-                        <TextBlock Text="Incognito Mode" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                        <TextBlock x:Uid="Settings_IncognitoMode" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
                     </StackPanel>
-                    <TextBlock Text="Do not record window titles (e.g. YouTube video names)." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    <TextBlock x:Uid="Settings_IncognitoModeDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                 </StackPanel>
                 <ToggleSwitch x:Name="ToggleIncognitoMode" Grid.Column="1" Toggled="ToggleIncognitoMode_Toggled"/>
             </Grid>
@@ -85,8 +85,8 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Spacing="2" Margin="0,0,0,10">
-                    <TextBlock Text="Excluded Apps" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                    <TextBlock Text="Double-click to remove an excluded app." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    <TextBlock x:Uid="Settings_ExcludedApps" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                    <TextBlock x:Uid="Settings_ExcludedAppsDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                 </StackPanel>
                 <ListView Grid.Row="1" x:Name="ExcludedAppList" Height="150" DoubleTapped="ExcludedAppList_DoubleTapped" BorderThickness="1" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" CornerRadius="4"/>
             </Grid>
@@ -98,14 +98,14 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Spacing="2" Margin="0,0,0,10">
-                    <TextBlock Text="Time Limits per App" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                    <TextBlock Text="Double-click to remove time limit." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    <TextBlock x:Uid="Settings_TimeLimits" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                    <TextBlock x:Uid="Settings_TimeLimitsDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                 </StackPanel>
                 <ListView Grid.Row="1" x:Name="AppTimeLimitsList" Height="150" DoubleTapped="AppTimeLimitsList_DoubleTapped" BorderThickness="1" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" CornerRadius="4"/>
             </Grid>
 
             <!-- Display -->
-            <TextBlock Text="Display" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,10,0,5"/>
+            <TextBlock x:Uid="Settings_Display" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,10,0,5"/>
              <StackPanel Spacing="5">
                 <!-- Days to Show -->
                  <Grid Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
@@ -114,8 +114,8 @@
                          <ColumnDefinition Width="Auto"/>
                      </Grid.ColumnDefinitions>
                      <StackPanel Grid.Column="0" Spacing="2">
-                         <TextBlock Text="Days to show on graph" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                          <TextBlock Text="Number of days shown in the Dashboard weekly bar chart." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                         <TextBlock x:Uid="Settings_DaysToShow" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                          <TextBlock x:Uid="Settings_DaysToShowDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                      </StackPanel>
                       <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="10">
                           <NumberBox x:Name="DaysToShowTextBox" Value="7" SpinButtonPlacementMode="Compact" Width="150" Minimum="1" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp"/>
@@ -129,8 +129,8 @@
                          <ColumnDefinition Width="Auto"/>
                      </Grid.ColumnDefinitions>
                      <StackPanel Grid.Column="0" Spacing="2">
-                         <TextBlock Text="Days to show on Detailed usage" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                         <TextBlock Text="Number of timeline columns in the Detailed Usage page (1-7 days)." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                          <TextBlock x:Uid="Settings_DetailedDays" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                          <TextBlock x:Uid="Settings_DetailedDaysDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                      </StackPanel>
                      <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="10">
                          <NumberBox x:Name="DetailedDaysTextBox" Value="1" SpinButtonPlacementMode="Compact" Width="150" Minimum="1" Maximum="7" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp"/>
@@ -144,8 +144,8 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0" Spacing="2">
-                        <TextBlock Text="Minimum App Duration (seconds)" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                        <TextBlock Text="Apps with usage less than this will be hidden (default 0s)." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock x:Uid="Settings_MinDuration" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                        <TextBlock x:Uid="Settings_MinDurationDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="10">
                         <NumberBox x:Name="MinDurationTextBox" Value="0" SpinButtonPlacementMode="Compact" Width="150" Minimum="0" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp"/>
@@ -159,8 +159,8 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0" Spacing="2">
-                        <TextBlock Text="Auto-Refresh Interval (s)" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                         <TextBlock Text="Minimum 6 seconds." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock x:Uid="Settings_AutoRefresh" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                         <TextBlock x:Uid="Settings_AutoRefreshDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     </StackPanel>
                      <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="10">
                          <ToggleSwitch x:Name="EnableAutoRefresh" Toggled="EnableAutoRefresh_Toggled"/>
@@ -175,8 +175,8 @@
                          <ColumnDefinition Width="Auto"/>
                      </Grid.ColumnDefinitions>
                      <StackPanel Grid.Column="0" Spacing="2">
-                         <TextBlock Text="Timeline Detail Level (Merge Threshold s)" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                         <TextBlock Text="Lower values show more items but may reduce performance (Default 30s)." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                          <TextBlock x:Uid="Settings_TimelineThreshold" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                          <TextBlock x:Uid="Settings_TimelineThresholdDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                      </StackPanel>
                      <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="10">
                          <NumberBox x:Name="TimelineThresholdTextBox" Value="30" SpinButtonPlacementMode="Compact" Width="150" Minimum="0" Maximum="300" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp"/>
@@ -190,12 +190,12 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0" Spacing="2">
-                        <TextBlock Text="Theme Mode" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                        <TextBlock x:Uid="Settings_ThemeMode" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
                     </StackPanel>
                     <ComboBox x:Name="CBTheme" Grid.Column="1" SelectionChanged="CBTheme_SelectionChanged" Width="150">
-                        <ComboBoxItem Content="System" Tag="System"/>
-                        <ComboBoxItem Content="Light" Tag="Light"/>
-                        <ComboBoxItem Content="Dark" Tag="Dark"/>
+                        <ComboBoxItem x:Uid="Settings_ThemeSystem" Tag="System"/>
+                        <ComboBoxItem x:Uid="Settings_ThemeLight" Tag="Light"/>
+                        <ComboBoxItem x:Uid="Settings_ThemeDark" Tag="Dark"/>
                     </ComboBox>
                 </Grid>
                 
@@ -206,15 +206,15 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0" Spacing="2">
-                        <TextBlock Text="Combined Audio View" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                        <TextBlock Text="Show Active Windows and Background Audio on same page instead of tabs." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock x:Uid="Settings_CombinedAudio" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                        <TextBlock x:Uid="Settings_CombinedAudioDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     </StackPanel>
                     <ToggleSwitch x:Name="ToggleCombinedAudioView" Grid.Column="1" Toggled="ToggleCombinedAudioView_Toggled"/>
                 </Grid>
              </StackPanel>
 
             <!-- Data -->
-             <TextBlock Text="Data" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,10,0,5"/>
+             <TextBlock x:Uid="Settings_Data" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,10,0,5"/>
              <Grid Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
                  <Grid.RowDefinitions>
                      <RowDefinition Height="Auto"/>
@@ -223,8 +223,8 @@
                  
                  <!-- Log Storage Location -->
                  <StackPanel Grid.Row="0" Spacing="5" Margin="0,0,0,10">
-                     <TextBlock Text="Log Storage Location" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                     <TextBlock Text="Change where usage logs are stored. Service will restart when changed." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                      <TextBlock x:Uid="Settings_LogStorage" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                      <TextBlock x:Uid="Settings_LogStorageDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                      <Grid Margin="0,5,0,0">
                          <Grid.ColumnDefinitions>
                              <ColumnDefinition Width="*"/>
@@ -233,22 +233,22 @@
                              <ColumnDefinition Width="Auto"/>
                          </Grid.ColumnDefinitions>
                          <TextBox x:Name="TxtLogLocation" Grid.Column="0" PlaceholderText="Default Location" Margin="0,0,10,0" MaxWidth="400" HorizontalAlignment="Left" TextWrapping="NoWrap" AcceptsReturn="False" TextChanged="TxtLogLocation_TextChanged"/>
-                         <Button Grid.Column="1" Content="Open" Click="BtnOpenAppFolder_Click" Margin="0,0,5,0"/>
-                         <Button Grid.Column="2" Content="Browse..." Click="BtnBrowseLogLocation_Click" Margin="0,0,5,0"/>
-                         <Button Grid.Column="3" Content="Reset" Click="BtnResetLogLocation_Click"/>
+                          <Button Grid.Column="1" x:Uid="Settings_BtnOpen" Click="BtnOpenAppFolder_Click" Margin="0,0,5,0"/>
+                          <Button Grid.Column="2" x:Uid="Settings_BtnBrowse" Click="BtnBrowseLogLocation_Click" Margin="0,0,5,0"/>
+                          <Button Grid.Column="3" x:Uid="Settings_BtnReset" Click="BtnResetLogLocation_Click"/>
                      </Grid>
                  </StackPanel>
 
                  <!-- Data Flush Interval -->
-                 <StackPanel Grid.Row="1" Spacing="5">
-                     <TextBlock Text="Data Flush Interval (seconds)" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                     <TextBlock Text="How often usage data in RAM is saved to disk. Lower values = more disk writes but better recovery on crash (Default 300s = 5 min)." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
+                  <StackPanel Grid.Row="1" Spacing="5">
+                      <TextBlock x:Uid="Settings_DataFlush" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                      <TextBlock x:Uid="Settings_DataFlushDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
                      <NumberBox x:Name="DataFlushIntervalTextBox" Value="300" SpinButtonPlacementMode="Compact" Width="150" Minimum="60" Maximum="1800" HorizontalAlignment="Left" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp"/>
                  </StackPanel>
               </Grid>
 
              <!-- App Tags -->
-             <TextBlock Text="App Tags" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,10,0,5"/>
+             <TextBlock x:Uid="Settings_AppTags" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,10,0,5"/>
              <Grid Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
                  <Grid.RowDefinitions>
                      <RowDefinition Height="Auto"/>
@@ -256,7 +256,7 @@
                      <RowDefinition Height="Auto"/>
                  </Grid.RowDefinitions>
                  
-                 <TextBlock Text="Manage Categories and Colors" Style="{ThemeResource BodyStrongTextBlockStyle}" Margin="0,0,0,10"/>
+                 <TextBlock x:Uid="Settings_ManageTags" Style="{ThemeResource BodyStrongTextBlockStyle}" Margin="0,0,0,10"/>
 
                  <ListView Grid.Row="1" ItemsSource="{x:Bind Tags}" SelectionMode="None">
                      <ListView.ItemTemplate>
@@ -286,17 +286,17 @@
                      </ListView.ItemTemplate>
                  </ListView>
                  
-                 <Button Grid.Row="2" Content="Add Tag" Click="BtnAddTag_Click" Margin="0,10,0,0"/>
+                 <Button Grid.Row="2" x:Uid="Settings_AddTag" Click="BtnAddTag_Click" Margin="0,10,0,0"/>
              </Grid>
 
 
              <!-- About -->
-             <TextBlock Text="About" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,10,0,5"/>
+             <TextBlock x:Uid="Settings_About" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,10,0,5"/>
              <StackPanel Spacing="5">
                   <TextBlock x:Name="TxtCurrentVersion" Text="App Version: ..." Style="{ThemeResource BodyTextBlockStyle}"/>
-                  <TextBlock Text="Created by David Cepero" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                  <TextBlock Text="Copyright © 2025. All rights reserved." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                  <HyperlinkButton Content="Source Code (GitHub)" NavigateUri="https://github.com/Some1sm/Windows-Digital-Wellbeing"/>
+                  <TextBlock x:Uid="Settings_CreatedBy" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                  <TextBlock x:Uid="Settings_Copyright" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                  <HyperlinkButton x:Uid="Settings_SourceCode" NavigateUri="https://github.com/Some1sm/Windows-Digital-Wellbeing"/>
              </StackPanel>
 
         </StackPanel>

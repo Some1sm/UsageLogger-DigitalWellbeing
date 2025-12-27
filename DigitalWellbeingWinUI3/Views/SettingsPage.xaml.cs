@@ -27,7 +27,7 @@ namespace DigitalWellbeingWinUI3.Views
             // var version = Package.Current.Id.Version; 
             // Package API fails in unpackaged apps.
             var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-            TxtCurrentVersion.Text = $"App Version {version.Major}.{version.Minor}.{version.Build}";
+            TxtCurrentVersion.Text = string.Format(LocalizationHelper.GetString("Settings_AppVersion"), $"{version.Major}.{version.Minor}.{version.Build}");
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

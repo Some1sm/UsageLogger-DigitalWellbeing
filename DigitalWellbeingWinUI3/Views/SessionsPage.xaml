@@ -20,8 +20,8 @@
         <!-- Header -->
         <Grid Grid.Row="0" Margin="24,24,24,10">
             <StackPanel Spacing="4">
-                <TextBlock Text="Timeline" Style="{ThemeResource TitleTextBlockStyle}"/>
-                <TextBlock Text="Visualize your day." Style="{ThemeResource BodyTextBlockStyle}" Opacity="0.6"/>
+                <TextBlock x:Uid="Sessions_Title" Style="{ThemeResource TitleTextBlockStyle}"/>
+                <TextBlock x:Uid="Sessions_Subtitle" Style="{ThemeResource BodyTextBlockStyle}" Opacity="0.6"/>
             </StackPanel>
         </Grid>
 
@@ -58,8 +58,8 @@
             <!-- Zoom Controls -->
             <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="16">
                 <StackPanel Orientation="Horizontal" Spacing="8">
-                    <Button Command="{x:Bind ViewModel.ZoomOutCommand}" Content="Zoom Out"/>
-                    <Button Command="{x:Bind ViewModel.ZoomInCommand}" Content="Zoom In"/>
+                    <Button x:Uid="Sessions_ZoomOut" Command="{x:Bind ViewModel.ZoomOutCommand}"/>
+                    <Button x:Uid="Sessions_ZoomIn" Command="{x:Bind ViewModel.ZoomInCommand}"/>
                 </StackPanel>
             </StackPanel>
         </Grid>
