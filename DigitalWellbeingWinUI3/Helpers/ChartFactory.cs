@@ -41,6 +41,34 @@ namespace DigitalWellbeingWinUI3.Helpers
         }
 
         /// <summary>
+        /// Generates a monochromatic color palette based on the accent color.
+        /// Colors vary in lightness/saturation while keeping hue constant.
+        /// This creates a "shades of accent" look that's cohesive with Windows theme.
+        /// </summary>
+        public static List<SKColor> GenerateMonochromaticPalette(SKColor baseColor, int count)
+        {
+            var palette = new List<SKColor>();
+            baseColor.ToHsl(out float h, out float s, out float l);
+
+            if (count < 1) count = 1;
+
+            // For a cohesive look, we vary lightness from 30% to 70%
+            // and slightly shift saturation
+            float minL = 30f;
+            float maxL = 70f;
+            float step = (maxL - minL) / Math.Max(1, count - 1);
+
+            for (int i = 0; i < count; i++)
+            {
+                float newL = minL + (i * step);
+                // Slight saturation variation for visual interest
+                float newS = Math.Clamp(s + (i % 2 == 0 ? 10f : -10f), 40f, 100f);
+                palette.Add(SKColor.FromHsl(h, newS, newL));
+            }
+            return palette;
+        }
+
+        /// <summary>
         /// Gets a theme-aware label paint (white for dark mode, black for light mode).
         /// </summary>
         public static SolidColorPaint GetLabelPaint(bool isDarkMode)

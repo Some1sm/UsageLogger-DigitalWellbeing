@@ -59,10 +59,6 @@ namespace DigitalWellbeingWinUI3.Controls
             // Calculate layout
             TreemapLayout.Calculate(items, width, height);
 
-            // Determine theme for text color
-            bool isDark = ChartFactory.IsDarkMode();
-            var textBrush = new SolidColorBrush(isDark ? Microsoft.UI.Colors.White : Microsoft.UI.Colors.Black);
-
             // Render items
             foreach (var item in items)
             {
@@ -77,6 +73,9 @@ namespace DigitalWellbeingWinUI3.Controls
                     BorderThickness = new Thickness(0),
                     Padding = new Thickness(6)
                 };
+
+                // Calculate luminance of background color for text contrast
+                var textBrush = GetContrastBrush(item.Fill);
 
                 // Content: Name and value
                 var stack = new StackPanel
@@ -109,7 +108,7 @@ namespace DigitalWellbeingWinUI3.Controls
                             Text = item.FormattedValue ?? "",
                             FontSize = 10,
                             Foreground = textBrush,
-                            Opacity = 0.8,
+                            Opacity = 0.9,
                             HorizontalAlignment = HorizontalAlignment.Center
                         };
                         stack.Children.Add(valueBlock);
@@ -128,6 +127,24 @@ namespace DigitalWellbeingWinUI3.Controls
 
                 TreemapCanvas.Children.Add(border);
             }
+        }
+
+        /// <summary>
+        /// Returns a contrast brush (Black or White) based on background luminance.
+        /// </summary>
+        private SolidColorBrush GetContrastBrush(Brush background)
+        {
+            if (background is SolidColorBrush solidBrush)
+            {
+                var color = solidBrush.Color;
+                // Calculate relative luminance using sRGB formula
+                double luminance = (0.299 * color.R + 0.587 * color.G + 0.114 * color.B) / 255.0;
+                return luminance > 0.5 
+                    ? new SolidColorBrush(Microsoft.UI.Colors.Black) 
+                    : new SolidColorBrush(Microsoft.UI.Colors.White);
+            }
+            // Default to white for non-solid brushes
+            return new SolidColorBrush(Microsoft.UI.Colors.White);
         }
 
         private string TruncateName(string name, int maxChars)

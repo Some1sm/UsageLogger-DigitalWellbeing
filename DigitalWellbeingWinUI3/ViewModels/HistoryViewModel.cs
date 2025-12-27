@@ -640,7 +640,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
             var uiSettings = new Windows.UI.ViewManagement.UISettings();
             var accent = uiSettings.GetColorValue(Windows.UI.ViewManagement.UIColorType.Accent);
             var skAccent = new SkiaSharp.SKColor(accent.R, accent.G, accent.B, accent.A);
-            var palette = ChartFactory.GenerateMultiHuePalette(skAccent, visibleApps.Count);
+            var palette = ChartFactory.GenerateMonochromaticPalette(skAccent, visibleApps.Count);
 
             var treemapItems = new ObservableCollection<TreemapItem>();
             int colorIndex = 0;
@@ -733,7 +733,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
             var uiSettings = new Windows.UI.ViewManagement.UISettings();
             var accent = uiSettings.GetColorValue(Windows.UI.ViewManagement.UIColorType.Accent);
             var skAccent = new SkiaSharp.SKColor(accent.R, accent.G, accent.B, accent.A);
-            var palette = ChartFactory.GenerateMultiHuePalette(skAccent, visibleApps.Count);
+            var palette = ChartFactory.GenerateMonochromaticPalette(skAccent, visibleApps.Count);
 
             var treemapItems = new ObservableCollection<TreemapItem>();
             int colorIndex = 0;
@@ -768,7 +768,10 @@ namespace DigitalWellbeingWinUI3.ViewModels
         private string FormatDuration(double totalMinutes)
         {
             TimeSpan t = TimeSpan.FromMinutes(totalMinutes);
-            return $"{(int)t.TotalHours:D2}:{t.Minutes:D2}:{t.Seconds:D2}";
+            if (t.TotalHours >= 1)
+                return $"{(int)t.TotalHours}h {t.Minutes}m {t.Seconds}s";
+            else
+                return $"{t.Minutes}m {t.Seconds}s";
         }
 
         private string FormatHours(double hours)
