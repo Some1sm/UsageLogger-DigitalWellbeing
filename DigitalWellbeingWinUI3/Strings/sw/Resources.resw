@@ -1,0 +1,337 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:schema id="root">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xs:element name="root" ns1:IsDataSet="true">
+      <xs:complexType>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element name="metadata">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="assembly">
+            <xs:complexType>
+              <xs:attribute name="alias" type="xsd:string" />
+              <xs:attribute name="name" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="data">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" ns1:Ordinal="1" />
+              <xs:attribute name="type" type="xsd:string" ns1:Ordinal="3" />
+              <xs:attribute name="mimetype" type="xsd:string" ns1:Ordinal="4" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="resheader">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" />
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Today" xml:space="preserve">
+    <value>Today</value>
+  </data>
+  <data name="FromLast" xml:space="preserve">
+    <value>from last</value>
+  </data>
+  <data name="History_TimePeriod.Text" xml:space="preserve">
+    <value>Time Period</value>
+  </data>
+  <data name="History_ViewMode.Text" xml:space="preserve">
+    <value>View Mode</value>
+  </data>
+  <data name="History_StartDate.Text" xml:space="preserve">
+    <value>Start Date</value>
+  </data>
+  <data name="History_EndDate.Text" xml:space="preserve">
+    <value>End Date</value>
+  </data>
+  <data name="History_ApplyButton.Content" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="History_TotalScreenTime.Text" xml:space="preserve">
+    <value>Total Screen Time</value>
+  </data>
+  <data name="History_DailyTrends.Text" xml:space="preserve">
+    <value>Daily Trends</value>
+  </data>
+  <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
+    <value>📊 Day-by-day usage</value>
+  </data>
+  <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
+    <value>Orange line = previous period average</value>
+  </data>
+  <data name="History_UsageTrends.Text" xml:space="preserve">
+    <value>Usage Trends</value>
+  </data>
+  <data name="History_DistributionAnalysis.Text" xml:space="preserve">
+    <value>Distribution Analysis</value>
+  </data>
+  <data name="History_ActivityHeatmap.Text" xml:space="preserve">
+    <value>Activity Heatmap</value>
+  </data>
+  <data name="History_HeatmapTooltip.Text" xml:space="preserve">
+    <value>Hover for details</value>
+  </data>
+  <data name="History_DailyUsage" xml:space="preserve">
+    <value>Daily Usage</value>
+  </data>
+  <data name="History_PrevPeriodAvg" xml:space="preserve">
+    <value>Prev Period Avg</value>
+  </data>
+  <data name="History_NoPreviousData" xml:space="preserve">
+    <value>No previous data</value>
+  </data>
+  <data name="History_VsPreviousDays" xml:space="preserve">
+    <value>vs previous {0} days</value>
+  </data>
+  <data name="Settings_UnsavedChanges.Text" xml:space="preserve">
+    <value>You have unsaved changes.</value>
+  </data>
+  <data name="Settings_ApplyChanges.Content" xml:space="preserve">
+    <value>Apply Changes</value>
+  </data>
+  <data name="Settings_Title.Text" xml:space="preserve">
+    <value>Mipangilio</value>
+  </data>
+  <data name="Settings_AppRuntime.Text" xml:space="preserve">
+    <value>Muda wa Programu</value>
+  </data>
+  <data name="Settings_RunOnStartup.Text" xml:space="preserve">
+    <value>Run on Startup</value>
+  </data>
+  <data name="Settings_RunOnStartupDesc.Text" xml:space="preserve">
+    <value>Runs this app on startup.</value>
+  </data>
+  <data name="Settings_MinimizeOnExit.Text" xml:space="preserve">
+    <value>Minimize On Exit</value>
+  </data>
+  <data name="Settings_MinimizeOnExitDesc.Text" xml:space="preserve">
+    <value>Minimize the app to tray on exit instead of closing.</value>
+  </data>
+  <data name="Settings_UsageData.Text" xml:space="preserve">
+    <value>Data ya Matumizi</value>
+  </data>
+  <data name="Settings_IncognitoMode.Text" xml:space="preserve">
+    <value>Incognito Mode</value>
+  </data>
+  <data name="Settings_IncognitoModeDesc.Text" xml:space="preserve">
+    <value>Do not record window titles (e.g. YouTube video names).</value>
+  </data>
+  <data name="Settings_ExcludedApps.Text" xml:space="preserve">
+    <value>Excluded Apps</value>
+  </data>
+  <data name="Settings_ExcludedAppsDesc.Text" xml:space="preserve">
+    <value>Double-click to remove an excluded app.</value>
+  </data>
+  <data name="Settings_TimeLimits.Text" xml:space="preserve">
+    <value>Time Limits per App</value>
+  </data>
+  <data name="Settings_TimeLimitsDesc.Text" xml:space="preserve">
+    <value>Double-click to remove time limit.</value>
+  </data>
+  <data name="Settings_Display.Text" xml:space="preserve">
+    <value>Onyesho</value>
+  </data>
+  <data name="Settings_DaysToShow.Text" xml:space="preserve">
+    <value>Days to show on graph</value>
+  </data>
+  <data name="Settings_DaysToShowDesc.Text" xml:space="preserve">
+    <value>Number of days shown in the Dashboard weekly bar chart.</value>
+  </data>
+  <data name="Settings_DetailedDays.Text" xml:space="preserve">
+    <value>Days to show on Detailed usage</value>
+  </data>
+  <data name="Settings_DetailedDaysDesc.Text" xml:space="preserve">
+    <value>Number of timeline columns in the Detailed Usage page (1-7 days).</value>
+  </data>
+  <data name="Settings_MinDuration.Text" xml:space="preserve">
+    <value>Minimum App Duration (seconds)</value>
+  </data>
+  <data name="Settings_MinDurationDesc.Text" xml:space="preserve">
+    <value>Apps with usage less than this will be hidden (default 0s).</value>
+  </data>
+  <data name="Settings_AutoRefresh.Text" xml:space="preserve">
+    <value>Auto-Refresh Interval (s)</value>
+  </data>
+  <data name="Settings_AutoRefreshDesc.Text" xml:space="preserve">
+    <value>Minimum 6 seconds.</value>
+  </data>
+  <data name="Settings_TimelineThreshold.Text" xml:space="preserve">
+    <value>Timeline Detail Level (Merge Threshold s)</value>
+  </data>
+  <data name="Settings_TimelineThresholdDesc.Text" xml:space="preserve">
+    <value>Lower values show more items but may reduce performance (Default 30s).</value>
+  </data>
+  <data name="Settings_ThemeMode.Text" xml:space="preserve">
+    <value>Theme Mode</value>
+  </data>
+  <data name="Settings_ThemeSystem.Content" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="Settings_ThemeLight.Content" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="Settings_ThemeDark.Content" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="Settings_CombinedAudio.Text" xml:space="preserve">
+    <value>Combined Audio View</value>
+  </data>
+  <data name="Settings_CombinedAudioDesc.Text" xml:space="preserve">
+    <value>Show Active Windows and Background Audio on same page instead of tabs.</value>
+  </data>
+  <data name="Settings_Data.Text" xml:space="preserve">
+    <value>Data</value>
+  </data>
+  <data name="Settings_LogStorage.Text" xml:space="preserve">
+    <value>Log Storage Location</value>
+  </data>
+  <data name="Settings_LogStorageDesc.Text" xml:space="preserve">
+    <value>Change where usage logs are stored. Service will restart when changed.</value>
+  </data>
+  <data name="Settings_BtnOpen.Content" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="Settings_BtnBrowse.Content" xml:space="preserve">
+    <value>Browse...</value>
+  </data>
+  <data name="Settings_BtnReset.Content" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="Settings_DataFlush.Text" xml:space="preserve">
+    <value>Data Flush Interval (seconds)</value>
+  </data>
+  <data name="Settings_DataFlushDesc.Text" xml:space="preserve">
+    <value>How often usage data in RAM is saved to disk. Lower values = more disk writes but better recovery on crash (Default 300s = 5 min).</value>
+  </data>
+  <data name="Settings_AppTags.Text" xml:space="preserve">
+    <value>Lebo za Programu</value>
+  </data>
+  <data name="Settings_ManageTags.Text" xml:space="preserve">
+    <value>Manage Categories and Colors</value>
+  </data>
+  <data name="Settings_AddTag.Content" xml:space="preserve">
+    <value>Add Tag</value>
+  </data>
+  <data name="Settings_About.Text" xml:space="preserve">
+    <value>Kuhusu</value>
+  </data>
+  <data name="Settings_CreatedBy.Text" xml:space="preserve">
+    <value>Created by David Cepero</value>
+  </data>
+  <data name="Settings_Copyright.Text" xml:space="preserve">
+    <value>Copyright © 2025. All rights reserved.</value>
+  </data>
+  <data name="Settings_SourceCode.Content" xml:space="preserve">
+    <value>Source Code (GitHub)</value>
+  </data>
+  <data name="Settings_AppVersion" xml:space="preserve">
+    <value>Toleo {0}</value>
+  </data>
+  <data name="Nav_Dashboard.Content" xml:space="preserve">
+    <value>Dashibodi</value>
+  </data>
+  <data name="Nav_History.Content" xml:space="preserve">
+    <value>Uchambuzi wa Usambazaji</value>
+  </data>
+  <data name="Nav_Sessions.Content" xml:space="preserve">
+    <value>Matumizi ya Kina</value>
+  </data>
+  <data name="Tray_Open.Text" xml:space="preserve">
+    <value>Fungua</value>
+  </data>
+  <data name="Tray_Settings.Text" xml:space="preserve">
+    <value>Mipangilio</value>
+  </data>
+  <data name="Tray_Exit.Text" xml:space="preserve">
+    <value>Toka</value>
+  </data>
+  <data name="Dashboard_SetTimeLimit.Text" xml:space="preserve">
+    <value>Weka Kikomo cha Muda</value>
+  </data>
+  <data name="Dashboard_SetCategory.Text" xml:space="preserve">
+    <value>Weka Kitengo</value>
+  </data>
+  <data name="Dashboard_SetDisplayName.Text" xml:space="preserve">
+    <value>Weka Jina la Kuonyesha...</value>
+  </data>
+  <data name="Dashboard_SetCustomIcon.Text" xml:space="preserve">
+    <value>Ikoni Maalum...</value>
+  </data>
+  <data name="Dashboard_ExcludeApp.Text" xml:space="preserve">
+    <value>Ondoa Programu</value>
+  </data>
+  <data name="Dashboard_Total.Text" xml:space="preserve">
+    <value>Jumla:</value>
+  </data>
+  <data name="Dashboard_DailyActivity.Text" xml:space="preserve">
+    <value>Shughuli za Kila Siku</value>
+  </data>
+  <data name="Dashboard_UsageSummary.Text" xml:space="preserve">
+    <value>Muhtasari wa Matumizi</value>
+  </data>
+  <data name="Dashboard_TabActiveWindows.Header" xml:space="preserve">
+    <value>📊 Active Windows</value>
+  </data>
+  <data name="Dashboard_TabBackgroundAudio.Header" xml:space="preserve">
+    <value>🔊 Background Audio</value>
+  </data>
+  <data name="Dashboard_AudioDesc.Text" xml:space="preserve">
+    <value>Apps playing audio while not in focus</value>
+  </data>
+  <data name="Dashboard_NoAudio.Text" xml:space="preserve">
+    <value>No background audio detected</value>
+  </data>
+  <data name="Dashboard_ActiveWindows.Text" xml:space="preserve">
+    <value>Madirisha Amilifu</value>
+  </data>
+  <data name="Dashboard_BackgroundAudio.Text" xml:space="preserve">
+    <value>Sauti ya Mandharinyuma</value>
+  </data>
+  <data name="Dashboard_NotCounted.Text" xml:space="preserve">
+    <value>(not counted)</value>
+  </data>
+  <data name="Sessions_Title.Text" xml:space="preserve">
+    <value>Ratiba</value>
+  </data>
+  <data name="Sessions_Subtitle.Text" xml:space="preserve">
+    <value>Tazama siku yako.</value>
+  </data>
+  <data name="Sessions_ZoomOut.Content" xml:space="preserve">
+    <value>Zoom Out</value>
+  </data>
+  <data name="Sessions_ZoomIn.Content" xml:space="preserve">
+    <value>Zoom In</value>
+  </data>
+</root>
