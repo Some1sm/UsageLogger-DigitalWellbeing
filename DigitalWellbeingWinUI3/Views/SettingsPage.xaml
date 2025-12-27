@@ -296,7 +296,7 @@
                   <TextBlock x:Name="TxtCurrentVersion" Text="App Version: ..." Style="{ThemeResource BodyTextBlockStyle}"/>
                   <TextBlock Text="Created by David Cepero" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                   <TextBlock Text="Copyright © 2025. All rights reserved." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                  <HyperlinkButton Content="Source Code (GitHub)" NavigateUri="https://github.com/dcepero/DigitalWellbeing"/>
+                  <HyperlinkButton Content="Source Code (GitHub)" NavigateUri="https://github.com/Some1sm/Windows-Digital-Wellbeing"/>
              </StackPanel>
 
         </StackPanel>
