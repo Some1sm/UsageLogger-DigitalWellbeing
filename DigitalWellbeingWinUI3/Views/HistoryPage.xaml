@@ -17,36 +17,43 @@
 
         <!-- Controls Header -->
         <Border Grid.Row="0" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="15" Margin="0,0,0,20">
-            <Grid HorizontalAlignment="Center">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="25"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="25"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="25"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-
-                <!-- Start Date -->
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="Start Date" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" Margin="0,0,0,5"/>
-                <CalendarDatePicker Grid.Row="1" Grid.Column="0" Date="{Binding StartDate, Mode=TwoWay}" Width="150" VerticalAlignment="Top"/>
-
-                <!-- End Date -->
-                <TextBlock Grid.Row="0" Grid.Column="2" Text="End Date" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" Margin="0,0,0,5"/>
-                <CalendarDatePicker Grid.Row="1" Grid.Column="2" Date="{Binding EndDate, Mode=TwoWay}" Width="150" VerticalAlignment="Top"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="20">
                 
-                <!-- Generate Button -->
-                <Button Grid.Row="1" Grid.Column="4" Content="Generate Report" Command="{x:Bind ViewModel.GenerateChartCommand}" Width="140" Style="{StaticResource AccentButtonStyle}" VerticalAlignment="Top"/>
-
-                <!-- View Mode Selector -->
-                <TextBlock Grid.Row="0" Grid.Column="6" Text="View Mode" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" Margin="0,0,0,5"/>
-                <ComboBox Grid.Row="1" Grid.Column="6" ItemsSource="{Binding ViewModeOptions}" SelectedIndex="{Binding SelectedViewModeIndex, Mode=TwoWay}" Width="120" VerticalAlignment="Top"/>
-            </Grid>
+                <!-- Time Period Dropdown -->
+                <StackPanel Spacing="4">
+                    <TextBlock Text="Time Period" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                    <ComboBox ItemsSource="{Binding DateRangeOptions}" SelectedIndex="{Binding SelectedDateRangeIndex, Mode=TwoWay}" Width="130"/>
+                </StackPanel>
+                
+                <!-- View Mode Dropdown -->
+                <StackPanel Spacing="4">
+                    <TextBlock Text="View Mode" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                    <ComboBox ItemsSource="{Binding ViewModeOptions}" SelectedIndex="{Binding SelectedViewModeIndex, Mode=TwoWay}" Width="120"/>
+                </StackPanel>
+                
+                <!-- Custom Date Range Controls (visible only when Custom is selected) -->
+                <StackPanel Orientation="Horizontal" Spacing="15" Visibility="{Binding IsCustomDateRange}">
+                    
+                    <!-- Separator -->
+                    <Border Width="1" Background="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="5,0"/>
+                    
+                    <!-- Start Date -->
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Start Date" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                        <CalendarDatePicker Date="{Binding StartDate, Mode=TwoWay}" Width="140"/>
+                    </StackPanel>
+                    
+                    <!-- End Date -->
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="End Date" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                        <CalendarDatePicker Date="{Binding EndDate, Mode=TwoWay}" Width="140"/>
+                    </StackPanel>
+                    
+                    <!-- Generate Button -->
+                    <Button Content="Apply" Command="{x:Bind ViewModel.GenerateChartCommand}" Style="{StaticResource AccentButtonStyle}" VerticalAlignment="Bottom" Padding="20,6"/>
+                </StackPanel>
+                
+            </StackPanel>
         </Border>
 
         <!-- Scrollable Content Area -->

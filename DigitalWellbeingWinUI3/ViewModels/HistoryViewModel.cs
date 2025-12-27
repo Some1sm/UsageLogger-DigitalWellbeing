@@ -27,10 +27,40 @@ namespace DigitalWellbeingWinUI3.ViewModels
         SubApps = 2
     }
 
+    public enum DateRangeOption
+    {
+        LastWeek = 0,
+        LastMonth = 1,
+        LastYear = 2,
+        Custom = 3
+    }
+
     public class HistoryViewModel : INotifyPropertyChanged
     {
         // View mode options for ComboBox binding
         public List<string> ViewModeOptions { get; } = new List<string> { "Categories", "Apps", "Sub-Apps" };
+        
+        // Date range preset options for ComboBox binding
+        public List<string> DateRangeOptions { get; } = new List<string> { "Last Week", "Last Month", "Last Year", "Custom" };
+        
+        private int _selectedDateRangeIndex = 0; // Default to Last Week
+        public int SelectedDateRangeIndex
+        {
+            get => _selectedDateRangeIndex;
+            set 
+            { 
+                if (_selectedDateRangeIndex != value) 
+                { 
+                    _selectedDateRangeIndex = value; 
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(IsCustomDateRange));
+                    ApplyDateRange();
+                } 
+            }
+        }
+        
+        public bool IsCustomDateRange => _selectedDateRangeIndex == (int)DateRangeOption.Custom;
+        
         private DateTimeOffset _startDate = DateTime.Now.AddDays(-7);
         public DateTimeOffset StartDate
         {
@@ -134,6 +164,67 @@ namespace DigitalWellbeingWinUI3.ViewModels
             ChartSeries = new ObservableCollection<ISeries>();
             TrendSeries = new ObservableCollection<ISeries>();
             GenerateChartCommand = new DelegateCommand(GenerateChart);
+            
+            // Apply initial date range (Last Week) without triggering chart generation yet
+            ApplyDateRangeWithoutGenerate();
+        }
+
+        private void ApplyDateRange()
+        {
+            ApplyDateRangeWithoutGenerate();
+            GenerateChart();
+        }
+        
+        private void ApplyDateRangeWithoutGenerate()
+        {
+            switch ((DateRangeOption)_selectedDateRangeIndex)
+            {
+                case DateRangeOption.LastWeek:
+                    SetLastWeekDates();
+                    break;
+                case DateRangeOption.LastMonth:
+                    SetLastMonthDates();
+                    break;
+                case DateRangeOption.LastYear:
+                    SetLastYearDates();
+                    break;
+                case DateRangeOption.Custom:
+                    // Keep current dates, user will set them manually
+                    break;
+            }
+        }
+
+        private void SetLastWeekDates()
+        {
+            // Get the previous week (Monday to Sunday)
+            DateTime today = DateTime.Now.Date;
+            int daysFromMonday = ((int)today.DayOfWeek + 6) % 7; // Days since Monday (0 = Mon, 6 = Sun)
+            DateTime thisMonday = today.AddDays(-daysFromMonday);
+            DateTime lastSunday = thisMonday.AddDays(-1);
+            DateTime lastMonday = lastSunday.AddDays(-6);
+            
+            StartDate = lastMonday;
+            EndDate = lastSunday;
+        }
+
+        private void SetLastMonthDates()
+        {
+            // Get the previous month (1st to last day)
+            DateTime today = DateTime.Now.Date;
+            DateTime firstOfCurrentMonth = new DateTime(today.Year, today.Month, 1);
+            DateTime lastOfPreviousMonth = firstOfCurrentMonth.AddDays(-1);
+            DateTime firstOfPreviousMonth = new DateTime(lastOfPreviousMonth.Year, lastOfPreviousMonth.Month, 1);
+            
+            StartDate = firstOfPreviousMonth;
+            EndDate = lastOfPreviousMonth;
+        }
+
+        private void SetLastYearDates()
+        {
+            // Get the previous year (Jan 1 to Dec 31)
+            int previousYear = DateTime.Now.Year - 1;
+            StartDate = new DateTime(previousYear, 1, 1);
+            EndDate = new DateTime(previousYear, 12, 31);
         }
 
         public async void GenerateChart()
