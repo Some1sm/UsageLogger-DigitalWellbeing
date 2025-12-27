@@ -1,5 +1,6 @@
 using DigitalWellbeing.Core.Models;
 using DigitalWellbeingWinUI3.Helpers;
+using DigitalWellbeingWinUI3.Models;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -16,6 +17,7 @@ using DigitalWellbeing.Core;
 using DigitalWellbeing.Core.Data;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Painting.Effects;
 
 namespace DigitalWellbeingWinUI3.ViewModels
@@ -89,6 +91,13 @@ namespace DigitalWellbeingWinUI3.ViewModels
         {
             get => _chartSeries;
             set { if (_chartSeries != value) { _chartSeries = value; OnPropertyChanged(); } }
+        }
+
+        private ObservableCollection<TreemapItem> _treemapData;
+        public ObservableCollection<TreemapItem> TreemapData
+        {
+            get => _treemapData;
+            set { if (_treemapData != value) { _treemapData = value; OnPropertyChanged(); } }
         }
 
         private ObservableCollection<ISeries> _heatMapSeries;
@@ -575,40 +584,39 @@ namespace DigitalWellbeingWinUI3.ViewModels
             var filteredTags = tagDurations.Where(k => k.Value >= 1.0).ToList();
             double totalDuration = filteredTags.Sum(k => k.Value);
 
-            var newSeries = new ObservableCollection<ISeries>();
+            var treemapItems = new ObservableCollection<TreemapItem>();
             foreach (var kvp in filteredTags.OrderByDescending(k => k.Value))
             {
                 try
                 {
                     var brush = (Microsoft.UI.Xaml.Media.SolidColorBrush)AppTagHelper.GetTagColor(kvp.Key);
-                    var skColor = ConvertColor(brush.Color);
+                    double percentage = totalDuration > 0 ? (kvp.Value / totalDuration) * 100 : 0;
 
-                    newSeries.Add(new PieSeries<double>
+                    treemapItems.Add(new TreemapItem
                     {
-                        Values = new ObservableCollection<double> { kvp.Value },
                         Name = AppTagHelper.GetTagDisplayName(kvp.Key),
-                        Fill = new SolidColorPaint(skColor),
-                        DataLabelsPaint = new SolidColorPaint(SKColors.White),
-                        DataLabelsFormatter = (p) => (p.Coordinate.PrimaryValue / totalDuration > 0.05) ? p.Context.Series.Name : "",
-                        ToolTipLabelFormatter = (p) => FormatDuration(p.Coordinate.PrimaryValue)
+                        Value = kvp.Value,
+                        Percentage = percentage,
+                        FormattedValue = FormatDuration(kvp.Value),
+                        Fill = brush
                     });
                 }
                 catch
                 {
-                    // Fallback
-                    newSeries.Add(new PieSeries<double>
+                    // Fallback with gray color
+                    double percentage = totalDuration > 0 ? (kvp.Value / totalDuration) * 100 : 0;
+                    treemapItems.Add(new TreemapItem
                     {
-                        Values = new ObservableCollection<double> { kvp.Value },
                         Name = AppTagHelper.GetTagDisplayName(kvp.Key),
-                        DataLabelsPaint = new SolidColorPaint(SKColors.Black),
-                        DataLabelsFormatter = (p) => (p.Coordinate.PrimaryValue / totalDuration > 0.05) ? p.Context.Series.Name : "",
-                        ToolTipLabelFormatter = (p) => FormatDuration(p.Coordinate.PrimaryValue)
+                        Value = kvp.Value,
+                        Percentage = percentage,
+                        FormattedValue = FormatDuration(kvp.Value),
+                        Fill = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Gray)
                     });
                 }
             }
 
-            if (newSeries.Count == 0) AddNoData(newSeries);
-            ChartSeries = newSeries;
+            TreemapData = treemapItems;
         }
 
         private void GenerateAppChart(List<AppUsage> usage)
@@ -628,21 +636,33 @@ namespace DigitalWellbeingWinUI3.ViewModels
             var visibleApps = appDurations.Where(k => k.Value >= 1.0).OrderByDescending(k => k.Value).Take(15).ToList();
             double totalDuration = visibleApps.Sum(k => k.Value);
 
-            var newSeries = new ObservableCollection<ISeries>();
+            // Generate color palette based on accent color
+            var uiSettings = new Windows.UI.ViewManagement.UISettings();
+            var accent = uiSettings.GetColorValue(Windows.UI.ViewManagement.UIColorType.Accent);
+            var skAccent = new SkiaSharp.SKColor(accent.R, accent.G, accent.B, accent.A);
+            var palette = ChartFactory.GenerateMultiHuePalette(skAccent, visibleApps.Count);
+
+            var treemapItems = new ObservableCollection<TreemapItem>();
+            int colorIndex = 0;
             foreach (var kvp in visibleApps)
             {
-                newSeries.Add(new PieSeries<double>
+                double percentage = totalDuration > 0 ? (kvp.Value / totalDuration) * 100 : 0;
+                var skColor = palette[colorIndex % palette.Count];
+                var brush = new Microsoft.UI.Xaml.Media.SolidColorBrush(
+                    Windows.UI.Color.FromArgb(skColor.Alpha, skColor.Red, skColor.Green, skColor.Blue));
+
+                treemapItems.Add(new TreemapItem
                 {
-                    Values = new ObservableCollection<double> { kvp.Value },
                     Name = TruncateName(UserPreferences.GetDisplayName(kvp.Key)),
-                    DataLabelsPaint = new SolidColorPaint(SKColors.Black),
-                    DataLabelsFormatter = (p) => (p.Coordinate.PrimaryValue / totalDuration > 0.05) ? p.Context.Series.Name : "",
-                    ToolTipLabelFormatter = (p) => FormatDuration(p.Coordinate.PrimaryValue)
+                    Value = kvp.Value,
+                    Percentage = percentage,
+                    FormattedValue = FormatDuration(kvp.Value),
+                    Fill = brush
                 });
+                colorIndex++;
             }
 
-             if (newSeries.Count == 0) AddNoData(newSeries);
-             ChartSeries = newSeries;
+            TreemapData = treemapItems;
         }
 
         private void GenerateSubAppChart(List<AppUsage> usage)
@@ -709,21 +729,33 @@ namespace DigitalWellbeingWinUI3.ViewModels
             var visibleApps = subAppDurations.Where(k => k.Value.Minutes >= 1.0).OrderByDescending(k => k.Value.Minutes).Take(20).ToList();
             double totalDuration = visibleApps.Sum(k => k.Value.Minutes);
 
-            var newSeries = new ObservableCollection<ISeries>();
+            // Generate color palette based on accent color
+            var uiSettings = new Windows.UI.ViewManagement.UISettings();
+            var accent = uiSettings.GetColorValue(Windows.UI.ViewManagement.UIColorType.Accent);
+            var skAccent = new SkiaSharp.SKColor(accent.R, accent.G, accent.B, accent.A);
+            var palette = ChartFactory.GenerateMultiHuePalette(skAccent, visibleApps.Count);
+
+            var treemapItems = new ObservableCollection<TreemapItem>();
+            int colorIndex = 0;
             foreach (var kvp in visibleApps)
             {
-                newSeries.Add(new PieSeries<double>
+                double percentage = totalDuration > 0 ? (kvp.Value.Minutes / totalDuration) * 100 : 0;
+                var skColor = palette[colorIndex % palette.Count];
+                var brush = new Microsoft.UI.Xaml.Media.SolidColorBrush(
+                    Windows.UI.Color.FromArgb(skColor.Alpha, skColor.Red, skColor.Green, skColor.Blue));
+
+                treemapItems.Add(new TreemapItem
                 {
-                    Values = new ObservableCollection<double> { kvp.Value.Minutes },
                     Name = TruncateName(kvp.Value.DisplayName),
-                    DataLabelsPaint = new SolidColorPaint(SKColors.Black),
-                    DataLabelsFormatter = (p) => (p.Coordinate.PrimaryValue / totalDuration > 0.05) ? p.Context.Series.Name : "",
-                    ToolTipLabelFormatter = (p) => FormatDuration(p.Coordinate.PrimaryValue)
+                    Value = kvp.Value.Minutes,
+                    Percentage = percentage,
+                    FormattedValue = FormatDuration(kvp.Value.Minutes),
+                    Fill = brush
                 });
+                colorIndex++;
             }
 
-             if (newSeries.Count == 0) AddNoData(newSeries);
-             ChartSeries = newSeries;
+            TreemapData = treemapItems;
         }
 
         private string TruncateName(string name, int maxLength = 30)

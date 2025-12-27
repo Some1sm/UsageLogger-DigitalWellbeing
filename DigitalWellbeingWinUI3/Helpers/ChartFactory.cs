@@ -41,6 +41,30 @@ namespace DigitalWellbeingWinUI3.Helpers
         }
 
         /// <summary>
+        /// Gets a theme-aware label paint (white for dark mode, black for light mode).
+        /// </summary>
+        public static SolidColorPaint GetLabelPaint(bool isDarkMode)
+        {
+            return new SolidColorPaint(isDarkMode ? SKColors.White : SKColors.Black);
+        }
+
+        /// <summary>
+        /// Determines if the current app theme is dark mode.
+        /// </summary>
+        public static bool IsDarkMode()
+        {
+            try
+            {
+                var theme = Microsoft.UI.Xaml.Application.Current.RequestedTheme;
+                return theme == Microsoft.UI.Xaml.ApplicationTheme.Dark;
+            }
+            catch
+            {
+                return true; // Default to dark mode
+            }
+        }
+
+        /// <summary>
         /// Creates a linear gradient paint from top to bottom using the accent color.
         /// </summary>
         /// <param name="accent">Windows accent color</param>

@@ -1,4 +1,5 @@
 using DigitalWellbeingWinUI3.ViewModels;
+using DigitalWellbeingWinUI3.Controls;
 using Microsoft.UI.Xaml.Controls;
 using LiveChartsCore.Kernel.Sketches;
 using System.Linq;
@@ -92,35 +93,27 @@ namespace DigitalWellbeingWinUI3.Views
                 TrendChartContainer.Content = new TextBlock { Text = "Chart Error", Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(Windows.UI.Color.FromArgb(255, 255, 0, 0)) };
             }
 
-            // Inject Pie Chart
+            // Inject Custom Treemap
             try
             {
                 if (HistoryChartContainer.Content == null)
                 {
-                    var pieChart = new LiveChartsCore.SkiaSharpView.WinUI.PieChart
-                    {
-                        LegendPosition = LiveChartsCore.Measure.LegendPosition.Right,
-                        InitialRotation = -90,
-                        Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent),
-                        LegendBackgroundPaint = null,
-                        LegendTextPaint = new LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint(legendColor),
-                        LegendTextSize = 11
-                    };
+                    var treemap = new CustomTreemap();
                     
                     var binding = new Microsoft.UI.Xaml.Data.Binding 
                     { 
                         Source = ViewModel, 
-                        Path = new Microsoft.UI.Xaml.PropertyPath("ChartSeries"), 
+                        Path = new Microsoft.UI.Xaml.PropertyPath("TreemapData"), 
                         Mode = Microsoft.UI.Xaml.Data.BindingMode.OneWay 
                     };
-                    pieChart.SetBinding(LiveChartsCore.SkiaSharpView.WinUI.PieChart.SeriesProperty, binding);
+                    treemap.SetBinding(CustomTreemap.ItemsSourceProperty, binding);
 
-                    HistoryChartContainer.Content = pieChart;
+                    HistoryChartContainer.Content = treemap;
                 }
             }
             catch (System.Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"[CRITICAL] History Chart Injection Failed: {ex}");
+                System.Diagnostics.Debug.WriteLine($"[CRITICAL] Treemap Injection Failed: {ex}");
                 HistoryChartContainer.Content = new TextBlock { Text = "Chart Error", Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(Windows.UI.Color.FromArgb(255, 255, 0, 0)) };
             }
 
