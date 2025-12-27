@@ -410,7 +410,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
             var series = new HeatSeries<WeightedPoint>
             {
                 Values = weightedPoints,
-                Name = "Activity",
+                Name = LocalizationHelper.GetString("History_Activity"),
                 HeatMap = new[]
                 {
                     new LvcColor(32, 32, 32),
@@ -473,11 +473,11 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 double changePercent = ((currentTotal - prevTotal) / prevTotal) * 100;
                 TotalChangePositive = changePercent >= 0;
                 string arrow = TotalChangePositive ? "↑" : "↓";
-                TotalChangeText = $"{arrow} {Math.Abs(changePercent):F0}% vs previous {prevDays} days";
+                TotalChangeText = $"{arrow} {Math.Abs(changePercent):F0}% {string.Format(LocalizationHelper.GetString("History_VsPreviousDays"), prevDays)}";
             }
             else
             {
-                TotalChangeText = "No previous data";
+                TotalChangeText = LocalizationHelper.GetString("History_NoPreviousData");
                 TotalChangePositive = true;
             }
 
@@ -488,7 +488,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
             var barSeries = new ColumnSeries<double>
             {
                 Values = barValues,
-                Name = "Daily Usage",
+                Name = LocalizationHelper.GetString("History_DailyUsage"),
                 Fill = new SolidColorPaint(new SKColor(0, 120, 215)),
                 MaxBarWidth = 30,
                 YToolTipLabelFormatter = (point) => FormatHours(point.Model)
@@ -498,7 +498,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
             var avgLine = new LineSeries<double>
             {
                 Values = Enumerable.Repeat(prevAvg / 60.0, barValues.Count).ToList(),
-                Name = $"Prev Period Avg ({FormatDuration(prevAvg)})",
+                Name = $"{LocalizationHelper.GetString("History_PrevPeriodAvg")} ({FormatDuration(prevAvg)})",
                 Stroke = new SolidColorPaint(new SKColor(255, 180, 0)) { StrokeThickness = 2, PathEffect = new DashEffect(new float[] { 6, 4 }) },
                 Fill = null,
                 GeometrySize = 0,

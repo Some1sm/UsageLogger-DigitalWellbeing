@@ -21,13 +21,13 @@
                 
                 <!-- Time Period Dropdown -->
                 <StackPanel Spacing="4">
-                    <TextBlock Text="Time Period" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                    <TextBlock x:Uid="History_TimePeriod" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
                     <ComboBox ItemsSource="{Binding DateRangeOptions}" SelectedIndex="{Binding SelectedDateRangeIndex, Mode=TwoWay}" Width="130"/>
                 </StackPanel>
                 
                 <!-- View Mode Dropdown -->
                 <StackPanel Spacing="4">
-                    <TextBlock Text="View Mode" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                    <TextBlock x:Uid="History_ViewMode" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
                     <ComboBox ItemsSource="{Binding ViewModeOptions}" SelectedIndex="{Binding SelectedViewModeIndex, Mode=TwoWay}" Width="120"/>
                 </StackPanel>
                 
@@ -39,18 +39,18 @@
                     
                     <!-- Start Date -->
                     <StackPanel Spacing="4">
-                        <TextBlock Text="Start Date" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                        <TextBlock x:Uid="History_StartDate" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
                         <CalendarDatePicker Date="{Binding StartDate, Mode=TwoWay}" Width="140"/>
                     </StackPanel>
                     
                     <!-- End Date -->
                     <StackPanel Spacing="4">
-                        <TextBlock Text="End Date" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                        <TextBlock x:Uid="History_EndDate" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
                         <CalendarDatePicker Date="{Binding EndDate, Mode=TwoWay}" Width="140"/>
                     </StackPanel>
                     
                     <!-- Generate Button -->
-                    <Button Content="Apply" Command="{x:Bind ViewModel.GenerateChartCommand}" Style="{StaticResource AccentButtonStyle}" VerticalAlignment="Bottom" Padding="20,6"/>
+                    <Button x:Uid="History_ApplyButton" Command="{x:Bind ViewModel.GenerateChartCommand}" Style="{StaticResource AccentButtonStyle}" VerticalAlignment="Bottom" Padding="20,6"/>
                 </StackPanel>
                 
             </StackPanel>
@@ -70,7 +70,7 @@
                     <!-- Total Time Card -->
                     <Border Grid.Column="0" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="20" Margin="0,0,10,0">
                         <StackPanel>
-                            <TextBlock Text="Total Screen Time" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                            <TextBlock x:Uid="History_TotalScreenTime" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
                             <TextBlock Text="{Binding TotalHoursText, FallbackValue='00:00:00'}" FontSize="28" FontWeight="Bold" Margin="0,5,0,0"/>
                             <TextBlock Text="{Binding TotalChangeText, FallbackValue='Generating...'}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="14" Margin="0,5,0,0"/>
                         </StackPanel>
@@ -79,9 +79,9 @@
                     <!-- Trend Info Card -->
                     <Border Grid.Column="1" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="20" Margin="10,0,0,0">
                         <StackPanel>
-                            <TextBlock Text="Daily Trends" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
-                            <TextBlock Text="📊 Day-by-day usage" FontSize="18" FontWeight="SemiBold" Margin="0,5,0,0"/>
-                            <TextBlock Text="Orange line = previous period average" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="14" Margin="0,5,0,0"/>
+                            <TextBlock x:Uid="History_DailyTrends" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                            <TextBlock x:Uid="History_DailyTrendsSubtitle" FontSize="18" FontWeight="SemiBold" Margin="0,5,0,0"/>
+                            <TextBlock x:Uid="History_DailyTrendsLegend" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="14" Margin="0,5,0,0"/>
                         </StackPanel>
                     </Border>
                 </Grid>
@@ -89,7 +89,7 @@
                 <!-- Trend Chart -->
                 <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="20">
                     <StackPanel>
-                        <TextBlock Text="Usage Trends" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                        <TextBlock x:Uid="History_UsageTrends" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,10"/>
                         <ContentControl x:Name="TrendChartContainer" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Height="250"/>
                     </StackPanel>
                 </Border>
@@ -97,7 +97,7 @@
                 <!-- Distribution Analysis -->
                 <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="20">
                     <StackPanel>
-                        <TextBlock Text="Distribution Analysis" FontSize="18" FontWeight="SemiBold"/>
+                        <TextBlock x:Uid="History_DistributionAnalysis" FontSize="18" FontWeight="SemiBold"/>
                         <ContentControl x:Name="HistoryChartContainer" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Height="350" Margin="0,10,0,0"/>
                     </StackPanel>
                 </Border>
@@ -105,8 +105,8 @@
                 <!-- Activity Heatmap -->
                 <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="20">
                     <StackPanel>
-                        <TextBlock Text="Activity Heatmap" FontSize="18" FontWeight="SemiBold"/>
-                        <TextBlock Text="Hover for details" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" Margin="0,2,0,10"/>
+                        <TextBlock x:Uid="History_ActivityHeatmap" FontSize="18" FontWeight="SemiBold"/>
+                        <TextBlock x:Uid="History_HeatmapTooltip" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" Margin="0,2,0,10"/>
                         <ContentControl x:Name="HeatMapContainer" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Height="280"/>
                     </StackPanel>
                 </Border>

@@ -64,4 +64,58 @@
   <data name="FromLast" xml:space="preserve">
     <value>from last</value>
   </data>
+  <data name="History_TimePeriod.Text" xml:space="preserve">
+    <value>Time Period</value>
+  </data>
+  <data name="History_ViewMode.Text" xml:space="preserve">
+    <value>View Mode</value>
+  </data>
+  <data name="History_StartDate.Text" xml:space="preserve">
+    <value>Start Date</value>
+  </data>
+  <data name="History_EndDate.Text" xml:space="preserve">
+    <value>End Date</value>
+  </data>
+  <data name="History_ApplyButton.Content" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="History_TotalScreenTime.Text" xml:space="preserve">
+    <value>Total Screen Time</value>
+  </data>
+  <data name="History_DailyTrends.Text" xml:space="preserve">
+    <value>Daily Trends</value>
+  </data>
+  <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
+    <value>📊 Day-by-day usage</value>
+  </data>
+  <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
+    <value>Orange line = previous period average</value>
+  </data>
+  <data name="History_UsageTrends.Text" xml:space="preserve">
+    <value>Usage Trends</value>
+  </data>
+  <data name="History_DistributionAnalysis.Text" xml:space="preserve">
+    <value>Distribution Analysis</value>
+  </data>
+  <data name="History_ActivityHeatmap.Text" xml:space="preserve">
+    <value>Activity Heatmap</value>
+  </data>
+  <data name="History_HeatmapTooltip.Text" xml:space="preserve">
+    <value>Hover for details</value>
+  </data>
+  <data name="History_DailyUsage" xml:space="preserve">
+    <value>Daily Usage</value>
+  </data>
+  <data name="History_PrevPeriodAvg" xml:space="preserve">
+    <value>Prev Period Avg</value>
+  </data>
+  <data name="History_NoPreviousData" xml:space="preserve">
+    <value>No previous data</value>
+  </data>
+  <data name="History_VsPreviousDays" xml:space="preserve">
+    <value>vs previous {0} days</value>
+  </data>
+  <data name="History_Activity" xml:space="preserve">
+    <value>Activity</value>
+  </data>
 </root>

@@ -64,4 +64,58 @@
   <data name="FromLast" xml:space="preserve">
     <value>del último</value>
   </data>
+  <data name="History_TimePeriod.Text" xml:space="preserve">
+    <value>Periodo</value>
+  </data>
+  <data name="History_ViewMode.Text" xml:space="preserve">
+    <value>Modo de Vista</value>
+  </data>
+  <data name="History_StartDate.Text" xml:space="preserve">
+    <value>Fecha Inicio</value>
+  </data>
+  <data name="History_EndDate.Text" xml:space="preserve">
+    <value>Fecha Fin</value>
+  </data>
+  <data name="History_ApplyButton.Content" xml:space="preserve">
+    <value>Aplicar</value>
+  </data>
+  <data name="History_TotalScreenTime.Text" xml:space="preserve">
+    <value>Tiempo Total en Pantalla</value>
+  </data>
+  <data name="History_DailyTrends.Text" xml:space="preserve">
+    <value>Tendencias Diarias</value>
+  </data>
+  <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
+    <value>📊 Uso día por día</value>
+  </data>
+  <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
+    <value>Línea naranja = media del periodo anterior</value>
+  </data>
+  <data name="History_UsageTrends.Text" xml:space="preserve">
+    <value>Tendencias de Uso</value>
+  </data>
+  <data name="History_DistributionAnalysis.Text" xml:space="preserve">
+    <value>Análisis de Distribución</value>
+  </data>
+  <data name="History_ActivityHeatmap.Text" xml:space="preserve">
+    <value>Mapa de Calor</value>
+  </data>
+  <data name="History_HeatmapTooltip.Text" xml:space="preserve">
+    <value>Pasa el ratón para ver detalles</value>
+  </data>
+  <data name="History_DailyUsage" xml:space="preserve">
+    <value>Uso Diario</value>
+  </data>
+  <data name="History_PrevPeriodAvg" xml:space="preserve">
+    <value>Media Periodo Ant</value>
+  </data>
+  <data name="History_NoPreviousData" xml:space="preserve">
+    <value>Sin datos anteriores</value>
+  </data>
+  <data name="History_VsPreviousDays" xml:space="preserve">
+    <value>vs los {0} días anteriores</value>
+  </data>
+  <data name="History_Activity" xml:space="preserve">
+    <value>Actividad</value>
+  </data>
 </root>
