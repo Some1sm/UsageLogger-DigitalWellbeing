@@ -115,7 +115,7 @@
                      </Grid.ColumnDefinitions>
                      <StackPanel Grid.Column="0" Spacing="2">
                          <TextBlock Text="Days to show on graph" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                          <TextBlock Text="Requires restart or Apply." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                          <TextBlock Text="Number of days shown in the Dashboard weekly bar chart." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                      </StackPanel>
                       <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="10">
                           <NumberBox x:Name="DaysToShowTextBox" Value="7" SpinButtonPlacementMode="Compact" Width="150" Minimum="1" ValueChanged="Settings_ValueChanged"/>
@@ -130,7 +130,7 @@
                      </Grid.ColumnDefinitions>
                      <StackPanel Grid.Column="0" Spacing="2">
                          <TextBlock Text="Days to show on Detailed usage" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                         <TextBlock Text="Requires restart or Apply (1-7 days)." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                         <TextBlock Text="Number of timeline columns in the Detailed Usage page (1-7 days)." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                      </StackPanel>
                      <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="10">
                          <NumberBox x:Name="DetailedDaysTextBox" Value="1" SpinButtonPlacementMode="Compact" Width="150" Minimum="1" Maximum="7" ValueChanged="Settings_ValueChanged"/>
