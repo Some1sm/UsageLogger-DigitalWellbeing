@@ -242,7 +242,8 @@ namespace DigitalWellbeingWinUI3
             }
             else
             {
-                // Clean exit
+                // Clean exit - also stop the service
+                StopService();
                 Helpers.Notifier.Dispose();
             }
         }
@@ -278,8 +279,22 @@ namespace DigitalWellbeingWinUI3
 
         public void ForceClose()
         {
+            StopService();
             Helpers.Notifier.Dispose();
             Application.Current.Exit();
+        }
+
+        private void StopService()
+        {
+            try
+            {
+                var processes = System.Diagnostics.Process.GetProcessesByName("DigitalWellbeingService");
+                foreach (var proc in processes)
+                {
+                    try { proc.Kill(); } catch { }
+                }
+            }
+            catch { }
         }
 
         // ShowAlertUsage removed - replaced by TimeLimitEnforcer logic in AppUsageViewModel
