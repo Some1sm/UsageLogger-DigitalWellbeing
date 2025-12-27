@@ -500,10 +500,10 @@ namespace DigitalWellbeing.Setup
                     using (RegistryKey key = parent.CreateSubKey(AppName))
                     {
                         key.SetValue("DisplayName", AppName);
-                        key.SetValue("ApplicationVersion", "0.8.0.0");
+                        key.SetValue("ApplicationVersion", "0.8.1.0");
                         key.SetValue("Publisher", PublisherName);
                         key.SetValue("DisplayIcon", Path.Combine(installLocation, "DigitalWellbeingWinUI3.exe"));
-                        key.SetValue("DisplayVersion", "0.8.0.0");
+                        key.SetValue("DisplayVersion", "0.8.1.0");
                         key.SetValue("InstallDate", DateTime.Now.ToString("yyyyMMdd"));
                         key.SetValue("UninstallString", $"\"{uninstallExePath}\" /uninstall");
                         key.SetValue("QuietUninstallString", $"\"{uninstallExePath}\" /uninstall");

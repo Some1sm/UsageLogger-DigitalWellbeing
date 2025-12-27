@@ -1,4 +1,4 @@
-# Digital Wellbeing for Windows v0.8.0 (Alpha Preview) 🚀
+# Digital Wellbeing for Windows v0.8.1 (Alpha Preview) 🚀
 
 **Welcome to the first public preview of Digital Wellbeing for Windows.**
 
