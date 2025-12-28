@@ -79,7 +79,7 @@
                                 <StackPanel Orientation="Horizontal" Spacing="8">
                                     <TextBlock Style="{StaticResource CaptionTextBlockStyle}" 
                                                Foreground="{ThemeResource TextFillColorSecondaryBrush}">
-                                        <Run Text="{x:Bind ProcessName}"/>
+                                        <Run Text="{x:Bind DisplayName}"/>
                                         <Run Text=" • "/>
                                         <Run Text="{x:Bind StartTime}"/>
                                         <Run Text=" - "/>

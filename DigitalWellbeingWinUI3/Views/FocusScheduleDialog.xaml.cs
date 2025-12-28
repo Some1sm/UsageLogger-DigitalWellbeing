@@ -11,8 +11,9 @@ namespace DigitalWellbeingWinUI3.Views
     public sealed partial class FocusScheduleDialog : ContentDialog
     {
         public FocusSession Session { get; private set; }
-        private List<string> _allApps = new List<string>();
+        private List<AppSuggestionItem> _allApps = new List<AppSuggestionItem>();
         private bool _isEditMode = false;
+        private string _selectedProcessName = null;
 
         public FocusScheduleDialog()
         {
@@ -29,13 +30,20 @@ namespace DigitalWellbeingWinUI3.Views
 
         private async void LoadApps()
         {
-            _allApps = await FocusManager.Instance.GetHistoricalAppNamesAsync();
+            var processNames = await FocusManager.Instance.GetHistoricalAppNamesAsync();
+            _allApps = processNames.Select(p => new AppSuggestionItem
+            {
+                ProcessName = p,
+                DisplayName = UserPreferences.GetDisplayName(p)
+            }).ToList();
         }
 
         private void PopulateFromSession(FocusSession session)
         {
             NameBox.Text = session.Name ?? "";
-            AppSuggestBox.Text = session.ProcessName ?? "";
+            // Show display name but store process name
+            _selectedProcessName = session.ProcessName;
+            AppSuggestBox.Text = UserPreferences.GetDisplayName(session.ProcessName ?? "");
             SubAppBox.Text = session.ProgramName ?? "";
             StartTimePicker.Time = session.StartTime;
             DurationBox.Value = session.Duration.TotalMinutes;
@@ -67,9 +75,11 @@ namespace DigitalWellbeingWinUI3.Views
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
+                _selectedProcessName = null; // Clear selection when user types
                 var query = sender.Text.ToLowerInvariant();
                 var filtered = _allApps
-                    .Where(a => a.ToLowerInvariant().Contains(query))
+                    .Where(a => a.DisplayName.ToLowerInvariant().Contains(query) || 
+                                a.ProcessName.ToLowerInvariant().Contains(query))
                     .Take(10)
                     .ToList();
                 sender.ItemsSource = filtered;
@@ -78,13 +88,28 @@ namespace DigitalWellbeingWinUI3.Views
 
         private void AppSuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
         {
-            sender.Text = args.SelectedItem?.ToString() ?? "";
+            if (args.SelectedItem is AppSuggestionItem item)
+            {
+                _selectedProcessName = item.ProcessName;
+                sender.Text = item.DisplayName;
+            }
         }
 
         private void PrimaryButton_Click(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
+            // Get the process name - either from selection or try to find a match
+            string processName = _selectedProcessName;
+            if (string.IsNullOrEmpty(processName))
+            {
+                // User typed something manually - try to find a matching app
+                var match = _allApps.FirstOrDefault(a => 
+                    a.DisplayName.Equals(AppSuggestBox.Text.Trim(), StringComparison.OrdinalIgnoreCase) ||
+                    a.ProcessName.Equals(AppSuggestBox.Text.Trim(), StringComparison.OrdinalIgnoreCase));
+                processName = match?.ProcessName ?? AppSuggestBox.Text.Trim();
+            }
+
             // Validate
-            if (string.IsNullOrWhiteSpace(AppSuggestBox.Text))
+            if (string.IsNullOrWhiteSpace(processName))
             {
                 args.Cancel = true;
                 return;
@@ -95,7 +120,7 @@ namespace DigitalWellbeingWinUI3.Views
             {
                 // Update existing
                 Session.Name = string.IsNullOrWhiteSpace(NameBox.Text) ? "Focus Session" : NameBox.Text;
-                Session.ProcessName = AppSuggestBox.Text.Trim();
+                Session.ProcessName = processName;
                 Session.ProgramName = string.IsNullOrWhiteSpace(SubAppBox.Text) ? null : SubAppBox.Text.Trim();
                 Session.StartTime = StartTimePicker.Time;
                 Session.Duration = TimeSpan.FromMinutes(DurationBox.Value);
@@ -108,7 +133,7 @@ namespace DigitalWellbeingWinUI3.Views
                 Session = new FocusSession
                 {
                     Name = string.IsNullOrWhiteSpace(NameBox.Text) ? "Focus Session" : NameBox.Text,
-                    ProcessName = AppSuggestBox.Text.Trim(),
+                    ProcessName = processName,
                     ProgramName = string.IsNullOrWhiteSpace(SubAppBox.Text) ? null : SubAppBox.Text.Trim(),
                     StartTime = StartTimePicker.Time,
                     Duration = TimeSpan.FromMinutes(DurationBox.Value),
@@ -146,4 +171,16 @@ namespace DigitalWellbeingWinUI3.Views
             return FocusMode.Normal;
         }
     }
+
+    /// <summary>
+    /// Helper class for app suggestions that holds both process name and display name.
+    /// </summary>
+    public class AppSuggestionItem
+    {
+        public string ProcessName { get; set; }
+        public string DisplayName { get; set; }
+
+        public override string ToString() => DisplayName;
+    }
 }
+

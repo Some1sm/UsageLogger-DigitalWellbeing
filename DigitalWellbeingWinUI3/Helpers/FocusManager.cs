@@ -388,8 +388,8 @@ namespace DigitalWellbeingWinUI3.Helpers
                     string logsFolder = DigitalWellbeing.Core.ApplicationPath.UsageLogsFolder;
                     var repo = new DigitalWellbeing.Core.Data.AppSessionRepository(logsFolder);
 
-                    // Load last 7 days
-                    for (int i = 0; i < 7; i++)
+                    // Load last 30 days
+                    for (int i = 0; i < 30; i++)
                     {
                         var sessions = repo.GetSessionsForDate(DateTime.Now.AddDays(-i));
                         foreach (var s in sessions)

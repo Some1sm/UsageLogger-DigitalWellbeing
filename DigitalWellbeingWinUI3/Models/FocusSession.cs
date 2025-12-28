@@ -57,6 +57,11 @@ namespace DigitalWellbeingWinUI3.Models
         public string ProcessName { get; set; }
 
         /// <summary>
+        /// Gets the user-friendly display name for the target app.
+        /// </summary>
+        public string DisplayName => Helpers.UserPreferences.GetDisplayName(ProcessName ?? "");
+
+        /// <summary>
         /// Optional: Specific window title / sub-app (e.g., "GitHub", "YouTube").
         /// If null/empty, any window of the ProcessName is allowed.
         /// </summary>
