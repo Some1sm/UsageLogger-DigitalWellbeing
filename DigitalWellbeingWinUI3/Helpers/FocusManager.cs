@@ -374,35 +374,131 @@ namespace DigitalWellbeingWinUI3.Helpers
         }
         #endregion
 
-        #region Helpers
+        #region App Cache
+        private static readonly string _appCachePath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "digital-wellbeing",
+            "known_apps.json");
+
+        private HashSet<string> _knownAppsCache = null;
+
         /// <summary>
-        /// Gets a list of all unique process names from usage history for app selection.
+        /// Gets a list of all unique process names. Uses cache first, falls back to 30-day scan.
         /// </summary>
         public async Task<List<string>> GetHistoricalAppNamesAsync()
         {
             return await Task.Run(() =>
             {
-                var apps = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-                try
+                // Try to load from cache first
+                if (_knownAppsCache == null)
                 {
-                    string logsFolder = DigitalWellbeing.Core.ApplicationPath.UsageLogsFolder;
-                    var repo = new DigitalWellbeing.Core.Data.AppSessionRepository(logsFolder);
+                    _knownAppsCache = LoadAppCache();
+                }
 
-                    // Load last 30 days
-                    for (int i = 0; i < 30; i++)
+                // If cache is empty or doesn't exist, do a full scan
+                if (_knownAppsCache.Count == 0)
+                {
+                    Debug.WriteLine("[FocusManager] Cache empty, scanning last 30 days...");
+                    ScanAndCacheApps(30);
+                }
+
+                return _knownAppsCache.OrderBy(a => a).ToList();
+            });
+        }
+
+        /// <summary>
+        /// Loads the known apps cache from disk.
+        /// </summary>
+        private HashSet<string> LoadAppCache()
+        {
+            try
+            {
+                if (File.Exists(_appCachePath))
+                {
+                    string json = File.ReadAllText(_appCachePath);
+                    var list = JsonSerializer.Deserialize<List<string>>(json);
+                    if (list != null)
                     {
-                        var sessions = repo.GetSessionsForDate(DateTime.Now.AddDays(-i));
-                        foreach (var s in sessions)
-                        {
-                            if (!string.IsNullOrEmpty(s.ProcessName))
-                                apps.Add(s.ProcessName);
-                        }
+                        Debug.WriteLine($"[FocusManager] Loaded {list.Count} apps from cache");
+                        return new HashSet<string>(list, StringComparer.OrdinalIgnoreCase);
                     }
                 }
-                catch { }
-                return apps.OrderBy(a => a).ToList();
-            });
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[FocusManager] Cache load error: {ex.Message}");
+            }
+            return new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// Saves the known apps cache to disk.
+        /// </summary>
+        private void SaveAppCache()
+        {
+            try
+            {
+                string dir = Path.GetDirectoryName(_appCachePath);
+                if (!Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
+
+                var list = _knownAppsCache.OrderBy(a => a).ToList();
+                string json = JsonSerializer.Serialize(list);
+                File.WriteAllText(_appCachePath, json);
+                Debug.WriteLine($"[FocusManager] Saved {list.Count} apps to cache");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[FocusManager] Cache save error: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Scans the last N days of logs and updates the cache.
+        /// </summary>
+        private void ScanAndCacheApps(int days)
+        {
+            try
+            {
+                string logsFolder = DigitalWellbeing.Core.ApplicationPath.UsageLogsFolder;
+                var repo = new DigitalWellbeing.Core.Data.AppSessionRepository(logsFolder);
+
+                for (int i = 0; i < days; i++)
+                {
+                    var sessions = repo.GetSessionsForDate(DateTime.Now.AddDays(-i));
+                    foreach (var s in sessions)
+                    {
+                        if (!string.IsNullOrEmpty(s.ProcessName))
+                            _knownAppsCache.Add(s.ProcessName);
+                    }
+                }
+
+                // Save to disk for future use
+                SaveAppCache();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[FocusManager] Scan error: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Adds a new app to the cache. Call this when new apps are encountered.
+        /// </summary>
+        public void RegisterApp(string processName)
+        {
+            if (string.IsNullOrEmpty(processName)) return;
+
+            if (_knownAppsCache == null)
+                _knownAppsCache = LoadAppCache();
+
+            if (_knownAppsCache.Add(processName))
+            {
+                // New app added, save cache
+                SaveAppCache();
+            }
         }
         #endregion
     }
 }
+

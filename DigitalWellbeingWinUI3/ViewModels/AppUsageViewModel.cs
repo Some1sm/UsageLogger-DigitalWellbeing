@@ -518,6 +518,9 @@ namespace DigitalWellbeingWinUI3.ViewModels
                     {
                         if (app.Duration.TotalSeconds > 0)
                             TotalDuration = TotalDuration.Add(app.Duration);
+                        
+                        // Register app in cache for Focus Schedule picker
+                        FocusManager.Instance.RegisterApp(app.ProcessName);
                     }
 
                     foreach (AppUsage app in filteredUsageList)
