@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version='1.0' encoding='utf-8'?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -86,7 +86,7 @@
     <value>Daily Trends</value>
   </data>
   <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>📊 Day-by-day usage</value>
+    <value>ðŸ“Š Day-by-day usage</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
     <value>Orange line = previous period average</value>
@@ -140,7 +140,7 @@
     <value>Minimize the app to tray on exit instead of closing.</value>
   </data>
   <data name="Settings_UsageData.Text" xml:space="preserve">
-    <value>Dane o użyciu</value>
+    <value>Dane o uÅ¼yciu</value>
   </data>
   <data name="Settings_IncognitoMode.Text" xml:space="preserve">
     <value>Incognito Mode</value>
@@ -161,7 +161,7 @@
     <value>Double-click to remove time limit.</value>
   </data>
   <data name="Settings_Display.Text" xml:space="preserve">
-    <value>Wyświetlanie</value>
+    <value>WyÅ›wietlanie</value>
   </data>
   <data name="Settings_DaysToShow.Text" xml:space="preserve">
     <value>Days to show on graph</value>
@@ -251,7 +251,7 @@
     <value>Created by David Cepero</value>
   </data>
   <data name="Settings_Copyright.Text" xml:space="preserve">
-    <value>Copyright © 2025. All rights reserved.</value>
+    <value>Copyright Â© 2025. All rights reserved.</value>
   </data>
   <data name="Settings_SourceCode.Content" xml:space="preserve">
     <value>Source Code (GitHub)</value>
@@ -266,46 +266,46 @@
     <value>Analiza dystrybucji</value>
   </data>
   <data name="Nav_Sessions.Content" xml:space="preserve">
-    <value>Szczegółowe użycie</value>
+    <value>SzczegÃ³Å‚owe uÅ¼ycie</value>
   </data>
   <data name="Tray_Open.Text" xml:space="preserve">
-    <value>Otwórz</value>
+    <value>OtwÃ³rz</value>
   </data>
   <data name="Tray_Settings.Text" xml:space="preserve">
     <value>Ustawienia</value>
   </data>
   <data name="Tray_Exit.Text" xml:space="preserve">
-    <value>Wyjdź</value>
+    <value>WyjdÅº</value>
   </data>
   <data name="Dashboard_SetTimeLimit.Text" xml:space="preserve">
     <value>Ustaw limit czasu</value>
   </data>
   <data name="Dashboard_SetCategory.Text" xml:space="preserve">
-    <value>Ustaw kategorię</value>
+    <value>Ustaw kategoriÄ™</value>
   </data>
   <data name="Dashboard_SetDisplayName.Text" xml:space="preserve">
-    <value>Ustaw nazwę...</value>
+    <value>Ustaw nazwÄ™...</value>
   </data>
   <data name="Dashboard_SetCustomIcon.Text" xml:space="preserve">
     <value>Niestandardowa ikona...</value>
   </data>
   <data name="Dashboard_ExcludeApp.Text" xml:space="preserve">
-    <value>Wyklucz aplikację</value>
+    <value>Wyklucz aplikacjÄ™</value>
   </data>
   <data name="Dashboard_Total.Text" xml:space="preserve">
     <value>Razem:</value>
   </data>
   <data name="Dashboard_DailyActivity.Text" xml:space="preserve">
-    <value>Codzienna aktywność</value>
+    <value>Codzienna aktywnoÅ›Ä‡</value>
   </data>
   <data name="Dashboard_UsageSummary.Text" xml:space="preserve">
-    <value>Podsumowanie użycia</value>
+    <value>Podsumowanie uÅ¼ycia</value>
   </data>
   <data name="Dashboard_TabActiveWindows.Header" xml:space="preserve">
-    <value>📊 Active Windows</value>
+    <value>ðŸ“Š Active Windows</value>
   </data>
   <data name="Dashboard_TabBackgroundAudio.Header" xml:space="preserve">
-    <value>🔊 Background Audio</value>
+    <value>ðŸ”Š Background Audio</value>
   </data>
   <data name="Dashboard_AudioDesc.Text" xml:space="preserve">
     <value>Apps playing audio while not in focus</value>
@@ -317,21 +317,24 @@
     <value>Aktywne okna</value>
   </data>
   <data name="Dashboard_BackgroundAudio.Text" xml:space="preserve">
-    <value>Dźwięk w tle</value>
+    <value>DÅºwiÄ™k w tle</value>
   </data>
   <data name="Dashboard_NotCounted.Text" xml:space="preserve">
     <value>(not counted)</value>
   </data>
   <data name="Sessions_Title.Text" xml:space="preserve">
-    <value>Oś czasu</value>
+    <value>OÅ› czasu</value>
   </data>
   <data name="Sessions_Subtitle.Text" xml:space="preserve">
-    <value>Wizualizuj swój dzień.</value>
+    <value>Wizualizuj swÃ³j dzieÅ„.</value>
   </data>
   <data name="Sessions_ZoomOut.Content" xml:space="preserve">
     <value>Zoom Out</value>
   </data>
   <data name="Sessions_ZoomIn.Content" xml:space="preserve">
     <value>Zoom In</value>
+  </data>
+  <data name="History_Activity" xml:space="preserve">
+    <value>Activity</value>
   </data>
 </root>

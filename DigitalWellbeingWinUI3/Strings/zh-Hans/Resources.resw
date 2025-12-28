@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version='1.0' encoding='utf-8'?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -86,7 +86,7 @@
     <value>Daily Trends</value>
   </data>
   <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>📊 Day-by-day usage</value>
+    <value>ðŸ“Š Day-by-day usage</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
     <value>Orange line = previous period average</value>
@@ -122,10 +122,10 @@
     <value>Apply Changes</value>
   </data>
   <data name="Settings_Title.Text" xml:space="preserve">
-    <value>设置</value>
+    <value>è®¾ç½®</value>
   </data>
   <data name="Settings_AppRuntime.Text" xml:space="preserve">
-    <value>应用运行</value>
+    <value>åº”ç”¨è¿è¡Œ</value>
   </data>
   <data name="Settings_RunOnStartup.Text" xml:space="preserve">
     <value>Run on Startup</value>
@@ -140,7 +140,7 @@
     <value>Minimize the app to tray on exit instead of closing.</value>
   </data>
   <data name="Settings_UsageData.Text" xml:space="preserve">
-    <value>使用数据</value>
+    <value>ä½¿ç”¨æ•°æ®</value>
   </data>
   <data name="Settings_IncognitoMode.Text" xml:space="preserve">
     <value>Incognito Mode</value>
@@ -161,7 +161,7 @@
     <value>Double-click to remove time limit.</value>
   </data>
   <data name="Settings_Display.Text" xml:space="preserve">
-    <value>显示</value>
+    <value>æ˜¾ç¤º</value>
   </data>
   <data name="Settings_DaysToShow.Text" xml:space="preserve">
     <value>Days to show on graph</value>
@@ -212,7 +212,7 @@
     <value>Show Active Windows and Background Audio on same page instead of tabs.</value>
   </data>
   <data name="Settings_Data.Text" xml:space="preserve">
-    <value>数据</value>
+    <value>æ•°æ®</value>
   </data>
   <data name="Settings_LogStorage.Text" xml:space="preserve">
     <value>Log Storage Location</value>
@@ -236,7 +236,7 @@
     <value>How often usage data in RAM is saved to disk. Lower values = more disk writes but better recovery on crash (Default 300s = 5 min).</value>
   </data>
   <data name="Settings_AppTags.Text" xml:space="preserve">
-    <value>应用标签</value>
+    <value>åº”ç”¨æ ‡ç­¾</value>
   </data>
   <data name="Settings_ManageTags.Text" xml:space="preserve">
     <value>Manage Categories and Colors</value>
@@ -245,67 +245,67 @@
     <value>Add Tag</value>
   </data>
   <data name="Settings_About.Text" xml:space="preserve">
-    <value>关于</value>
+    <value>å…³äºŽ</value>
   </data>
   <data name="Settings_CreatedBy.Text" xml:space="preserve">
     <value>Created by David Cepero</value>
   </data>
   <data name="Settings_Copyright.Text" xml:space="preserve">
-    <value>Copyright © 2025. All rights reserved.</value>
+    <value>Copyright Â© 2025. All rights reserved.</value>
   </data>
   <data name="Settings_SourceCode.Content" xml:space="preserve">
     <value>Source Code (GitHub)</value>
   </data>
   <data name="Settings_AppVersion" xml:space="preserve">
-    <value>版本 {0}</value>
+    <value>ç‰ˆæœ¬ {0}</value>
   </data>
   <data name="Nav_Dashboard.Content" xml:space="preserve">
-    <value>仪表板</value>
+    <value>ä»ªè¡¨æ¿</value>
   </data>
   <data name="Nav_History.Content" xml:space="preserve">
-    <value>分布分析</value>
+    <value>åˆ†å¸ƒåˆ†æž</value>
   </data>
   <data name="Nav_Sessions.Content" xml:space="preserve">
-    <value>详细使用情况</value>
+    <value>è¯¦ç»†ä½¿ç”¨æƒ…å†µ</value>
   </data>
   <data name="Tray_Open.Text" xml:space="preserve">
-    <value>打开</value>
+    <value>æ‰“å¼€</value>
   </data>
   <data name="Tray_Settings.Text" xml:space="preserve">
-    <value>设置</value>
+    <value>è®¾ç½®</value>
   </data>
   <data name="Tray_Exit.Text" xml:space="preserve">
-    <value>退出</value>
+    <value>é€€å‡º</value>
   </data>
   <data name="Dashboard_SetTimeLimit.Text" xml:space="preserve">
-    <value>设置时间限制</value>
+    <value>è®¾ç½®æ—¶é—´é™åˆ¶</value>
   </data>
   <data name="Dashboard_SetCategory.Text" xml:space="preserve">
-    <value>设置类别</value>
+    <value>è®¾ç½®ç±»åˆ«</value>
   </data>
   <data name="Dashboard_SetDisplayName.Text" xml:space="preserve">
-    <value>设置显示名称...</value>
+    <value>è®¾ç½®æ˜¾ç¤ºåç§°...</value>
   </data>
   <data name="Dashboard_SetCustomIcon.Text" xml:space="preserve">
-    <value>自定义图标...</value>
+    <value>è‡ªå®šä¹‰å›¾æ ‡...</value>
   </data>
   <data name="Dashboard_ExcludeApp.Text" xml:space="preserve">
-    <value>排除应用</value>
+    <value>æŽ’é™¤åº”ç”¨</value>
   </data>
   <data name="Dashboard_Total.Text" xml:space="preserve">
-    <value>总计:</value>
+    <value>æ€»è®¡:</value>
   </data>
   <data name="Dashboard_DailyActivity.Text" xml:space="preserve">
-    <value>每日活动</value>
+    <value>æ¯æ—¥æ´»åŠ¨</value>
   </data>
   <data name="Dashboard_UsageSummary.Text" xml:space="preserve">
-    <value>使用摘要</value>
+    <value>ä½¿ç”¨æ‘˜è¦</value>
   </data>
   <data name="Dashboard_TabActiveWindows.Header" xml:space="preserve">
-    <value>📊 Active Windows</value>
+    <value>ðŸ“Š Active Windows</value>
   </data>
   <data name="Dashboard_TabBackgroundAudio.Header" xml:space="preserve">
-    <value>🔊 Background Audio</value>
+    <value>ðŸ”Š Background Audio</value>
   </data>
   <data name="Dashboard_AudioDesc.Text" xml:space="preserve">
     <value>Apps playing audio while not in focus</value>
@@ -314,24 +314,27 @@
     <value>No background audio detected</value>
   </data>
   <data name="Dashboard_ActiveWindows.Text" xml:space="preserve">
-    <value>活动窗口</value>
+    <value>æ´»åŠ¨çª—å£</value>
   </data>
   <data name="Dashboard_BackgroundAudio.Text" xml:space="preserve">
-    <value>后台音频</value>
+    <value>åŽå°éŸ³é¢‘</value>
   </data>
   <data name="Dashboard_NotCounted.Text" xml:space="preserve">
     <value>(not counted)</value>
   </data>
   <data name="Sessions_Title.Text" xml:space="preserve">
-    <value>时间轴</value>
+    <value>æ—¶é—´è½´</value>
   </data>
   <data name="Sessions_Subtitle.Text" xml:space="preserve">
-    <value>可视化的一天。</value>
+    <value>å¯è§†åŒ–çš„ä¸€å¤©ã€‚</value>
   </data>
   <data name="Sessions_ZoomOut.Content" xml:space="preserve">
     <value>Zoom Out</value>
   </data>
   <data name="Sessions_ZoomIn.Content" xml:space="preserve">
     <value>Zoom In</value>
+  </data>
+  <data name="History_Activity" xml:space="preserve">
+    <value>Activity</value>
   </data>
 </root>

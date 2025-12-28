@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version='1.0' encoding='utf-8'?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -86,7 +86,7 @@
     <value>Daily Trends</value>
   </data>
   <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>📊 Day-by-day usage</value>
+    <value>ðŸ“Š Day-by-day usage</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
     <value>Orange line = previous period average</value>
@@ -122,7 +122,7 @@
     <value>Apply Changes</value>
   </data>
   <data name="Settings_Title.Text" xml:space="preserve">
-    <value>Setări</value>
+    <value>SetÄƒri</value>
   </data>
   <data name="Settings_AppRuntime.Text" xml:space="preserve">
     <value>Timp rulare</value>
@@ -161,7 +161,7 @@
     <value>Double-click to remove time limit.</value>
   </data>
   <data name="Settings_Display.Text" xml:space="preserve">
-    <value>Afișare</value>
+    <value>AfiÈ™are</value>
   </data>
   <data name="Settings_DaysToShow.Text" xml:space="preserve">
     <value>Days to show on graph</value>
@@ -236,7 +236,7 @@
     <value>How often usage data in RAM is saved to disk. Lower values = more disk writes but better recovery on crash (Default 300s = 5 min).</value>
   </data>
   <data name="Settings_AppTags.Text" xml:space="preserve">
-    <value>Etichete aplicație</value>
+    <value>Etichete aplicaÈ›ie</value>
   </data>
   <data name="Settings_ManageTags.Text" xml:space="preserve">
     <value>Manage Categories and Colors</value>
@@ -251,7 +251,7 @@
     <value>Created by David Cepero</value>
   </data>
   <data name="Settings_Copyright.Text" xml:space="preserve">
-    <value>Copyright © 2025. All rights reserved.</value>
+    <value>Copyright Â© 2025. All rights reserved.</value>
   </data>
   <data name="Settings_SourceCode.Content" xml:space="preserve">
     <value>Source Code (GitHub)</value>
@@ -263,49 +263,49 @@
     <value>Tablou de bord</value>
   </data>
   <data name="Nav_History.Content" xml:space="preserve">
-    <value>Analiza distribuției</value>
+    <value>Analiza distribuÈ›iei</value>
   </data>
   <data name="Nav_Sessions.Content" xml:space="preserve">
-    <value>Utilizare detaliată</value>
+    <value>Utilizare detaliatÄƒ</value>
   </data>
   <data name="Tray_Open.Text" xml:space="preserve">
     <value>Deschidere</value>
   </data>
   <data name="Tray_Settings.Text" xml:space="preserve">
-    <value>Setări</value>
+    <value>SetÄƒri</value>
   </data>
   <data name="Tray_Exit.Text" xml:space="preserve">
-    <value>Ieșire</value>
+    <value>IeÈ™ire</value>
   </data>
   <data name="Dashboard_SetTimeLimit.Text" xml:space="preserve">
-    <value>Setare limită timp</value>
+    <value>Setare limitÄƒ timp</value>
   </data>
   <data name="Dashboard_SetCategory.Text" xml:space="preserve">
     <value>Setare categorie</value>
   </data>
   <data name="Dashboard_SetDisplayName.Text" xml:space="preserve">
-    <value>Nume afișare...</value>
+    <value>Nume afiÈ™are...</value>
   </data>
   <data name="Dashboard_SetCustomIcon.Text" xml:space="preserve">
-    <value>Pictogramă personalizată...</value>
+    <value>PictogramÄƒ personalizatÄƒ...</value>
   </data>
   <data name="Dashboard_ExcludeApp.Text" xml:space="preserve">
-    <value>Excludere aplicație</value>
+    <value>Excludere aplicaÈ›ie</value>
   </data>
   <data name="Dashboard_Total.Text" xml:space="preserve">
     <value>Total:</value>
   </data>
   <data name="Dashboard_DailyActivity.Text" xml:space="preserve">
-    <value>Activitate zilnică</value>
+    <value>Activitate zilnicÄƒ</value>
   </data>
   <data name="Dashboard_UsageSummary.Text" xml:space="preserve">
     <value>Rezumat utilizare</value>
   </data>
   <data name="Dashboard_TabActiveWindows.Header" xml:space="preserve">
-    <value>📊 Active Windows</value>
+    <value>ðŸ“Š Active Windows</value>
   </data>
   <data name="Dashboard_TabBackgroundAudio.Header" xml:space="preserve">
-    <value>🔊 Background Audio</value>
+    <value>ðŸ”Š Background Audio</value>
   </data>
   <data name="Dashboard_AudioDesc.Text" xml:space="preserve">
     <value>Apps playing audio while not in focus</value>
@@ -317,7 +317,7 @@
     <value>Ferestre active</value>
   </data>
   <data name="Dashboard_BackgroundAudio.Text" xml:space="preserve">
-    <value>Audio în fundal</value>
+    <value>Audio Ã®n fundal</value>
   </data>
   <data name="Dashboard_NotCounted.Text" xml:space="preserve">
     <value>(not counted)</value>
@@ -326,12 +326,15 @@
     <value>Cronologie</value>
   </data>
   <data name="Sessions_Subtitle.Text" xml:space="preserve">
-    <value>Vizualizați-vă ziua.</value>
+    <value>VizualizaÈ›i-vÄƒ ziua.</value>
   </data>
   <data name="Sessions_ZoomOut.Content" xml:space="preserve">
     <value>Zoom Out</value>
   </data>
   <data name="Sessions_ZoomIn.Content" xml:space="preserve">
     <value>Zoom In</value>
+  </data>
+  <data name="History_Activity" xml:space="preserve">
+    <value>Activity</value>
   </data>
 </root>

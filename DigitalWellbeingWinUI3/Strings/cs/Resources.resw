@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version='1.0' encoding='utf-8'?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -86,7 +86,7 @@
     <value>Daily Trends</value>
   </data>
   <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>📊 Day-by-day usage</value>
+    <value>ðŸ“Š Day-by-day usage</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
     <value>Orange line = previous period average</value>
@@ -122,10 +122,10 @@
     <value>Apply Changes</value>
   </data>
   <data name="Settings_Title.Text" xml:space="preserve">
-    <value>Nastavení</value>
+    <value>NastavenÃ­</value>
   </data>
   <data name="Settings_AppRuntime.Text" xml:space="preserve">
-    <value>Doba běhu aplikace</value>
+    <value>Doba bÄ›hu aplikace</value>
   </data>
   <data name="Settings_RunOnStartup.Text" xml:space="preserve">
     <value>Run on Startup</value>
@@ -140,7 +140,7 @@
     <value>Minimize the app to tray on exit instead of closing.</value>
   </data>
   <data name="Settings_UsageData.Text" xml:space="preserve">
-    <value>Data o použití</value>
+    <value>Data o pouÅ¾itÃ­</value>
   </data>
   <data name="Settings_IncognitoMode.Text" xml:space="preserve">
     <value>Incognito Mode</value>
@@ -161,7 +161,7 @@
     <value>Double-click to remove time limit.</value>
   </data>
   <data name="Settings_Display.Text" xml:space="preserve">
-    <value>Zobrazení</value>
+    <value>ZobrazenÃ­</value>
   </data>
   <data name="Settings_DaysToShow.Text" xml:space="preserve">
     <value>Days to show on graph</value>
@@ -236,7 +236,7 @@
     <value>How often usage data in RAM is saved to disk. Lower values = more disk writes but better recovery on crash (Default 300s = 5 min).</value>
   </data>
   <data name="Settings_AppTags.Text" xml:space="preserve">
-    <value>Štítky aplikací</value>
+    <value>Å tÃ­tky aplikacÃ­</value>
   </data>
   <data name="Settings_ManageTags.Text" xml:space="preserve">
     <value>Manage Categories and Colors</value>
@@ -251,7 +251,7 @@
     <value>Created by David Cepero</value>
   </data>
   <data name="Settings_Copyright.Text" xml:space="preserve">
-    <value>Copyright © 2025. All rights reserved.</value>
+    <value>Copyright Â© 2025. All rights reserved.</value>
   </data>
   <data name="Settings_SourceCode.Content" xml:space="preserve">
     <value>Source Code (GitHub)</value>
@@ -260,52 +260,52 @@
     <value>Verze {0}</value>
   </data>
   <data name="Nav_Dashboard.Content" xml:space="preserve">
-    <value>Přehled</value>
+    <value>PÅ™ehled</value>
   </data>
   <data name="Nav_History.Content" xml:space="preserve">
-    <value>Analýza distribuce</value>
+    <value>AnalÃ½za distribuce</value>
   </data>
   <data name="Nav_Sessions.Content" xml:space="preserve">
-    <value>Podrobné použití</value>
+    <value>PodrobnÃ© pouÅ¾itÃ­</value>
   </data>
   <data name="Tray_Open.Text" xml:space="preserve">
-    <value>Otevřít</value>
+    <value>OtevÅ™Ã­t</value>
   </data>
   <data name="Tray_Settings.Text" xml:space="preserve">
-    <value>Nastavení</value>
+    <value>NastavenÃ­</value>
   </data>
   <data name="Tray_Exit.Text" xml:space="preserve">
-    <value>Ukončit</value>
+    <value>UkonÄit</value>
   </data>
   <data name="Dashboard_SetTimeLimit.Text" xml:space="preserve">
-    <value>Nastavit časový limit</value>
+    <value>Nastavit ÄasovÃ½ limit</value>
   </data>
   <data name="Dashboard_SetCategory.Text" xml:space="preserve">
     <value>Nastavit kategorii</value>
   </data>
   <data name="Dashboard_SetDisplayName.Text" xml:space="preserve">
-    <value>Nastavit zobrazovaný název...</value>
+    <value>Nastavit zobrazovanÃ½ nÃ¡zev...</value>
   </data>
   <data name="Dashboard_SetCustomIcon.Text" xml:space="preserve">
-    <value>Vlastní ikona...</value>
+    <value>VlastnÃ­ ikona...</value>
   </data>
   <data name="Dashboard_ExcludeApp.Text" xml:space="preserve">
-    <value>Vyloučit aplikaci</value>
+    <value>VylouÄit aplikaci</value>
   </data>
   <data name="Dashboard_Total.Text" xml:space="preserve">
     <value>Celkem:</value>
   </data>
   <data name="Dashboard_DailyActivity.Text" xml:space="preserve">
-    <value>Denní aktivita</value>
+    <value>DennÃ­ aktivita</value>
   </data>
   <data name="Dashboard_UsageSummary.Text" xml:space="preserve">
-    <value>Souhrn použití</value>
+    <value>Souhrn pouÅ¾itÃ­</value>
   </data>
   <data name="Dashboard_TabActiveWindows.Header" xml:space="preserve">
-    <value>📊 Active Windows</value>
+    <value>ðŸ“Š Active Windows</value>
   </data>
   <data name="Dashboard_TabBackgroundAudio.Header" xml:space="preserve">
-    <value>🔊 Background Audio</value>
+    <value>ðŸ”Š Background Audio</value>
   </data>
   <data name="Dashboard_AudioDesc.Text" xml:space="preserve">
     <value>Apps playing audio while not in focus</value>
@@ -314,24 +314,27 @@
     <value>No background audio detected</value>
   </data>
   <data name="Dashboard_ActiveWindows.Text" xml:space="preserve">
-    <value>Aktivní okna</value>
+    <value>AktivnÃ­ okna</value>
   </data>
   <data name="Dashboard_BackgroundAudio.Text" xml:space="preserve">
-    <value>Zvuk na pozadí</value>
+    <value>Zvuk na pozadÃ­</value>
   </data>
   <data name="Dashboard_NotCounted.Text" xml:space="preserve">
     <value>(not counted)</value>
   </data>
   <data name="Sessions_Title.Text" xml:space="preserve">
-    <value>Časová osa</value>
+    <value>ÄŒasovÃ¡ osa</value>
   </data>
   <data name="Sessions_Subtitle.Text" xml:space="preserve">
-    <value>Vizualizujte svůj den.</value>
+    <value>Vizualizujte svÅ¯j den.</value>
   </data>
   <data name="Sessions_ZoomOut.Content" xml:space="preserve">
     <value>Zoom Out</value>
   </data>
   <data name="Sessions_ZoomIn.Content" xml:space="preserve">
     <value>Zoom In</value>
+  </data>
+  <data name="History_Activity" xml:space="preserve">
+    <value>Activity</value>
   </data>
 </root>

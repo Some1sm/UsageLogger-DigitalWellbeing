@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version='1.0' encoding='utf-8'?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -86,7 +86,7 @@
     <value>Daily Trends</value>
   </data>
   <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>📊 Day-by-day usage</value>
+    <value>ðŸ“Š Day-by-day usage</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
     <value>Orange line = previous period average</value>
@@ -122,10 +122,10 @@
     <value>Apply Changes</value>
   </data>
   <data name="Settings_Title.Text" xml:space="preserve">
-    <value>설정</value>
+    <value>ì„¤ì •</value>
   </data>
   <data name="Settings_AppRuntime.Text" xml:space="preserve">
-    <value>앱 실행</value>
+    <value>ì•± ì‹¤í–‰</value>
   </data>
   <data name="Settings_RunOnStartup.Text" xml:space="preserve">
     <value>Run on Startup</value>
@@ -140,7 +140,7 @@
     <value>Minimize the app to tray on exit instead of closing.</value>
   </data>
   <data name="Settings_UsageData.Text" xml:space="preserve">
-    <value>사용 데이터</value>
+    <value>ì‚¬ìš© ë°ì´í„°</value>
   </data>
   <data name="Settings_IncognitoMode.Text" xml:space="preserve">
     <value>Incognito Mode</value>
@@ -161,7 +161,7 @@
     <value>Double-click to remove time limit.</value>
   </data>
   <data name="Settings_Display.Text" xml:space="preserve">
-    <value>디스플레이</value>
+    <value>ë””ìŠ¤í”Œë ˆì´</value>
   </data>
   <data name="Settings_DaysToShow.Text" xml:space="preserve">
     <value>Days to show on graph</value>
@@ -212,7 +212,7 @@
     <value>Show Active Windows and Background Audio on same page instead of tabs.</value>
   </data>
   <data name="Settings_Data.Text" xml:space="preserve">
-    <value>데이터</value>
+    <value>ë°ì´í„°</value>
   </data>
   <data name="Settings_LogStorage.Text" xml:space="preserve">
     <value>Log Storage Location</value>
@@ -236,7 +236,7 @@
     <value>How often usage data in RAM is saved to disk. Lower values = more disk writes but better recovery on crash (Default 300s = 5 min).</value>
   </data>
   <data name="Settings_AppTags.Text" xml:space="preserve">
-    <value>앱 태그</value>
+    <value>ì•± íƒœê·¸</value>
   </data>
   <data name="Settings_ManageTags.Text" xml:space="preserve">
     <value>Manage Categories and Colors</value>
@@ -245,67 +245,67 @@
     <value>Add Tag</value>
   </data>
   <data name="Settings_About.Text" xml:space="preserve">
-    <value>정보</value>
+    <value>ì •ë³´</value>
   </data>
   <data name="Settings_CreatedBy.Text" xml:space="preserve">
     <value>Created by David Cepero</value>
   </data>
   <data name="Settings_Copyright.Text" xml:space="preserve">
-    <value>Copyright © 2025. All rights reserved.</value>
+    <value>Copyright Â© 2025. All rights reserved.</value>
   </data>
   <data name="Settings_SourceCode.Content" xml:space="preserve">
     <value>Source Code (GitHub)</value>
   </data>
   <data name="Settings_AppVersion" xml:space="preserve">
-    <value>버전 {0}</value>
+    <value>ë²„ì „ {0}</value>
   </data>
   <data name="Nav_Dashboard.Content" xml:space="preserve">
-    <value>대시보드</value>
+    <value>ëŒ€ì‹œë³´ë“œ</value>
   </data>
   <data name="Nav_History.Content" xml:space="preserve">
-    <value>분포 분석</value>
+    <value>ë¶„í¬ ë¶„ì„</value>
   </data>
   <data name="Nav_Sessions.Content" xml:space="preserve">
-    <value>상세 사용량</value>
+    <value>ìƒì„¸ ì‚¬ìš©ëŸ‰</value>
   </data>
   <data name="Tray_Open.Text" xml:space="preserve">
-    <value>열기</value>
+    <value>ì—´ê¸°</value>
   </data>
   <data name="Tray_Settings.Text" xml:space="preserve">
-    <value>설정</value>
+    <value>ì„¤ì •</value>
   </data>
   <data name="Tray_Exit.Text" xml:space="preserve">
-    <value>종료</value>
+    <value>ì¢…ë£Œ</value>
   </data>
   <data name="Dashboard_SetTimeLimit.Text" xml:space="preserve">
-    <value>시간 제한 설정</value>
+    <value>ì‹œê°„ ì œí•œ ì„¤ì •</value>
   </data>
   <data name="Dashboard_SetCategory.Text" xml:space="preserve">
-    <value>카테고리 설정</value>
+    <value>ì¹´í…Œê³ ë¦¬ ì„¤ì •</value>
   </data>
   <data name="Dashboard_SetDisplayName.Text" xml:space="preserve">
-    <value>표시 이름 설정...</value>
+    <value>í‘œì‹œ ì´ë¦„ ì„¤ì •...</value>
   </data>
   <data name="Dashboard_SetCustomIcon.Text" xml:space="preserve">
-    <value>사용자 지정 아이콘...</value>
+    <value>ì‚¬ìš©ìž ì§€ì • ì•„ì´ì½˜...</value>
   </data>
   <data name="Dashboard_ExcludeApp.Text" xml:space="preserve">
-    <value>앱 제외</value>
+    <value>ì•± ì œì™¸</value>
   </data>
   <data name="Dashboard_Total.Text" xml:space="preserve">
-    <value>합계:</value>
+    <value>í•©ê³„:</value>
   </data>
   <data name="Dashboard_DailyActivity.Text" xml:space="preserve">
-    <value>일일 활동</value>
+    <value>ì¼ì¼ í™œë™</value>
   </data>
   <data name="Dashboard_UsageSummary.Text" xml:space="preserve">
-    <value>사용 요약</value>
+    <value>ì‚¬ìš© ìš”ì•½</value>
   </data>
   <data name="Dashboard_TabActiveWindows.Header" xml:space="preserve">
-    <value>📊 Active Windows</value>
+    <value>ðŸ“Š Active Windows</value>
   </data>
   <data name="Dashboard_TabBackgroundAudio.Header" xml:space="preserve">
-    <value>🔊 Background Audio</value>
+    <value>ðŸ”Š Background Audio</value>
   </data>
   <data name="Dashboard_AudioDesc.Text" xml:space="preserve">
     <value>Apps playing audio while not in focus</value>
@@ -314,24 +314,27 @@
     <value>No background audio detected</value>
   </data>
   <data name="Dashboard_ActiveWindows.Text" xml:space="preserve">
-    <value>활성 창</value>
+    <value>í™œì„± ì°½</value>
   </data>
   <data name="Dashboard_BackgroundAudio.Text" xml:space="preserve">
-    <value>백그라운드 오디오</value>
+    <value>ë°±ê·¸ë¼ìš´ë“œ ì˜¤ë””ì˜¤</value>
   </data>
   <data name="Dashboard_NotCounted.Text" xml:space="preserve">
     <value>(not counted)</value>
   </data>
   <data name="Sessions_Title.Text" xml:space="preserve">
-    <value>타임라인</value>
+    <value>íƒ€ìž„ë¼ì¸</value>
   </data>
   <data name="Sessions_Subtitle.Text" xml:space="preserve">
-    <value>하루를 시각화합니다.</value>
+    <value>í•˜ë£¨ë¥¼ ì‹œê°í™”í•©ë‹ˆë‹¤.</value>
   </data>
   <data name="Sessions_ZoomOut.Content" xml:space="preserve">
     <value>Zoom Out</value>
   </data>
   <data name="Sessions_ZoomIn.Content" xml:space="preserve">
     <value>Zoom In</value>
+  </data>
+  <data name="History_Activity" xml:space="preserve">
+    <value>Activity</value>
   </data>
 </root>

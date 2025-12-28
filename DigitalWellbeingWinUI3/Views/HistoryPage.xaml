@@ -60,6 +60,9 @@
         <ScrollViewer Grid.Row="1">
             <StackPanel Spacing="20">
                 
+                <!-- Error Message Banner -->
+                <InfoBar IsOpen="{Binding HasError, Mode=OneWay}" Severity="Error" Title="Error" Message="{Binding ErrorMessage, Mode=OneWay}" IsClosable="False" Margin="0,0,0,10" />
+
                 <!-- KPI Summary Cards -->
                 <Grid>
                     <Grid.ColumnDefinitions>

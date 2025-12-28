@@ -236,21 +236,55 @@ namespace DigitalWellbeingWinUI3.ViewModels
             EndDate = new DateTime(previousYear, 12, 31);
         }
 
+        private string _errorMessage;
+        public string ErrorMessage
+        {
+            get => _errorMessage;
+            set 
+            { 
+                if (_errorMessage != value) 
+                { 
+                    _errorMessage = value; 
+                    OnPropertyChanged(); 
+                    OnPropertyChanged(nameof(HasError));
+                } 
+            }
+        }
+
+        public bool HasError => !string.IsNullOrEmpty(ErrorMessage);
+
         public async void GenerateChart()
         {
             if (EndDate < StartDate) 
             {
-                Debug.WriteLine("[HistoryViewModel] EndDate < StartDate");
+                ErrorMessage = "End Date cannot be before Start Date.";
                 return;
             }
 
             IsLoading = true;
+            ErrorMessage = null;
+            
             Debug.WriteLine($"[HistoryViewModel] Generating Chart for {StartDate.Date.ToShortDateString()} - {EndDate.Date.ToShortDateString()}");
             try
             {
+                // Clear previous data
+                TreemapData = null;
+                TrendSeries = null;
+                HeatMapSeries = null;
+                TotalHoursText = "Loading...";
+                TotalChangeText = "";
+
                 // Load current period
                 List<AppSession> allSessions = await LoadSessionsForDateRange(StartDate.Date, EndDate.Date);
                 Debug.WriteLine($"[HistoryViewModel] Loaded {allSessions.Count} sessions.");
+
+                if (allSessions.Count == 0)
+                {
+                    TotalHoursText = "0h 0m 0s";
+                    TotalChangeText = "No data found for this period.";
+                    ErrorMessage = "No activity logs found for the selected date range.";
+                    return;
+                }
 
                 // Load previous period for comparison
                 int dayCount = (EndDate.Date - StartDate.Date).Days + 1;
@@ -279,10 +313,17 @@ namespace DigitalWellbeingWinUI3.ViewModels
                         GenerateSubAppChart(aggregatedUsage);
                         break;
                 }
+
+                if (TreemapData == null || TreemapData.Count == 0)
+                {
+                    ErrorMessage = "No data available for the selected view.";
+                }
             }
             catch (Exception ex) 
             {
                 Debug.WriteLine($"[HistoryViewModel] Generation Error: {ex}");
+                ErrorMessage = $"Failed to load data: {ex.Message}";
+                TotalHoursText = "Error";
             }
             finally
             {

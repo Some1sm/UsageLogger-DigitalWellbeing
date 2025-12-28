@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version='1.0' encoding='utf-8'?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -86,7 +86,7 @@
     <value>Daily Trends</value>
   </data>
   <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>📊 Day-by-day usage</value>
+    <value>ðŸ“Š Day-by-day usage</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
     <value>Orange line = previous period average</value>
@@ -122,10 +122,10 @@
     <value>Apply Changes</value>
   </data>
   <data name="Settings_Title.Text" xml:space="preserve">
-    <value>ترتیبات</value>
+    <value>ØªØ±ØªÛŒØ¨Ø§Øª</value>
   </data>
   <data name="Settings_AppRuntime.Text" xml:space="preserve">
-    <value>ایپ رن ٹائم</value>
+    <value>Ø§ÛŒÙ¾ Ø±Ù† Ù¹Ø§Ø¦Ù…</value>
   </data>
   <data name="Settings_RunOnStartup.Text" xml:space="preserve">
     <value>Run on Startup</value>
@@ -140,7 +140,7 @@
     <value>Minimize the app to tray on exit instead of closing.</value>
   </data>
   <data name="Settings_UsageData.Text" xml:space="preserve">
-    <value>استعمال کا ڈیٹا</value>
+    <value>Ø§Ø³ØªØ¹Ù…Ø§Ù„ Ú©Ø§ ÚˆÛŒÙ¹Ø§</value>
   </data>
   <data name="Settings_IncognitoMode.Text" xml:space="preserve">
     <value>Incognito Mode</value>
@@ -161,7 +161,7 @@
     <value>Double-click to remove time limit.</value>
   </data>
   <data name="Settings_Display.Text" xml:space="preserve">
-    <value>ڈسپلے</value>
+    <value>ÚˆØ³Ù¾Ù„Û’</value>
   </data>
   <data name="Settings_DaysToShow.Text" xml:space="preserve">
     <value>Days to show on graph</value>
@@ -212,7 +212,7 @@
     <value>Show Active Windows and Background Audio on same page instead of tabs.</value>
   </data>
   <data name="Settings_Data.Text" xml:space="preserve">
-    <value>ڈیٹا</value>
+    <value>ÚˆÛŒÙ¹Ø§</value>
   </data>
   <data name="Settings_LogStorage.Text" xml:space="preserve">
     <value>Log Storage Location</value>
@@ -236,7 +236,7 @@
     <value>How often usage data in RAM is saved to disk. Lower values = more disk writes but better recovery on crash (Default 300s = 5 min).</value>
   </data>
   <data name="Settings_AppTags.Text" xml:space="preserve">
-    <value>ایپ ٹیگز</value>
+    <value>Ø§ÛŒÙ¾ Ù¹ÛŒÚ¯Ø²</value>
   </data>
   <data name="Settings_ManageTags.Text" xml:space="preserve">
     <value>Manage Categories and Colors</value>
@@ -245,67 +245,67 @@
     <value>Add Tag</value>
   </data>
   <data name="Settings_About.Text" xml:space="preserve">
-    <value>کے بارے میں</value>
+    <value>Ú©Û’ Ø¨Ø§Ø±Û’ Ù…ÛŒÚº</value>
   </data>
   <data name="Settings_CreatedBy.Text" xml:space="preserve">
     <value>Created by David Cepero</value>
   </data>
   <data name="Settings_Copyright.Text" xml:space="preserve">
-    <value>Copyright © 2025. All rights reserved.</value>
+    <value>Copyright Â© 2025. All rights reserved.</value>
   </data>
   <data name="Settings_SourceCode.Content" xml:space="preserve">
     <value>Source Code (GitHub)</value>
   </data>
   <data name="Settings_AppVersion" xml:space="preserve">
-    <value>ورژن {0}</value>
+    <value>ÙˆØ±Ú˜Ù† {0}</value>
   </data>
   <data name="Nav_Dashboard.Content" xml:space="preserve">
-    <value>ڈیش بورڈ</value>
+    <value>ÚˆÛŒØ´ Ø¨ÙˆØ±Úˆ</value>
   </data>
   <data name="Nav_History.Content" xml:space="preserve">
-    <value>تقسیم کا تجزیہ</value>
+    <value>ØªÙ‚Ø³ÛŒÙ… Ú©Ø§ ØªØ¬Ø²ÛŒÛ</value>
   </data>
   <data name="Nav_Sessions.Content" xml:space="preserve">
-    <value>تفصیلی استعمال</value>
+    <value>ØªÙØµÛŒÙ„ÛŒ Ø§Ø³ØªØ¹Ù…Ø§Ù„</value>
   </data>
   <data name="Tray_Open.Text" xml:space="preserve">
-    <value>کھولیں</value>
+    <value>Ú©Ú¾ÙˆÙ„ÛŒÚº</value>
   </data>
   <data name="Tray_Settings.Text" xml:space="preserve">
-    <value>ترتیبات</value>
+    <value>ØªØ±ØªÛŒØ¨Ø§Øª</value>
   </data>
   <data name="Tray_Exit.Text" xml:space="preserve">
-    <value>خروج</value>
+    <value>Ø®Ø±ÙˆØ¬</value>
   </data>
   <data name="Dashboard_SetTimeLimit.Text" xml:space="preserve">
-    <value>وقت کی حد مقرر کریں</value>
+    <value>ÙˆÙ‚Øª Ú©ÛŒ Ø­Ø¯ Ù…Ù‚Ø±Ø± Ú©Ø±ÛŒÚº</value>
   </data>
   <data name="Dashboard_SetCategory.Text" xml:space="preserve">
-    <value>زمرہ مقرر کریں</value>
+    <value>Ø²Ù…Ø±Û Ù…Ù‚Ø±Ø± Ú©Ø±ÛŒÚº</value>
   </data>
   <data name="Dashboard_SetDisplayName.Text" xml:space="preserve">
-    <value>ڈسپلے کا نام...</value>
+    <value>ÚˆØ³Ù¾Ù„Û’ Ú©Ø§ Ù†Ø§Ù…...</value>
   </data>
   <data name="Dashboard_SetCustomIcon.Text" xml:space="preserve">
-    <value>حسب ضرورت آئیکن...</value>
+    <value>Ø­Ø³Ø¨ Ø¶Ø±ÙˆØ±Øª Ø¢Ø¦ÛŒÚ©Ù†...</value>
   </data>
   <data name="Dashboard_ExcludeApp.Text" xml:space="preserve">
-    <value>ایپ کو مستثنیٰ کریں</value>
+    <value>Ø§ÛŒÙ¾ Ú©Ùˆ Ù…Ø³ØªØ«Ù†ÛŒÙ° Ú©Ø±ÛŒÚº</value>
   </data>
   <data name="Dashboard_Total.Text" xml:space="preserve">
-    <value>کل:</value>
+    <value>Ú©Ù„:</value>
   </data>
   <data name="Dashboard_DailyActivity.Text" xml:space="preserve">
-    <value>روزانہ کی سرگرمی</value>
+    <value>Ø±ÙˆØ²Ø§Ù†Û Ú©ÛŒ Ø³Ø±Ú¯Ø±Ù…ÛŒ</value>
   </data>
   <data name="Dashboard_UsageSummary.Text" xml:space="preserve">
-    <value>استعمال کا خلاصہ</value>
+    <value>Ø§Ø³ØªØ¹Ù…Ø§Ù„ Ú©Ø§ Ø®Ù„Ø§ØµÛ</value>
   </data>
   <data name="Dashboard_TabActiveWindows.Header" xml:space="preserve">
-    <value>📊 Active Windows</value>
+    <value>ðŸ“Š Active Windows</value>
   </data>
   <data name="Dashboard_TabBackgroundAudio.Header" xml:space="preserve">
-    <value>🔊 Background Audio</value>
+    <value>ðŸ”Š Background Audio</value>
   </data>
   <data name="Dashboard_AudioDesc.Text" xml:space="preserve">
     <value>Apps playing audio while not in focus</value>
@@ -314,24 +314,27 @@
     <value>No background audio detected</value>
   </data>
   <data name="Dashboard_ActiveWindows.Text" xml:space="preserve">
-    <value>فعال ونڈوز</value>
+    <value>ÙØ¹Ø§Ù„ ÙˆÙ†ÚˆÙˆØ²</value>
   </data>
   <data name="Dashboard_BackgroundAudio.Text" xml:space="preserve">
-    <value>پس منظر آڈیو</value>
+    <value>Ù¾Ø³ Ù…Ù†Ø¸Ø± Ø¢ÚˆÛŒÙˆ</value>
   </data>
   <data name="Dashboard_NotCounted.Text" xml:space="preserve">
     <value>(not counted)</value>
   </data>
   <data name="Sessions_Title.Text" xml:space="preserve">
-    <value>ٹائم لائن</value>
+    <value>Ù¹Ø§Ø¦Ù… Ù„Ø§Ø¦Ù†</value>
   </data>
   <data name="Sessions_Subtitle.Text" xml:space="preserve">
-    <value>اپنے دن کا تصور کریں۔</value>
+    <value>Ø§Ù¾Ù†Û’ Ø¯Ù† Ú©Ø§ ØªØµÙˆØ± Ú©Ø±ÛŒÚºÛ”</value>
   </data>
   <data name="Sessions_ZoomOut.Content" xml:space="preserve">
     <value>Zoom Out</value>
   </data>
   <data name="Sessions_ZoomIn.Content" xml:space="preserve">
     <value>Zoom In</value>
+  </data>
+  <data name="History_Activity" xml:space="preserve">
+    <value>Activity</value>
   </data>
 </root>

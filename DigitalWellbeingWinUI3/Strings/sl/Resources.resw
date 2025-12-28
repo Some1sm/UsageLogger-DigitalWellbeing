@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version='1.0' encoding='utf-8'?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -86,7 +86,7 @@
     <value>Daily Trends</value>
   </data>
   <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>📊 Day-by-day usage</value>
+    <value>ðŸ“Š Day-by-day usage</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
     <value>Orange line = previous period average</value>
@@ -125,7 +125,7 @@
     <value>Nastavitve</value>
   </data>
   <data name="Settings_AppRuntime.Text" xml:space="preserve">
-    <value>Čas izvajanja</value>
+    <value>ÄŒas izvajanja</value>
   </data>
   <data name="Settings_RunOnStartup.Text" xml:space="preserve">
     <value>Run on Startup</value>
@@ -251,16 +251,16 @@
     <value>Created by David Cepero</value>
   </data>
   <data name="Settings_Copyright.Text" xml:space="preserve">
-    <value>Copyright © 2025. All rights reserved.</value>
+    <value>Copyright Â© 2025. All rights reserved.</value>
   </data>
   <data name="Settings_SourceCode.Content" xml:space="preserve">
     <value>Source Code (GitHub)</value>
   </data>
   <data name="Settings_AppVersion" xml:space="preserve">
-    <value>Različica {0}</value>
+    <value>RazliÄica {0}</value>
   </data>
   <data name="Nav_Dashboard.Content" xml:space="preserve">
-    <value>Nadzorna plošča</value>
+    <value>Nadzorna ploÅ¡Äa</value>
   </data>
   <data name="Nav_History.Content" xml:space="preserve">
     <value>Analiza porazdelitve</value>
@@ -278,7 +278,7 @@
     <value>Izhod</value>
   </data>
   <data name="Dashboard_SetTimeLimit.Text" xml:space="preserve">
-    <value>Nastavi časovno omejitev</value>
+    <value>Nastavi Äasovno omejitev</value>
   </data>
   <data name="Dashboard_SetCategory.Text" xml:space="preserve">
     <value>Nastavi kategorijo</value>
@@ -290,7 +290,7 @@
     <value>Ikona po meri...</value>
   </data>
   <data name="Dashboard_ExcludeApp.Text" xml:space="preserve">
-    <value>Izključi aplikacijo</value>
+    <value>IzkljuÄi aplikacijo</value>
   </data>
   <data name="Dashboard_Total.Text" xml:space="preserve">
     <value>Skupaj:</value>
@@ -302,10 +302,10 @@
     <value>Povzetek uporabe</value>
   </data>
   <data name="Dashboard_TabActiveWindows.Header" xml:space="preserve">
-    <value>📊 Active Windows</value>
+    <value>ðŸ“Š Active Windows</value>
   </data>
   <data name="Dashboard_TabBackgroundAudio.Header" xml:space="preserve">
-    <value>🔊 Background Audio</value>
+    <value>ðŸ”Š Background Audio</value>
   </data>
   <data name="Dashboard_AudioDesc.Text" xml:space="preserve">
     <value>Apps playing audio while not in focus</value>
@@ -323,7 +323,7 @@
     <value>(not counted)</value>
   </data>
   <data name="Sessions_Title.Text" xml:space="preserve">
-    <value>Časovnica</value>
+    <value>ÄŒasovnica</value>
   </data>
   <data name="Sessions_Subtitle.Text" xml:space="preserve">
     <value>Vizualizirajte svoj dan.</value>
@@ -333,5 +333,8 @@
   </data>
   <data name="Sessions_ZoomIn.Content" xml:space="preserve">
     <value>Zoom In</value>
+  </data>
+  <data name="History_Activity" xml:space="preserve">
+    <value>Activity</value>
   </data>
 </root>

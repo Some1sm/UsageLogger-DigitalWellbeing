@@ -100,6 +100,9 @@
   <data name="History_ActivityHeatmap.Text" xml:space="preserve">
     <value>Activity Heatmap</value>
   </data>
+  <data name="History_Activity" xml:space="preserve">
+    <value>Activity</value>
+  </data>
   <data name="History_HeatmapTooltip.Text" xml:space="preserve">
     <value>Hover for details</value>
   </data>

@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version='1.0' encoding='utf-8'?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -86,7 +86,7 @@
     <value>Daily Trends</value>
   </data>
   <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>📊 Day-by-day usage</value>
+    <value>ðŸ“Š Day-by-day usage</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
     <value>Orange line = previous period average</value>
@@ -122,10 +122,10 @@
     <value>Apply Changes</value>
   </data>
   <data name="Settings_Title.Text" xml:space="preserve">
-    <value>Inställningar</value>
+    <value>InstÃ¤llningar</value>
   </data>
   <data name="Settings_AppRuntime.Text" xml:space="preserve">
-    <value>Körtid</value>
+    <value>KÃ¶rtid</value>
   </data>
   <data name="Settings_RunOnStartup.Text" xml:space="preserve">
     <value>Run on Startup</value>
@@ -140,7 +140,7 @@
     <value>Minimize the app to tray on exit instead of closing.</value>
   </data>
   <data name="Settings_UsageData.Text" xml:space="preserve">
-    <value>Användningsdata</value>
+    <value>AnvÃ¤ndningsdata</value>
   </data>
   <data name="Settings_IncognitoMode.Text" xml:space="preserve">
     <value>Incognito Mode</value>
@@ -251,7 +251,7 @@
     <value>Created by David Cepero</value>
   </data>
   <data name="Settings_Copyright.Text" xml:space="preserve">
-    <value>Copyright © 2025. All rights reserved.</value>
+    <value>Copyright Â© 2025. All rights reserved.</value>
   </data>
   <data name="Settings_SourceCode.Content" xml:space="preserve">
     <value>Source Code (GitHub)</value>
@@ -266,19 +266,19 @@
     <value>Distributionsanalys</value>
   </data>
   <data name="Nav_Sessions.Content" xml:space="preserve">
-    <value>Detaljerad användning</value>
+    <value>Detaljerad anvÃ¤ndning</value>
   </data>
   <data name="Tray_Open.Text" xml:space="preserve">
-    <value>Öppna</value>
+    <value>Ã–ppna</value>
   </data>
   <data name="Tray_Settings.Text" xml:space="preserve">
-    <value>Inställningar</value>
+    <value>InstÃ¤llningar</value>
   </data>
   <data name="Tray_Exit.Text" xml:space="preserve">
     <value>Avsluta</value>
   </data>
   <data name="Dashboard_SetTimeLimit.Text" xml:space="preserve">
-    <value>Ange tidsgräns</value>
+    <value>Ange tidsgrÃ¤ns</value>
   </data>
   <data name="Dashboard_SetCategory.Text" xml:space="preserve">
     <value>Ange kategori</value>
@@ -302,10 +302,10 @@
     <value>Sammanfattning</value>
   </data>
   <data name="Dashboard_TabActiveWindows.Header" xml:space="preserve">
-    <value>📊 Active Windows</value>
+    <value>ðŸ“Š Active Windows</value>
   </data>
   <data name="Dashboard_TabBackgroundAudio.Header" xml:space="preserve">
-    <value>🔊 Background Audio</value>
+    <value>ðŸ”Š Background Audio</value>
   </data>
   <data name="Dashboard_AudioDesc.Text" xml:space="preserve">
     <value>Apps playing audio while not in focus</value>
@@ -314,7 +314,7 @@
     <value>No background audio detected</value>
   </data>
   <data name="Dashboard_ActiveWindows.Text" xml:space="preserve">
-    <value>Aktiva fönster</value>
+    <value>Aktiva fÃ¶nster</value>
   </data>
   <data name="Dashboard_BackgroundAudio.Text" xml:space="preserve">
     <value>Bakgrundsljud</value>
@@ -333,5 +333,8 @@
   </data>
   <data name="Sessions_ZoomIn.Content" xml:space="preserve">
     <value>Zoom In</value>
+  </data>
+  <data name="History_Activity" xml:space="preserve">
+    <value>Activity</value>
   </data>
 </root>

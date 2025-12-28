@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -62,7 +62,7 @@
     <value>Hoy</value>
   </data>
   <data name="FromLast" xml:space="preserve">
-    <value>del último</value>
+    <value>del Ãºltimo</value>
   </data>
   <data name="History_TimePeriod.Text" xml:space="preserve">
     <value>Periodo</value>
@@ -86,22 +86,22 @@
     <value>Tendencias Diarias</value>
   </data>
   <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>📊 Uso día por día</value>
+    <value>ðŸ“Š Uso dÃ­a por dÃ­a</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
-    <value>Línea naranja = media del periodo anterior</value>
+    <value>LÃ­nea naranja = media del periodo anterior</value>
   </data>
   <data name="History_UsageTrends.Text" xml:space="preserve">
     <value>Tendencias de Uso</value>
   </data>
   <data name="History_DistributionAnalysis.Text" xml:space="preserve">
-    <value>Análisis de Distribución</value>
+    <value>AnÃ¡lisis de DistribuciÃ³n</value>
   </data>
   <data name="History_ActivityHeatmap.Text" xml:space="preserve">
     <value>Mapa de Calor</value>
   </data>
   <data name="History_HeatmapTooltip.Text" xml:space="preserve">
-    <value>Pasa el ratón para ver detalles</value>
+    <value>Pasa el ratÃ³n para ver detalles</value>
   </data>
   <data name="History_DailyUsage" xml:space="preserve">
     <value>Uso Diario</value>
@@ -113,7 +113,7 @@
     <value>Sin datos anteriores</value>
   </data>
   <data name="History_VsPreviousDays" xml:space="preserve">
-    <value>vs los {0} días anteriores</value>
+    <value>vs los {0} dÃ­as anteriores</value>
   </data>
   <data name="Settings_UnsavedChanges.Text" xml:space="preserve">
     <value>Tienes cambios sin guardar.</value>
@@ -122,10 +122,10 @@
     <value>Aplicar Cambios</value>
   </data>
   <data name="Settings_Title.Text" xml:space="preserve">
-    <value>Configuración</value>
+    <value>ConfiguraciÃ³n</value>
   </data>
   <data name="Settings_AppRuntime.Text" xml:space="preserve">
-    <value>Ejecución</value>
+    <value>EjecuciÃ³n</value>
   </data>
   <data name="Settings_RunOnStartup.Text" xml:space="preserve">
     <value>Ejecutar al Inicio</value>
@@ -143,40 +143,40 @@
     <value>Datos de Uso</value>
   </data>
   <data name="Settings_IncognitoMode.Text" xml:space="preserve">
-    <value>Modo Incógnito</value>
+    <value>Modo IncÃ³gnito</value>
   </data>
   <data name="Settings_IncognitoModeDesc.Text" xml:space="preserve">
-    <value>No registrar títulos (ej. videos YouTube).</value>
+    <value>No registrar tÃ­tulos (ej. videos YouTube).</value>
   </data>
   <data name="Settings_ExcludedApps.Text" xml:space="preserve">
     <value>Apps Excluidas</value>
   </data>
   <data name="Settings_ExcludedAppsDesc.Text" xml:space="preserve">
-    <value>Doble clic para eliminar exclusión.</value>
+    <value>Doble clic para eliminar exclusiÃ³n.</value>
   </data>
   <data name="Settings_TimeLimits.Text" xml:space="preserve">
-    <value>Límites de Tiempo</value>
+    <value>LÃ­mites de Tiempo</value>
   </data>
   <data name="Settings_TimeLimitsDesc.Text" xml:space="preserve">
-    <value>Doble clic para eliminar límite.</value>
+    <value>Doble clic para eliminar lÃ­mite.</value>
   </data>
   <data name="Settings_Display.Text" xml:space="preserve">
-    <value>Visualización</value>
+    <value>VisualizaciÃ³n</value>
   </data>
   <data name="Settings_DaysToShow.Text" xml:space="preserve">
-    <value>Días a mostrar</value>
+    <value>DÃ­as a mostrar</value>
   </data>
   <data name="Settings_DaysToShowDesc.Text" xml:space="preserve">
-    <value>Días mostrados en gráfico semanal.</value>
+    <value>DÃ­as mostrados en grÃ¡fico semanal.</value>
   </data>
   <data name="Settings_DetailedDays.Text" xml:space="preserve">
-    <value>Días en Uso Detallado</value>
+    <value>DÃ­as en Uso Detallado</value>
   </data>
   <data name="Settings_DetailedDaysDesc.Text" xml:space="preserve">
-    <value>Columnas en página de Uso Detallado.</value>
+    <value>Columnas en pÃ¡gina de Uso Detallado.</value>
   </data>
   <data name="Settings_MinDuration.Text" xml:space="preserve">
-    <value>Duración Mínima (segundos)</value>
+    <value>DuraciÃ³n MÃ­nima (segundos)</value>
   </data>
   <data name="Settings_MinDurationDesc.Text" xml:space="preserve">
     <value>Ocultar apps con uso menor a este.</value>
@@ -185,7 +185,7 @@
     <value>Intervalo Auto-Refresco (s)</value>
   </data>
   <data name="Settings_AutoRefreshDesc.Text" xml:space="preserve">
-    <value>Mínimo 6 segundos.</value>
+    <value>MÃ­nimo 6 segundos.</value>
   </data>
   <data name="Settings_TimelineThreshold.Text" xml:space="preserve">
     <value>Nivel Detalle Timeline (Umbral s)</value>
@@ -215,10 +215,10 @@
     <value>Datos</value>
   </data>
   <data name="Settings_LogStorage.Text" xml:space="preserve">
-    <value>Ubicación de Logs</value>
+    <value>UbicaciÃ³n de Logs</value>
   </data>
   <data name="Settings_LogStorageDesc.Text" xml:space="preserve">
-    <value>Cambiar carpeta guarda logs. Reiniciará el servicio.</value>
+    <value>Cambiar carpeta guarda logs. ReiniciarÃ¡ el servicio.</value>
   </data>
   <data name="Settings_BtnOpen.Content" xml:space="preserve">
     <value>Abrir</value>
@@ -239,10 +239,10 @@
     <value>Etiquetas</value>
   </data>
   <data name="Settings_ManageTags.Text" xml:space="preserve">
-    <value>Gestionar Categorías</value>
+    <value>Gestionar CategorÃ­as</value>
   </data>
   <data name="Settings_AddTag.Content" xml:space="preserve">
-    <value>Añadir Etiqueta</value>
+    <value>AÃ±adir Etiqueta</value>
   </data>
   <data name="Settings_About.Text" xml:space="preserve">
     <value>Acerca de</value>
@@ -251,19 +251,19 @@
     <value>Creado por David Cepero</value>
   </data>
   <data name="Settings_Copyright.Text" xml:space="preserve">
-    <value>Copyright © 2025. Todos los derechos reservados.</value>
+    <value>Copyright Â© 2025. Todos los derechos reservados.</value>
   </data>
   <data name="Settings_SourceCode.Content" xml:space="preserve">
-    <value>Código Fuente (GitHub)</value>
+    <value>CÃ³digo Fuente (GitHub)</value>
   </data>
   <data name="Settings_AppVersion" xml:space="preserve">
-    <value>Versión {0}</value>
+    <value>VersiÃ³n {0}</value>
   </data>
   <data name="Nav_Dashboard.Content" xml:space="preserve">
     <value>Inicio</value>
   </data>
   <data name="Nav_History.Content" xml:space="preserve">
-    <value>Análisis</value>
+    <value>AnÃ¡lisis</value>
   </data>
   <data name="Nav_Sessions.Content" xml:space="preserve">
     <value>Uso Detallado</value>
@@ -272,16 +272,16 @@
     <value>Abrir</value>
   </data>
   <data name="Tray_Settings.Text" xml:space="preserve">
-    <value>Configuración</value>
+    <value>ConfiguraciÃ³n</value>
   </data>
   <data name="Tray_Exit.Text" xml:space="preserve">
     <value>Salir</value>
   </data>
   <data name="Dashboard_SetTimeLimit.Text" xml:space="preserve">
-    <value>Límite de Tiempo</value>
+    <value>LÃ­mite de Tiempo</value>
   </data>
   <data name="Dashboard_SetCategory.Text" xml:space="preserve">
-    <value>Categoría</value>
+    <value>CategorÃ­a</value>
   </data>
   <data name="Dashboard_SetDisplayName.Text" xml:space="preserve">
     <value>Nombre Personalizado...</value>
@@ -302,10 +302,10 @@
     <value>Resumen de Uso</value>
   </data>
   <data name="Dashboard_TabActiveWindows.Header" xml:space="preserve">
-    <value>📊 Ventanas Activas</value>
+    <value>ðŸ“Š Ventanas Activas</value>
   </data>
   <data name="Dashboard_TabBackgroundAudio.Header" xml:space="preserve">
-    <value>🔊 Audio de Fondo</value>
+    <value>ðŸ”Š Audio de Fondo</value>
   </data>
   <data name="Dashboard_AudioDesc.Text" xml:space="preserve">
     <value>Apps reproduciendo audio en segundo plano</value>
@@ -323,10 +323,10 @@
     <value>(no contado)</value>
   </data>
   <data name="Sessions_Title.Text" xml:space="preserve">
-    <value>Cronología</value>
+    <value>CronologÃ­a</value>
   </data>
   <data name="Sessions_Subtitle.Text" xml:space="preserve">
-    <value>Visualiza tu día.</value>
+    <value>Visualiza tu dÃ­a.</value>
   </data>
   <data name="Sessions_ZoomOut.Content" xml:space="preserve">
     <value>Alejar</value>
@@ -334,4 +334,8 @@
   <data name="Sessions_ZoomIn.Content" xml:space="preserve">
     <value>Acercar</value>
   </data>
+  <data name="History_Activity" xml:space="preserve">
+    <value>Activity</value>
+  </data>
 </root>
+

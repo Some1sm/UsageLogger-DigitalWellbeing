@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentDialog
+    x:Class="DigitalWellbeingWinUI3.Views.FocusScheduleDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Focus Session"
+    PrimaryButtonText="Save"
+    CloseButtonText="Cancel"
+    DefaultButton="Primary"
+    CornerRadius="8"
+    PrimaryButtonClick="PrimaryButton_Click">
+
+    <StackPanel Spacing="16" MinWidth="400">
+        
+        <!-- Name -->
+        <TextBox x:Name="NameBox" Header="Session Name" PlaceholderText="e.g., Morning Coding"/>
+
+        <!-- Target App -->
+        <StackPanel Spacing="4">
+            <TextBlock Text="Target Application" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+            <AutoSuggestBox x:Name="AppSuggestBox" 
+                            PlaceholderText="Type to search your apps..."
+                            TextChanged="AppSuggestBox_TextChanged"
+                            SuggestionChosen="AppSuggestBox_SuggestionChosen"
+                            QueryIcon="Find"/>
+            <TextBlock Text="Select an app from your usage history" 
+                       Style="{StaticResource CaptionTextBlockStyle}"
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+        </StackPanel>
+
+        <!-- Sub-App (Optional) -->
+        <TextBox x:Name="SubAppBox" Header="Sub-App / Keyword (Optional)" 
+                 PlaceholderText="e.g., GitHub, YouTube"/>
+
+        <!-- Time Settings -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="16"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <TimePicker x:Name="StartTimePicker" Header="Start Time" Grid.Column="0"/>
+            <NumberBox x:Name="DurationBox" Header="Duration (minutes)" 
+                       Grid.Column="2" 
+                       Value="60" Minimum="5" Maximum="480"
+                       SpinButtonPlacementMode="Inline"/>
+        </Grid>
+
+        <!-- Days -->
+        <StackPanel Spacing="4">
+            <TextBlock Text="Repeat on Days" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <ToggleButton x:Name="SunToggle" Content="S" Width="36"/>
+                <ToggleButton x:Name="MonToggle" Content="M" Width="36"/>
+                <ToggleButton x:Name="TueToggle" Content="T" Width="36"/>
+                <ToggleButton x:Name="WedToggle" Content="W" Width="36"/>
+                <ToggleButton x:Name="ThuToggle" Content="T" Width="36"/>
+                <ToggleButton x:Name="FriToggle" Content="F" Width="36"/>
+                <ToggleButton x:Name="SatToggle" Content="S" Width="36"/>
+            </StackPanel>
+            <TextBlock Text="Leave all off for one-time session" 
+                       Style="{StaticResource CaptionTextBlockStyle}"
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+        </StackPanel>
+
+        <!-- Mode -->
+        <StackPanel Spacing="4">
+            <TextBlock Text="Enforcement Mode" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+            <RadioButtons x:Name="ModeSelector">
+                <RadioButton Content="🟢 Chill - Toast notification only" Tag="Chill"/>
+                <RadioButton Content="🟠 Normal - Popup dialog (like time limits)" Tag="Normal" IsChecked="True"/>
+                <RadioButton Content="🔴 Focus - Close unauthorized apps" Tag="Focus"/>
+            </RadioButtons>
+        </StackPanel>
+
+    </StackPanel>
+</ContentDialog>

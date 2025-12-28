@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version='1.0' encoding='utf-8'?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -86,7 +86,7 @@
     <value>Daily Trends</value>
   </data>
   <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>📊 Day-by-day usage</value>
+    <value>ðŸ“Š Day-by-day usage</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
     <value>Orange line = previous period average</value>
@@ -122,10 +122,10 @@
     <value>Apply Changes</value>
   </data>
   <data name="Settings_Title.Text" xml:space="preserve">
-    <value>Paramètres</value>
+    <value>ParamÃ¨tres</value>
   </data>
   <data name="Settings_AppRuntime.Text" xml:space="preserve">
-    <value>Exécution</value>
+    <value>ExÃ©cution</value>
   </data>
   <data name="Settings_RunOnStartup.Text" xml:space="preserve">
     <value>Run on Startup</value>
@@ -140,7 +140,7 @@
     <value>Minimize the app to tray on exit instead of closing.</value>
   </data>
   <data name="Settings_UsageData.Text" xml:space="preserve">
-    <value>Données d'utilisation</value>
+    <value>DonnÃ©es d'utilisation</value>
   </data>
   <data name="Settings_IncognitoMode.Text" xml:space="preserve">
     <value>Incognito Mode</value>
@@ -212,7 +212,7 @@
     <value>Show Active Windows and Background Audio on same page instead of tabs.</value>
   </data>
   <data name="Settings_Data.Text" xml:space="preserve">
-    <value>Données</value>
+    <value>DonnÃ©es</value>
   </data>
   <data name="Settings_LogStorage.Text" xml:space="preserve">
     <value>Log Storage Location</value>
@@ -245,13 +245,13 @@
     <value>Add Tag</value>
   </data>
   <data name="Settings_About.Text" xml:space="preserve">
-    <value>À propos</value>
+    <value>Ã€ propos</value>
   </data>
   <data name="Settings_CreatedBy.Text" xml:space="preserve">
     <value>Created by David Cepero</value>
   </data>
   <data name="Settings_Copyright.Text" xml:space="preserve">
-    <value>Copyright © 2025. All rights reserved.</value>
+    <value>Copyright Â© 2025. All rights reserved.</value>
   </data>
   <data name="Settings_SourceCode.Content" xml:space="preserve">
     <value>Source Code (GitHub)</value>
@@ -266,28 +266,28 @@
     <value>Analyse de distribution</value>
   </data>
   <data name="Nav_Sessions.Content" xml:space="preserve">
-    <value>Utilisation détaillée</value>
+    <value>Utilisation dÃ©taillÃ©e</value>
   </data>
   <data name="Tray_Open.Text" xml:space="preserve">
     <value>Ouvrir</value>
   </data>
   <data name="Tray_Settings.Text" xml:space="preserve">
-    <value>Paramètres</value>
+    <value>ParamÃ¨tres</value>
   </data>
   <data name="Tray_Exit.Text" xml:space="preserve">
     <value>Quitter</value>
   </data>
   <data name="Dashboard_SetTimeLimit.Text" xml:space="preserve">
-    <value>Définir une limite</value>
+    <value>DÃ©finir une limite</value>
   </data>
   <data name="Dashboard_SetCategory.Text" xml:space="preserve">
-    <value>Définir une catégorie</value>
+    <value>DÃ©finir une catÃ©gorie</value>
   </data>
   <data name="Dashboard_SetDisplayName.Text" xml:space="preserve">
     <value>Nom d'affichage...</value>
   </data>
   <data name="Dashboard_SetCustomIcon.Text" xml:space="preserve">
-    <value>Icône personnalisée...</value>
+    <value>IcÃ´ne personnalisÃ©e...</value>
   </data>
   <data name="Dashboard_ExcludeApp.Text" xml:space="preserve">
     <value>Exclure l'application</value>
@@ -296,16 +296,16 @@
     <value>Total:</value>
   </data>
   <data name="Dashboard_DailyActivity.Text" xml:space="preserve">
-    <value>Activité quotidienne</value>
+    <value>ActivitÃ© quotidienne</value>
   </data>
   <data name="Dashboard_UsageSummary.Text" xml:space="preserve">
-    <value>Résumé de l'utilisation</value>
+    <value>RÃ©sumÃ© de l'utilisation</value>
   </data>
   <data name="Dashboard_TabActiveWindows.Header" xml:space="preserve">
-    <value>📊 Active Windows</value>
+    <value>ðŸ“Š Active Windows</value>
   </data>
   <data name="Dashboard_TabBackgroundAudio.Header" xml:space="preserve">
-    <value>🔊 Background Audio</value>
+    <value>ðŸ”Š Background Audio</value>
   </data>
   <data name="Dashboard_AudioDesc.Text" xml:space="preserve">
     <value>Apps playing audio while not in focus</value>
@@ -314,10 +314,10 @@
     <value>No background audio detected</value>
   </data>
   <data name="Dashboard_ActiveWindows.Text" xml:space="preserve">
-    <value>Fenêtres actives</value>
+    <value>FenÃªtres actives</value>
   </data>
   <data name="Dashboard_BackgroundAudio.Text" xml:space="preserve">
-    <value>Audio en arrière-plan</value>
+    <value>Audio en arriÃ¨re-plan</value>
   </data>
   <data name="Dashboard_NotCounted.Text" xml:space="preserve">
     <value>(not counted)</value>
@@ -326,12 +326,15 @@
     <value>Chronologie</value>
   </data>
   <data name="Sessions_Subtitle.Text" xml:space="preserve">
-    <value>Visualisez votre journée.</value>
+    <value>Visualisez votre journÃ©e.</value>
   </data>
   <data name="Sessions_ZoomOut.Content" xml:space="preserve">
     <value>Zoom Out</value>
   </data>
   <data name="Sessions_ZoomIn.Content" xml:space="preserve">
     <value>Zoom In</value>
+  </data>
+  <data name="History_Activity" xml:space="preserve">
+    <value>Activity</value>
   </data>
 </root>

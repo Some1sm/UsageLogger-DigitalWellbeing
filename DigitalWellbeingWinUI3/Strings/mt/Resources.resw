@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version='1.0' encoding='utf-8'?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -86,7 +86,7 @@
     <value>Daily Trends</value>
   </data>
   <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>📊 Day-by-day usage</value>
+    <value>ðŸ“Š Day-by-day usage</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
     <value>Orange line = previous period average</value>
@@ -125,7 +125,7 @@
     <value>Settings</value>
   </data>
   <data name="Settings_AppRuntime.Text" xml:space="preserve">
-    <value>Ħin tal-App</value>
+    <value>Ä¦in tal-App</value>
   </data>
   <data name="Settings_RunOnStartup.Text" xml:space="preserve">
     <value>Run on Startup</value>
@@ -140,7 +140,7 @@
     <value>Minimize the app to tray on exit instead of closing.</value>
   </data>
   <data name="Settings_UsageData.Text" xml:space="preserve">
-    <value>Dejta tal-Użu</value>
+    <value>Dejta tal-UÅ¼u</value>
   </data>
   <data name="Settings_IncognitoMode.Text" xml:space="preserve">
     <value>Incognito Mode</value>
@@ -251,34 +251,34 @@
     <value>Created by David Cepero</value>
   </data>
   <data name="Settings_Copyright.Text" xml:space="preserve">
-    <value>Copyright © 2025. All rights reserved.</value>
+    <value>Copyright Â© 2025. All rights reserved.</value>
   </data>
   <data name="Settings_SourceCode.Content" xml:space="preserve">
     <value>Source Code (GitHub)</value>
   </data>
   <data name="Settings_AppVersion" xml:space="preserve">
-    <value>Verżjoni {0}</value>
+    <value>VerÅ¼joni {0}</value>
   </data>
   <data name="Nav_Dashboard.Content" xml:space="preserve">
     <value>Dashboard</value>
   </data>
   <data name="Nav_History.Content" xml:space="preserve">
-    <value>Analiżi tad-Distribuzzjoni</value>
+    <value>AnaliÅ¼i tad-Distribuzzjoni</value>
   </data>
   <data name="Nav_Sessions.Content" xml:space="preserve">
-    <value>Użu Dettaljat</value>
+    <value>UÅ¼u Dettaljat</value>
   </data>
   <data name="Tray_Open.Text" xml:space="preserve">
-    <value>Iftaħ</value>
+    <value>IftaÄ§</value>
   </data>
   <data name="Tray_Settings.Text" xml:space="preserve">
     <value>Settings</value>
   </data>
   <data name="Tray_Exit.Text" xml:space="preserve">
-    <value>Oħroġ</value>
+    <value>OÄ§roÄ¡</value>
   </data>
   <data name="Dashboard_SetTimeLimit.Text" xml:space="preserve">
-    <value>Issettja Limitu ta' Ħin</value>
+    <value>Issettja Limitu ta' Ä¦in</value>
   </data>
   <data name="Dashboard_SetCategory.Text" xml:space="preserve">
     <value>Issettja Kategorija</value>
@@ -290,22 +290,22 @@
     <value>Ikona Personalizzata...</value>
   </data>
   <data name="Dashboard_ExcludeApp.Text" xml:space="preserve">
-    <value>Eskluż App</value>
+    <value>EskluÅ¼ App</value>
   </data>
   <data name="Dashboard_Total.Text" xml:space="preserve">
     <value>Total:</value>
   </data>
   <data name="Dashboard_DailyActivity.Text" xml:space="preserve">
-    <value>Attività ta' Kuljum</value>
+    <value>AttivitÃ  ta' Kuljum</value>
   </data>
   <data name="Dashboard_UsageSummary.Text" xml:space="preserve">
-    <value>Sommarju tal-Użu</value>
+    <value>Sommarju tal-UÅ¼u</value>
   </data>
   <data name="Dashboard_TabActiveWindows.Header" xml:space="preserve">
-    <value>📊 Active Windows</value>
+    <value>ðŸ“Š Active Windows</value>
   </data>
   <data name="Dashboard_TabBackgroundAudio.Header" xml:space="preserve">
-    <value>🔊 Background Audio</value>
+    <value>ðŸ”Š Background Audio</value>
   </data>
   <data name="Dashboard_AudioDesc.Text" xml:space="preserve">
     <value>Apps playing audio while not in focus</value>
@@ -323,15 +323,18 @@
     <value>(not counted)</value>
   </data>
   <data name="Sessions_Title.Text" xml:space="preserve">
-    <value>Kronoloġija</value>
+    <value>KronoloÄ¡ija</value>
   </data>
   <data name="Sessions_Subtitle.Text" xml:space="preserve">
-    <value>Viżwalizza l-ġurnata tiegħek.</value>
+    <value>ViÅ¼walizza l-Ä¡urnata tiegÄ§ek.</value>
   </data>
   <data name="Sessions_ZoomOut.Content" xml:space="preserve">
     <value>Zoom Out</value>
   </data>
   <data name="Sessions_ZoomIn.Content" xml:space="preserve">
     <value>Zoom In</value>
+  </data>
+  <data name="History_Activity" xml:space="preserve">
+    <value>Activity</value>
   </data>
 </root>
