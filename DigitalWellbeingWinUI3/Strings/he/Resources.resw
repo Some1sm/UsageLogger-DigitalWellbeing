@@ -86,7 +86,7 @@
     <value>Daily Trends</value>
   </data>
   <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>ðŸ“Š Day-by-day usage</value>
+    <value>📊 Day-by-day usage</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
     <value>Orange line = previous period average</value>
@@ -122,10 +122,10 @@
     <value>Apply Changes</value>
   </data>
   <data name="Settings_Title.Text" xml:space="preserve">
-    <value>×”×’×“×¨×•×ª</value>
+    <value>הגדרות</value>
   </data>
   <data name="Settings_AppRuntime.Text" xml:space="preserve">
-    <value>×–×ž×Ÿ ×¨×™×¦×”</value>
+    <value>זמן ריצה</value>
   </data>
   <data name="Settings_RunOnStartup.Text" xml:space="preserve">
     <value>Run on Startup</value>
@@ -140,7 +140,7 @@
     <value>Minimize the app to tray on exit instead of closing.</value>
   </data>
   <data name="Settings_UsageData.Text" xml:space="preserve">
-    <value>× ×ª×•× ×™ ×©×™×ž×•×©</value>
+    <value>נתוני שימוש</value>
   </data>
   <data name="Settings_IncognitoMode.Text" xml:space="preserve">
     <value>Incognito Mode</value>
@@ -161,7 +161,7 @@
     <value>Double-click to remove time limit.</value>
   </data>
   <data name="Settings_Display.Text" xml:space="preserve">
-    <value>×ª×¦×•×’×”</value>
+    <value>תצוגה</value>
   </data>
   <data name="Settings_DaysToShow.Text" xml:space="preserve">
     <value>Days to show on graph</value>
@@ -212,7 +212,7 @@
     <value>Show Active Windows and Background Audio on same page instead of tabs.</value>
   </data>
   <data name="Settings_Data.Text" xml:space="preserve">
-    <value>× ×ª×•× ×™×</value>
+    <value>נתונים</value>
   </data>
   <data name="Settings_LogStorage.Text" xml:space="preserve">
     <value>Log Storage Location</value>
@@ -236,7 +236,7 @@
     <value>How often usage data in RAM is saved to disk. Lower values = more disk writes but better recovery on crash (Default 300s = 5 min).</value>
   </data>
   <data name="Settings_AppTags.Text" xml:space="preserve">
-    <value>×ª×’×™×</value>
+    <value>תגים</value>
   </data>
   <data name="Settings_ManageTags.Text" xml:space="preserve">
     <value>Manage Categories and Colors</value>
@@ -245,67 +245,67 @@
     <value>Add Tag</value>
   </data>
   <data name="Settings_About.Text" xml:space="preserve">
-    <value>××•×“×•×ª</value>
+    <value>אודות</value>
   </data>
   <data name="Settings_CreatedBy.Text" xml:space="preserve">
     <value>Created by David Cepero</value>
   </data>
   <data name="Settings_Copyright.Text" xml:space="preserve">
-    <value>Copyright Â© 2025. All rights reserved.</value>
+    <value>Copyright © 2025. All rights reserved.</value>
   </data>
   <data name="Settings_SourceCode.Content" xml:space="preserve">
     <value>Source Code (GitHub)</value>
   </data>
   <data name="Settings_AppVersion" xml:space="preserve">
-    <value>×’×¨×¡×” {0}</value>
+    <value>גרסה {0}</value>
   </data>
   <data name="Nav_Dashboard.Content" xml:space="preserve">
-    <value>×œ×•×— ×‘×§×¨×”</value>
+    <value>לוח בקרה</value>
   </data>
   <data name="Nav_History.Content" xml:space="preserve">
-    <value>× ×™×ª×•×— ×”×ª×¤×œ×’×•×ª</value>
+    <value>ניתוח התפלגות</value>
   </data>
   <data name="Nav_Sessions.Content" xml:space="preserve">
-    <value>×©×™×ž×•×© ×ž×¤×•×¨×˜</value>
+    <value>שימוש מפורט</value>
   </data>
   <data name="Tray_Open.Text" xml:space="preserve">
-    <value>×¤×ª×—</value>
+    <value>פתח</value>
   </data>
   <data name="Tray_Settings.Text" xml:space="preserve">
-    <value>×”×’×“×¨×•×ª</value>
+    <value>הגדרות</value>
   </data>
   <data name="Tray_Exit.Text" xml:space="preserve">
-    <value>×™×¦×™××”</value>
+    <value>יציאה</value>
   </data>
   <data name="Dashboard_SetTimeLimit.Text" xml:space="preserve">
-    <value>×”×’×“×¨ ×ž×’×‘×œ×ª ×–×ž×Ÿ</value>
+    <value>הגדר מגבלת זמן</value>
   </data>
   <data name="Dashboard_SetCategory.Text" xml:space="preserve">
-    <value>×”×’×“×¨ ×§×˜×’×•×¨×™×”</value>
+    <value>הגדר קטגוריה</value>
   </data>
   <data name="Dashboard_SetDisplayName.Text" xml:space="preserve">
-    <value>×”×’×“×¨ ×©× ×ª×¦×•×’×”...</value>
+    <value>הגדר שם תצוגה...</value>
   </data>
   <data name="Dashboard_SetCustomIcon.Text" xml:space="preserve">
-    <value>×¡×ž×œ ×ž×•×ª×× ××™×©×™×ª...</value>
+    <value>סמל מותאם אישית...</value>
   </data>
   <data name="Dashboard_ExcludeApp.Text" xml:space="preserve">
-    <value>×”×—×¨×’ ××¤×œ×™×§×¦×™×”</value>
+    <value>החרג אפליקציה</value>
   </data>
   <data name="Dashboard_Total.Text" xml:space="preserve">
-    <value>×¡×”"×›:</value>
+    <value>סה"כ:</value>
   </data>
   <data name="Dashboard_DailyActivity.Text" xml:space="preserve">
-    <value>×¤×¢×™×œ×•×ª ×™×•×ž×™×ª</value>
+    <value>פעילות יומית</value>
   </data>
   <data name="Dashboard_UsageSummary.Text" xml:space="preserve">
-    <value>×¡×™×›×•× ×©×™×ž×•×©</value>
+    <value>סיכום שימוש</value>
   </data>
   <data name="Dashboard_TabActiveWindows.Header" xml:space="preserve">
-    <value>ðŸ“Š Active Windows</value>
+    <value>📊 Active Windows</value>
   </data>
   <data name="Dashboard_TabBackgroundAudio.Header" xml:space="preserve">
-    <value>ðŸ”Š Background Audio</value>
+    <value>🔊 Background Audio</value>
   </data>
   <data name="Dashboard_AudioDesc.Text" xml:space="preserve">
     <value>Apps playing audio while not in focus</value>
@@ -314,19 +314,19 @@
     <value>No background audio detected</value>
   </data>
   <data name="Dashboard_ActiveWindows.Text" xml:space="preserve">
-    <value>×—×œ×•× ×•×ª ×¤×¢×™×œ×™×</value>
+    <value>חלונות פעילים</value>
   </data>
   <data name="Dashboard_BackgroundAudio.Text" xml:space="preserve">
-    <value>×©×ž×¢ ×‘×¨×§×¢</value>
+    <value>שמע ברקע</value>
   </data>
   <data name="Dashboard_NotCounted.Text" xml:space="preserve">
     <value>(not counted)</value>
   </data>
   <data name="Sessions_Title.Text" xml:space="preserve">
-    <value>×¦×™×¨ ×–×ž×Ÿ</value>
+    <value>ציר זמן</value>
   </data>
   <data name="Sessions_Subtitle.Text" xml:space="preserve">
-    <value>×”×¦×’ ××ª ×”×™×•× ×©×œ×š.</value>
+    <value>הצג את היום שלך.</value>
   </data>
   <data name="Sessions_ZoomOut.Content" xml:space="preserve">
     <value>Zoom Out</value>

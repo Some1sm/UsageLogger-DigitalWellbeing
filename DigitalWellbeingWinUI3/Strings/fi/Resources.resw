@@ -86,7 +86,7 @@
     <value>Daily Trends</value>
   </data>
   <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>ðŸ“Š Day-by-day usage</value>
+    <value>📊 Day-by-day usage</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
     <value>Orange line = previous period average</value>
@@ -140,7 +140,7 @@
     <value>Minimize the app to tray on exit instead of closing.</value>
   </data>
   <data name="Settings_UsageData.Text" xml:space="preserve">
-    <value>KÃ¤yttÃ¶tiedot</value>
+    <value>Käyttötiedot</value>
   </data>
   <data name="Settings_IncognitoMode.Text" xml:space="preserve">
     <value>Incognito Mode</value>
@@ -161,7 +161,7 @@
     <value>Double-click to remove time limit.</value>
   </data>
   <data name="Settings_Display.Text" xml:space="preserve">
-    <value>NÃ¤yttÃ¶</value>
+    <value>Näyttö</value>
   </data>
   <data name="Settings_DaysToShow.Text" xml:space="preserve">
     <value>Days to show on graph</value>
@@ -251,7 +251,7 @@
     <value>Created by David Cepero</value>
   </data>
   <data name="Settings_Copyright.Text" xml:space="preserve">
-    <value>Copyright Â© 2025. All rights reserved.</value>
+    <value>Copyright © 2025. All rights reserved.</value>
   </data>
   <data name="Settings_SourceCode.Content" xml:space="preserve">
     <value>Source Code (GitHub)</value>
@@ -266,7 +266,7 @@
     <value>Jakauma-analyysi</value>
   </data>
   <data name="Nav_Sessions.Content" xml:space="preserve">
-    <value>Yksityiskohtainen kÃ¤yttÃ¶</value>
+    <value>Yksityiskohtainen käyttö</value>
   </data>
   <data name="Tray_Open.Text" xml:space="preserve">
     <value>Avaa</value>
@@ -284,7 +284,7 @@
     <value>Aseta luokka</value>
   </data>
   <data name="Dashboard_SetDisplayName.Text" xml:space="preserve">
-    <value>Aseta nÃ¤yttÃ¶nimi...</value>
+    <value>Aseta näyttönimi...</value>
   </data>
   <data name="Dashboard_SetCustomIcon.Text" xml:space="preserve">
     <value>Mukautettu kuvake...</value>
@@ -293,19 +293,19 @@
     <value>Sulje pois sovellus</value>
   </data>
   <data name="Dashboard_Total.Text" xml:space="preserve">
-    <value>YhteensÃ¤:</value>
+    <value>Yhteensä:</value>
   </data>
   <data name="Dashboard_DailyActivity.Text" xml:space="preserve">
-    <value>PÃ¤ivittÃ¤inen toiminta</value>
+    <value>Päivittäinen toiminta</value>
   </data>
   <data name="Dashboard_UsageSummary.Text" xml:space="preserve">
-    <value>KÃ¤ytÃ¶n yhteenveto</value>
+    <value>Käytön yhteenveto</value>
   </data>
   <data name="Dashboard_TabActiveWindows.Header" xml:space="preserve">
-    <value>ðŸ“Š Active Windows</value>
+    <value>📊 Active Windows</value>
   </data>
   <data name="Dashboard_TabBackgroundAudio.Header" xml:space="preserve">
-    <value>ðŸ”Š Background Audio</value>
+    <value>🔊 Background Audio</value>
   </data>
   <data name="Dashboard_AudioDesc.Text" xml:space="preserve">
     <value>Apps playing audio while not in focus</value>
@@ -317,7 +317,7 @@
     <value>Aktiiviset ikkunat</value>
   </data>
   <data name="Dashboard_BackgroundAudio.Text" xml:space="preserve">
-    <value>TaustaÃ¤Ã¤ni</value>
+    <value>Taustaääni</value>
   </data>
   <data name="Dashboard_NotCounted.Text" xml:space="preserve">
     <value>(not counted)</value>
@@ -326,7 +326,7 @@
     <value>Aikajana</value>
   </data>
   <data name="Sessions_Subtitle.Text" xml:space="preserve">
-    <value>Visualisoi pÃ¤ivÃ¤si.</value>
+    <value>Visualisoi päiväsi.</value>
   </data>
   <data name="Sessions_ZoomOut.Content" xml:space="preserve">
     <value>Zoom Out</value>

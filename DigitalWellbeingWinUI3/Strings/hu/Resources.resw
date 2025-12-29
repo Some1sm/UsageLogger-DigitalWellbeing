@@ -86,7 +86,7 @@
     <value>Daily Trends</value>
   </data>
   <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>ðŸ“Š Day-by-day usage</value>
+    <value>📊 Day-by-day usage</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
     <value>Orange line = previous period average</value>
@@ -122,10 +122,10 @@
     <value>Apply Changes</value>
   </data>
   <data name="Settings_Title.Text" xml:space="preserve">
-    <value>BeÃ¡llÃ­tÃ¡sok</value>
+    <value>Beállítások</value>
   </data>
   <data name="Settings_AppRuntime.Text" xml:space="preserve">
-    <value>FutÃ¡sidÅ‘</value>
+    <value>Futásidő</value>
   </data>
   <data name="Settings_RunOnStartup.Text" xml:space="preserve">
     <value>Run on Startup</value>
@@ -140,7 +140,7 @@
     <value>Minimize the app to tray on exit instead of closing.</value>
   </data>
   <data name="Settings_UsageData.Text" xml:space="preserve">
-    <value>HasznÃ¡lati adatok</value>
+    <value>Használati adatok</value>
   </data>
   <data name="Settings_IncognitoMode.Text" xml:space="preserve">
     <value>Incognito Mode</value>
@@ -161,7 +161,7 @@
     <value>Double-click to remove time limit.</value>
   </data>
   <data name="Settings_Display.Text" xml:space="preserve">
-    <value>MegjelenÃ­tÃ©s</value>
+    <value>Megjelenítés</value>
   </data>
   <data name="Settings_DaysToShow.Text" xml:space="preserve">
     <value>Days to show on graph</value>
@@ -236,7 +236,7 @@
     <value>How often usage data in RAM is saved to disk. Lower values = more disk writes but better recovery on crash (Default 300s = 5 min).</value>
   </data>
   <data name="Settings_AppTags.Text" xml:space="preserve">
-    <value>CÃ­mkÃ©k</value>
+    <value>Címkék</value>
   </data>
   <data name="Settings_ManageTags.Text" xml:space="preserve">
     <value>Manage Categories and Colors</value>
@@ -245,67 +245,67 @@
     <value>Add Tag</value>
   </data>
   <data name="Settings_About.Text" xml:space="preserve">
-    <value>NÃ©vjegy</value>
+    <value>Névjegy</value>
   </data>
   <data name="Settings_CreatedBy.Text" xml:space="preserve">
     <value>Created by David Cepero</value>
   </data>
   <data name="Settings_Copyright.Text" xml:space="preserve">
-    <value>Copyright Â© 2025. All rights reserved.</value>
+    <value>Copyright © 2025. All rights reserved.</value>
   </data>
   <data name="Settings_SourceCode.Content" xml:space="preserve">
     <value>Source Code (GitHub)</value>
   </data>
   <data name="Settings_AppVersion" xml:space="preserve">
-    <value>VerziÃ³ {0}</value>
+    <value>Verzió {0}</value>
   </data>
   <data name="Nav_Dashboard.Content" xml:space="preserve">
-    <value>IrÃ¡nyÃ­tÃ³pult</value>
+    <value>Irányítópult</value>
   </data>
   <data name="Nav_History.Content" xml:space="preserve">
-    <value>EloszlÃ¡s elemzÃ©s</value>
+    <value>Eloszlás elemzés</value>
   </data>
   <data name="Nav_Sessions.Content" xml:space="preserve">
-    <value>RÃ©szletes hasznÃ¡lat</value>
+    <value>Részletes használat</value>
   </data>
   <data name="Tray_Open.Text" xml:space="preserve">
-    <value>MegnyitÃ¡s</value>
+    <value>Megnyitás</value>
   </data>
   <data name="Tray_Settings.Text" xml:space="preserve">
-    <value>BeÃ¡llÃ­tÃ¡sok</value>
+    <value>Beállítások</value>
   </data>
   <data name="Tray_Exit.Text" xml:space="preserve">
-    <value>KilÃ©pÃ©s</value>
+    <value>Kilépés</value>
   </data>
   <data name="Dashboard_SetTimeLimit.Text" xml:space="preserve">
-    <value>IdÅ‘korlÃ¡t beÃ¡llÃ­tÃ¡sa</value>
+    <value>Időkorlát beállítása</value>
   </data>
   <data name="Dashboard_SetCategory.Text" xml:space="preserve">
-    <value>KategÃ³ria beÃ¡llÃ­tÃ¡sa</value>
+    <value>Kategória beállítása</value>
   </data>
   <data name="Dashboard_SetDisplayName.Text" xml:space="preserve">
-    <value>MegjelenÃ­tett nÃ©v...</value>
+    <value>Megjelenített név...</value>
   </data>
   <data name="Dashboard_SetCustomIcon.Text" xml:space="preserve">
-    <value>EgyÃ©ni ikon...</value>
+    <value>Egyéni ikon...</value>
   </data>
   <data name="Dashboard_ExcludeApp.Text" xml:space="preserve">
-    <value>AlkalmazÃ¡s kizÃ¡rÃ¡sa</value>
+    <value>Alkalmazás kizárása</value>
   </data>
   <data name="Dashboard_Total.Text" xml:space="preserve">
-    <value>Ã–sszesen:</value>
+    <value>Összesen:</value>
   </data>
   <data name="Dashboard_DailyActivity.Text" xml:space="preserve">
-    <value>Napi tevÃ©kenysÃ©g</value>
+    <value>Napi tevékenység</value>
   </data>
   <data name="Dashboard_UsageSummary.Text" xml:space="preserve">
-    <value>HasznÃ¡lati Ã¶sszefoglalÃ³</value>
+    <value>Használati összefoglaló</value>
   </data>
   <data name="Dashboard_TabActiveWindows.Header" xml:space="preserve">
-    <value>ðŸ“Š Active Windows</value>
+    <value>📊 Active Windows</value>
   </data>
   <data name="Dashboard_TabBackgroundAudio.Header" xml:space="preserve">
-    <value>ðŸ”Š Background Audio</value>
+    <value>🔊 Background Audio</value>
   </data>
   <data name="Dashboard_AudioDesc.Text" xml:space="preserve">
     <value>Apps playing audio while not in focus</value>
@@ -314,19 +314,19 @@
     <value>No background audio detected</value>
   </data>
   <data name="Dashboard_ActiveWindows.Text" xml:space="preserve">
-    <value>AktÃ­v ablakok</value>
+    <value>Aktív ablakok</value>
   </data>
   <data name="Dashboard_BackgroundAudio.Text" xml:space="preserve">
-    <value>HÃ¡ttÃ©rhang</value>
+    <value>Háttérhang</value>
   </data>
   <data name="Dashboard_NotCounted.Text" xml:space="preserve">
     <value>(not counted)</value>
   </data>
   <data name="Sessions_Title.Text" xml:space="preserve">
-    <value>IdÅ‘vonal</value>
+    <value>Idővonal</value>
   </data>
   <data name="Sessions_Subtitle.Text" xml:space="preserve">
-    <value>VizualizÃ¡lja a napjÃ¡t.</value>
+    <value>Vizualizálja a napját.</value>
   </data>
   <data name="Sessions_ZoomOut.Content" xml:space="preserve">
     <value>Zoom Out</value>

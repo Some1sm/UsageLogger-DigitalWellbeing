@@ -86,7 +86,7 @@
     <value>Daily Trends</value>
   </data>
   <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>ðŸ“Š Day-by-day usage</value>
+    <value>📊 Day-by-day usage</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
     <value>Orange line = previous period average</value>
@@ -122,10 +122,10 @@
     <value>Apply Changes</value>
   </data>
   <data name="Settings_Title.Text" xml:space="preserve">
-    <value>è¨­å®š</value>
+    <value>設定</value>
   </data>
   <data name="Settings_AppRuntime.Text" xml:space="preserve">
-    <value>ã‚¢ãƒ—ãƒªã®å®Ÿè¡Œ</value>
+    <value>アプリの実行</value>
   </data>
   <data name="Settings_RunOnStartup.Text" xml:space="preserve">
     <value>Run on Startup</value>
@@ -140,7 +140,7 @@
     <value>Minimize the app to tray on exit instead of closing.</value>
   </data>
   <data name="Settings_UsageData.Text" xml:space="preserve">
-    <value>ä½¿ç”¨ãƒ‡ãƒ¼ã‚¿</value>
+    <value>使用データ</value>
   </data>
   <data name="Settings_IncognitoMode.Text" xml:space="preserve">
     <value>Incognito Mode</value>
@@ -161,7 +161,7 @@
     <value>Double-click to remove time limit.</value>
   </data>
   <data name="Settings_Display.Text" xml:space="preserve">
-    <value>è¡¨ç¤º</value>
+    <value>表示</value>
   </data>
   <data name="Settings_DaysToShow.Text" xml:space="preserve">
     <value>Days to show on graph</value>
@@ -212,7 +212,7 @@
     <value>Show Active Windows and Background Audio on same page instead of tabs.</value>
   </data>
   <data name="Settings_Data.Text" xml:space="preserve">
-    <value>ãƒ‡ãƒ¼ã‚¿</value>
+    <value>データ</value>
   </data>
   <data name="Settings_LogStorage.Text" xml:space="preserve">
     <value>Log Storage Location</value>
@@ -236,7 +236,7 @@
     <value>How often usage data in RAM is saved to disk. Lower values = more disk writes but better recovery on crash (Default 300s = 5 min).</value>
   </data>
   <data name="Settings_AppTags.Text" xml:space="preserve">
-    <value>ã‚¢ãƒ—ãƒªã‚¿ã‚°</value>
+    <value>アプリタグ</value>
   </data>
   <data name="Settings_ManageTags.Text" xml:space="preserve">
     <value>Manage Categories and Colors</value>
@@ -245,67 +245,67 @@
     <value>Add Tag</value>
   </data>
   <data name="Settings_About.Text" xml:space="preserve">
-    <value>æƒ…å ±</value>
+    <value>情報</value>
   </data>
   <data name="Settings_CreatedBy.Text" xml:space="preserve">
     <value>Created by David Cepero</value>
   </data>
   <data name="Settings_Copyright.Text" xml:space="preserve">
-    <value>Copyright Â© 2025. All rights reserved.</value>
+    <value>Copyright © 2025. All rights reserved.</value>
   </data>
   <data name="Settings_SourceCode.Content" xml:space="preserve">
     <value>Source Code (GitHub)</value>
   </data>
   <data name="Settings_AppVersion" xml:space="preserve">
-    <value>ãƒãƒ¼ã‚¸ãƒ§ãƒ³ {0}</value>
+    <value>バージョン {0}</value>
   </data>
   <data name="Nav_Dashboard.Content" xml:space="preserve">
-    <value>ãƒ€ãƒƒã‚·ãƒ¥ãƒœãƒ¼ãƒ‰</value>
+    <value>ダッシュボード</value>
   </data>
   <data name="Nav_History.Content" xml:space="preserve">
-    <value>åˆ†å¸ƒåˆ†æž</value>
+    <value>分布分析</value>
   </data>
   <data name="Nav_Sessions.Content" xml:space="preserve">
-    <value>è©³ç´°ãªä½¿ç”¨çŠ¶æ³</value>
+    <value>詳細な使用状況</value>
   </data>
   <data name="Tray_Open.Text" xml:space="preserve">
-    <value>é–‹ã</value>
+    <value>開く</value>
   </data>
   <data name="Tray_Settings.Text" xml:space="preserve">
-    <value>è¨­å®š</value>
+    <value>設定</value>
   </data>
   <data name="Tray_Exit.Text" xml:space="preserve">
-    <value>çµ‚äº†</value>
+    <value>終了</value>
   </data>
   <data name="Dashboard_SetTimeLimit.Text" xml:space="preserve">
-    <value>æ™‚é–“åˆ¶é™ã®è¨­å®š</value>
+    <value>時間制限の設定</value>
   </data>
   <data name="Dashboard_SetCategory.Text" xml:space="preserve">
-    <value>ã‚«ãƒ†ã‚´ãƒªã®è¨­å®š</value>
+    <value>カテゴリの設定</value>
   </data>
   <data name="Dashboard_SetDisplayName.Text" xml:space="preserve">
-    <value>è¡¨ç¤ºåã®è¨­å®š...</value>
+    <value>表示名の設定...</value>
   </data>
   <data name="Dashboard_SetCustomIcon.Text" xml:space="preserve">
-    <value>ã‚«ã‚¹ã‚¿ãƒ ã‚¢ã‚¤ã‚³ãƒ³...</value>
+    <value>カスタムアイコン...</value>
   </data>
   <data name="Dashboard_ExcludeApp.Text" xml:space="preserve">
-    <value>ã‚¢ãƒ—ãƒªã‚’é™¤å¤–</value>
+    <value>アプリを除外</value>
   </data>
   <data name="Dashboard_Total.Text" xml:space="preserve">
-    <value>åˆè¨ˆ:</value>
+    <value>合計:</value>
   </data>
   <data name="Dashboard_DailyActivity.Text" xml:space="preserve">
-    <value>æ¯Žæ—¥ã®æ´»å‹•</value>
+    <value>毎日の活動</value>
   </data>
   <data name="Dashboard_UsageSummary.Text" xml:space="preserve">
-    <value>ä½¿ç”¨çŠ¶æ³ã®æ¦‚è¦</value>
+    <value>使用状況の概要</value>
   </data>
   <data name="Dashboard_TabActiveWindows.Header" xml:space="preserve">
-    <value>ðŸ“Š Active Windows</value>
+    <value>📊 Active Windows</value>
   </data>
   <data name="Dashboard_TabBackgroundAudio.Header" xml:space="preserve">
-    <value>ðŸ”Š Background Audio</value>
+    <value>🔊 Background Audio</value>
   </data>
   <data name="Dashboard_AudioDesc.Text" xml:space="preserve">
     <value>Apps playing audio while not in focus</value>
@@ -314,19 +314,19 @@
     <value>No background audio detected</value>
   </data>
   <data name="Dashboard_ActiveWindows.Text" xml:space="preserve">
-    <value>ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ãªã‚¦ã‚£ãƒ³ãƒ‰ã‚¦</value>
+    <value>アクティブなウィンドウ</value>
   </data>
   <data name="Dashboard_BackgroundAudio.Text" xml:space="preserve">
-    <value>ãƒãƒƒã‚¯ã‚°ãƒ©ã‚¦ãƒ³ãƒ‰ã‚ªãƒ¼ãƒ‡ã‚£ã‚ª</value>
+    <value>バックグラウンドオーディオ</value>
   </data>
   <data name="Dashboard_NotCounted.Text" xml:space="preserve">
     <value>(not counted)</value>
   </data>
   <data name="Sessions_Title.Text" xml:space="preserve">
-    <value>ã‚¿ã‚¤ãƒ ãƒ©ã‚¤ãƒ³</value>
+    <value>タイムライン</value>
   </data>
   <data name="Sessions_Subtitle.Text" xml:space="preserve">
-    <value>ä¸€æ—¥ã‚’è¦–è¦šåŒ–ã—ã¾ã™ã€‚</value>
+    <value>一日を視覚化します。</value>
   </data>
   <data name="Sessions_ZoomOut.Content" xml:space="preserve">
     <value>Zoom Out</value>

@@ -86,7 +86,7 @@
     <value>Daily Trends</value>
   </data>
   <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>ðŸ“Š Day-by-day usage</value>
+    <value>📊 Day-by-day usage</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
     <value>Orange line = previous period average</value>
@@ -122,10 +122,10 @@
     <value>Apply Changes</value>
   </data>
   <data name="Settings_Title.Text" xml:space="preserve">
-    <value>á‰…áŠ•á‰¥áˆ®á‰½</value>
+    <value>ቅንብሮች</value>
   </data>
   <data name="Settings_AppRuntime.Text" xml:space="preserve">
-    <value>á‹¨áˆ˜á‰°áŒá‰ áˆªá‹« áŒŠá‹œ</value>
+    <value>የመተግበሪያ ጊዜ</value>
   </data>
   <data name="Settings_RunOnStartup.Text" xml:space="preserve">
     <value>Run on Startup</value>
@@ -140,7 +140,7 @@
     <value>Minimize the app to tray on exit instead of closing.</value>
   </data>
   <data name="Settings_UsageData.Text" xml:space="preserve">
-    <value>á‹¨áŠ áŒ á‰ƒá‰€áˆ á‹áˆ‚á‰¥</value>
+    <value>የአጠቃቀም ውሂብ</value>
   </data>
   <data name="Settings_IncognitoMode.Text" xml:space="preserve">
     <value>Incognito Mode</value>
@@ -161,7 +161,7 @@
     <value>Double-click to remove time limit.</value>
   </data>
   <data name="Settings_Display.Text" xml:space="preserve">
-    <value>áˆ›áˆ³á‹«</value>
+    <value>ማሳያ</value>
   </data>
   <data name="Settings_DaysToShow.Text" xml:space="preserve">
     <value>Days to show on graph</value>
@@ -212,7 +212,7 @@
     <value>Show Active Windows and Background Audio on same page instead of tabs.</value>
   </data>
   <data name="Settings_Data.Text" xml:space="preserve">
-    <value>á‹áˆ‚á‰¥</value>
+    <value>ውሂብ</value>
   </data>
   <data name="Settings_LogStorage.Text" xml:space="preserve">
     <value>Log Storage Location</value>
@@ -236,7 +236,7 @@
     <value>How often usage data in RAM is saved to disk. Lower values = more disk writes but better recovery on crash (Default 300s = 5 min).</value>
   </data>
   <data name="Settings_AppTags.Text" xml:space="preserve">
-    <value>áˆ˜áˆˆá‹«á‹Žá‰½</value>
+    <value>መለያዎች</value>
   </data>
   <data name="Settings_ManageTags.Text" xml:space="preserve">
     <value>Manage Categories and Colors</value>
@@ -245,67 +245,67 @@
     <value>Add Tag</value>
   </data>
   <data name="Settings_About.Text" xml:space="preserve">
-    <value>áˆµáˆˆ</value>
+    <value>ስለ</value>
   </data>
   <data name="Settings_CreatedBy.Text" xml:space="preserve">
     <value>Created by David Cepero</value>
   </data>
   <data name="Settings_Copyright.Text" xml:space="preserve">
-    <value>Copyright Â© 2025. All rights reserved.</value>
+    <value>Copyright © 2025. All rights reserved.</value>
   </data>
   <data name="Settings_SourceCode.Content" xml:space="preserve">
     <value>Source Code (GitHub)</value>
   </data>
   <data name="Settings_AppVersion" xml:space="preserve">
-    <value>áˆµáˆªá‰µ {0}</value>
+    <value>ስሪት {0}</value>
   </data>
   <data name="Nav_Dashboard.Content" xml:space="preserve">
-    <value>á‹³áˆ½á‰¦áˆ­á‹µ</value>
+    <value>ዳሽቦርድ</value>
   </data>
   <data name="Nav_History.Content" xml:space="preserve">
-    <value>áˆµáˆ­áŒ­á‰µ á‰µáŠ•á‰°áŠ“</value>
+    <value>ስርጭት ትንተና</value>
   </data>
   <data name="Nav_Sessions.Content" xml:space="preserve">
-    <value>á‹áˆ­á‹áˆ­ áŠ áŒ á‰ƒá‰€áˆ</value>
+    <value>ዝርዝር አጠቃቀም</value>
   </data>
   <data name="Tray_Open.Text" xml:space="preserve">
-    <value>áŠ­áˆá‰µ</value>
+    <value>ክፈት</value>
   </data>
   <data name="Tray_Settings.Text" xml:space="preserve">
-    <value>á‰…áŠ•á‰¥áˆ®á‰½</value>
+    <value>ቅንብሮች</value>
   </data>
   <data name="Tray_Exit.Text" xml:space="preserve">
-    <value>á‹áŒ£</value>
+    <value>ውጣ</value>
   </data>
   <data name="Dashboard_SetTimeLimit.Text" xml:space="preserve">
-    <value>á‹¨áŒŠá‹œ áŒˆá‹°á‰¥ áŠ á‹˜áŒ‹áŒ…</value>
+    <value>የጊዜ ገደብ አዘጋጅ</value>
   </data>
   <data name="Dashboard_SetCategory.Text" xml:space="preserve">
-    <value>áˆá‹µá‰¥ áŠ á‹˜áŒ‹áŒ…</value>
+    <value>ምድብ አዘጋጅ</value>
   </data>
   <data name="Dashboard_SetDisplayName.Text" xml:space="preserve">
-    <value>á‹¨áˆ›áˆ³á‹« áˆµáˆ áŠ á‹˜áŒ‹áŒ…...</value>
+    <value>የማሳያ ስም አዘጋጅ...</value>
   </data>
   <data name="Dashboard_SetCustomIcon.Text" xml:space="preserve">
-    <value>á‰¥áŒ áŠ á‹¶...</value>
+    <value>ብጁ አዶ...</value>
   </data>
   <data name="Dashboard_ExcludeApp.Text" xml:space="preserve">
-    <value>áˆ˜á‰°áŒá‰ áˆªá‹«áŠ• áŠ áŒáˆáˆ</value>
+    <value>መተግበሪያን አግልል</value>
   </data>
   <data name="Dashboard_Total.Text" xml:space="preserve">
-    <value>áŒ á‰…áˆ‹áˆ‹:</value>
+    <value>ጠቅላላ:</value>
   </data>
   <data name="Dashboard_DailyActivity.Text" xml:space="preserve">
-    <value>á‹•áˆˆá‰³á‹Š áŠ¥áŠ•á‰…áˆµá‰ƒáˆ´</value>
+    <value>ዕለታዊ እንቅስቃሴ</value>
   </data>
   <data name="Dashboard_UsageSummary.Text" xml:space="preserve">
-    <value>á‹¨áŠ áŒ á‰ƒá‰€áˆ áˆ›áŒ á‰ƒáˆˆá‹«</value>
+    <value>የአጠቃቀም ማጠቃለያ</value>
   </data>
   <data name="Dashboard_TabActiveWindows.Header" xml:space="preserve">
-    <value>ðŸ“Š Active Windows</value>
+    <value>📊 Active Windows</value>
   </data>
   <data name="Dashboard_TabBackgroundAudio.Header" xml:space="preserve">
-    <value>ðŸ”Š Background Audio</value>
+    <value>🔊 Background Audio</value>
   </data>
   <data name="Dashboard_AudioDesc.Text" xml:space="preserve">
     <value>Apps playing audio while not in focus</value>
@@ -314,19 +314,19 @@
     <value>No background audio detected</value>
   </data>
   <data name="Dashboard_ActiveWindows.Text" xml:space="preserve">
-    <value>áŠ•á‰ áˆ˜áˆµáŠ®á‰¶á‰½</value>
+    <value>ንቁ መስኮቶች</value>
   </data>
   <data name="Dashboard_BackgroundAudio.Text" xml:space="preserve">
-    <value>á‹¨á‰ áˆµá‰°áŒ€áˆ­á‰£ áŠ¦á‹²á‹®</value>
+    <value>የበስተጀርባ ኦዲዮ</value>
   </data>
   <data name="Dashboard_NotCounted.Text" xml:space="preserve">
     <value>(not counted)</value>
   </data>
   <data name="Sessions_Title.Text" xml:space="preserve">
-    <value>á‹¨áŒŠá‹œ áˆ˜áˆµáˆ˜áˆ­</value>
+    <value>የጊዜ መስመር</value>
   </data>
   <data name="Sessions_Subtitle.Text" xml:space="preserve">
-    <value>á‰€áŠ•á‹ŽáŠ• á‰ áˆáˆµáˆ á‹­á‹©á¢</value>
+    <value>ቀንዎን በምስል ይዩ።</value>
   </data>
   <data name="Sessions_ZoomOut.Content" xml:space="preserve">
     <value>Zoom Out</value>

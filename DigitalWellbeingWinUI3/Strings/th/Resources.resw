@@ -86,7 +86,7 @@
     <value>Daily Trends</value>
   </data>
   <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>ðŸ“Š Day-by-day usage</value>
+    <value>📊 Day-by-day usage</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
     <value>Orange line = previous period average</value>
@@ -122,10 +122,10 @@
     <value>Apply Changes</value>
   </data>
   <data name="Settings_Title.Text" xml:space="preserve">
-    <value>à¸à¸²à¸£à¸•à¸±à¹‰à¸‡à¸„à¹ˆà¸²</value>
+    <value>การตั้งค่า</value>
   </data>
   <data name="Settings_AppRuntime.Text" xml:space="preserve">
-    <value>à¸£à¸±à¸™à¹„à¸—à¸¡à¹Œà¹à¸­à¸›</value>
+    <value>รันไทม์แอป</value>
   </data>
   <data name="Settings_RunOnStartup.Text" xml:space="preserve">
     <value>Run on Startup</value>
@@ -140,7 +140,7 @@
     <value>Minimize the app to tray on exit instead of closing.</value>
   </data>
   <data name="Settings_UsageData.Text" xml:space="preserve">
-    <value>à¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¸à¸²à¸£à¹ƒà¸Šà¹‰à¸‡à¸²à¸™</value>
+    <value>ข้อมูลการใช้งาน</value>
   </data>
   <data name="Settings_IncognitoMode.Text" xml:space="preserve">
     <value>Incognito Mode</value>
@@ -161,7 +161,7 @@
     <value>Double-click to remove time limit.</value>
   </data>
   <data name="Settings_Display.Text" xml:space="preserve">
-    <value>à¹à¸ªà¸”à¸‡à¸œà¸¥</value>
+    <value>แสดงผล</value>
   </data>
   <data name="Settings_DaysToShow.Text" xml:space="preserve">
     <value>Days to show on graph</value>
@@ -212,7 +212,7 @@
     <value>Show Active Windows and Background Audio on same page instead of tabs.</value>
   </data>
   <data name="Settings_Data.Text" xml:space="preserve">
-    <value>à¸‚à¹‰à¸­à¸¡à¸¹à¸¥</value>
+    <value>ข้อมูล</value>
   </data>
   <data name="Settings_LogStorage.Text" xml:space="preserve">
     <value>Log Storage Location</value>
@@ -236,7 +236,7 @@
     <value>How often usage data in RAM is saved to disk. Lower values = more disk writes but better recovery on crash (Default 300s = 5 min).</value>
   </data>
   <data name="Settings_AppTags.Text" xml:space="preserve">
-    <value>à¹à¸—à¹‡à¸à¹à¸­à¸›</value>
+    <value>แท็กแอป</value>
   </data>
   <data name="Settings_ManageTags.Text" xml:space="preserve">
     <value>Manage Categories and Colors</value>
@@ -245,67 +245,67 @@
     <value>Add Tag</value>
   </data>
   <data name="Settings_About.Text" xml:space="preserve">
-    <value>à¹€à¸à¸µà¹ˆà¸¢à¸§à¸à¸±à¸š</value>
+    <value>เกี่ยวกับ</value>
   </data>
   <data name="Settings_CreatedBy.Text" xml:space="preserve">
     <value>Created by David Cepero</value>
   </data>
   <data name="Settings_Copyright.Text" xml:space="preserve">
-    <value>Copyright Â© 2025. All rights reserved.</value>
+    <value>Copyright © 2025. All rights reserved.</value>
   </data>
   <data name="Settings_SourceCode.Content" xml:space="preserve">
     <value>Source Code (GitHub)</value>
   </data>
   <data name="Settings_AppVersion" xml:space="preserve">
-    <value>à¹€à¸§à¸­à¸£à¹Œà¸Šà¸±à¸™ {0}</value>
+    <value>เวอร์ชัน {0}</value>
   </data>
   <data name="Nav_Dashboard.Content" xml:space="preserve">
-    <value>à¹à¸”à¸Šà¸šà¸­à¸£à¹Œà¸”</value>
+    <value>แดชบอร์ด</value>
   </data>
   <data name="Nav_History.Content" xml:space="preserve">
-    <value>à¸à¸²à¸£à¸§à¸´à¹€à¸„à¸£à¸²à¸°à¸«à¹Œà¸à¸²à¸£à¸à¸£à¸°à¸ˆà¸²à¸¢</value>
+    <value>การวิเคราะห์การกระจาย</value>
   </data>
   <data name="Nav_Sessions.Content" xml:space="preserve">
-    <value>à¸à¸²à¸£à¹ƒà¸Šà¹‰à¸‡à¸²à¸™à¹‚à¸”à¸¢à¸¥à¸°à¹€à¸­à¸µà¸¢à¸”</value>
+    <value>การใช้งานโดยละเอียด</value>
   </data>
   <data name="Tray_Open.Text" xml:space="preserve">
-    <value>à¹€à¸›à¸´à¸”</value>
+    <value>เปิด</value>
   </data>
   <data name="Tray_Settings.Text" xml:space="preserve">
-    <value>à¸à¸²à¸£à¸•à¸±à¹‰à¸‡à¸„à¹ˆà¸²</value>
+    <value>การตั้งค่า</value>
   </data>
   <data name="Tray_Exit.Text" xml:space="preserve">
-    <value>à¸­à¸­à¸</value>
+    <value>ออก</value>
   </data>
   <data name="Dashboard_SetTimeLimit.Text" xml:space="preserve">
-    <value>à¸•à¸±à¹‰à¸‡à¹€à¸§à¸¥à¸²à¸ˆà¸³à¸à¸±à¸”</value>
+    <value>ตั้งเวลาจำกัด</value>
   </data>
   <data name="Dashboard_SetCategory.Text" xml:space="preserve">
-    <value>à¸•à¸±à¹‰à¸‡à¸«à¸¡à¸§à¸”à¸«à¸¡à¸¹à¹ˆ</value>
+    <value>ตั้งหมวดหมู่</value>
   </data>
   <data name="Dashboard_SetDisplayName.Text" xml:space="preserve">
-    <value>à¸•à¸±à¹‰à¸‡à¸Šà¸·à¹ˆà¸­à¸—à¸µà¹ˆà¹à¸ªà¸”à¸‡...</value>
+    <value>ตั้งชื่อที่แสดง...</value>
   </data>
   <data name="Dashboard_SetCustomIcon.Text" xml:space="preserve">
-    <value>à¹„à¸­à¸„à¸­à¸™à¸à¸³à¸«à¸™à¸”à¹€à¸­à¸‡...</value>
+    <value>ไอคอนกำหนดเอง...</value>
   </data>
   <data name="Dashboard_ExcludeApp.Text" xml:space="preserve">
-    <value>à¸¢à¸à¹€à¸§à¹‰à¸™à¹à¸­à¸›</value>
+    <value>ยกเว้นแอป</value>
   </data>
   <data name="Dashboard_Total.Text" xml:space="preserve">
-    <value>à¸£à¸§à¸¡:</value>
+    <value>รวม:</value>
   </data>
   <data name="Dashboard_DailyActivity.Text" xml:space="preserve">
-    <value>à¸à¸´à¸ˆà¸à¸£à¸£à¸¡à¸£à¸²à¸¢à¸§à¸±à¸™</value>
+    <value>กิจกรรมรายวัน</value>
   </data>
   <data name="Dashboard_UsageSummary.Text" xml:space="preserve">
-    <value>à¸ªà¸£à¸¸à¸›à¸à¸²à¸£à¹ƒà¸Šà¹‰à¸‡à¸²à¸™</value>
+    <value>สรุปการใช้งาน</value>
   </data>
   <data name="Dashboard_TabActiveWindows.Header" xml:space="preserve">
-    <value>ðŸ“Š Active Windows</value>
+    <value>📊 Active Windows</value>
   </data>
   <data name="Dashboard_TabBackgroundAudio.Header" xml:space="preserve">
-    <value>ðŸ”Š Background Audio</value>
+    <value>🔊 Background Audio</value>
   </data>
   <data name="Dashboard_AudioDesc.Text" xml:space="preserve">
     <value>Apps playing audio while not in focus</value>
@@ -314,19 +314,19 @@
     <value>No background audio detected</value>
   </data>
   <data name="Dashboard_ActiveWindows.Text" xml:space="preserve">
-    <value>à¸«à¸™à¹‰à¸²à¸•à¹ˆà¸²à¸‡à¸—à¸µà¹ˆà¹ƒà¸Šà¹‰à¸‡à¸²à¸™à¸­à¸¢à¸¹à¹ˆ</value>
+    <value>หน้าต่างที่ใช้งานอยู่</value>
   </data>
   <data name="Dashboard_BackgroundAudio.Text" xml:space="preserve">
-    <value>à¹€à¸ªà¸µà¸¢à¸‡à¸žà¸·à¹‰à¸™à¸«à¸¥à¸±à¸‡</value>
+    <value>เสียงพื้นหลัง</value>
   </data>
   <data name="Dashboard_NotCounted.Text" xml:space="preserve">
     <value>(not counted)</value>
   </data>
   <data name="Sessions_Title.Text" xml:space="preserve">
-    <value>à¹„à¸—à¸¡à¹Œà¹„à¸¥à¸™à¹Œ</value>
+    <value>ไทม์ไลน์</value>
   </data>
   <data name="Sessions_Subtitle.Text" xml:space="preserve">
-    <value>à¹€à¸«à¹‡à¸™à¸ à¸²à¸žà¸§à¸±à¸™à¸‚à¸­à¸‡à¸„à¸¸à¸“</value>
+    <value>เห็นภาพวันของคุณ</value>
   </data>
   <data name="Sessions_ZoomOut.Content" xml:space="preserve">
     <value>Zoom Out</value>

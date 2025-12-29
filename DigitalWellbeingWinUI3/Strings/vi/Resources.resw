@@ -86,7 +86,7 @@
     <value>Daily Trends</value>
   </data>
   <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>ðŸ“Š Day-by-day usage</value>
+    <value>📊 Day-by-day usage</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
     <value>Orange line = previous period average</value>
@@ -122,10 +122,10 @@
     <value>Apply Changes</value>
   </data>
   <data name="Settings_Title.Text" xml:space="preserve">
-    <value>CÃ i Ä‘áº·t</value>
+    <value>Cài đặt</value>
   </data>
   <data name="Settings_AppRuntime.Text" xml:space="preserve">
-    <value>Thá»i gian cháº¡y</value>
+    <value>Thời gian chạy</value>
   </data>
   <data name="Settings_RunOnStartup.Text" xml:space="preserve">
     <value>Run on Startup</value>
@@ -140,7 +140,7 @@
     <value>Minimize the app to tray on exit instead of closing.</value>
   </data>
   <data name="Settings_UsageData.Text" xml:space="preserve">
-    <value>Dá»¯ liá»‡u sá»­ dá»¥ng</value>
+    <value>Dữ liệu sử dụng</value>
   </data>
   <data name="Settings_IncognitoMode.Text" xml:space="preserve">
     <value>Incognito Mode</value>
@@ -161,7 +161,7 @@
     <value>Double-click to remove time limit.</value>
   </data>
   <data name="Settings_Display.Text" xml:space="preserve">
-    <value>Hiá»ƒn thá»‹</value>
+    <value>Hiển thị</value>
   </data>
   <data name="Settings_DaysToShow.Text" xml:space="preserve">
     <value>Days to show on graph</value>
@@ -212,7 +212,7 @@
     <value>Show Active Windows and Background Audio on same page instead of tabs.</value>
   </data>
   <data name="Settings_Data.Text" xml:space="preserve">
-    <value>Dá»¯ liá»‡u</value>
+    <value>Dữ liệu</value>
   </data>
   <data name="Settings_LogStorage.Text" xml:space="preserve">
     <value>Log Storage Location</value>
@@ -236,7 +236,7 @@
     <value>How often usage data in RAM is saved to disk. Lower values = more disk writes but better recovery on crash (Default 300s = 5 min).</value>
   </data>
   <data name="Settings_AppTags.Text" xml:space="preserve">
-    <value>Tháº» á»©ng dá»¥ng</value>
+    <value>Thẻ ứng dụng</value>
   </data>
   <data name="Settings_ManageTags.Text" xml:space="preserve">
     <value>Manage Categories and Colors</value>
@@ -245,67 +245,67 @@
     <value>Add Tag</value>
   </data>
   <data name="Settings_About.Text" xml:space="preserve">
-    <value>Giá»›i thiá»‡u</value>
+    <value>Giới thiệu</value>
   </data>
   <data name="Settings_CreatedBy.Text" xml:space="preserve">
     <value>Created by David Cepero</value>
   </data>
   <data name="Settings_Copyright.Text" xml:space="preserve">
-    <value>Copyright Â© 2025. All rights reserved.</value>
+    <value>Copyright © 2025. All rights reserved.</value>
   </data>
   <data name="Settings_SourceCode.Content" xml:space="preserve">
     <value>Source Code (GitHub)</value>
   </data>
   <data name="Settings_AppVersion" xml:space="preserve">
-    <value>PhiÃªn báº£n {0}</value>
+    <value>Phiên bản {0}</value>
   </data>
   <data name="Nav_Dashboard.Content" xml:space="preserve">
-    <value>Báº£ng Ä‘iá»u khiá»ƒn</value>
+    <value>Bảng điều khiển</value>
   </data>
   <data name="Nav_History.Content" xml:space="preserve">
-    <value>PhÃ¢n tÃ­ch phÃ¢n phá»‘i</value>
+    <value>Phân tích phân phối</value>
   </data>
   <data name="Nav_Sessions.Content" xml:space="preserve">
-    <value>Sá»­ dá»¥ng chi tiáº¿t</value>
+    <value>Sử dụng chi tiết</value>
   </data>
   <data name="Tray_Open.Text" xml:space="preserve">
-    <value>Má»Ÿ</value>
+    <value>Mở</value>
   </data>
   <data name="Tray_Settings.Text" xml:space="preserve">
-    <value>CÃ i Ä‘áº·t</value>
+    <value>Cài đặt</value>
   </data>
   <data name="Tray_Exit.Text" xml:space="preserve">
-    <value>ThoÃ¡t</value>
+    <value>Thoát</value>
   </data>
   <data name="Dashboard_SetTimeLimit.Text" xml:space="preserve">
-    <value>Äáº·t giá»›i háº¡n thá»i gian</value>
+    <value>Đặt giới hạn thời gian</value>
   </data>
   <data name="Dashboard_SetCategory.Text" xml:space="preserve">
-    <value>Äáº·t danh má»¥c</value>
+    <value>Đặt danh mục</value>
   </data>
   <data name="Dashboard_SetDisplayName.Text" xml:space="preserve">
-    <value>Äáº·t tÃªn hiá»ƒn thá»‹...</value>
+    <value>Đặt tên hiển thị...</value>
   </data>
   <data name="Dashboard_SetCustomIcon.Text" xml:space="preserve">
-    <value>Biá»ƒu tÆ°á»£ng tÃ¹y chá»‰nh...</value>
+    <value>Biểu tượng tùy chỉnh...</value>
   </data>
   <data name="Dashboard_ExcludeApp.Text" xml:space="preserve">
-    <value>Loáº¡i trá»« á»©ng dá»¥ng</value>
+    <value>Loại trừ ứng dụng</value>
   </data>
   <data name="Dashboard_Total.Text" xml:space="preserve">
-    <value>Tá»•ng cá»™ng:</value>
+    <value>Tổng cộng:</value>
   </data>
   <data name="Dashboard_DailyActivity.Text" xml:space="preserve">
-    <value>Hoáº¡t Ä‘á»™ng hÃ ng ngÃ y</value>
+    <value>Hoạt động hàng ngày</value>
   </data>
   <data name="Dashboard_UsageSummary.Text" xml:space="preserve">
-    <value>TÃ³m táº¯t sá»­ dá»¥ng</value>
+    <value>Tóm tắt sử dụng</value>
   </data>
   <data name="Dashboard_TabActiveWindows.Header" xml:space="preserve">
-    <value>ðŸ“Š Active Windows</value>
+    <value>📊 Active Windows</value>
   </data>
   <data name="Dashboard_TabBackgroundAudio.Header" xml:space="preserve">
-    <value>ðŸ”Š Background Audio</value>
+    <value>🔊 Background Audio</value>
   </data>
   <data name="Dashboard_AudioDesc.Text" xml:space="preserve">
     <value>Apps playing audio while not in focus</value>
@@ -314,19 +314,19 @@
     <value>No background audio detected</value>
   </data>
   <data name="Dashboard_ActiveWindows.Text" xml:space="preserve">
-    <value>Cá»­a sá»• hoáº¡t Ä‘á»™ng</value>
+    <value>Cửa sổ hoạt động</value>
   </data>
   <data name="Dashboard_BackgroundAudio.Text" xml:space="preserve">
-    <value>Ã‚m thanh ná»n</value>
+    <value>Âm thanh nền</value>
   </data>
   <data name="Dashboard_NotCounted.Text" xml:space="preserve">
     <value>(not counted)</value>
   </data>
   <data name="Sessions_Title.Text" xml:space="preserve">
-    <value>DÃ²ng thá»i gian</value>
+    <value>Dòng thời gian</value>
   </data>
   <data name="Sessions_Subtitle.Text" xml:space="preserve">
-    <value>HÃ¬nh dung ngÃ y cá»§a báº¡n.</value>
+    <value>Hình dung ngày của bạn.</value>
   </data>
   <data name="Sessions_ZoomOut.Content" xml:space="preserve">
     <value>Zoom Out</value>

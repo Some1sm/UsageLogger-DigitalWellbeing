@@ -86,7 +86,7 @@
     <value>Daily Trends</value>
   </data>
   <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>ðŸ“Š Day-by-day usage</value>
+    <value>📊 Day-by-day usage</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
     <value>Orange line = previous period average</value>
@@ -122,10 +122,10 @@
     <value>Apply Changes</value>
   </data>
   <data name="Settings_Title.Text" xml:space="preserve">
-    <value>Î¡Ï…Î¸Î¼Î¯ÏƒÎµÎ¹Ï‚</value>
+    <value>Ρυθμίσεις</value>
   </data>
   <data name="Settings_AppRuntime.Text" xml:space="preserve">
-    <value>Î§ÏÏŒÎ½Î¿Ï‚ ÎµÎºÏ„Î­Î»ÎµÏƒÎ·Ï‚</value>
+    <value>Χρόνος εκτέλεσης</value>
   </data>
   <data name="Settings_RunOnStartup.Text" xml:space="preserve">
     <value>Run on Startup</value>
@@ -140,7 +140,7 @@
     <value>Minimize the app to tray on exit instead of closing.</value>
   </data>
   <data name="Settings_UsageData.Text" xml:space="preserve">
-    <value>Î”ÎµÎ´Î¿Î¼Î­Î½Î± Ï‡ÏÎ®ÏƒÎ·Ï‚</value>
+    <value>Δεδομένα χρήσης</value>
   </data>
   <data name="Settings_IncognitoMode.Text" xml:space="preserve">
     <value>Incognito Mode</value>
@@ -161,7 +161,7 @@
     <value>Double-click to remove time limit.</value>
   </data>
   <data name="Settings_Display.Text" xml:space="preserve">
-    <value>Î•Î¼Ï†Î¬Î½Î¹ÏƒÎ·</value>
+    <value>Εμφάνιση</value>
   </data>
   <data name="Settings_DaysToShow.Text" xml:space="preserve">
     <value>Days to show on graph</value>
@@ -212,7 +212,7 @@
     <value>Show Active Windows and Background Audio on same page instead of tabs.</value>
   </data>
   <data name="Settings_Data.Text" xml:space="preserve">
-    <value>Î”ÎµÎ´Î¿Î¼Î­Î½Î±</value>
+    <value>Δεδομένα</value>
   </data>
   <data name="Settings_LogStorage.Text" xml:space="preserve">
     <value>Log Storage Location</value>
@@ -236,7 +236,7 @@
     <value>How often usage data in RAM is saved to disk. Lower values = more disk writes but better recovery on crash (Default 300s = 5 min).</value>
   </data>
   <data name="Settings_AppTags.Text" xml:space="preserve">
-    <value>Î•Ï„Î¹ÎºÎ­Ï„ÎµÏ‚ ÎµÏ†Î±ÏÎ¼Î¿Î³ÏŽÎ½</value>
+    <value>Ετικέτες εφαρμογών</value>
   </data>
   <data name="Settings_ManageTags.Text" xml:space="preserve">
     <value>Manage Categories and Colors</value>
@@ -245,67 +245,67 @@
     <value>Add Tag</value>
   </data>
   <data name="Settings_About.Text" xml:space="preserve">
-    <value>Î£Ï‡ÎµÏ„Î¹ÎºÎ¬</value>
+    <value>Σχετικά</value>
   </data>
   <data name="Settings_CreatedBy.Text" xml:space="preserve">
     <value>Created by David Cepero</value>
   </data>
   <data name="Settings_Copyright.Text" xml:space="preserve">
-    <value>Copyright Â© 2025. All rights reserved.</value>
+    <value>Copyright © 2025. All rights reserved.</value>
   </data>
   <data name="Settings_SourceCode.Content" xml:space="preserve">
     <value>Source Code (GitHub)</value>
   </data>
   <data name="Settings_AppVersion" xml:space="preserve">
-    <value>ÎˆÎºÎ´Î¿ÏƒÎ· {0}</value>
+    <value>Έκδοση {0}</value>
   </data>
   <data name="Nav_Dashboard.Content" xml:space="preserve">
-    <value>Î¤Î±Î¼Ï€Î»ÏŒ</value>
+    <value>Ταμπλό</value>
   </data>
   <data name="Nav_History.Content" xml:space="preserve">
-    <value>Î‘Î½Î¬Î»Ï…ÏƒÎ· ÎšÎ±Ï„Î±Î½Î¿Î¼Î®Ï‚</value>
+    <value>Ανάλυση Κατανομής</value>
   </data>
   <data name="Nav_Sessions.Content" xml:space="preserve">
-    <value>Î›ÎµÏ€Ï„Î¿Î¼ÎµÏÎ®Ï‚ Î§ÏÎ®ÏƒÎ·</value>
+    <value>Λεπτομερής Χρήση</value>
   </data>
   <data name="Tray_Open.Text" xml:space="preserve">
-    <value>Î†Î½Î¿Î¹Î³Î¼Î±</value>
+    <value>Άνοιγμα</value>
   </data>
   <data name="Tray_Settings.Text" xml:space="preserve">
-    <value>Î¡Ï…Î¸Î¼Î¯ÏƒÎµÎ¹Ï‚</value>
+    <value>Ρυθμίσεις</value>
   </data>
   <data name="Tray_Exit.Text" xml:space="preserve">
-    <value>ÎˆÎ¾Î¿Î´Î¿Ï‚</value>
+    <value>Έξοδος</value>
   </data>
   <data name="Dashboard_SetTimeLimit.Text" xml:space="preserve">
-    <value>ÎŸÏÎ¹ÏƒÎ¼ÏŒÏ‚ Î¿ÏÎ¯Î¿Ï… Ï‡ÏÏŒÎ½Î¿Ï…</value>
+    <value>Ορισμός ορίου χρόνου</value>
   </data>
   <data name="Dashboard_SetCategory.Text" xml:space="preserve">
-    <value>ÎŸÏÎ¹ÏƒÎ¼ÏŒÏ‚ ÎºÎ±Ï„Î·Î³Î¿ÏÎ¯Î±Ï‚</value>
+    <value>Ορισμός κατηγορίας</value>
   </data>
   <data name="Dashboard_SetDisplayName.Text" xml:space="preserve">
-    <value>ÎŸÏÎ¹ÏƒÎ¼ÏŒÏ‚ Î¿Î½ÏŒÎ¼Î±Ï„Î¿Ï‚...</value>
+    <value>Ορισμός ονόματος...</value>
   </data>
   <data name="Dashboard_SetCustomIcon.Text" xml:space="preserve">
-    <value>Î ÏÎ¿ÏƒÎ±ÏÎ¼Î¿ÏƒÎ¼Î­Î½Î¿ ÎµÎ¹ÎºÎ¿Î½Î¯Î´Î¹Î¿...</value>
+    <value>Προσαρμοσμένο εικονίδιο...</value>
   </data>
   <data name="Dashboard_ExcludeApp.Text" xml:space="preserve">
-    <value>Î•Î¾Î±Î¯ÏÎµÏƒÎ· ÎµÏ†Î±ÏÎ¼Î¿Î³Î®Ï‚</value>
+    <value>Εξαίρεση εφαρμογής</value>
   </data>
   <data name="Dashboard_Total.Text" xml:space="preserve">
-    <value>Î£ÏÎ½Î¿Î»Î¿:</value>
+    <value>Σύνολο:</value>
   </data>
   <data name="Dashboard_DailyActivity.Text" xml:space="preserve">
-    <value>Î—Î¼ÎµÏÎ®ÏƒÎ¹Î± Î´ÏÎ±ÏƒÏ„Î·ÏÎ¹ÏŒÏ„Î·Ï„Î±</value>
+    <value>Ημερήσια δραστηριότητα</value>
   </data>
   <data name="Dashboard_UsageSummary.Text" xml:space="preserve">
-    <value>Î£ÏÎ½Î¿ÏˆÎ· Ï‡ÏÎ®ÏƒÎ·Ï‚</value>
+    <value>Σύνοψη χρήσης</value>
   </data>
   <data name="Dashboard_TabActiveWindows.Header" xml:space="preserve">
-    <value>ðŸ“Š Active Windows</value>
+    <value>📊 Active Windows</value>
   </data>
   <data name="Dashboard_TabBackgroundAudio.Header" xml:space="preserve">
-    <value>ðŸ”Š Background Audio</value>
+    <value>🔊 Background Audio</value>
   </data>
   <data name="Dashboard_AudioDesc.Text" xml:space="preserve">
     <value>Apps playing audio while not in focus</value>
@@ -314,19 +314,19 @@
     <value>No background audio detected</value>
   </data>
   <data name="Dashboard_ActiveWindows.Text" xml:space="preserve">
-    <value>Î•Î½ÎµÏÎ³Î¬ Ï€Î±ÏÎ¬Î¸Ï…ÏÎ±</value>
+    <value>Ενεργά παράθυρα</value>
   </data>
   <data name="Dashboard_BackgroundAudio.Text" xml:space="preserve">
-    <value>Î‰Ï‡Î¿Ï‚ Ï€Î±ÏÎ±ÏƒÎºÎ·Î½Î¯Î¿Ï…</value>
+    <value>Ήχος παρασκηνίου</value>
   </data>
   <data name="Dashboard_NotCounted.Text" xml:space="preserve">
     <value>(not counted)</value>
   </data>
   <data name="Sessions_Title.Text" xml:space="preserve">
-    <value>Î§ÏÎ¿Î½Î¿Î»ÏŒÎ³Î¹Î¿</value>
+    <value>Χρονολόγιο</value>
   </data>
   <data name="Sessions_Subtitle.Text" xml:space="preserve">
-    <value>ÎŸÏ€Ï„Î¹ÎºÎ¿Ï€Î¿Î¹Î®ÏƒÏ„Îµ Ï„Î· Î¼Î­ÏÎ± ÏƒÎ±Ï‚.</value>
+    <value>Οπτικοποιήστε τη μέρα σας.</value>
   </data>
   <data name="Sessions_ZoomOut.Content" xml:space="preserve">
     <value>Zoom Out</value>

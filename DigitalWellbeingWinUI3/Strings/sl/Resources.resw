@@ -86,7 +86,7 @@
     <value>Daily Trends</value>
   </data>
   <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>ðŸ“Š Day-by-day usage</value>
+    <value>📊 Day-by-day usage</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
     <value>Orange line = previous period average</value>
@@ -125,7 +125,7 @@
     <value>Nastavitve</value>
   </data>
   <data name="Settings_AppRuntime.Text" xml:space="preserve">
-    <value>ÄŒas izvajanja</value>
+    <value>Čas izvajanja</value>
   </data>
   <data name="Settings_RunOnStartup.Text" xml:space="preserve">
     <value>Run on Startup</value>
@@ -251,16 +251,16 @@
     <value>Created by David Cepero</value>
   </data>
   <data name="Settings_Copyright.Text" xml:space="preserve">
-    <value>Copyright Â© 2025. All rights reserved.</value>
+    <value>Copyright © 2025. All rights reserved.</value>
   </data>
   <data name="Settings_SourceCode.Content" xml:space="preserve">
     <value>Source Code (GitHub)</value>
   </data>
   <data name="Settings_AppVersion" xml:space="preserve">
-    <value>RazliÄica {0}</value>
+    <value>Različica {0}</value>
   </data>
   <data name="Nav_Dashboard.Content" xml:space="preserve">
-    <value>Nadzorna ploÅ¡Äa</value>
+    <value>Nadzorna plošča</value>
   </data>
   <data name="Nav_History.Content" xml:space="preserve">
     <value>Analiza porazdelitve</value>
@@ -278,7 +278,7 @@
     <value>Izhod</value>
   </data>
   <data name="Dashboard_SetTimeLimit.Text" xml:space="preserve">
-    <value>Nastavi Äasovno omejitev</value>
+    <value>Nastavi časovno omejitev</value>
   </data>
   <data name="Dashboard_SetCategory.Text" xml:space="preserve">
     <value>Nastavi kategorijo</value>
@@ -290,7 +290,7 @@
     <value>Ikona po meri...</value>
   </data>
   <data name="Dashboard_ExcludeApp.Text" xml:space="preserve">
-    <value>IzkljuÄi aplikacijo</value>
+    <value>Izključi aplikacijo</value>
   </data>
   <data name="Dashboard_Total.Text" xml:space="preserve">
     <value>Skupaj:</value>
@@ -302,10 +302,10 @@
     <value>Povzetek uporabe</value>
   </data>
   <data name="Dashboard_TabActiveWindows.Header" xml:space="preserve">
-    <value>ðŸ“Š Active Windows</value>
+    <value>📊 Active Windows</value>
   </data>
   <data name="Dashboard_TabBackgroundAudio.Header" xml:space="preserve">
-    <value>ðŸ”Š Background Audio</value>
+    <value>🔊 Background Audio</value>
   </data>
   <data name="Dashboard_AudioDesc.Text" xml:space="preserve">
     <value>Apps playing audio while not in focus</value>
@@ -323,7 +323,7 @@
     <value>(not counted)</value>
   </data>
   <data name="Sessions_Title.Text" xml:space="preserve">
-    <value>ÄŒasovnica</value>
+    <value>Časovnica</value>
   </data>
   <data name="Sessions_Subtitle.Text" xml:space="preserve">
     <value>Vizualizirajte svoj dan.</value>

@@ -86,7 +86,7 @@
     <value>Daily Trends</value>
   </data>
   <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>ðŸ“Š Day-by-day usage</value>
+    <value>📊 Day-by-day usage</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
     <value>Orange line = previous period average</value>
@@ -122,10 +122,10 @@
     <value>Apply Changes</value>
   </data>
   <data name="Settings_Title.Text" xml:space="preserve">
-    <value>è¨­å®š</value>
+    <value>設定</value>
   </data>
   <data name="Settings_AppRuntime.Text" xml:space="preserve">
-    <value>æ‡‰ç”¨ç¨‹å¼åŸ·è¡Œæ™‚é–“</value>
+    <value>應用程式執行時間</value>
   </data>
   <data name="Settings_RunOnStartup.Text" xml:space="preserve">
     <value>Run on Startup</value>
@@ -140,7 +140,7 @@
     <value>Minimize the app to tray on exit instead of closing.</value>
   </data>
   <data name="Settings_UsageData.Text" xml:space="preserve">
-    <value>ä½¿ç”¨è³‡æ–™</value>
+    <value>使用資料</value>
   </data>
   <data name="Settings_IncognitoMode.Text" xml:space="preserve">
     <value>Incognito Mode</value>
@@ -161,7 +161,7 @@
     <value>Double-click to remove time limit.</value>
   </data>
   <data name="Settings_Display.Text" xml:space="preserve">
-    <value>é¡¯ç¤º</value>
+    <value>顯示</value>
   </data>
   <data name="Settings_DaysToShow.Text" xml:space="preserve">
     <value>Days to show on graph</value>
@@ -212,7 +212,7 @@
     <value>Show Active Windows and Background Audio on same page instead of tabs.</value>
   </data>
   <data name="Settings_Data.Text" xml:space="preserve">
-    <value>è³‡æ–™</value>
+    <value>資料</value>
   </data>
   <data name="Settings_LogStorage.Text" xml:space="preserve">
     <value>Log Storage Location</value>
@@ -236,7 +236,7 @@
     <value>How often usage data in RAM is saved to disk. Lower values = more disk writes but better recovery on crash (Default 300s = 5 min).</value>
   </data>
   <data name="Settings_AppTags.Text" xml:space="preserve">
-    <value>æ‡‰ç”¨ç¨‹å¼æ¨™ç±¤</value>
+    <value>應用程式標籤</value>
   </data>
   <data name="Settings_ManageTags.Text" xml:space="preserve">
     <value>Manage Categories and Colors</value>
@@ -245,67 +245,67 @@
     <value>Add Tag</value>
   </data>
   <data name="Settings_About.Text" xml:space="preserve">
-    <value>é—œæ–¼</value>
+    <value>關於</value>
   </data>
   <data name="Settings_CreatedBy.Text" xml:space="preserve">
     <value>Created by David Cepero</value>
   </data>
   <data name="Settings_Copyright.Text" xml:space="preserve">
-    <value>Copyright Â© 2025. All rights reserved.</value>
+    <value>Copyright © 2025. All rights reserved.</value>
   </data>
   <data name="Settings_SourceCode.Content" xml:space="preserve">
     <value>Source Code (GitHub)</value>
   </data>
   <data name="Settings_AppVersion" xml:space="preserve">
-    <value>ç‰ˆæœ¬ {0}</value>
+    <value>版本 {0}</value>
   </data>
   <data name="Nav_Dashboard.Content" xml:space="preserve">
-    <value>å„€è¡¨æ¿</value>
+    <value>儀表板</value>
   </data>
   <data name="Nav_History.Content" xml:space="preserve">
-    <value>åˆ†ä½ˆåˆ†æž</value>
+    <value>分佈分析</value>
   </data>
   <data name="Nav_Sessions.Content" xml:space="preserve">
-    <value>è©³ç´°ä½¿ç”¨æƒ…æ³</value>
+    <value>詳細使用情況</value>
   </data>
   <data name="Tray_Open.Text" xml:space="preserve">
-    <value>é–‹å•Ÿ</value>
+    <value>開啟</value>
   </data>
   <data name="Tray_Settings.Text" xml:space="preserve">
-    <value>è¨­å®š</value>
+    <value>設定</value>
   </data>
   <data name="Tray_Exit.Text" xml:space="preserve">
-    <value>é€€å‡º</value>
+    <value>退出</value>
   </data>
   <data name="Dashboard_SetTimeLimit.Text" xml:space="preserve">
-    <value>è¨­å®šæ™‚é–“é™åˆ¶</value>
+    <value>設定時間限制</value>
   </data>
   <data name="Dashboard_SetCategory.Text" xml:space="preserve">
-    <value>è¨­å®šé¡žåˆ¥</value>
+    <value>設定類別</value>
   </data>
   <data name="Dashboard_SetDisplayName.Text" xml:space="preserve">
-    <value>è¨­å®šé¡¯ç¤ºåç¨±...</value>
+    <value>設定顯示名稱...</value>
   </data>
   <data name="Dashboard_SetCustomIcon.Text" xml:space="preserve">
-    <value>è‡ªè¨‚åœ–ç¤º...</value>
+    <value>自訂圖示...</value>
   </data>
   <data name="Dashboard_ExcludeApp.Text" xml:space="preserve">
-    <value>æŽ’é™¤æ‡‰ç”¨ç¨‹å¼</value>
+    <value>排除應用程式</value>
   </data>
   <data name="Dashboard_Total.Text" xml:space="preserve">
-    <value>ç¸½è¨ˆ:</value>
+    <value>總計:</value>
   </data>
   <data name="Dashboard_DailyActivity.Text" xml:space="preserve">
-    <value>æ¯æ—¥æ´»å‹•</value>
+    <value>每日活動</value>
   </data>
   <data name="Dashboard_UsageSummary.Text" xml:space="preserve">
-    <value>ä½¿ç”¨æ‘˜è¦</value>
+    <value>使用摘要</value>
   </data>
   <data name="Dashboard_TabActiveWindows.Header" xml:space="preserve">
-    <value>ðŸ“Š Active Windows</value>
+    <value>📊 Active Windows</value>
   </data>
   <data name="Dashboard_TabBackgroundAudio.Header" xml:space="preserve">
-    <value>ðŸ”Š Background Audio</value>
+    <value>🔊 Background Audio</value>
   </data>
   <data name="Dashboard_AudioDesc.Text" xml:space="preserve">
     <value>Apps playing audio while not in focus</value>
@@ -314,19 +314,19 @@
     <value>No background audio detected</value>
   </data>
   <data name="Dashboard_ActiveWindows.Text" xml:space="preserve">
-    <value>æ´»å‹•è¦–çª—</value>
+    <value>活動視窗</value>
   </data>
   <data name="Dashboard_BackgroundAudio.Text" xml:space="preserve">
-    <value>èƒŒæ™¯éŸ³è¨Š</value>
+    <value>背景音訊</value>
   </data>
   <data name="Dashboard_NotCounted.Text" xml:space="preserve">
     <value>(not counted)</value>
   </data>
   <data name="Sessions_Title.Text" xml:space="preserve">
-    <value>æ™‚é–“è»¸</value>
+    <value>時間軸</value>
   </data>
   <data name="Sessions_Subtitle.Text" xml:space="preserve">
-    <value>è¦–è¦ºåŒ–æ‚¨çš„ä¸€å¤©ã€‚</value>
+    <value>視覺化您的一天。</value>
   </data>
   <data name="Sessions_ZoomOut.Content" xml:space="preserve">
     <value>Zoom Out</value>

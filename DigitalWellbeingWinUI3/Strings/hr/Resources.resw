@@ -86,7 +86,7 @@
     <value>Daily Trends</value>
   </data>
   <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>ðŸ“Š Day-by-day usage</value>
+    <value>📊 Day-by-day usage</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
     <value>Orange line = previous period average</value>
@@ -251,7 +251,7 @@
     <value>Created by David Cepero</value>
   </data>
   <data name="Settings_Copyright.Text" xml:space="preserve">
-    <value>Copyright Â© 2025. All rights reserved.</value>
+    <value>Copyright © 2025. All rights reserved.</value>
   </data>
   <data name="Settings_SourceCode.Content" xml:space="preserve">
     <value>Source Code (GitHub)</value>
@@ -260,7 +260,7 @@
     <value>Verzija {0}</value>
   </data>
   <data name="Nav_Dashboard.Content" xml:space="preserve">
-    <value>Nadzorna ploÄa</value>
+    <value>Nadzorna ploča</value>
   </data>
   <data name="Nav_History.Content" xml:space="preserve">
     <value>Analiza distribucije</value>
@@ -278,7 +278,7 @@
     <value>Izlaz</value>
   </data>
   <data name="Dashboard_SetTimeLimit.Text" xml:space="preserve">
-    <value>Postavi vremensko ograniÄenje</value>
+    <value>Postavi vremensko ograničenje</value>
   </data>
   <data name="Dashboard_SetCategory.Text" xml:space="preserve">
     <value>Postavi kategoriju</value>
@@ -287,10 +287,10 @@
     <value>Postavi naziv...</value>
   </data>
   <data name="Dashboard_SetCustomIcon.Text" xml:space="preserve">
-    <value>PrilagoÄ‘ena ikona...</value>
+    <value>Prilagođena ikona...</value>
   </data>
   <data name="Dashboard_ExcludeApp.Text" xml:space="preserve">
-    <value>IskljuÄi aplikaciju</value>
+    <value>Isključi aplikaciju</value>
   </data>
   <data name="Dashboard_Total.Text" xml:space="preserve">
     <value>Ukupno:</value>
@@ -299,13 +299,13 @@
     <value>Dnevna aktivnost</value>
   </data>
   <data name="Dashboard_UsageSummary.Text" xml:space="preserve">
-    <value>SaÅ¾etak upotrebe</value>
+    <value>Sažetak upotrebe</value>
   </data>
   <data name="Dashboard_TabActiveWindows.Header" xml:space="preserve">
-    <value>ðŸ“Š Active Windows</value>
+    <value>📊 Active Windows</value>
   </data>
   <data name="Dashboard_TabBackgroundAudio.Header" xml:space="preserve">
-    <value>ðŸ”Š Background Audio</value>
+    <value>🔊 Background Audio</value>
   </data>
   <data name="Dashboard_AudioDesc.Text" xml:space="preserve">
     <value>Apps playing audio while not in focus</value>

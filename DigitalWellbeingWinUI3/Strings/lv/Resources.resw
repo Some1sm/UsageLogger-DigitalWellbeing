@@ -86,7 +86,7 @@
     <value>Daily Trends</value>
   </data>
   <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>ðŸ“Š Day-by-day usage</value>
+    <value>📊 Day-by-day usage</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
     <value>Orange line = previous period average</value>
@@ -122,10 +122,10 @@
     <value>Apply Changes</value>
   </data>
   <data name="Settings_Title.Text" xml:space="preserve">
-    <value>IestatÄ«jumi</value>
+    <value>Iestatījumi</value>
   </data>
   <data name="Settings_AppRuntime.Text" xml:space="preserve">
-    <value>Lietotnes darbÄ«bas laiks</value>
+    <value>Lietotnes darbības laiks</value>
   </data>
   <data name="Settings_RunOnStartup.Text" xml:space="preserve">
     <value>Run on Startup</value>
@@ -236,7 +236,7 @@
     <value>How often usage data in RAM is saved to disk. Lower values = more disk writes but better recovery on crash (Default 300s = 5 min).</value>
   </data>
   <data name="Settings_AppTags.Text" xml:space="preserve">
-    <value>LietotÅ†u tagi</value>
+    <value>Lietotņu tagi</value>
   </data>
   <data name="Settings_ManageTags.Text" xml:space="preserve">
     <value>Manage Categories and Colors</value>
@@ -251,7 +251,7 @@
     <value>Created by David Cepero</value>
   </data>
   <data name="Settings_Copyright.Text" xml:space="preserve">
-    <value>Copyright Â© 2025. All rights reserved.</value>
+    <value>Copyright © 2025. All rights reserved.</value>
   </data>
   <data name="Settings_SourceCode.Content" xml:space="preserve">
     <value>Source Code (GitHub)</value>
@@ -260,52 +260,52 @@
     <value>Versija {0}</value>
   </data>
   <data name="Nav_Dashboard.Content" xml:space="preserve">
-    <value>InformÄcijas panelis</value>
+    <value>Informācijas panelis</value>
   </data>
   <data name="Nav_History.Content" xml:space="preserve">
-    <value>SadalÄ«juma analÄ«ze</value>
+    <value>Sadalījuma analīze</value>
   </data>
   <data name="Nav_Sessions.Content" xml:space="preserve">
-    <value>DetalizÄ“ts lietojums</value>
+    <value>Detalizēts lietojums</value>
   </data>
   <data name="Tray_Open.Text" xml:space="preserve">
-    <value>AtvÄ“rt</value>
+    <value>Atvērt</value>
   </data>
   <data name="Tray_Settings.Text" xml:space="preserve">
-    <value>IestatÄ«jumi</value>
+    <value>Iestatījumi</value>
   </data>
   <data name="Tray_Exit.Text" xml:space="preserve">
     <value>Iziet</value>
   </data>
   <data name="Dashboard_SetTimeLimit.Text" xml:space="preserve">
-    <value>IestatÄ«t laika ierobeÅ¾ojumu</value>
+    <value>Iestatīt laika ierobežojumu</value>
   </data>
   <data name="Dashboard_SetCategory.Text" xml:space="preserve">
-    <value>IestatÄ«t kategoriju</value>
+    <value>Iestatīt kategoriju</value>
   </data>
   <data name="Dashboard_SetDisplayName.Text" xml:space="preserve">
-    <value>IestatÄ«t parÄdÄmo nosaukumu...</value>
+    <value>Iestatīt parādāmo nosaukumu...</value>
   </data>
   <data name="Dashboard_SetCustomIcon.Text" xml:space="preserve">
-    <value>PielÄgota ikona...</value>
+    <value>Pielāgota ikona...</value>
   </data>
   <data name="Dashboard_ExcludeApp.Text" xml:space="preserve">
-    <value>IzslÄ“gt lietotni</value>
+    <value>Izslēgt lietotni</value>
   </data>
   <data name="Dashboard_Total.Text" xml:space="preserve">
-    <value>KopÄ:</value>
+    <value>Kopā:</value>
   </data>
   <data name="Dashboard_DailyActivity.Text" xml:space="preserve">
-    <value>Dienas aktivitÄte</value>
+    <value>Dienas aktivitāte</value>
   </data>
   <data name="Dashboard_UsageSummary.Text" xml:space="preserve">
     <value>Lietojuma kopsavilkums</value>
   </data>
   <data name="Dashboard_TabActiveWindows.Header" xml:space="preserve">
-    <value>ðŸ“Š Active Windows</value>
+    <value>📊 Active Windows</value>
   </data>
   <data name="Dashboard_TabBackgroundAudio.Header" xml:space="preserve">
-    <value>ðŸ”Š Background Audio</value>
+    <value>🔊 Background Audio</value>
   </data>
   <data name="Dashboard_AudioDesc.Text" xml:space="preserve">
     <value>Apps playing audio while not in focus</value>
@@ -314,7 +314,7 @@
     <value>No background audio detected</value>
   </data>
   <data name="Dashboard_ActiveWindows.Text" xml:space="preserve">
-    <value>AktÄ«vie logi</value>
+    <value>Aktīvie logi</value>
   </data>
   <data name="Dashboard_BackgroundAudio.Text" xml:space="preserve">
     <value>Fona audio</value>
@@ -326,7 +326,7 @@
     <value>Laika skala</value>
   </data>
   <data name="Sessions_Subtitle.Text" xml:space="preserve">
-    <value>VizualizÄ“jiet savu dienu.</value>
+    <value>Vizualizējiet savu dienu.</value>
   </data>
   <data name="Sessions_ZoomOut.Content" xml:space="preserve">
     <value>Zoom Out</value>

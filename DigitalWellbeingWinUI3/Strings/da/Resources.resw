@@ -86,7 +86,7 @@
     <value>Daily Trends</value>
   </data>
   <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>ðŸ“Š Day-by-day usage</value>
+    <value>📊 Day-by-day usage</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
     <value>Orange line = previous period average</value>
@@ -125,7 +125,7 @@
     <value>Indstillinger</value>
   </data>
   <data name="Settings_AppRuntime.Text" xml:space="preserve">
-    <value>KÃ¸rselstid</value>
+    <value>Kørselstid</value>
   </data>
   <data name="Settings_RunOnStartup.Text" xml:space="preserve">
     <value>Run on Startup</value>
@@ -251,7 +251,7 @@
     <value>Created by David Cepero</value>
   </data>
   <data name="Settings_Copyright.Text" xml:space="preserve">
-    <value>Copyright Â© 2025. All rights reserved.</value>
+    <value>Copyright © 2025. All rights reserved.</value>
   </data>
   <data name="Settings_SourceCode.Content" xml:space="preserve">
     <value>Source Code (GitHub)</value>
@@ -269,7 +269,7 @@
     <value>Detaljeret brug</value>
   </data>
   <data name="Tray_Open.Text" xml:space="preserve">
-    <value>Ã…bn</value>
+    <value>Åbn</value>
   </data>
   <data name="Tray_Settings.Text" xml:space="preserve">
     <value>Indstillinger</value>
@@ -278,7 +278,7 @@
     <value>Afslut</value>
   </data>
   <data name="Dashboard_SetTimeLimit.Text" xml:space="preserve">
-    <value>Indstil tidsgrÃ¦nse</value>
+    <value>Indstil tidsgrænse</value>
   </data>
   <data name="Dashboard_SetCategory.Text" xml:space="preserve">
     <value>Indstil kategori</value>
@@ -302,10 +302,10 @@
     <value>Brugsoversigt</value>
   </data>
   <data name="Dashboard_TabActiveWindows.Header" xml:space="preserve">
-    <value>ðŸ“Š Active Windows</value>
+    <value>📊 Active Windows</value>
   </data>
   <data name="Dashboard_TabBackgroundAudio.Header" xml:space="preserve">
-    <value>ðŸ”Š Background Audio</value>
+    <value>🔊 Background Audio</value>
   </data>
   <data name="Dashboard_AudioDesc.Text" xml:space="preserve">
     <value>Apps playing audio while not in focus</value>

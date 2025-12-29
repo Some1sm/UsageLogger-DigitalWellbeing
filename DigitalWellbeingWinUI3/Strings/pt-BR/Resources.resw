@@ -86,7 +86,7 @@
     <value>Daily Trends</value>
   </data>
   <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>ðŸ“Š Day-by-day usage</value>
+    <value>📊 Day-by-day usage</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
     <value>Orange line = previous period average</value>
@@ -122,10 +122,10 @@
     <value>Apply Changes</value>
   </data>
   <data name="Settings_Title.Text" xml:space="preserve">
-    <value>ConfiguraÃ§Ãµes</value>
+    <value>Configurações</value>
   </data>
   <data name="Settings_AppRuntime.Text" xml:space="preserve">
-    <value>ExecuÃ§Ã£o do App</value>
+    <value>Execução do App</value>
   </data>
   <data name="Settings_RunOnStartup.Text" xml:space="preserve">
     <value>Run on Startup</value>
@@ -161,7 +161,7 @@
     <value>Double-click to remove time limit.</value>
   </data>
   <data name="Settings_Display.Text" xml:space="preserve">
-    <value>ExibiÃ§Ã£o</value>
+    <value>Exibição</value>
   </data>
   <data name="Settings_DaysToShow.Text" xml:space="preserve">
     <value>Days to show on graph</value>
@@ -251,19 +251,19 @@
     <value>Created by David Cepero</value>
   </data>
   <data name="Settings_Copyright.Text" xml:space="preserve">
-    <value>Copyright Â© 2025. All rights reserved.</value>
+    <value>Copyright © 2025. All rights reserved.</value>
   </data>
   <data name="Settings_SourceCode.Content" xml:space="preserve">
     <value>Source Code (GitHub)</value>
   </data>
   <data name="Settings_AppVersion" xml:space="preserve">
-    <value>VersÃ£o {0}</value>
+    <value>Versão {0}</value>
   </data>
   <data name="Nav_Dashboard.Content" xml:space="preserve">
     <value>Painel</value>
   </data>
   <data name="Nav_History.Content" xml:space="preserve">
-    <value>AnÃ¡lise de DistribuiÃ§Ã£o</value>
+    <value>Análise de Distribuição</value>
   </data>
   <data name="Nav_Sessions.Content" xml:space="preserve">
     <value>Uso Detalhado</value>
@@ -272,7 +272,7 @@
     <value>Abrir</value>
   </data>
   <data name="Tray_Settings.Text" xml:space="preserve">
-    <value>ConfiguraÃ§Ãµes</value>
+    <value>Configurações</value>
   </data>
   <data name="Tray_Exit.Text" xml:space="preserve">
     <value>Sair</value>
@@ -284,10 +284,10 @@
     <value>Definir Categoria</value>
   </data>
   <data name="Dashboard_SetDisplayName.Text" xml:space="preserve">
-    <value>Nome de ExibiÃ§Ã£o...</value>
+    <value>Nome de Exibição...</value>
   </data>
   <data name="Dashboard_SetCustomIcon.Text" xml:space="preserve">
-    <value>Ãcone Personalizado...</value>
+    <value>Ícone Personalizado...</value>
   </data>
   <data name="Dashboard_ExcludeApp.Text" xml:space="preserve">
     <value>Excluir App</value>
@@ -296,16 +296,16 @@
     <value>Total:</value>
   </data>
   <data name="Dashboard_DailyActivity.Text" xml:space="preserve">
-    <value>Atividade DiÃ¡ria</value>
+    <value>Atividade Diária</value>
   </data>
   <data name="Dashboard_UsageSummary.Text" xml:space="preserve">
     <value>Resumo de Uso</value>
   </data>
   <data name="Dashboard_TabActiveWindows.Header" xml:space="preserve">
-    <value>ðŸ“Š Active Windows</value>
+    <value>📊 Active Windows</value>
   </data>
   <data name="Dashboard_TabBackgroundAudio.Header" xml:space="preserve">
-    <value>ðŸ”Š Background Audio</value>
+    <value>🔊 Background Audio</value>
   </data>
   <data name="Dashboard_AudioDesc.Text" xml:space="preserve">
     <value>Apps playing audio while not in focus</value>
@@ -317,7 +317,7 @@
     <value>Janelas Ativas</value>
   </data>
   <data name="Dashboard_BackgroundAudio.Text" xml:space="preserve">
-    <value>Ãudio em Segundo Plano</value>
+    <value>Áudio em Segundo Plano</value>
   </data>
   <data name="Dashboard_NotCounted.Text" xml:space="preserve">
     <value>(not counted)</value>

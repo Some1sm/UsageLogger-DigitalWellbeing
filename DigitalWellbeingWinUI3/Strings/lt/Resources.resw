@@ -86,7 +86,7 @@
     <value>Daily Trends</value>
   </data>
   <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>ðŸ“Š Day-by-day usage</value>
+    <value>📊 Day-by-day usage</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
     <value>Orange line = previous period average</value>
@@ -236,7 +236,7 @@
     <value>How often usage data in RAM is saved to disk. Lower values = more disk writes but better recovery on crash (Default 300s = 5 min).</value>
   </data>
   <data name="Settings_AppTags.Text" xml:space="preserve">
-    <value>ProgramÅ³ Å¾ymos</value>
+    <value>Programų žymos</value>
   </data>
   <data name="Settings_ManageTags.Text" xml:space="preserve">
     <value>Manage Categories and Colors</value>
@@ -251,7 +251,7 @@
     <value>Created by David Cepero</value>
   </data>
   <data name="Settings_Copyright.Text" xml:space="preserve">
-    <value>Copyright Â© 2025. All rights reserved.</value>
+    <value>Copyright © 2025. All rights reserved.</value>
   </data>
   <data name="Settings_SourceCode.Content" xml:space="preserve">
     <value>Source Code (GitHub)</value>
@@ -260,13 +260,13 @@
     <value>Versija {0}</value>
   </data>
   <data name="Nav_Dashboard.Content" xml:space="preserve">
-    <value>Informacijos suvestinÄ—</value>
+    <value>Informacijos suvestinė</value>
   </data>
   <data name="Nav_History.Content" xml:space="preserve">
-    <value>Paskirstymo analizÄ—</value>
+    <value>Paskirstymo analizė</value>
   </data>
   <data name="Nav_Sessions.Content" xml:space="preserve">
-    <value>IÅ¡samus naudojimas</value>
+    <value>Išsamus naudojimas</value>
   </data>
   <data name="Tray_Open.Text" xml:space="preserve">
     <value>Atidaryti</value>
@@ -275,37 +275,37 @@
     <value>Nustatymai</value>
   </data>
   <data name="Tray_Exit.Text" xml:space="preserve">
-    <value>IÅ¡eiti</value>
+    <value>Išeiti</value>
   </data>
   <data name="Dashboard_SetTimeLimit.Text" xml:space="preserve">
-    <value>Nustatyti laiko limitÄ…</value>
+    <value>Nustatyti laiko limitą</value>
   </data>
   <data name="Dashboard_SetCategory.Text" xml:space="preserve">
-    <value>Nustatyti kategorijÄ…</value>
+    <value>Nustatyti kategoriją</value>
   </data>
   <data name="Dashboard_SetDisplayName.Text" xml:space="preserve">
-    <value>Nustatyti pavadinimÄ…...</value>
+    <value>Nustatyti pavadinimą...</value>
   </data>
   <data name="Dashboard_SetCustomIcon.Text" xml:space="preserve">
-    <value>PasirinktinÄ— piktograma...</value>
+    <value>Pasirinktinė piktograma...</value>
   </data>
   <data name="Dashboard_ExcludeApp.Text" xml:space="preserve">
-    <value>NeÄ¯traukti programos</value>
+    <value>Neįtraukti programos</value>
   </data>
   <data name="Dashboard_Total.Text" xml:space="preserve">
-    <value>IÅ¡ viso:</value>
+    <value>Iš viso:</value>
   </data>
   <data name="Dashboard_DailyActivity.Text" xml:space="preserve">
     <value>Dienos veikla</value>
   </data>
   <data name="Dashboard_UsageSummary.Text" xml:space="preserve">
-    <value>Naudojimo suvestinÄ—</value>
+    <value>Naudojimo suvestinė</value>
   </data>
   <data name="Dashboard_TabActiveWindows.Header" xml:space="preserve">
-    <value>ðŸ“Š Active Windows</value>
+    <value>📊 Active Windows</value>
   </data>
   <data name="Dashboard_TabBackgroundAudio.Header" xml:space="preserve">
-    <value>ðŸ”Š Background Audio</value>
+    <value>🔊 Background Audio</value>
   </data>
   <data name="Dashboard_AudioDesc.Text" xml:space="preserve">
     <value>Apps playing audio while not in focus</value>
@@ -314,7 +314,7 @@
     <value>No background audio detected</value>
   </data>
   <data name="Dashboard_ActiveWindows.Text" xml:space="preserve">
-    <value>AktyvÅ«s langai</value>
+    <value>Aktyvūs langai</value>
   </data>
   <data name="Dashboard_BackgroundAudio.Text" xml:space="preserve">
     <value>Garso fonas</value>
@@ -326,7 +326,7 @@
     <value>Laiko juosta</value>
   </data>
   <data name="Sessions_Subtitle.Text" xml:space="preserve">
-    <value>Vizualizuokite savo dienÄ….</value>
+    <value>Vizualizuokite savo dieną.</value>
   </data>
   <data name="Sessions_ZoomOut.Content" xml:space="preserve">
     <value>Zoom Out</value>

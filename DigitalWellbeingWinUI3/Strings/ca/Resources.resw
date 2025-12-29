@@ -86,7 +86,7 @@
     <value>Daily Trends</value>
   </data>
   <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>ðŸ“Š Day-by-day usage</value>
+    <value>📊 Day-by-day usage</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
     <value>Orange line = previous period average</value>
@@ -122,10 +122,10 @@
     <value>Apply Changes</value>
   </data>
   <data name="Settings_Title.Text" xml:space="preserve">
-    <value>ConfiguraciÃ³</value>
+    <value>Configuració</value>
   </data>
   <data name="Settings_AppRuntime.Text" xml:space="preserve">
-    <value>Temps d'execuciÃ³</value>
+    <value>Temps d'execució</value>
   </data>
   <data name="Settings_RunOnStartup.Text" xml:space="preserve">
     <value>Run on Startup</value>
@@ -140,7 +140,7 @@
     <value>Minimize the app to tray on exit instead of closing.</value>
   </data>
   <data name="Settings_UsageData.Text" xml:space="preserve">
-    <value>Dades d'Ãºs</value>
+    <value>Dades d'ús</value>
   </data>
   <data name="Settings_IncognitoMode.Text" xml:space="preserve">
     <value>Incognito Mode</value>
@@ -161,7 +161,7 @@
     <value>Double-click to remove time limit.</value>
   </data>
   <data name="Settings_Display.Text" xml:space="preserve">
-    <value>VisualitzaciÃ³</value>
+    <value>Visualització</value>
   </data>
   <data name="Settings_DaysToShow.Text" xml:space="preserve">
     <value>Days to show on graph</value>
@@ -251,34 +251,34 @@
     <value>Created by David Cepero</value>
   </data>
   <data name="Settings_Copyright.Text" xml:space="preserve">
-    <value>Copyright Â© 2025. All rights reserved.</value>
+    <value>Copyright © 2025. All rights reserved.</value>
   </data>
   <data name="Settings_SourceCode.Content" xml:space="preserve">
     <value>Source Code (GitHub)</value>
   </data>
   <data name="Settings_AppVersion" xml:space="preserve">
-    <value>VersiÃ³ {0}</value>
+    <value>Versió {0}</value>
   </data>
   <data name="Nav_Dashboard.Content" xml:space="preserve">
     <value>Tauler</value>
   </data>
   <data name="Nav_History.Content" xml:space="preserve">
-    <value>AnÃ lisi de distribuciÃ³</value>
+    <value>Anàlisi de distribució</value>
   </data>
   <data name="Nav_Sessions.Content" xml:space="preserve">
-    <value>Ãšs detallat</value>
+    <value>Ús detallat</value>
   </data>
   <data name="Tray_Open.Text" xml:space="preserve">
     <value>Obrir</value>
   </data>
   <data name="Tray_Settings.Text" xml:space="preserve">
-    <value>ConfiguraciÃ³</value>
+    <value>Configuració</value>
   </data>
   <data name="Tray_Exit.Text" xml:space="preserve">
     <value>Sortir</value>
   </data>
   <data name="Dashboard_SetTimeLimit.Text" xml:space="preserve">
-    <value>Establir lÃ­mit de temps</value>
+    <value>Establir límit de temps</value>
   </data>
   <data name="Dashboard_SetCategory.Text" xml:space="preserve">
     <value>Establir categoria</value>
@@ -290,22 +290,22 @@
     <value>Icona personalitzada...</value>
   </data>
   <data name="Dashboard_ExcludeApp.Text" xml:space="preserve">
-    <value>Excloure aplicaciÃ³</value>
+    <value>Excloure aplicació</value>
   </data>
   <data name="Dashboard_Total.Text" xml:space="preserve">
     <value>Total:</value>
   </data>
   <data name="Dashboard_DailyActivity.Text" xml:space="preserve">
-    <value>Activitat diÃ ria</value>
+    <value>Activitat diària</value>
   </data>
   <data name="Dashboard_UsageSummary.Text" xml:space="preserve">
-    <value>Resum d'Ãºs</value>
+    <value>Resum d'ús</value>
   </data>
   <data name="Dashboard_TabActiveWindows.Header" xml:space="preserve">
-    <value>ðŸ“Š Active Windows</value>
+    <value>📊 Active Windows</value>
   </data>
   <data name="Dashboard_TabBackgroundAudio.Header" xml:space="preserve">
-    <value>ðŸ”Š Background Audio</value>
+    <value>🔊 Background Audio</value>
   </data>
   <data name="Dashboard_AudioDesc.Text" xml:space="preserve">
     <value>Apps playing audio while not in focus</value>
@@ -317,7 +317,7 @@
     <value>Finestres actives</value>
   </data>
   <data name="Dashboard_BackgroundAudio.Text" xml:space="preserve">
-    <value>Ã€udio de fons</value>
+    <value>Àudio de fons</value>
   </data>
   <data name="Dashboard_NotCounted.Text" xml:space="preserve">
     <value>(not counted)</value>

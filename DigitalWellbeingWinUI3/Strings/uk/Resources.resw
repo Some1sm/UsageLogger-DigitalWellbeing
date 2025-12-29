@@ -86,7 +86,7 @@
     <value>Daily Trends</value>
   </data>
   <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>ðŸ“Š Day-by-day usage</value>
+    <value>📊 Day-by-day usage</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
     <value>Orange line = previous period average</value>
@@ -122,10 +122,10 @@
     <value>Apply Changes</value>
   </data>
   <data name="Settings_Title.Text" xml:space="preserve">
-    <value>ÐÐ°Ð»Ð°ÑˆÑ‚ÑƒÐ²Ð°Ð½Ð½Ñ</value>
+    <value>Налаштування</value>
   </data>
   <data name="Settings_AppRuntime.Text" xml:space="preserve">
-    <value>Ð§Ð°Ñ Ñ€Ð¾Ð±Ð¾Ñ‚Ð¸ Ð¿Ñ€Ð¾Ð³Ñ€Ð°Ð¼Ð¸</value>
+    <value>Час роботи програми</value>
   </data>
   <data name="Settings_RunOnStartup.Text" xml:space="preserve">
     <value>Run on Startup</value>
@@ -140,7 +140,7 @@
     <value>Minimize the app to tray on exit instead of closing.</value>
   </data>
   <data name="Settings_UsageData.Text" xml:space="preserve">
-    <value>Ð”Ð°Ð½Ñ– Ð²Ð¸ÐºÐ¾Ñ€Ð¸ÑÑ‚Ð°Ð½Ð½Ñ</value>
+    <value>Дані використання</value>
   </data>
   <data name="Settings_IncognitoMode.Text" xml:space="preserve">
     <value>Incognito Mode</value>
@@ -161,7 +161,7 @@
     <value>Double-click to remove time limit.</value>
   </data>
   <data name="Settings_Display.Text" xml:space="preserve">
-    <value>Ð’Ñ–Ð´Ð¾Ð±Ñ€Ð°Ð¶ÐµÐ½Ð½Ñ</value>
+    <value>Відображення</value>
   </data>
   <data name="Settings_DaysToShow.Text" xml:space="preserve">
     <value>Days to show on graph</value>
@@ -212,7 +212,7 @@
     <value>Show Active Windows and Background Audio on same page instead of tabs.</value>
   </data>
   <data name="Settings_Data.Text" xml:space="preserve">
-    <value>Ð”Ð°Ð½Ñ–</value>
+    <value>Дані</value>
   </data>
   <data name="Settings_LogStorage.Text" xml:space="preserve">
     <value>Log Storage Location</value>
@@ -236,7 +236,7 @@
     <value>How often usage data in RAM is saved to disk. Lower values = more disk writes but better recovery on crash (Default 300s = 5 min).</value>
   </data>
   <data name="Settings_AppTags.Text" xml:space="preserve">
-    <value>Ð¢ÐµÐ³Ð¸ Ð´Ð¾Ð´Ð°Ñ‚ÐºÑ–Ð²</value>
+    <value>Теги додатків</value>
   </data>
   <data name="Settings_ManageTags.Text" xml:space="preserve">
     <value>Manage Categories and Colors</value>
@@ -245,67 +245,67 @@
     <value>Add Tag</value>
   </data>
   <data name="Settings_About.Text" xml:space="preserve">
-    <value>ÐŸÑ€Ð¾ Ð¿Ñ€Ð¾Ð³Ñ€Ð°Ð¼Ñƒ</value>
+    <value>Про програму</value>
   </data>
   <data name="Settings_CreatedBy.Text" xml:space="preserve">
     <value>Created by David Cepero</value>
   </data>
   <data name="Settings_Copyright.Text" xml:space="preserve">
-    <value>Copyright Â© 2025. All rights reserved.</value>
+    <value>Copyright © 2025. All rights reserved.</value>
   </data>
   <data name="Settings_SourceCode.Content" xml:space="preserve">
     <value>Source Code (GitHub)</value>
   </data>
   <data name="Settings_AppVersion" xml:space="preserve">
-    <value>Ð’ÐµÑ€ÑÑ–Ñ {0}</value>
+    <value>Версія {0}</value>
   </data>
   <data name="Nav_Dashboard.Content" xml:space="preserve">
-    <value>ÐŸÐ°Ð½ÐµÐ»ÑŒ Ð¿Ñ€Ð¸Ð»Ð°Ð´Ñ–Ð²</value>
+    <value>Панель приладів</value>
   </data>
   <data name="Nav_History.Content" xml:space="preserve">
-    <value>ÐÐ½Ð°Ð»Ñ–Ð· Ñ€Ð¾Ð·Ð¿Ð¾Ð´Ñ–Ð»Ñƒ</value>
+    <value>Аналіз розподілу</value>
   </data>
   <data name="Nav_Sessions.Content" xml:space="preserve">
-    <value>Ð”ÐµÑ‚Ð°Ð»ÑŒÐ½Ðµ Ð²Ð¸ÐºÐ¾Ñ€Ð¸ÑÑ‚Ð°Ð½Ð½Ñ</value>
+    <value>Детальне використання</value>
   </data>
   <data name="Tray_Open.Text" xml:space="preserve">
-    <value>Ð’Ñ–Ð´ÐºÑ€Ð¸Ñ‚Ð¸</value>
+    <value>Відкрити</value>
   </data>
   <data name="Tray_Settings.Text" xml:space="preserve">
-    <value>ÐÐ°Ð»Ð°ÑˆÑ‚ÑƒÐ²Ð°Ð½Ð½Ñ</value>
+    <value>Налаштування</value>
   </data>
   <data name="Tray_Exit.Text" xml:space="preserve">
-    <value>Ð’Ð¸Ñ…Ñ–Ð´</value>
+    <value>Вихід</value>
   </data>
   <data name="Dashboard_SetTimeLimit.Text" xml:space="preserve">
-    <value>Ð’ÑÑ‚Ð°Ð½Ð¾Ð²Ð¸Ñ‚Ð¸ Ð»Ñ–Ð¼Ñ–Ñ‚ Ñ‡Ð°ÑÑƒ</value>
+    <value>Встановити ліміт часу</value>
   </data>
   <data name="Dashboard_SetCategory.Text" xml:space="preserve">
-    <value>Ð’ÑÑ‚Ð°Ð½Ð¾Ð²Ð¸Ñ‚Ð¸ ÐºÐ°Ñ‚ÐµÐ³Ð¾Ñ€Ñ–ÑŽ</value>
+    <value>Встановити категорію</value>
   </data>
   <data name="Dashboard_SetDisplayName.Text" xml:space="preserve">
-    <value>Ð’ÑÑ‚Ð°Ð½Ð¾Ð²Ð¸Ñ‚Ð¸ Ð½Ð°Ð·Ð²Ñƒ...</value>
+    <value>Встановити назву...</value>
   </data>
   <data name="Dashboard_SetCustomIcon.Text" xml:space="preserve">
-    <value>Ð’Ð»Ð°ÑÐ½Ð° Ñ–ÐºÐ¾Ð½ÐºÐ°...</value>
+    <value>Власна іконка...</value>
   </data>
   <data name="Dashboard_ExcludeApp.Text" xml:space="preserve">
-    <value>Ð’Ð¸ÐºÐ»ÑŽÑ‡Ð¸Ñ‚Ð¸ Ð´Ð¾Ð´Ð°Ñ‚Ð¾Ðº</value>
+    <value>Виключити додаток</value>
   </data>
   <data name="Dashboard_Total.Text" xml:space="preserve">
-    <value>Ð’ÑÑŒÐ¾Ð³Ð¾:</value>
+    <value>Всього:</value>
   </data>
   <data name="Dashboard_DailyActivity.Text" xml:space="preserve">
-    <value>Ð©Ð¾Ð´ÐµÐ½Ð½Ð° Ð°ÐºÑ‚Ð¸Ð²Ð½Ñ–ÑÑ‚ÑŒ</value>
+    <value>Щоденна активність</value>
   </data>
   <data name="Dashboard_UsageSummary.Text" xml:space="preserve">
-    <value>ÐŸÑ–Ð´ÑÑƒÐ¼Ð¾Ðº Ð²Ð¸ÐºÐ¾Ñ€Ð¸ÑÑ‚Ð°Ð½Ð½Ñ</value>
+    <value>Підсумок використання</value>
   </data>
   <data name="Dashboard_TabActiveWindows.Header" xml:space="preserve">
-    <value>ðŸ“Š Active Windows</value>
+    <value>📊 Active Windows</value>
   </data>
   <data name="Dashboard_TabBackgroundAudio.Header" xml:space="preserve">
-    <value>ðŸ”Š Background Audio</value>
+    <value>🔊 Background Audio</value>
   </data>
   <data name="Dashboard_AudioDesc.Text" xml:space="preserve">
     <value>Apps playing audio while not in focus</value>
@@ -314,19 +314,19 @@
     <value>No background audio detected</value>
   </data>
   <data name="Dashboard_ActiveWindows.Text" xml:space="preserve">
-    <value>ÐÐºÑ‚Ð¸Ð²Ð½Ñ– Ð²Ñ–ÐºÐ½Ð°</value>
+    <value>Активні вікна</value>
   </data>
   <data name="Dashboard_BackgroundAudio.Text" xml:space="preserve">
-    <value>Ð¤Ð¾Ð½Ð¾Ð²Ð¸Ð¹ Ð·Ð²ÑƒÐº</value>
+    <value>Фоновий звук</value>
   </data>
   <data name="Dashboard_NotCounted.Text" xml:space="preserve">
     <value>(not counted)</value>
   </data>
   <data name="Sessions_Title.Text" xml:space="preserve">
-    <value>Ð§Ð°ÑÐ¾Ð²Ð° ÑˆÐºÐ°Ð»Ð°</value>
+    <value>Часова шкала</value>
   </data>
   <data name="Sessions_Subtitle.Text" xml:space="preserve">
-    <value>Ð’Ñ–Ð·ÑƒÐ°Ð»Ñ–Ð·ÑƒÐ¹Ñ‚Ðµ ÑÐ²Ñ–Ð¹ Ð´ÐµÐ½ÑŒ.</value>
+    <value>Візуалізуйте свій день.</value>
   </data>
   <data name="Sessions_ZoomOut.Content" xml:space="preserve">
     <value>Zoom Out</value>

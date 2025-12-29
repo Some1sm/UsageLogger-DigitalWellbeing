@@ -86,7 +86,7 @@
     <value>Daily Trends</value>
   </data>
   <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>ðŸ“Š Day-by-day usage</value>
+    <value>📊 Day-by-day usage</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
     <value>Orange line = previous period average</value>
@@ -125,7 +125,7 @@
     <value>Seaded</value>
   </data>
   <data name="Settings_AppRuntime.Text" xml:space="preserve">
-    <value>Rakenduse tÃ¶Ã¶aeg</value>
+    <value>Rakenduse tööaeg</value>
   </data>
   <data name="Settings_RunOnStartup.Text" xml:space="preserve">
     <value>Run on Startup</value>
@@ -251,7 +251,7 @@
     <value>Created by David Cepero</value>
   </data>
   <data name="Settings_Copyright.Text" xml:space="preserve">
-    <value>Copyright Â© 2025. All rights reserved.</value>
+    <value>Copyright © 2025. All rights reserved.</value>
   </data>
   <data name="Settings_SourceCode.Content" xml:space="preserve">
     <value>Source Code (GitHub)</value>
@@ -263,10 +263,10 @@
     <value>Armatuurlaud</value>
   </data>
   <data name="Nav_History.Content" xml:space="preserve">
-    <value>Jaotuse analÃ¼Ã¼s</value>
+    <value>Jaotuse analüüs</value>
   </data>
   <data name="Nav_Sessions.Content" xml:space="preserve">
-    <value>Ãœksikasjalik kasutus</value>
+    <value>Üksikasjalik kasutus</value>
   </data>
   <data name="Tray_Open.Text" xml:space="preserve">
     <value>Ava</value>
@@ -275,37 +275,37 @@
     <value>Seaded</value>
   </data>
   <data name="Tray_Exit.Text" xml:space="preserve">
-    <value>VÃ¤lju</value>
+    <value>Välju</value>
   </data>
   <data name="Dashboard_SetTimeLimit.Text" xml:space="preserve">
-    <value>MÃ¤Ã¤ra ajapiirang</value>
+    <value>Määra ajapiirang</value>
   </data>
   <data name="Dashboard_SetCategory.Text" xml:space="preserve">
-    <value>MÃ¤Ã¤ra kategooria</value>
+    <value>Määra kategooria</value>
   </data>
   <data name="Dashboard_SetDisplayName.Text" xml:space="preserve">
-    <value>MÃ¤Ã¤ra kuvatav nimi...</value>
+    <value>Määra kuvatav nimi...</value>
   </data>
   <data name="Dashboard_SetCustomIcon.Text" xml:space="preserve">
     <value>Kohandatud ikoon...</value>
   </data>
   <data name="Dashboard_ExcludeApp.Text" xml:space="preserve">
-    <value>VÃ¤lista rakendus</value>
+    <value>Välista rakendus</value>
   </data>
   <data name="Dashboard_Total.Text" xml:space="preserve">
     <value>Kokku:</value>
   </data>
   <data name="Dashboard_DailyActivity.Text" xml:space="preserve">
-    <value>PÃ¤evane tegevus</value>
+    <value>Päevane tegevus</value>
   </data>
   <data name="Dashboard_UsageSummary.Text" xml:space="preserve">
-    <value>Kasutuse kokkuvÃµte</value>
+    <value>Kasutuse kokkuvõte</value>
   </data>
   <data name="Dashboard_TabActiveWindows.Header" xml:space="preserve">
-    <value>ðŸ“Š Active Windows</value>
+    <value>📊 Active Windows</value>
   </data>
   <data name="Dashboard_TabBackgroundAudio.Header" xml:space="preserve">
-    <value>ðŸ”Š Background Audio</value>
+    <value>🔊 Background Audio</value>
   </data>
   <data name="Dashboard_AudioDesc.Text" xml:space="preserve">
     <value>Apps playing audio while not in focus</value>
@@ -326,7 +326,7 @@
     <value>Ajajoon</value>
   </data>
   <data name="Sessions_Subtitle.Text" xml:space="preserve">
-    <value>Visualiseerige oma pÃ¤eva.</value>
+    <value>Visualiseerige oma päeva.</value>
   </data>
   <data name="Sessions_ZoomOut.Content" xml:space="preserve">
     <value>Zoom Out</value>

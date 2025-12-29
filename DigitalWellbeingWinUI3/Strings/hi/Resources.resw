@@ -86,7 +86,7 @@
     <value>Daily Trends</value>
   </data>
   <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>ðŸ“Š Day-by-day usage</value>
+    <value>📊 Day-by-day usage</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
     <value>Orange line = previous period average</value>
@@ -122,10 +122,10 @@
     <value>Apply Changes</value>
   </data>
   <data name="Settings_Title.Text" xml:space="preserve">
-    <value>à¤¸à¥‡à¤Ÿà¤¿à¤‚à¤—à¥à¤¸</value>
+    <value>सेटिंग्स</value>
   </data>
   <data name="Settings_AppRuntime.Text" xml:space="preserve">
-    <value>à¤à¤ª à¤°à¤¨à¤Ÿà¤¾à¤‡à¤®</value>
+    <value>ऐप रनटाइम</value>
   </data>
   <data name="Settings_RunOnStartup.Text" xml:space="preserve">
     <value>Run on Startup</value>
@@ -140,7 +140,7 @@
     <value>Minimize the app to tray on exit instead of closing.</value>
   </data>
   <data name="Settings_UsageData.Text" xml:space="preserve">
-    <value>à¤‰à¤ªà¤¯à¥‹à¤— à¤¡à¥‡à¤Ÿà¤¾</value>
+    <value>उपयोग डेटा</value>
   </data>
   <data name="Settings_IncognitoMode.Text" xml:space="preserve">
     <value>Incognito Mode</value>
@@ -161,7 +161,7 @@
     <value>Double-click to remove time limit.</value>
   </data>
   <data name="Settings_Display.Text" xml:space="preserve">
-    <value>à¤ªà¥à¤°à¤¦à¤°à¥à¤¶à¤¨</value>
+    <value>प्रदर्शन</value>
   </data>
   <data name="Settings_DaysToShow.Text" xml:space="preserve">
     <value>Days to show on graph</value>
@@ -212,7 +212,7 @@
     <value>Show Active Windows and Background Audio on same page instead of tabs.</value>
   </data>
   <data name="Settings_Data.Text" xml:space="preserve">
-    <value>à¤¡à¥‡à¤Ÿà¤¾</value>
+    <value>डेटा</value>
   </data>
   <data name="Settings_LogStorage.Text" xml:space="preserve">
     <value>Log Storage Location</value>
@@ -236,7 +236,7 @@
     <value>How often usage data in RAM is saved to disk. Lower values = more disk writes but better recovery on crash (Default 300s = 5 min).</value>
   </data>
   <data name="Settings_AppTags.Text" xml:space="preserve">
-    <value>à¤à¤ª à¤Ÿà¥ˆà¤—</value>
+    <value>ऐप टैग</value>
   </data>
   <data name="Settings_ManageTags.Text" xml:space="preserve">
     <value>Manage Categories and Colors</value>
@@ -245,67 +245,67 @@
     <value>Add Tag</value>
   </data>
   <data name="Settings_About.Text" xml:space="preserve">
-    <value>à¤•à¥‡ à¤¬à¤¾à¤°à¥‡ à¤®à¥‡à¤‚</value>
+    <value>के बारे में</value>
   </data>
   <data name="Settings_CreatedBy.Text" xml:space="preserve">
     <value>Created by David Cepero</value>
   </data>
   <data name="Settings_Copyright.Text" xml:space="preserve">
-    <value>Copyright Â© 2025. All rights reserved.</value>
+    <value>Copyright © 2025. All rights reserved.</value>
   </data>
   <data name="Settings_SourceCode.Content" xml:space="preserve">
     <value>Source Code (GitHub)</value>
   </data>
   <data name="Settings_AppVersion" xml:space="preserve">
-    <value>à¤¸à¤‚à¤¸à¥à¤•à¤°à¤£ {0}</value>
+    <value>संस्करण {0}</value>
   </data>
   <data name="Nav_Dashboard.Content" xml:space="preserve">
-    <value>à¤¡à¥ˆà¤¶à¤¬à¥‹à¤°à¥à¤¡</value>
+    <value>डैशबोर्ड</value>
   </data>
   <data name="Nav_History.Content" xml:space="preserve">
-    <value>à¤µà¤¿à¤¤à¤°à¤£ à¤µà¤¿à¤¶à¥à¤²à¥‡à¤·à¤£</value>
+    <value>वितरण विश्लेषण</value>
   </data>
   <data name="Nav_Sessions.Content" xml:space="preserve">
-    <value>à¤µà¤¿à¤¸à¥à¤¤à¥ƒà¤¤ à¤‰à¤ªà¤¯à¥‹à¤—</value>
+    <value>विस्तृत उपयोग</value>
   </data>
   <data name="Tray_Open.Text" xml:space="preserve">
-    <value>à¤–à¥‹à¤²à¥‡à¤‚</value>
+    <value>खोलें</value>
   </data>
   <data name="Tray_Settings.Text" xml:space="preserve">
-    <value>à¤¸à¥‡à¤Ÿà¤¿à¤‚à¤—à¥à¤¸</value>
+    <value>सेटिंग्स</value>
   </data>
   <data name="Tray_Exit.Text" xml:space="preserve">
-    <value>à¤¬à¤¾à¤¹à¤° à¤¨à¤¿à¤•à¤²à¥‡à¤‚</value>
+    <value>बाहर निकलें</value>
   </data>
   <data name="Dashboard_SetTimeLimit.Text" xml:space="preserve">
-    <value>à¤¸à¤®à¤¯ à¤¸à¥€à¤®à¤¾ à¤¸à¥‡à¤Ÿ à¤•à¤°à¥‡à¤‚</value>
+    <value>समय सीमा सेट करें</value>
   </data>
   <data name="Dashboard_SetCategory.Text" xml:space="preserve">
-    <value>à¤¶à¥à¤°à¥‡à¤£à¥€ à¤¸à¥‡à¤Ÿ à¤•à¤°à¥‡à¤‚</value>
+    <value>श्रेणी सेट करें</value>
   </data>
   <data name="Dashboard_SetDisplayName.Text" xml:space="preserve">
-    <value>à¤ªà¥à¤°à¤¦à¤°à¥à¤¶à¤¨ à¤¨à¤¾à¤® à¤¸à¥‡à¤Ÿ à¤•à¤°à¥‡à¤‚...</value>
+    <value>प्रदर्शन नाम सेट करें...</value>
   </data>
   <data name="Dashboard_SetCustomIcon.Text" xml:space="preserve">
-    <value>à¤•à¤¸à¥à¤Ÿà¤® à¤†à¤‡à¤•à¤¨...</value>
+    <value>कस्टम आइकन...</value>
   </data>
   <data name="Dashboard_ExcludeApp.Text" xml:space="preserve">
-    <value>à¤à¤ª à¤•à¥‹ à¤¬à¤¾à¤¹à¤° à¤•à¤°à¥‡à¤‚</value>
+    <value>ऐप को बाहर करें</value>
   </data>
   <data name="Dashboard_Total.Text" xml:space="preserve">
-    <value>à¤•à¥à¤²:</value>
+    <value>कुल:</value>
   </data>
   <data name="Dashboard_DailyActivity.Text" xml:space="preserve">
-    <value>à¤¦à¥ˆà¤¨à¤¿à¤• à¤—à¤¤à¤¿à¤µà¤¿à¤§à¤¿</value>
+    <value>दैनिक गतिविधि</value>
   </data>
   <data name="Dashboard_UsageSummary.Text" xml:space="preserve">
-    <value>à¤‰à¤ªà¤¯à¥‹à¤— à¤¸à¤¾à¤°à¤¾à¤‚à¤¶</value>
+    <value>उपयोग सारांश</value>
   </data>
   <data name="Dashboard_TabActiveWindows.Header" xml:space="preserve">
-    <value>ðŸ“Š Active Windows</value>
+    <value>📊 Active Windows</value>
   </data>
   <data name="Dashboard_TabBackgroundAudio.Header" xml:space="preserve">
-    <value>ðŸ”Š Background Audio</value>
+    <value>🔊 Background Audio</value>
   </data>
   <data name="Dashboard_AudioDesc.Text" xml:space="preserve">
     <value>Apps playing audio while not in focus</value>
@@ -314,19 +314,19 @@
     <value>No background audio detected</value>
   </data>
   <data name="Dashboard_ActiveWindows.Text" xml:space="preserve">
-    <value>à¤¸à¤•à¥à¤°à¤¿à¤¯ à¤µà¤¿à¤‚à¤¡à¥‹à¤œà¤¼</value>
+    <value>सक्रिय विंडोज़</value>
   </data>
   <data name="Dashboard_BackgroundAudio.Text" xml:space="preserve">
-    <value>à¤ªà¥ƒà¤·à¥à¤ à¤­à¥‚à¤®à¤¿ à¤‘à¤¡à¤¿à¤¯à¥‹</value>
+    <value>पृष्ठभूमि ऑडियो</value>
   </data>
   <data name="Dashboard_NotCounted.Text" xml:space="preserve">
     <value>(not counted)</value>
   </data>
   <data name="Sessions_Title.Text" xml:space="preserve">
-    <value>à¤¸à¤®à¤¯à¤°à¥‡à¤–à¤¾</value>
+    <value>समयरेखा</value>
   </data>
   <data name="Sessions_Subtitle.Text" xml:space="preserve">
-    <value>à¤…à¤ªà¤¨à¥‡ à¤¦à¤¿à¤¨ à¤•à¥€ à¤•à¤²à¥à¤ªà¤¨à¤¾ à¤•à¤°à¥‡à¤‚à¥¤</value>
+    <value>अपने दिन की कल्पना करें।</value>
   </data>
   <data name="Sessions_ZoomOut.Content" xml:space="preserve">
     <value>Zoom Out</value>
