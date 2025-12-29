@@ -271,6 +271,9 @@
   <data name="Nav_Sessions.Content" xml:space="preserve">
     <value>Detailed Usage</value>
   </data>
+  <data name="Nav_Focus.Content" xml:space="preserve">
+    <value>Focus Schedule</value>
+  </data>
   <data name="Tray_Open.Text" xml:space="preserve">
     <value>Open</value>
   </data>

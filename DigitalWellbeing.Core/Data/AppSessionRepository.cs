@@ -1,6 +1,7 @@
 using DigitalWellbeing.Core.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 
@@ -78,8 +79,8 @@ namespace DigitalWellbeing.Core.Data
                             {
                                 string processName = parts[0];
                                 string programName = parts[1];
-                                long startTicks = long.Parse(parts[2]);
-                                long endTicks = long.Parse(parts[3]);
+                                long startTicks = long.Parse(parts[2], CultureInfo.InvariantCulture);
+                                long endTicks = long.Parse(parts[3], CultureInfo.InvariantCulture);
                                 bool isAfk = bool.Parse(parts[4]);
 
                                 System.Collections.Generic.List<string> audioSources = null;

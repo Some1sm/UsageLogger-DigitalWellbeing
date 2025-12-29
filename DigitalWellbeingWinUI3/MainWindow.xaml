@@ -53,7 +53,7 @@
                         <FontIcon Glyph="&#xE9F9;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Content="Focus Schedule" Tag="Focus">
+                <NavigationViewItem x:Uid="Nav_Focus" Tag="Focus">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE823;"/>
                     </NavigationViewItem.Icon>

@@ -337,4 +337,7 @@
   <data name="History_Activity" xml:space="preserve">
     <value>Activity</value>
   </data>
+  <data name="Nav_Focus.Content" xml:space="preserve">
+    <value>Focus Schedule</value>
+  </data>
 </root>
