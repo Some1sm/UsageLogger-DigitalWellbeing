@@ -13,8 +13,8 @@ The solution uses a **Hybrid Architecture** with two distinct processes:
     *   **Framework**: .NET 8, WinUI 3 (Unpackaged).
     *   **Responsibility**: Visualization, Settings, User Interaction.
     *   **Rendering**: LiveCharts2 (SkiaSharp) for high-performance charting.
-2.  **Background Service (`DigitalWellbeingService.NET4.6`)**
-    *   **Framework**: .NET Framework 4.7.2.
+2.  **Background Service (`DigitalWellbeingService`)**
+    *   **Framework**: .NET 8.
     *   **Responsibility**: Silent polling of active processes (User32.dll), logging usage.
     *   **Constraint**: Must run robustly and independently of the UI.
 
