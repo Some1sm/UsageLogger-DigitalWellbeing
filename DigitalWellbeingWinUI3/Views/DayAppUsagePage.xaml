@@ -17,7 +17,7 @@
                                 <FontIcon Glyph="&#xE823;"/>
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutSubItem l:Uids.Uid="Dashboard_SetCategory">
+                        <MenuFlyoutSubItem l:Uids.Uid="Dashboard_SetCategory" Tag="SetCategory_SubItem">
                             <MenuFlyoutSubItem.Icon>
                                 <FontIcon Glyph="&#xE8EC;"/>
                             </MenuFlyoutSubItem.Icon>

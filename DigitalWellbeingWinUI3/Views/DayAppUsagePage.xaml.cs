@@ -194,7 +194,7 @@ namespace DigitalWellbeingWinUI3.Views
         {
             if (sender is MenuFlyout flyout && flyout.Target is FrameworkElement target && target.DataContext is DigitalWellbeingWinUI3.Models.AppUsageListItem appItem)
             {
-                var categoryItem = flyout.Items.OfType<MenuFlyoutSubItem>().FirstOrDefault(i => i.Text == "Set Category");
+                var categoryItem = flyout.Items.OfType<MenuFlyoutSubItem>().FirstOrDefault(i => (i.Tag as string) == "SetCategory_SubItem");
                 if (categoryItem != null)
                 {
                     categoryItem.Items.Clear();
