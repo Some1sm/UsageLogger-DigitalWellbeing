@@ -98,6 +98,43 @@ namespace DigitalWellbeingWinUI3.Views
             }
             if (CBTheme.SelectedItem == null) CBTheme.SelectedIndex = 0; // Default System
 
+            // Language
+            // Language
+            try
+            {
+                // Priority: Manual Preference > System Override > Default
+                string currentLang = UserPreferences.LanguageCode;
+                Debug.WriteLine($"[Settings] LoadCurrentSettings - LanguageCode from UserPreferences: '{currentLang}'");
+                if (string.IsNullOrEmpty(currentLang))
+                {
+                    currentLang = Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride;
+                    Debug.WriteLine($"[Settings] LoadCurrentSettings - Fallback to PrimaryLanguageOverride: '{currentLang}'");
+                }
+
+                bool foundLang = false;
+                foreach (ComboBoxItem item in CBLanguage.Items)
+                {
+                    string tagValue = item.Tag?.ToString() ?? "";
+                    if (tagValue == currentLang)
+                    {
+                        CBLanguage.SelectedItem = item;
+                        foundLang = true;
+                        Debug.WriteLine($"[Settings] LoadCurrentSettings - Found matching language: '{tagValue}'");
+                        break;
+                    }
+                }
+                if (!foundLang)
+                {
+                    Debug.WriteLine($"[Settings] LoadCurrentSettings - No match found, defaulting to index 0");
+                    CBLanguage.SelectedIndex = 0; // Default
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error loading language: {ex.Message}");
+                CBLanguage.SelectedIndex = 0;
+            }
+
             // Combined Audio View
             ToggleCombinedAudioView.IsOn = UserPreferences.ShowCombinedAudioView;
 
@@ -212,7 +249,14 @@ namespace DigitalWellbeingWinUI3.Views
             UserPreferences.DataFlushIntervalSeconds = (int)DataFlushIntervalTextBox.Value;
 
             // Startup
-            SettingsManager.SetRunOnStartup(EnableRunOnStartup.IsOn);
+            try
+            {
+                SettingsManager.SetRunOnStartup(EnableRunOnStartup.IsOn);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Startup registry error: {ex.Message}");
+            }
 
             // Theme
             if (CBTheme.SelectedItem is ComboBoxItem item)
@@ -225,6 +269,32 @@ namespace DigitalWellbeingWinUI3.Views
                     ElementTheme rTheme = ElementTheme.Default;
                     Enum.TryParse(theme, out rTheme);
                     (window.Content as FrameworkElement).RequestedTheme = rTheme;
+                }
+            }
+
+            // Language (Requires Restart usually)
+            if (CBLanguage.SelectedItem is ComboBoxItem langItem)
+            {
+                try 
+                {
+                    string code = langItem.Tag?.ToString() ?? "";
+                    Debug.WriteLine($"[Settings] ApplyAll_Click - Setting LanguageCode to: '{code}'");
+                    
+                    // Save to manual preference
+                    UserPreferences.LanguageCode = code;
+                    Debug.WriteLine($"[Settings] ApplyAll_Click - UserPreferences.LanguageCode is now: '{UserPreferences.LanguageCode}'");
+
+                    // Try to set system override as well (best effort)
+                    string current = Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride;
+                    if (current != code)
+                    {
+                        // Update
+                        Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = code;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error saving language preference: {ex.Message}");
                 }
             }
 
@@ -281,6 +351,11 @@ namespace DigitalWellbeingWinUI3.Views
         }
 
         private void CBTheme_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            MarkDirty();
+        }
+
+        private void CBLanguage_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             MarkDirty();
         }

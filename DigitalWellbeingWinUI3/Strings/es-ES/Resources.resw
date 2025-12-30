@@ -205,6 +205,12 @@
   <data name="Settings_ThemeDark.Content" xml:space="preserve">
     <value>Oscuro</value>
   </data>
+  <data name="Settings_Language.Text" xml:space="preserve">
+    <value>Idioma</value>
+  </data>
+  <data name="Settings_LanguageDesc.Text" xml:space="preserve">
+    <value>Selecciona el idioma de la aplicación (requiere reiniciar)</value>
+  </data>
   <data name="Settings_CombinedAudio.Text" xml:space="preserve">
     <value>Vista Audio Combinada</value>
   </data>

@@ -32,6 +32,7 @@ namespace DigitalWellbeingWinUI3.Helpers
         public static Dictionary<string, string> TitleDisplayNames { get; set; } = new Dictionary<string, string>();
         public static Dictionary<string, int> TitleTimeLimits { get; set; } = new Dictionary<string, int>();
         public static List<string> ExcludedTitles { get; set; } = new List<string>();
+        public static string LanguageCode { get; set; } = "";
 
         static UserPreferences()
         {
@@ -62,14 +63,18 @@ namespace DigitalWellbeingWinUI3.Helpers
                     CustomIconPaths,
                     TitleDisplayNames,
                     TitleTimeLimits,
-                    ExcludedTitles
+                    ExcludedTitles,
+                    LanguageCode
                 };
 
                 string json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
                 Directory.CreateDirectory(Path.GetDirectoryName(SettingsPath));
                 File.WriteAllText(SettingsPath, json);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"UserPreferences Save Error: {ex}");
+            }
         }
 
         public static void Load()
@@ -100,6 +105,7 @@ namespace DigitalWellbeingWinUI3.Helpers
                     if (data.TryGetProperty(nameof(TitleDisplayNames), out prop)) TitleDisplayNames = JsonSerializer.Deserialize<Dictionary<string, string>>(prop.GetRawText()) ?? new Dictionary<string, string>();
                     if (data.TryGetProperty(nameof(TitleTimeLimits), out prop)) TitleTimeLimits = JsonSerializer.Deserialize<Dictionary<string, int>>(prop.GetRawText()) ?? new Dictionary<string, int>();
                     if (data.TryGetProperty(nameof(ExcludedTitles), out prop)) ExcludedTitles = JsonSerializer.Deserialize<List<string>>(prop.GetRawText()) ?? new List<string>();
+                    if (data.TryGetProperty(nameof(LanguageCode), out prop)) LanguageCode = prop.GetString() ?? "";
                 }
 
                 // Default Initialization

@@ -16,9 +16,11 @@ using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
+using WinUI3Localizer;
 
 namespace DigitalWellbeingWinUI3
 {
@@ -27,7 +29,7 @@ namespace DigitalWellbeingWinUI3
         public App()
         {
             this.InitializeComponent();
-            this.UnhandledException += App_UnhandledException; // Handle unhandled exceptions
+            this.UnhandledException += App_UnhandledException;
 
             LiveCharts.Configure(config =>
                 config
@@ -40,16 +42,19 @@ namespace DigitalWellbeingWinUI3
         private void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
         {
             LogCrash(e.Exception);
-            e.Handled = true; // Try to keep alive to show message? No, just log.
+            e.Handled = true;
         }
 
-        protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+        protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
             try
             {
-                // Load user preferences before initializing UI
+                // Load user preferences first
                 Helpers.UserPreferences.Load();
-                
+
+                // Initialize WinUI3Localizer BEFORE creating any windows
+                await InitializeLocalizerAsync();
+
                 m_window = new MainWindow();
                 MainWindow = (MainWindow)m_window;
                 m_window.Activate();
@@ -60,6 +65,62 @@ namespace DigitalWellbeingWinUI3
             }
         }
 
+        /// <summary>
+        /// Initializes WinUI3Localizer with the Strings folder and user's preferred language.
+        /// </summary>
+        private async Task InitializeLocalizerAsync()
+        {
+            try
+            {
+                // Path to the Strings folder (copied to output directory)
+                string stringsFolderPath = System.IO.Path.Combine(AppContext.BaseDirectory, "Strings");
+
+                // Get user's preferred language
+                // Empty string means "System Default" - use system language
+                string preferredLanguage = Helpers.UserPreferences.LanguageCode;
+                
+                if (string.IsNullOrEmpty(preferredLanguage))
+                {
+                    // Get the system's primary language
+                    var languages = Windows.System.UserProfile.GlobalizationPreferences.Languages;
+                    if (languages != null && languages.Count > 0)
+                    {
+                        preferredLanguage = languages[0]; // e.g., "en-US", "es-ES"
+                    }
+                    else
+                    {
+                        preferredLanguage = "en-US"; // Final fallback
+                    }
+                    Debug.WriteLine($"[App] Using system language: {preferredLanguage}");
+                }
+                else
+                {
+                    Debug.WriteLine($"[App] Using user-selected language: {preferredLanguage}");
+                }
+
+                Debug.WriteLine($"[App] Strings folder: {stringsFolderPath}");
+
+                // Build the localizer
+                ILocalizer localizer = await new LocalizerBuilder()
+                    .AddStringResourcesFolderForLanguageDictionaries(stringsFolderPath)
+                    .SetOptions(options =>
+                    {
+                        options.DefaultLanguage = "en-US"; // Fallback for missing translations
+                    })
+                    .Build();
+
+                // Set the user's preferred language
+                await localizer.SetLanguage(preferredLanguage);
+
+                Debug.WriteLine($"[App] WinUI3Localizer initialized with language: {preferredLanguage}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[App] WinUI3Localizer initialization error: {ex.Message}");
+                // Continue without localization if it fails
+            }
+        }
+
         private void LogCrash(Exception ex)
         {
             try
@@ -67,9 +128,6 @@ namespace DigitalWellbeingWinUI3
                 string path = System.IO.Path.Combine(AppContext.BaseDirectory, "startup_crash.txt");
                 string message = $"[{DateTime.Now}] CRASH: {ex.ToString()}\n\nSTACK: {ex.StackTrace}\n\nINNER: {ex.InnerException?.ToString()}";
                 System.IO.File.AppendAllText(path, message);
-                
-                // Also try to show a message box if possible (native)
-                // or just rely on file.
             }
             catch { }
         }

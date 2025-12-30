@@ -208,6 +208,12 @@
   <data name="Settings_ThemeDark.Content" xml:space="preserve">
     <value>Dark</value>
   </data>
+  <data name="Settings_Language.Text" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="Settings_LanguageDesc.Text" xml:space="preserve">
+    <value>Select application language (requires restart)</value>
+  </data>
   <data name="Settings_CombinedAudio.Text" xml:space="preserve">
     <value>Combined Audio View</value>
   </data>

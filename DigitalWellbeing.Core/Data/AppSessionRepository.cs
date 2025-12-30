@@ -147,8 +147,13 @@ namespace DigitalWellbeing.Core.Data
             string filePath = GetFilePath(session.StartTime.Date);
             Directory.CreateDirectory(_logsFolderPath);
 
+            // SANITIZATION: Remove tabs and newlines to prevent CSV corruption
+            string cleanProcess = session.ProcessName?.Replace("\t", " ")?.Replace("\r", "")?.Replace("\n", "") ?? "";
+            string cleanProgram = session.ProgramName?.Replace("\t", " ")?.Replace("\r", "")?.Replace("\n", "") ?? "";
+
             string audioStr = (session.AudioSources != null && session.AudioSources.Count > 0) ? string.Join(";", session.AudioSources) : "";
-            string line = $"{session.ProcessName}\t{session.ProgramName}\t{session.StartTime.Ticks}\t{session.EndTime.Ticks}\t{session.IsAfk}\t{audioStr}";
+            string line = $"{cleanProcess}\t{cleanProgram}\t{session.StartTime.Ticks}\t{session.EndTime.Ticks}\t{session.IsAfk}\t{audioStr}";
+
 
             try
             {
@@ -203,8 +208,13 @@ namespace DigitalWellbeing.Core.Data
                 string filePath = GetFilePath(session.StartTime.Date);
                 Directory.CreateDirectory(_logsFolderPath);
 
+                // SANITIZATION: Remove tabs and newlines to prevent CSV corruption
+                string cleanProcess = session.ProcessName?.Replace("\t", " ")?.Replace("\r", "")?.Replace("\n", "") ?? "";
+                string cleanProgram = session.ProgramName?.Replace("\t", " ")?.Replace("\r", "")?.Replace("\n", "") ?? "";
+
                 string audioStr = (session.AudioSources != null && session.AudioSources.Count > 0) ? string.Join(";", session.AudioSources) : "";
-                string newLine = $"{session.ProcessName}\t{session.ProgramName}\t{session.StartTime.Ticks}\t{session.EndTime.Ticks}\t{session.IsAfk}\t{audioStr}";
+                string newLine = $"{cleanProcess}\t{cleanProgram}\t{session.StartTime.Ticks}\t{session.EndTime.Ticks}\t{session.IsAfk}\t{audioStr}";
+
 
                 using (var fs = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
                 {
@@ -267,7 +277,8 @@ namespace DigitalWellbeing.Core.Data
                         if (parts.Length >= 5)
                         {
                             string processName = parts[0];
-                            long startTicks = long.Parse(parts[2]);
+
+                            long.TryParse(parts[2], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out long startTicks);
                             
                             // Check if it's the same session (Same Start Time exactly)
                             if (processName == session.ProcessName && startTicks == session.StartTime.Ticks)

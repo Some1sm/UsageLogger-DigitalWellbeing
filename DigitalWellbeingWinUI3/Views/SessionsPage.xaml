@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Page
     x:Class="DigitalWellbeingWinUI3.Views.SessionsPage"
     x:Name="RootPage"
@@ -8,6 +8,7 @@
     xmlns:controls="using:DigitalWellbeingWinUI3.Views.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:l="using:WinUI3Localizer"
     mc:Ignorable="d">
 
     <Grid>
@@ -20,8 +21,8 @@
         <!-- Header -->
         <Grid Grid.Row="0" Margin="24,24,24,10">
             <StackPanel Spacing="4">
-                <TextBlock x:Uid="Sessions_Title" Style="{ThemeResource TitleTextBlockStyle}"/>
-                <TextBlock x:Uid="Sessions_Subtitle" Style="{ThemeResource BodyTextBlockStyle}" Opacity="0.6"/>
+                <TextBlock l:Uids.Uid="Sessions_Title" Style="{ThemeResource TitleTextBlockStyle}"/>
+                <TextBlock l:Uids.Uid="Sessions_Subtitle" Style="{ThemeResource BodyTextBlockStyle}" Opacity="0.6"/>
             </StackPanel>
         </Grid>
 
@@ -58,8 +59,8 @@
             <!-- Zoom Controls -->
             <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="16">
                 <StackPanel Orientation="Horizontal" Spacing="8">
-                    <Button x:Uid="Sessions_ZoomOut" Command="{x:Bind ViewModel.ZoomOutCommand}"/>
-                    <Button x:Uid="Sessions_ZoomIn" Command="{x:Bind ViewModel.ZoomInCommand}"/>
+                    <Button l:Uids.Uid="Sessions_ZoomOut" Command="{x:Bind ViewModel.ZoomOutCommand}"/>
+                    <Button l:Uids.Uid="Sessions_ZoomIn" Command="{x:Bind ViewModel.ZoomInCommand}"/>
                 </StackPanel>
             </StackPanel>
         </Grid>

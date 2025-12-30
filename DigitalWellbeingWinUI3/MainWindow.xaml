@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Window
     x:Class="DigitalWellbeingWinUI3.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -7,6 +7,7 @@
     xmlns:tb="using:H.NotifyIcon"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:l="using:WinUI3Localizer"
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -29,31 +30,31 @@
         <tb:TaskbarIcon x:Name="TrayIcon" DoubleClickCommand="{x:Bind OpenCommand}" ToolTipText="Digital Wellbeing">
             <tb:TaskbarIcon.ContextFlyout>
                 <MenuFlyout>
-                    <MenuFlyoutItem x:Uid="Tray_Open" Command="{x:Bind OpenCommand}" />
-                    <MenuFlyoutItem x:Uid="Tray_Settings" Command="{x:Bind SettingsCommand}" />
+                    <MenuFlyoutItem l:Uids.Uid="Tray_Open" Command="{x:Bind OpenCommand}" />
+                    <MenuFlyoutItem l:Uids.Uid="Tray_Settings" Command="{x:Bind SettingsCommand}" />
                     <MenuFlyoutSeparator />
-                    <MenuFlyoutItem x:Uid="Tray_Exit" Command="{x:Bind ExitCommand}" />
+                    <MenuFlyoutItem l:Uids.Uid="Tray_Exit" Command="{x:Bind ExitCommand}" />
                 </MenuFlyout>
             </tb:TaskbarIcon.ContextFlyout>
         </tb:TaskbarIcon>
         <NavigationView x:Name="NavView" Grid.Row="1" IsBackButtonVisible="Collapsed" Loaded="NavView_Loaded" ItemInvoked="NavView_ItemInvoked">
             <NavigationView.MenuItems>
-                <NavigationViewItem x:Uid="Nav_Dashboard" Tag="Dashboard">
+                <NavigationViewItem l:Uids.Uid="Nav_Dashboard" Tag="Dashboard">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE80F;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem x:Uid="Nav_History" Tag="History">
+                <NavigationViewItem l:Uids.Uid="Nav_History" Tag="History">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE9D9;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem x:Uid="Nav_Sessions" Tag="Sessions">
+                <NavigationViewItem l:Uids.Uid="Nav_Sessions" Tag="Sessions">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE9F9;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem x:Uid="Nav_Focus" Tag="Focus">
+                <NavigationViewItem l:Uids.Uid="Nav_Focus" Tag="Focus">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE823;"/>
                     </NavigationViewItem.Icon>
