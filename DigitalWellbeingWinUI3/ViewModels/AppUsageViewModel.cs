@@ -769,6 +769,9 @@ namespace DigitalWellbeingWinUI3.ViewModels
                     existing.Duration = newItem.Duration;
                     existing.Percentage = newItem.Percentage;
                     
+                    // FORCE METADATA REFRESH: Updates DisplayName and Icon if they changed via context menu
+                    existing.Refresh();
+                    
                     // Update Children if they changed (different day or data changed)
                     // Compare by checking if children count differs or first child differs
                     bool childrenChanged = existing.Children.Count != newItem.Children.Count;

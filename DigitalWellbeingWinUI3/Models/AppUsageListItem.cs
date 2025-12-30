@@ -31,8 +31,31 @@ namespace DigitalWellbeingWinUI3.Models
         }
         
         public string StrDuration { get => StringHelper.TimeSpanToString(Duration); }
-        public ImageSource IconSource { get; set; }
+        private ImageSource _iconSource;
+        public ImageSource IconSource 
+        { 
+            get => _iconSource; 
+            set { if (_iconSource != value) { _iconSource = value; OnPropertyChanged(); } } 
+        }
 
+        // ...
+
+        public void Refresh()
+        {
+            OnPropertyChanged(nameof(DisplayName)); // Refresh display name from UserPreferences
+            OnPropertyChanged(nameof(Percentage));
+            OnPropertyChanged(nameof(Duration));
+            OnPropertyChanged(nameof(StrDuration));
+
+            OnPropertyChanged(nameof(_AppTag));
+            OnPropertyChanged(nameof(StrAppTag));
+            OnPropertyChanged(nameof(BrushAppTag));
+            OnPropertyChanged(nameof(BrushAppTagBg));
+            OnPropertyChanged(nameof(BrushAppTagInnerBg));
+            
+            // Reload Icon
+            IconSource = IconManager.GetIconSource(ProcessName);
+        }
         private AppTag _appTag;
         public AppTag _AppTag 
         { 
@@ -101,6 +124,7 @@ namespace DigitalWellbeingWinUI3.Models
             ProgramName = programName;
             Duration = duration;
             Percentage = percentage;
+            // IconSource setter will fire notification, but that's fine/ignored in ctor
             IconSource = IconManager.GetIconSource(processName);
             _AppTag = appTag;
             
@@ -114,24 +138,6 @@ namespace DigitalWellbeingWinUI3.Models
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public void Refresh()
-        {
-            OnPropertyChanged(nameof(ProcessName));
-            OnPropertyChanged(nameof(DisplayName));
-            OnPropertyChanged(nameof(Percentage));
-
-            OnPropertyChanged(nameof(Duration));
-            OnPropertyChanged(nameof(StrDuration));
-
-            OnPropertyChanged(nameof(_AppTag));
-            OnPropertyChanged(nameof(StrAppTag));
-            OnPropertyChanged(nameof(StrAppTag));
-            OnPropertyChanged(nameof(BrushAppTag));
-            OnPropertyChanged(nameof(BrushAppTagBg));
-            OnPropertyChanged(nameof(BrushAppTagInnerBg));
-            
-            // Refresh Icon if needed?
-        }
     }
 
 

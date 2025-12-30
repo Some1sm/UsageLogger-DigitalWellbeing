@@ -46,12 +46,18 @@ The solution uses a **Hybrid Architecture** with two distinct processes:
     *   **Tooltips**: Use `YToolTipLabelFormatter` (Cartesian) or `ToolTipLabelFormatter` (Pie/Heatmap).
     *   **Format**: Always format durations as `Xh Ym` (never decimals like "1.5h").
     *   **Colors**: Listen to `UISettings.ColorValuesChanged` to generate dynamic gradients based on the user's System Accent Color.
+*   **Timeline Visualization**:
+    *   **Clutter Control**: Use label collision detection (hide overlapping text) and enforces minimum height thresholds (16px text, 28px sub-details).
+    *   **Smart Tooltips**: Prioritize the smallest/most specific non-AFK block under the cursor to handle overlapping elements (e.g. Chrome vs Background).
+    *   **Incognito Merging**: When `IncognitoMode` is true, force app grouping by `ProcessName` (ignoring Window Titles) to merge fragmented sessions into single continuous blocks.
 
 ## 6. Coding Standards
 *   **Async/Threading**: Heavy data work happens on background threads. Use `DispatcherQueue` to update UI.
+*   **Live Metadata Updates**: ViewModels must explicitly notify/refresh metadata (Icon, Title, Tags) for existing list items during updates (e.g., `UpdateListInPlace`), as these are not automatically rebound if only data properties change.
 *   **Self-Healing**: The app validates data on startup (e.g. cleaning "Orphan Tags").
 *   **Sub-Apps**:
     *   We track specific window titles (e.g., "YouTube - Chrome") as children of the main process ("chrome.exe").
+    *   **Tag Resolution**: Always check `GetTitleTagId` (specific) before falling back to `GetAppTag` (process generic).
     *   Always truncate long sub-app titles to ~30 chars in charts.
 
 ## 7. Project Locations

@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Linq;
 using DigitalWellbeing.Core.Models;
 using DigitalWellbeingWinUI3.Models;
+using DigitalWellbeingWinUI3.Helpers;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 
@@ -102,7 +103,12 @@ namespace DigitalWellbeingWinUI3.ViewModels
             if (_cachedSessions == null) return;
 
             var newBlocks = new ObservableCollection<SessionBlock>();
-            var processGroups = _cachedSessions.GroupBy(s => !string.IsNullOrEmpty(s.ProgramName) ? s.ProgramName : s.ProcessName);
+            // Force GroupBy ProcessName in Incognito mode to merge fragmented sessions
+            var processGroups = _cachedSessions.GroupBy(s => 
+                UserPreferences.IncognitoMode 
+                    ? s.ProcessName 
+                    : (!string.IsNullOrEmpty(s.ProgramName) ? s.ProgramName : s.ProcessName)
+            );
             var mergedBlocks = new List<SessionBlock>();
 
             foreach (var group in processGroups)
@@ -121,8 +127,26 @@ namespace DigitalWellbeingWinUI3.ViewModels
                     
                     if (validEnd <= validStart) continue;
 
-                    string title = string.IsNullOrEmpty(s.ProgramName) ? s.ProcessName : s.ProgramName;
-                    var tag = DigitalWellbeingWinUI3.Helpers.AppTagHelper.GetAppTag(s.ProcessName);
+                    // In Incognito mode, always use ProcessName for the label
+                    string title = UserPreferences.IncognitoMode 
+                        ? s.ProcessName 
+                        : (string.IsNullOrEmpty(s.ProgramName) ? s.ProcessName : s.ProgramName);
+                    
+                    // Check for sub-app specific tag first, fallback to parent process tag
+                    AppTag tag;
+                    if (!string.IsNullOrEmpty(s.ProgramName))
+                    {
+                        int? titleTagId = DigitalWellbeingWinUI3.Helpers.SettingsManager.GetTitleTagId(s.ProcessName, s.ProgramName);
+                        if (titleTagId.HasValue)
+                            tag = (AppTag)titleTagId.Value;
+                        else
+                            tag = DigitalWellbeingWinUI3.Helpers.AppTagHelper.GetAppTag(s.ProcessName);
+                    }
+                    else
+                    {
+                        tag = DigitalWellbeingWinUI3.Helpers.AppTagHelper.GetAppTag(s.ProcessName);
+                    }
+                    
                     var baseBrush = DigitalWellbeingWinUI3.Helpers.AppTagHelper.GetTagColor(tag) as SolidColorBrush;
                     Brush color = baseBrush;
 

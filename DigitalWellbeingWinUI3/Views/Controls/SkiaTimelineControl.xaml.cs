@@ -217,6 +217,9 @@ namespace DigitalWellbeingWinUI3.Views.Controls
             using var textPaint = new SKPaint { Style = SKPaintStyle.Fill, IsAntialias = true, Typeface = SKTypeface.FromFamilyName("Segoe UI") };
             using var strokePaint = new SKPaint { Style = SKPaintStyle.Stroke, StrokeWidth = 1, IsAntialias = true };
 
+            // Label collision detection
+            var drawnLabels = new System.Collections.Generic.List<SKRect>();
+
             foreach (var block in sessionBlocks.ToList())
             {
                 float top = (float)(block.Top * scale);
@@ -241,26 +244,49 @@ namespace DigitalWellbeingWinUI3.Views.Controls
                     canvas.DrawRoundRect(new SKRect(4 * scale, top, mainBlockWidth, top + height), 4 * scale, 4 * scale, fillPaint);
                 }
 
-                // Main text - show if block is at least 12 pixels tall (absolute)
-                if (height > 12)
+                // Main text - show if block is at least 16 pixels tall (decluttering threshold)
+                if (height > 16)
                 {
                     textPaint.TextSize = Math.Max(9, Math.Min(12, height * 0.6f));
                     var displayName = UserPreferences.GetDisplayName(block.ProcessName);
                     string title = string.IsNullOrEmpty(displayName) ? block.Title : displayName;
                     textPaint.Color = blockColor;
-                    canvas.DrawText(ClipText(title, textPaint, mainBlockWidth - 20 * scale), 12 * scale, top + height * 0.65f, textPaint);
+                    
+                    float textX = 12 * scale;
+                    float textY = top + height * 0.65f;
+                    string clippedTitle = ClipText(title, textPaint, mainBlockWidth - 20 * scale);
+                    float textWidth = textPaint.MeasureText(clippedTitle);
+                    var labelRect = new SKRect(textX, textY - textPaint.TextSize, textX + textWidth, textY);
+                    
+                    // Check for collision
+                    bool collides = drawnLabels.Any(r => r.IntersectsWith(labelRect));
+                    if (!collides)
+                    {
+                        canvas.DrawText(clippedTitle, textX, textY, textPaint);
+                        drawnLabels.Add(labelRect);
+                    }
 
-                    // Duration text - show if at least 25 pixels tall
-                    if (height > 25)
+                    // Duration text - show if at least 28 pixels tall
+                    if (height > 28)
                     {
                         textPaint.TextSize = Math.Max(8, Math.Min(10, height * 0.35f));
                         textPaint.Color = new SKColor(128, 128, 128, 180);
-                        canvas.DrawText(block.DurationText ?? "", 12 * scale, top + height * 0.9f, textPaint);
+                        float durY = top + height * 0.9f;
+                        string durText = block.DurationText ?? "";
+                        float durWidth = textPaint.MeasureText(durText);
+                        var durRect = new SKRect(textX, durY - textPaint.TextSize, textX + durWidth, durY);
+                        
+                        bool durCollides = drawnLabels.Any(r => r.IntersectsWith(durRect));
+                        if (!durCollides)
+                        {
+                            canvas.DrawText(durText, textX, durY, textPaint);
+                            drawnLabels.Add(durRect);
+                        }
                     }
                 }
 
-                // Audio block - show if block is at least 8 pixels tall (absolute)
-                if (block.HasAudio && height > 8)
+                // Audio block - show if block is at least 12 pixels tall (decluttering threshold)
+                if (block.HasAudio && height > 12)
                 {
                     var audioRect = new SKRect(audioLeft, top, audioLeft + audioWidth, top + height);
                     fillPaint.Color = new SKColor(50, 50, 50, 220);
@@ -268,16 +294,16 @@ namespace DigitalWellbeingWinUI3.Views.Controls
                     strokePaint.Color = new SKColor(100, 100, 100, 150);
                     canvas.DrawRoundRect(audioRect, 4 * scale, 4 * scale, strokePaint);
                     
-                    // Audio icon - show if at least 12 pixels
-                    if (height > 12)
+                    // Audio icon - show if at least 16 pixels
+                    if (height > 16)
                     {
                         textPaint.TextSize = Math.Max(8, Math.Min(11, height * 0.5f));
                         textPaint.Color = new SKColor(200, 200, 200, 255);
                         canvas.DrawText("🔊", audioLeft + 3 * scale, top + height * 0.6f, textPaint);
                     }
                     
-                    // Audio source text - show if at least 20 pixels
-                    if (height > 20)
+                    // Audio source text - show if at least 24 pixels
+                    if (height > 24)
                     {
                         textPaint.TextSize = Math.Max(7, Math.Min(10, height * 0.35f));
                         textPaint.Color = new SKColor(230, 230, 230, 255);
@@ -287,6 +313,7 @@ namespace DigitalWellbeingWinUI3.Views.Controls
             }
             return true;
         }
+
 
         private string ClipText(string text, SKPaint paint, float maxWidth)
         {
@@ -317,42 +344,54 @@ namespace DigitalWellbeingWinUI3.Views.Controls
                 float audioLeft = mainBlockWidth + 6;
                 float audioWidth = (float)((_canvas.ActualWidth - 50) * 0.18);
 
-                foreach (var block in vm.SessionBlocks)
+                // Collect ALL blocks that intersect the mouse position
+                var mainCandidates = vm.SessionBlocks
+                    .Where(b => pos.Y >= b.Top && pos.Y <= b.Top + b.Height && pos.X >= 0 && pos.X <= mainBlockWidth)
+                    .ToList();
+                
+                var audioCandidates = vm.SessionBlocks
+                    .Where(b => b.HasAudio && pos.Y >= b.Top && pos.Y <= b.Top + b.Height && pos.X >= audioLeft && pos.X <= audioLeft + audioWidth)
+                    .ToList();
+
+                // Prioritize main blocks over audio
+                if (mainCandidates.Any())
                 {
-                    // Check main block
-                    if (pos.Y >= block.Top && pos.Y <= block.Top + block.Height && pos.X >= 0 && pos.X <= mainBlockWidth)
-                    {
-                        // Format duration nicely
-                        string durationStr = FormatDuration(block.OriginalSession?.Duration ?? TimeSpan.Zero);
-                        _tooltipText.Text = $"{block.Title}\n{durationStr}{(block.IsAfk ? " [AFK]" : "")}";
-                        _tooltipBorder.Visibility = Visibility.Visible;
-                        
-                        double left = Math.Min(pos.X + 15, _canvas.ActualWidth - 180);
-                        double top = pos.Y - 10;
-                        Canvas.SetLeft(_tooltipBorder, left);
-                        Canvas.SetTop(_tooltipBorder, top);
-                        return;
-                    }
+                    // Smart selection: prefer non-AFK, then smallest (most specific) block
+                    var best = mainCandidates
+                        .OrderBy(b => b.IsAfk ? 1 : 0) // Non-AFK first
+                        .ThenBy(b => b.Height)         // Smallest first (more specific)
+                        .First();
+
+                    string durationStr = FormatDuration(best.OriginalSession?.Duration ?? TimeSpan.Zero);
+                    _tooltipText.Text = $"{best.Title}\n{durationStr}{(best.IsAfk ? " [AFK]" : "")}";
+                    _tooltipBorder.Visibility = Visibility.Visible;
                     
-                    // Check audio block
-                    if (block.HasAudio && pos.Y >= block.Top && pos.Y <= block.Top + block.Height && 
-                        pos.X >= audioLeft && pos.X <= audioLeft + audioWidth)
-                    {
-                        string durationStr = FormatDuration(block.OriginalSession?.Duration ?? TimeSpan.Zero);
-                        _tooltipText.Text = $"🔊 Audio: {block.AudioSourcesText}\n{durationStr}";
-                        _tooltipBorder.Visibility = Visibility.Visible;
-                        
-                        double left = Math.Min(pos.X + 15, _canvas.ActualWidth - 180);
-                        double top = pos.Y - 10;
-                        Canvas.SetLeft(_tooltipBorder, left);
-                        Canvas.SetTop(_tooltipBorder, top);
-                        return;
-                    }
+                    double left = Math.Min(pos.X + 15, _canvas.ActualWidth - 180);
+                    double top = pos.Y - 10;
+                    Canvas.SetLeft(_tooltipBorder, left);
+                    Canvas.SetTop(_tooltipBorder, top);
+                    return;
                 }
+                
+                if (audioCandidates.Any())
+                {
+                    var best = audioCandidates.OrderBy(b => b.Height).First();
+                    string durationStr = FormatDuration(best.OriginalSession?.Duration ?? TimeSpan.Zero);
+                    _tooltipText.Text = $"🔊 Audio: {best.AudioSourcesText}\n{durationStr}";
+                    _tooltipBorder.Visibility = Visibility.Visible;
+                    
+                    double left = Math.Min(pos.X + 15, _canvas.ActualWidth - 180);
+                    double top = pos.Y - 10;
+                    Canvas.SetLeft(_tooltipBorder, left);
+                    Canvas.SetTop(_tooltipBorder, top);
+                    return;
+                }
+
                 _tooltipBorder.Visibility = Visibility.Collapsed;
             }
             catch { }
         }
+
         
         private string FormatDuration(TimeSpan duration)
         {

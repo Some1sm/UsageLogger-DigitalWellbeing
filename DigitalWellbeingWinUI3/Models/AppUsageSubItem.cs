@@ -16,7 +16,12 @@ namespace DigitalWellbeingWinUI3.Models
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public string Title { get; set; }
+        private string _title;
+        public string Title 
+        { 
+            get => _title;
+            set { if (_title != value) { _title = value; OnPropertyChanged(); } }
+        }
         public string ParentProcessName { get; set; }
         
         private TimeSpan _duration;
@@ -43,7 +48,12 @@ namespace DigitalWellbeingWinUI3.Models
             set { _percentage = value; OnPropertyChanged(); }
         }
         
-        public ImageSource IconSource { get; set; }
+        private ImageSource _iconSource;
+        public ImageSource IconSource 
+        { 
+            get => _iconSource;
+            set { if (_iconSource != value) { _iconSource = value; OnPropertyChanged(); } }
+        }
         public AppTag ItemTag { get; set; }
         
         private SolidColorBrush _tagIndicatorBrush;
