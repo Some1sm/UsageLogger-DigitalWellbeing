@@ -126,7 +126,11 @@ namespace DigitalWellbeingService
             {
                  proc = Process.GetProcessById((int)currProcessId);
             }
-            catch { return; }
+            catch (Exception ex)
+            {
+                Helpers.ServiceLogger.Log("OnTimer", $"GetProcessById({currProcessId}) failed: {ex.Message}");
+                return;
+            }
 
             // Wrap all process usage in try-finally to ensure disposal
             try

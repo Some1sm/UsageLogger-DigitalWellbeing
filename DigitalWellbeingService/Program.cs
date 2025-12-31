@@ -13,10 +13,18 @@ namespace DigitalWellbeingService
         static void Main(string[] args)
         {
             ActivityLogger _al = new ActivityLogger();
+            Helpers.ServiceLogger.Log("Service", "Service started successfully.");
 
             while (true)
             {
-                _al.OnTimer();
+                try
+                {
+                    _al.OnTimer();
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ServiceLogger.LogError("OnTimer", ex);
+                }
                 Thread.Sleep(ActivityLogger.TIMER_INTERVAL_SEC * 1000);
             }
         }
