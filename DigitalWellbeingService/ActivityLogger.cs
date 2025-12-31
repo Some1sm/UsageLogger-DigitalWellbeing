@@ -116,8 +116,18 @@ namespace DigitalWellbeingService
         // Main Timer Logic
         public void OnTimer()
         {
-            IntPtr handle = ForegroundWindowManager.GetForegroundWindow();
+            // Use fallback-aware method instead of direct GetForegroundWindow
+            IntPtr handle = ForegroundWindowManager.GetActiveWindowHandle();
             uint currProcessId = ForegroundWindowManager.GetForegroundProcessId(handle);
+            
+            // Handle PID 0 (System Idle / Desktop / No foreground window)
+            if (currProcessId == 0)
+            {
+                // Log as "System Idle" rather than failing
+                UpdateTimeEntry("System Idle", "Desktop");
+                _sessionManager.Update("System Idle", "Desktop", new List<string>());
+                return;
+            }
             
             // Handle edge case where handle is invalid or process exited
             // Use using block to properly dispose Process handle and prevent leaks

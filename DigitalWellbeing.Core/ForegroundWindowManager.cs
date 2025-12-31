@@ -71,5 +71,75 @@ namespace DigitalWellbeing.Core
 
         [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         public static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
+
+        // Fallback APIs
+        [DllImport("user32.dll")]
+        private static extern bool GetCursorPos(out POINT lpPoint);
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr WindowFromPoint(POINT Point);
+
+        [DllImport("user32.dll")]
+        private static extern bool GetGUIThreadInfo(uint idThread, ref GUITHREADINFO lpgui);
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct POINT
+        {
+            public int X;
+            public int Y;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct GUITHREADINFO
+        {
+            public int cbSize;
+            public uint flags;
+            public IntPtr hwndActive;
+            public IntPtr hwndFocus;
+            public IntPtr hwndCapture;
+            public IntPtr hwndMenuOwner;
+            public IntPtr hwndMoveSize;
+            public IntPtr hwndCaret;
+            public RECT rcCaret;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct RECT
+        {
+            public int Left, Top, Right, Bottom;
+        }
+
+        /// <summary>
+        /// Gets the active window handle using multiple fallback strategies.
+        /// Returns IntPtr.Zero only if all methods fail.
+        /// </summary>
+        public static IntPtr GetActiveWindowHandle()
+        {
+            // Primary: Standard foreground window
+            IntPtr handle = GetForegroundWindow();
+            if (handle != IntPtr.Zero)
+                return handle;
+
+            // Fallback 1: Window under cursor
+            if (GetCursorPos(out POINT pt))
+            {
+                handle = WindowFromPoint(pt);
+                if (handle != IntPtr.Zero)
+                    return handle;
+            }
+
+            // Fallback 2: GUI Thread Info (foreground thread's active window)
+            GUITHREADINFO info = new GUITHREADINFO();
+            info.cbSize = Marshal.SizeOf(info);
+            if (GetGUIThreadInfo(0, ref info)) // 0 = foreground thread
+            {
+                if (info.hwndActive != IntPtr.Zero)
+                    return info.hwndActive;
+                if (info.hwndFocus != IntPtr.Zero)
+                    return info.hwndFocus;
+            }
+
+            return IntPtr.Zero;
+        }
     }
 }
