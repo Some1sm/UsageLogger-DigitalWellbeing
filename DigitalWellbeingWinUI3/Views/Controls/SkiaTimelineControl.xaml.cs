@@ -183,7 +183,8 @@ namespace DigitalWellbeingWinUI3.Views.Controls
             if (gridLines == null || gridLines.Count == 0) return false;
             
             using var linePaint = new SKPaint { Style = SKPaintStyle.Stroke, StrokeWidth = 1, IsAntialias = true };
-            using var textPaint = new SKPaint { Style = SKPaintStyle.Fill, IsAntialias = true, Typeface = SKTypeface.FromFamilyName("Segoe UI") };
+            using var textPaint = new SKPaint { Style = SKPaintStyle.Fill, IsAntialias = true };
+            using var typeface = SKTypeface.FromFamilyName("Segoe UI");
 
             foreach (var line in gridLines.ToList())
             {
@@ -194,9 +195,10 @@ namespace DigitalWellbeingWinUI3.Views.Controls
                 if (!string.IsNullOrEmpty(line.TimeText))
                 {
                     textPaint.Color = new SKColor(128, 128, 128, 128);
-                    textPaint.TextSize = Math.Max(8, (float)(line.FontSize * scale));
-                    float textWidth = textPaint.MeasureText(line.TimeText);
-                    canvas.DrawText(line.TimeText, width - 45 * scale - textWidth, y - 2 * scale, textPaint);
+                    float fontSize = Math.Max(8, (float)(line.FontSize * scale));
+                    using var font = new SKFont(typeface, fontSize);
+                    float textWidth = font.MeasureText(line.TimeText, out _);
+                    canvas.DrawText(line.TimeText, width - 45 * scale - textWidth, y - 2 * scale, font, textPaint);
                 }
             }
             return true;
@@ -214,8 +216,9 @@ namespace DigitalWellbeingWinUI3.Views.Controls
             float audioWidth = (width - 50 * scale) * 0.18f;
             
             using var fillPaint = new SKPaint { Style = SKPaintStyle.Fill, IsAntialias = true };
-            using var textPaint = new SKPaint { Style = SKPaintStyle.Fill, IsAntialias = true, Typeface = SKTypeface.FromFamilyName("Segoe UI") };
+            using var textPaint = new SKPaint { Style = SKPaintStyle.Fill, IsAntialias = true };
             using var strokePaint = new SKPaint { Style = SKPaintStyle.Stroke, StrokeWidth = 1, IsAntialias = true };
+            using var typeface = SKTypeface.FromFamilyName("Segoe UI");
 
             // Label collision detection
             var drawnLabels = new System.Collections.Generic.List<SKRect>();
@@ -247,39 +250,41 @@ namespace DigitalWellbeingWinUI3.Views.Controls
                 // Main text - show if block is at least 16 pixels tall (decluttering threshold)
                 if (height > 16)
                 {
-                    textPaint.TextSize = Math.Max(9, Math.Min(12, height * 0.6f));
+                    float mainFontSize = Math.Max(9, Math.Min(12, height * 0.6f));
+                    using var mainFont = new SKFont(typeface, mainFontSize);
                     var displayName = UserPreferences.GetDisplayName(block.ProcessName);
                     string title = string.IsNullOrEmpty(displayName) ? block.Title : displayName;
                     textPaint.Color = blockColor;
                     
                     float textX = 12 * scale;
                     float textY = top + height * 0.65f;
-                    string clippedTitle = ClipText(title, textPaint, mainBlockWidth - 20 * scale);
-                    float textWidth = textPaint.MeasureText(clippedTitle);
-                    var labelRect = new SKRect(textX, textY - textPaint.TextSize, textX + textWidth, textY);
+                    string clippedTitle = ClipText(title, mainFont, mainBlockWidth - 20 * scale);
+                    float textWidth = mainFont.MeasureText(clippedTitle, out _);
+                    var labelRect = new SKRect(textX, textY - mainFontSize, textX + textWidth, textY);
                     
                     // Check for collision
                     bool collides = drawnLabels.Any(r => r.IntersectsWith(labelRect));
                     if (!collides)
                     {
-                        canvas.DrawText(clippedTitle, textX, textY, textPaint);
+                        canvas.DrawText(clippedTitle, textX, textY, mainFont, textPaint);
                         drawnLabels.Add(labelRect);
                     }
 
                     // Duration text - show if at least 28 pixels tall
                     if (height > 28)
                     {
-                        textPaint.TextSize = Math.Max(8, Math.Min(10, height * 0.35f));
+                        float durFontSize = Math.Max(8, Math.Min(10, height * 0.35f));
+                        using var durFont = new SKFont(typeface, durFontSize);
                         textPaint.Color = new SKColor(128, 128, 128, 180);
                         float durY = top + height * 0.9f;
                         string durText = block.DurationText ?? "";
-                        float durWidth = textPaint.MeasureText(durText);
-                        var durRect = new SKRect(textX, durY - textPaint.TextSize, textX + durWidth, durY);
+                        float durWidth = durFont.MeasureText(durText, out _);
+                        var durRect = new SKRect(textX, durY - durFontSize, textX + durWidth, durY);
                         
                         bool durCollides = drawnLabels.Any(r => r.IntersectsWith(durRect));
                         if (!durCollides)
                         {
-                            canvas.DrawText(durText, textX, durY, textPaint);
+                            canvas.DrawText(durText, textX, durY, durFont, textPaint);
                             drawnLabels.Add(durRect);
                         }
                     }
@@ -297,17 +302,19 @@ namespace DigitalWellbeingWinUI3.Views.Controls
                     // Audio icon - show if at least 16 pixels
                     if (height > 16)
                     {
-                        textPaint.TextSize = Math.Max(8, Math.Min(11, height * 0.5f));
+                        float audioIconSize = Math.Max(8, Math.Min(11, height * 0.5f));
+                        using var audioIconFont = new SKFont(typeface, audioIconSize);
                         textPaint.Color = new SKColor(200, 200, 200, 255);
-                        canvas.DrawText("🔊", audioLeft + 3 * scale, top + height * 0.6f, textPaint);
+                        canvas.DrawText("🔊", audioLeft + 3 * scale, top + height * 0.6f, audioIconFont, textPaint);
                     }
                     
                     // Audio source text - show if at least 24 pixels
                     if (height > 24)
                     {
-                        textPaint.TextSize = Math.Max(7, Math.Min(10, height * 0.35f));
+                        float audioTextSize = Math.Max(7, Math.Min(10, height * 0.35f));
+                        using var audioTextFont = new SKFont(typeface, audioTextSize);
                         textPaint.Color = new SKColor(230, 230, 230, 255);
-                        canvas.DrawText(ClipText(block.AudioSourcesText, textPaint, audioWidth - 6 * scale), audioLeft + 3 * scale, top + height * 0.85f, textPaint);
+                        canvas.DrawText(ClipText(block.AudioSourcesText, audioTextFont, audioWidth - 6 * scale), audioLeft + 3 * scale, top + height * 0.85f, audioTextFont, textPaint);
                     }
                 }
             }
@@ -315,12 +322,12 @@ namespace DigitalWellbeingWinUI3.Views.Controls
         }
 
 
-        private string ClipText(string text, SKPaint paint, float maxWidth)
+        private string ClipText(string text, SKFont font, float maxWidth)
         {
             if (string.IsNullOrEmpty(text) || maxWidth <= 0) return "";
-            if (paint.MeasureText(text) <= maxWidth) return text;
+            if (font.MeasureText(text, out _) <= maxWidth) return text;
             int len = text.Length;
-            while (len > 0 && paint.MeasureText(text.Substring(0, len) + "...") > maxWidth) len--;
+            while (len > 0 && font.MeasureText(text.Substring(0, len) + "...", out _) > maxWidth) len--;
             return len > 0 ? text.Substring(0, len) + "..." : "";
         }
 

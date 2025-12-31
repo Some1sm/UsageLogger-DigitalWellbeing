@@ -37,18 +37,18 @@ namespace DigitalWellbeingWinUI3.Views
         }
 
         private bool _isLoading = false;
-        private bool _isDirty = false;
+        // private bool _isDirty = false; // Removed unused field
 
         private void MarkDirty()
         {
             if (_isLoading) return;
-            _isDirty = true;
+            // _isDirty = true;
             UnsavedChangesBanner.Visibility = Visibility.Visible;
         }
 
         private void MarkClean()
         {
-            _isDirty = false;
+            // _isDirty = false;
             UnsavedChangesBanner.Visibility = Visibility.Collapsed;
         }
 

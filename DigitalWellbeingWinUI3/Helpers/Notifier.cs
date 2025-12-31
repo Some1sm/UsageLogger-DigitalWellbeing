@@ -21,8 +21,8 @@ namespace DigitalWellbeingWinUI3.Helpers
     {
         public static TaskbarIcon TrayIcon;
 
-        private static TimeSpan warningLimit = TimeSpan.FromMinutes(15);
-        private static int CHECK_INTERVAL = 60; // Check every 60 seconds
+        // private static TimeSpan warningLimit = TimeSpan.FromMinutes(15);
+        // private static int CHECK_INTERVAL = 60; // Check every 60 seconds
 
         private static MainWindow _mainWindow;
 

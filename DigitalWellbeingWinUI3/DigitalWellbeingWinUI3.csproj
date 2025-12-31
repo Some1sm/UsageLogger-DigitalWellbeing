@@ -19,6 +19,7 @@
     <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
     <!-- Localization Support -->
     <DefaultLanguage>en-US</DefaultLanguage>
+    <NoWarn>$(NoWarn)</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
