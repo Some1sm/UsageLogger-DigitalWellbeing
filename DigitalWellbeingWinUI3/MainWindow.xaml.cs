@@ -165,6 +165,9 @@ namespace DigitalWellbeingWinUI3
                          case "Focus":
                              ContentFrame.Navigate(typeof(FocusPage));
                              break;
+                         case "MiscData":
+                             ContentFrame.Navigate(typeof(MiscDataPage));
+                             break;
                     }
                 }
             }

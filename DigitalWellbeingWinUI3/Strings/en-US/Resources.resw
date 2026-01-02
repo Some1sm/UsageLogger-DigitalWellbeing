@@ -346,4 +346,13 @@
   <data name="Sessions_ZoomIn.Content" xml:space="preserve">
     <value>Zoom In</value>
   </data>
+  <data name="Nav_MiscData.Content" xml:space="preserve">
+    <value>Fun Facts</value>
+  </data>
+  <data name="MiscData_Title.Text" xml:space="preserve">
+    <value>Fun Facts</value>
+  </data>
+  <data name="MiscData_Subtitle.Text" xml:space="preserve">
+    <value>Today's random stats and insights</value>
+  </data>
 </root>
