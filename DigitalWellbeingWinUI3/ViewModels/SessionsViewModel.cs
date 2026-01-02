@@ -146,6 +146,9 @@ namespace DigitalWellbeingWinUI3.ViewModels
             // Or we could show a loading spinner property
             Days.Clear();
             
+            // Refresh exclusion list from disk to pick up any Settings changes
+            new AppUsageViewModel().LoadUserExcludedProcesses();
+            
             // Fetch All data concurrently
             var tasks = new List<Task<(DateTime Date, List<AppSession> Sessions)>>();
             
@@ -160,7 +163,10 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 
                 tasks.Add(Task.Run(() => 
                 {
-                    return (targetDate, _repository.GetSessionsForDate(targetDate));
+                    var sessions = _repository.GetSessionsForDate(targetDate);
+                    // Filter out excluded processes
+                    sessions = sessions.Where(s => !AppUsageViewModel.IsProcessExcluded(s.ProcessName)).ToList();
+                    return (targetDate, sessions);
                 }));
             }
 
@@ -227,6 +233,8 @@ namespace DigitalWellbeingWinUI3.ViewModels
             if (todayVM != null)
             {
                 var sessions = await Task.Run(() => _repository.GetSessionsForDate(DateTime.Now));
+                // Filter out excluded processes
+                sessions = sessions.Where(s => !AppUsageViewModel.IsProcessExcluded(s.ProcessName)).ToList();
                 todayVM.LoadSessions(sessions, PixelsPerHour);
             }
         }
