@@ -85,6 +85,7 @@ namespace DigitalWellbeingWinUI3.Views
 
             // Data Flush Interval
             DataFlushIntervalTextBox.Value = UserPreferences.DataFlushIntervalSeconds;
+            ToggleUseRamCache.IsOn = UserPreferences.UseRamCache;
             
             // Theme
             string theme = UserPreferences.ThemeMode;
@@ -247,6 +248,7 @@ namespace DigitalWellbeingWinUI3.Views
             UserPreferences.EnableAutoRefresh = EnableAutoRefresh.IsOn;
             UserPreferences.RefreshIntervalSeconds = (int)RefreshInterval.Value;
             UserPreferences.DataFlushIntervalSeconds = (int)DataFlushIntervalTextBox.Value;
+            UserPreferences.UseRamCache = ToggleUseRamCache.IsOn;
 
             // Startup
             try
@@ -365,6 +367,11 @@ namespace DigitalWellbeingWinUI3.Views
             if (_isLoading) return;
             UserPreferences.ShowCombinedAudioView = ToggleCombinedAudioView.IsOn;
             UserPreferences.Save();
+        }
+
+        private void ToggleUseRamCache_Toggled(object sender, RoutedEventArgs e)
+        {
+            MarkDirty();
         }
 
         private void ApplyTimelineThreshold_Click(object sender, RoutedEventArgs e)

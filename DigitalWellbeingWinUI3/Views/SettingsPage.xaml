@@ -266,8 +266,11 @@
                   <StackPanel Grid.Row="1" Spacing="5">
                       <TextBlock l:Uids.Uid="Settings_DataFlush" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
                       <TextBlock l:Uids.Uid="Settings_DataFlushDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
-                     <NumberBox x:Name="DataFlushIntervalTextBox" Value="300" SpinButtonPlacementMode="Compact" Width="150" Minimum="60" Maximum="1800" HorizontalAlignment="Left" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp"/>
-                 </StackPanel>
+                      <StackPanel Orientation="Horizontal" Spacing="10">
+                          <ToggleSwitch x:Name="ToggleUseRamCache" Toggled="ToggleUseRamCache_Toggled" OnContent="RAM Cache" OffContent="Direct Write"/>
+                          <NumberBox x:Name="DataFlushIntervalTextBox" Value="300" SpinButtonPlacementMode="Compact" Width="150" Minimum="60" Maximum="1800" HorizontalAlignment="Left" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp" IsEnabled="{x:Bind ToggleUseRamCache.IsOn, Mode=OneWay}"/>
+                      </StackPanel>
+                  </StackPanel>
               </Grid>
 
              <!-- App Tags -->

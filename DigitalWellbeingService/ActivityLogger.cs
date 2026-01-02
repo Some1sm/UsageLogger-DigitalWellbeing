@@ -49,7 +49,23 @@ namespace DigitalWellbeingService
                     json = sr.ReadToEnd();
                 }
 
-                // Simple JSON parse for "DataFlushIntervalSeconds": <value>
+                // Check UseRamCache first (if false, flush every 1 second for immediate writes)
+                int useRamCacheIdx = json.IndexOf("\"UseRamCache\":");
+                if (useRamCacheIdx >= 0)
+                {
+                    int colonIdx = json.IndexOf(':', useRamCacheIdx);
+                    int endIdx = json.IndexOf(',', colonIdx);
+                    if (endIdx < 0) endIdx = json.IndexOf('}', colonIdx);
+                    
+                    string valueStr = json.Substring(colonIdx + 1, endIdx - colonIdx - 1).Trim().ToLowerInvariant();
+                    if (valueStr == "false")
+                    {
+                        _bufferFlushIntervalSec = 1; // Immediate write mode
+                        return _bufferFlushIntervalSec;
+                    }
+                }
+
+                // Default: use DataFlushIntervalSeconds for RAM cache mode
                 int startIdx = json.IndexOf("\"DataFlushIntervalSeconds\":");
                 if (startIdx >= 0)
                 {

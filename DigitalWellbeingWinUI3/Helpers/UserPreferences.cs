@@ -33,6 +33,7 @@ namespace DigitalWellbeingWinUI3.Helpers
         public static Dictionary<string, int> TitleTimeLimits { get; set; } = new Dictionary<string, int>();
         public static List<string> ExcludedTitles { get; set; } = new List<string>();
         public static string LanguageCode { get; set; } = "";
+        public static bool UseRamCache { get; set; } = true; // True = RAM buffer + 5 min flush; False = Direct disk writes
 
         static UserPreferences()
         {
@@ -64,7 +65,8 @@ namespace DigitalWellbeingWinUI3.Helpers
                     TitleDisplayNames,
                     TitleTimeLimits,
                     ExcludedTitles,
-                    LanguageCode
+                    LanguageCode,
+                    UseRamCache
                 };
 
                 string json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
@@ -106,6 +108,7 @@ namespace DigitalWellbeingWinUI3.Helpers
                     if (data.TryGetProperty(nameof(TitleTimeLimits), out prop)) TitleTimeLimits = JsonSerializer.Deserialize<Dictionary<string, int>>(prop.GetRawText()) ?? new Dictionary<string, int>();
                     if (data.TryGetProperty(nameof(ExcludedTitles), out prop)) ExcludedTitles = JsonSerializer.Deserialize<List<string>>(prop.GetRawText()) ?? new List<string>();
                     if (data.TryGetProperty(nameof(LanguageCode), out prop)) LanguageCode = prop.GetString() ?? "";
+                    if (data.TryGetProperty(nameof(UseRamCache), out prop)) UseRamCache = prop.GetBoolean();
                 }
 
                 // Default Initialization

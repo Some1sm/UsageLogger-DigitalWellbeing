@@ -242,7 +242,7 @@
     <value>Data Flush Interval (seconds)</value>
   </data>
   <data name="Settings_DataFlushDesc.Text" xml:space="preserve">
-    <value>How often usage data in RAM is saved to disk. Lower values = more disk writes but better recovery on crash (Default 300s = 5 min).</value>
+    <value>RAM Cache: buffers data in memory and saves to disk periodically (faster, default). Direct Write: saves immediately to disk (safer if crash occurs). Interval only applies when RAM Cache is ON.</value>
   </data>
   <data name="Settings_AppTags.Text" xml:space="preserve">
     <value>App Tags</value>
