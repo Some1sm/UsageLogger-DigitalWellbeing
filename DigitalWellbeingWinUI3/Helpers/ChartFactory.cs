@@ -152,19 +152,24 @@ namespace DigitalWellbeingWinUI3.Helpers
             {
                 Values = new ObservableCollection<double> { value },
                 Name = name,
-                ToolTipLabelFormatter = (point) => $"{point.Context.Series.Name}: {FormatMinutes(point.Coordinate.PrimaryValue)}",
+                ToolTipLabelFormatter = (point) => FormatMinutes(point.Coordinate.PrimaryValue),
                 DataLabelsFormatter = (point) => point.Context.Series.Name,
                 Fill = new SolidColorPaint(fill)
             };
         }
 
         /// <summary>
-        /// Formats minutes as "HH:MM:SS" for consistent tooltip display.
+        /// Formats minutes as "Xh Ym" for consistent tooltip display.
         /// </summary>
         private static string FormatMinutes(double totalMinutes)
         {
             TimeSpan t = TimeSpan.FromMinutes(totalMinutes);
-            return $"{(int)t.TotalHours:D2}:{t.Minutes:D2}:{t.Seconds:D2}";
+            if (t.TotalHours >= 1)
+                return $"{(int)t.TotalHours}h {t.Minutes}m";
+            else if (t.TotalMinutes >= 1)
+                return $"{t.Minutes}m {t.Seconds}s";
+            else
+                return $"{t.Seconds}s";
         }
 
         /// <summary>

@@ -12,6 +12,18 @@ namespace DigitalWellbeingWinUI3.Views
     public sealed partial class DayAppUsagePage : Page
     {
         public AppUsageViewModel ViewModel { get; }
+        
+        // === Spinable Pie Chart Easter Egg ===
+        private LiveChartsCore.SkiaSharpView.WinUI.PieChart _pieChart;
+        private bool _isDraggingChart = false;
+        private double _chartRotation = -90; // Current rotation angle
+        private double _angularVelocity = 0;  // Spin speed (degrees per frame)
+        private Windows.Foundation.Point _chartCenter;
+        private DateTime _lastDragTime;
+        private double _startPointerAngle; // Angle of pointer at drag start
+        private double _startChartRotation; // Chart rotation at drag start
+        private double _lastRotation; // For velocity calculation
+        private bool _animationsDisabled = false; // Track animation state
 
         public DayAppUsagePage()
         {
@@ -84,11 +96,11 @@ namespace DigitalWellbeingWinUI3.Views
                     }
                     var legendColor = isDark ? SkiaSharp.SKColors.White : SkiaSharp.SKColors.Black;
 
-                    var pieChart = new LiveChartsCore.SkiaSharpView.WinUI.PieChart
+                    _pieChart = new LiveChartsCore.SkiaSharpView.WinUI.PieChart
                     {
                         Series = ViewModel.DayPieChartSeries,
                         LegendPosition = LiveChartsCore.Measure.LegendPosition.Right,
-                        InitialRotation = -90,
+                        InitialRotation = _chartRotation,
                         Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent),
                         LegendBackgroundPaint = null,
                         LegendTextPaint = new LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint(legendColor),
@@ -96,7 +108,17 @@ namespace DigitalWellbeingWinUI3.Views
                         HorizontalAlignment = Microsoft.UI.Xaml.HorizontalAlignment.Stretch,
                         VerticalAlignment = Microsoft.UI.Xaml.VerticalAlignment.Stretch
                     };
-                    PieChartContainer.Content = pieChart;
+                    
+                    // Use AddHandler on CONTAINER for larger hit-test area
+                    PieChartContainer.AddHandler(UIElement.PointerPressedEvent, new Microsoft.UI.Xaml.Input.PointerEventHandler(PieChart_PointerPressed), true);
+                    PieChartContainer.AddHandler(UIElement.PointerMovedEvent, new Microsoft.UI.Xaml.Input.PointerEventHandler(PieChart_PointerMoved), true);
+                    PieChartContainer.AddHandler(UIElement.PointerReleasedEvent, new Microsoft.UI.Xaml.Input.PointerEventHandler(PieChart_PointerReleased), true);
+                    PieChartContainer.AddHandler(UIElement.PointerCanceledEvent, new Microsoft.UI.Xaml.Input.PointerEventHandler(PieChart_PointerReleased), true);
+                    
+                    PieChartContainer.Content = _pieChart;
+                    
+                    // Start physics loop
+                    Microsoft.UI.Xaml.Media.CompositionTarget.Rendering += ChartPhysicsLoop;
                 }
             }
             catch (Exception ex)
@@ -778,6 +800,133 @@ namespace DigitalWellbeingWinUI3.Views
             {
                 TabViewMode.Visibility = Visibility.Visible;
                 CombinedViewMode.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        // === Spinable Pie Chart Easter Egg: Event Handlers ===
+        private void PieChart_PointerPressed(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            if (_pieChart == null) return;
+            
+            // Relaxed: any click activates spin (no strict button check)
+            _isDraggingChart = true;
+            _angularVelocity = 0; // Stop any existing spin
+            
+            // IMMEDIATE RESPONSE: Disable animations AND tooltips for instant tracking
+            if (!_animationsDisabled)
+            {
+                _pieChart.AnimationsSpeed = TimeSpan.Zero;
+                _pieChart.TooltipPosition = LiveChartsCore.Measure.TooltipPosition.Hidden;
+                _animationsDisabled = true;
+            }
+            
+            // Get position relative to CONTAINER (consistent hit area)
+            var pos = e.GetCurrentPoint(PieChartContainer).Position;
+            _lastDragTime = DateTime.Now;
+            
+            // Use CENTER OF CONTAINER (matches pie chart center)
+            _chartCenter = new Windows.Foundation.Point(PieChartContainer.ActualWidth / 2, PieChartContainer.ActualHeight / 2);
+            
+            // ABSOLUTE TRACKING: Record starting angles
+            _startPointerAngle = Math.Atan2(pos.Y - _chartCenter.Y, pos.X - _chartCenter.X) * 180 / Math.PI;
+            _startChartRotation = _chartRotation;
+            _lastRotation = _chartRotation;
+            
+            // Capture on container for consistent tracking
+            try { PieChartContainer.CapturePointer(e.Pointer); } catch { }
+        }
+
+        private void PieChart_PointerMoved(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            if (!_isDraggingChart || _pieChart == null) return;
+            
+            // Relaxed: no IsInContact check - we rely on _isDraggingChart state
+            
+            var pos = e.GetCurrentPoint(PieChartContainer).Position;
+            
+            // ABSOLUTE TRACKING: Calculate current pointer angle
+            double currentPointerAngle = Math.Atan2(pos.Y - _chartCenter.Y, pos.X - _chartCenter.X) * 180 / Math.PI;
+            
+            // Compute delta from start (absolute)
+            double angleDelta = currentPointerAngle - _startPointerAngle;
+            
+            // Handle wraparound 
+            if (angleDelta > 180) angleDelta -= 360;
+            if (angleDelta < -180) angleDelta += 360;
+            
+            // Set rotation ABSOLUTELY (no accumulation drift)
+            _chartRotation = _startChartRotation + angleDelta;
+            _pieChart.InitialRotation = _chartRotation;
+            
+            // Track velocity for inertia
+            var now = DateTime.Now;
+            var elapsed = (now - _lastDragTime).TotalMilliseconds;
+            if (elapsed >= 10 && elapsed < 200)
+            {
+                double rotationDelta = _chartRotation - _lastRotation;
+                // Handle wraparound for velocity
+                if (rotationDelta > 180) rotationDelta -= 360;
+                if (rotationDelta < -180) rotationDelta += 360;
+                
+                double instantVelocity = rotationDelta / elapsed * 16; // Scale to ~60fps
+                // Weighted smoothing
+                _angularVelocity = _angularVelocity * 0.5 + instantVelocity * 0.5;
+            }
+            
+            _lastRotation = _chartRotation;
+            _lastDragTime = now;
+        }
+
+        private void PieChart_PointerReleased(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            if (_pieChart == null) return;
+            
+            _isDraggingChart = false;
+            try { PieChartContainer.ReleasePointerCapture(e.Pointer); } catch { }
+            
+            // Flick threshold: Only apply inertia if moving fast enough
+            if (Math.Abs(_angularVelocity) < 1.5)
+            {
+                _angularVelocity = 0; // Too slow = stop immediately (precision drag)
+            }
+        }
+
+        private void ChartPhysicsLoop(object sender, object e)
+        {
+            if (_pieChart == null) return;
+
+            // HYBRID ANIMATION & TOOLTIP CONTROL
+            // Disable animations/tooltips when spinning (drag or fast inertia)
+            // Enable animations/tooltips when idle to allow interaction
+            bool shouldDisable = _isDraggingChart || Math.Abs(_angularVelocity) > 0.1;
+
+            if (shouldDisable && !_animationsDisabled)
+            {
+                _pieChart.AnimationsSpeed = TimeSpan.Zero;
+                _pieChart.TooltipPosition = LiveChartsCore.Measure.TooltipPosition.Hidden;
+                _animationsDisabled = true;
+            }
+            else if (!shouldDisable && _animationsDisabled)
+            {
+                _pieChart.AnimationsSpeed = TimeSpan.FromMilliseconds(500);
+                _pieChart.TooltipPosition = LiveChartsCore.Measure.TooltipPosition.Top; // Restore default
+                _animationsDisabled = false;
+            }
+
+            if (_isDraggingChart) return;
+            
+            // Apply inertia
+            if (Math.Abs(_angularVelocity) > 0.1)
+            {
+                _chartRotation += _angularVelocity;
+                _pieChart.InitialRotation = _chartRotation;
+                
+                // Apply friction
+                _angularVelocity *= 0.94; // Balanced friction
+            }
+            else
+            {
+                _angularVelocity = 0; // Stop tiny movements
             }
         }
     }

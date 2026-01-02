@@ -266,7 +266,12 @@ namespace DigitalWellbeingWinUI3.ViewModels
         private string FormatMinutes(double totalMinutes)
         {
             TimeSpan t = TimeSpan.FromMinutes(totalMinutes);
-            return $"{(int)t.TotalHours:D2}:{t.Minutes:D2}:{t.Seconds:D2}";
+            if (t.TotalHours >= 1)
+                return $"{(int)t.TotalHours}h {t.Minutes}m";
+            else if (t.TotalMinutes >= 1)
+                return $"{t.Minutes}m {t.Seconds}s";
+            else
+                return $"{t.Seconds}s";
         }
 
         private void InitAutoRefreshTimer()
@@ -558,7 +563,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
                                 {
                                     Values = new ObservableCollection<double> { app.Duration.TotalMinutes },
                                     Name = UserPreferences.GetDisplayName(app.ProcessName),
-                                    ToolTipLabelFormatter = (point) => $"{point.Context.Series.Name}: {FormatMinutes(point.Coordinate.PrimaryValue)}",
+                                    ToolTipLabelFormatter = (point) => FormatMinutes(point.Coordinate.PrimaryValue),
                                     DataLabelsFormatter = (point) => point.Context.Series.Name,
                                     Fill = new SolidColorPaint(palette[index % palette.Count])
                                 };
