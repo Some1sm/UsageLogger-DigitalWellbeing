@@ -19,6 +19,8 @@ namespace DigitalWellbeingWinUI3.Views.Controls
         private DayTimelineViewModel _subscribedViewModel;
         private Border _tooltipBorder;
         private TextBlock _tooltipText;
+        private float _scaleX = 1.0f; // Track X scale for hit-testing
+        private float _scaleY = 1.0f; // Track Y scale for hit-testing
 
         public SkiaTimelineControl()
         {
@@ -156,6 +158,14 @@ namespace DigitalWellbeingWinUI3.Views.Controls
                 if (width <= 0) width = actualWidth;
                 
                 float scale = width / Math.Max(actualWidth, 1);
+                _scaleX = scale;
+                
+                // Calculate Y scale separately (canvas height may differ due to layout rounding)
+                float height = info.Height;
+                float actualHeight = (float)_canvas.ActualHeight;
+                if (actualHeight <= 0) actualHeight = (float)vm.CanvasHeight;
+                if (height <= 0) height = actualHeight;
+                _scaleY = height / Math.Max(actualHeight, 1);
                 
                 bool drewGridLines = DrawGridLines(canvas, width, scale, vm);
                 bool drewBlocks = DrawSessionBlocks(canvas, width, scale, vm);
@@ -347,17 +357,22 @@ namespace DigitalWellbeingWinUI3.Views.Controls
                 if (vm?.SessionBlocks == null) return;
                 
                 var pos = e.GetCurrentPoint(_canvas).Position;
-                float mainBlockWidth = (float)((_canvas.ActualWidth - 50) * 0.80);
-                float audioLeft = mainBlockWidth + 6;
-                float audioWidth = (float)((_canvas.ActualWidth - 50) * 0.18);
+                
+                // Apply split scale correction: X uses _scaleX, Y uses _scaleY
+                double correctedY = pos.Y * _scaleY;
+                double correctedX = pos.X * _scaleX;
+                
+                float mainBlockWidth = (float)((_canvas.ActualWidth - 50) * 0.80 * _scaleX);
+                float audioLeft = mainBlockWidth + 6 * _scaleX;
+                float audioWidth = (float)((_canvas.ActualWidth - 50) * 0.18 * _scaleX);
 
-                // Collect ALL blocks that intersect the mouse position
+                // Collect ALL blocks that intersect the mouse position (using split-scaled coordinates)
                 var mainCandidates = vm.SessionBlocks
-                    .Where(b => pos.Y >= b.Top && pos.Y <= b.Top + b.Height && pos.X >= 0 && pos.X <= mainBlockWidth)
+                    .Where(b => correctedY >= b.Top * _scaleY && correctedY <= (b.Top + b.Height) * _scaleY && correctedX >= 0 && correctedX <= mainBlockWidth)
                     .ToList();
                 
                 var audioCandidates = vm.SessionBlocks
-                    .Where(b => b.HasAudio && pos.Y >= b.Top && pos.Y <= b.Top + b.Height && pos.X >= audioLeft && pos.X <= audioLeft + audioWidth)
+                    .Where(b => b.HasAudio && correctedY >= b.Top * _scaleY && correctedY <= (b.Top + b.Height) * _scaleY && correctedX >= audioLeft && correctedX <= audioLeft + audioWidth)
                     .ToList();
 
                 // Prioritize main blocks over audio
