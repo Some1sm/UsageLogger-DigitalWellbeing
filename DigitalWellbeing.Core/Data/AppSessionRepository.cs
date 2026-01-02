@@ -112,8 +112,8 @@ namespace DigitalWellbeing.Core.Data
                     {
                         if (ramSession == null || ramSession.StartTime.Date != date.Date) continue;
                         
-                        // Check if we already have this session on disk
-                        var existing = sessions.FirstOrDefault(s => s.ProcessName == ramSession.ProcessName && s.StartTime == ramSession.StartTime);
+                        // Check if we already have this session on disk (Fuzzy match StartTime to handle JSON/Tick precision diffs)
+                        var existing = sessions.FirstOrDefault(s => s.ProcessName == ramSession.ProcessName && Math.Abs((s.StartTime - ramSession.StartTime).TotalSeconds) < 2);
                         
                         if (existing != null)
                         {
@@ -133,8 +133,64 @@ namespace DigitalWellbeing.Core.Data
                     Console.WriteLine("Live Session Merge Error: " + ex.Message);
                 }
             }
+            // CONSOLIDATE: Merge overlapping intervals to prevent double-counting
+            sessions = ConsolidateSessions(sessions);
 
             return sessions;
+        }
+
+        /// <summary>
+        /// Merges overlapping sessions for the same ProcessName to prevent double-counting.
+        /// Uses interval merging algorithm: sort by start, merge if next.Start < current.End.
+        /// </summary>
+        private List<AppSession> ConsolidateSessions(List<AppSession> sessions)
+        {
+            if (sessions == null || sessions.Count <= 1) return sessions;
+
+            var result = new List<AppSession>();
+
+            // Group by ProcessName + ProgramName (Window Title) to preserve sub-app granularity
+            var groups = sessions.GroupBy(s => new { s.ProcessName, s.ProgramName });
+
+            foreach (var group in groups)
+            {
+                var sorted = group.OrderBy(s => s.StartTime).ToList();
+                AppSession current = sorted[0];
+
+                for (int i = 1; i < sorted.Count; i++)
+                {
+                    var next = sorted[i];
+
+                    // Check if overlapping or adjacent (within 2 seconds tolerance)
+                    if (next.StartTime <= current.EndTime.AddSeconds(2))
+                    {
+                        // Merge: extend current's EndTime to the max
+                        if (next.EndTime > current.EndTime)
+                            current.EndTime = next.EndTime;
+                        // Merge audio sources if present
+                        if (next.AudioSources != null && next.AudioSources.Count > 0)
+                        {
+                            if (current.AudioSources == null) current.AudioSources = new List<string>();
+                            foreach (var src in next.AudioSources)
+                            {
+                                if (!current.AudioSources.Contains(src))
+                                    current.AudioSources.Add(src);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // No overlap, finalize current and start new
+                        result.Add(current);
+                        current = next;
+                    }
+                }
+
+                // Add the last session
+                result.Add(current);
+            }
+
+            return result;
         }
 
         public void AppendSession(AppSession session)

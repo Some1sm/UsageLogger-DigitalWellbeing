@@ -39,10 +39,12 @@ The solution uses a **Hybrid Architecture** with two distinct processes:
     *   **Namespace**: `xmlns:l="using:WinUI3Localizer"`
     *   **Attribute**: Use `<Button l:Uids.Uid="MyBtn" />` (NOT `x:Uid`!).
 3.  **Code Usage**: Use `LocalizationHelper.GetString("Key")`.
+4.  **Logic Checks**: NEVER rely on `MenuFlyoutItem.Text` or UI strings for logic (e.g. `if (item.Text == "Category")`). Use `Tag` or `Name` properties instead, as Text changes with locale.
 
 ## 5. UI & Charting Guidelines
 *   **Aesthetics**: Mimic native Windows 11 design. Use Mica/Acrylic where possible.
-*   **LiveCharts2**:
+*   **LiveCharts2 / SkiaSharp**:
+    *   **Text Rendering**: `SKPaint.Typeface` and `SKPaint.TextSize` are **DEPRECATED**. Use the modern **`SKFont(typeface, size)`** API for all text operations.
     *   **Tooltips**: Use `YToolTipLabelFormatter` (Cartesian) or `ToolTipLabelFormatter` (Pie/Heatmap).
     *   **Format**: Always format durations as `Xh Ym` (never decimals like "1.5h").
     *   **Colors**: Listen to `UISettings.ColorValuesChanged` to generate dynamic gradients based on the user's System Accent Color.
@@ -52,6 +54,10 @@ The solution uses a **Hybrid Architecture** with two distinct processes:
     *   **Incognito Merging**: When `IncognitoMode` is true, force app grouping by `ProcessName` (ignoring Window Titles) to merge fragmented sessions into single continuous blocks.
 
 ## 6. Coding Standards
+*   **Service Robustness**:
+    *   **Global Exception Handling**: The Background Service loop (`Program.cs`) MUST be wrapped in a global `try-catch` to log errors (to file) and prevent crashes.
+    *   **Window Detection Fallback**: `GetForegroundWindow` can fail (return 0) on Desktop or Transitions. Always implement fallbacks: `GetForegroundWindow` -> `WindowFromPoint(Cursor)` -> `GetGUIThreadInfo`.
+    *   **System Calls**: `Process.GetProcessById` can fail. Always wrap in try-catch and log failures rather than crashing or silently returning.
 *   **Async/Threading**: Heavy data work happens on background threads. Use `DispatcherQueue` to update UI.
 *   **Live Metadata Updates**: ViewModels must explicitly notify/refresh metadata (Icon, Title, Tags) for existing list items during updates (e.g., `UpdateListInPlace`), as these are not automatically rebound if only data properties change.
 *   **Self-Healing**: The app validates data on startup (e.g. cleaning "Orphan Tags").
@@ -63,4 +69,19 @@ The solution uses a **Hybrid Architecture** with two distinct processes:
 ## 7. Project Locations
 *   **Dev Logs**: Workspace folder.
 *   **Prod Logs**: `%LocalAppData%\digital-wellbeing`.
+*   **Service Debug Logs**: `%LocalAppData%\digital-wellbeing\service_debug.log`.
 *   **Installer Output**: Root workspace folder.
+
+## 8. Data Persistence Strategy
+The application supports two modes for saving usage data, controlled by `UserPreferences.UseRamCache`:
+1.  **RAM Cache (Default)**:
+    *   **Behavior**: Usage data is buffered in RAM and flushed to disk every 5 minutes (or `DataFlushIntervalSeconds`).
+    *   **Pros**: Reduces disk I/O, extends SSD life, better performance.
+    *   **Cons**: Potential data loss of up to 5 minutes if the Service crashes (unlikely).
+2.  **Direct Write**:
+    *   **Behavior**: Flushes data to disk every **1 second** (logic in `ActivityLogger.cs` overrides interval).
+    *   **Pros**: Maximum data safety (crash recovery).
+    *   **Cons**: High disk I/O frequency.
+*   **Implementation Details**:
+    *   `ActivityLogger` reads `user_preferences.json` every 30s.
+    *   If `UseRamCache` is false, it forces `_bufferFlushIntervalSec = 1`.
