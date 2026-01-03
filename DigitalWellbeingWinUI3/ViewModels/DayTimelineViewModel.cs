@@ -9,6 +9,7 @@ using DigitalWellbeingWinUI3.Models;
 using DigitalWellbeingWinUI3.Helpers;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
+using SkiaSharp;
 
 namespace DigitalWellbeingWinUI3.ViewModels
 {

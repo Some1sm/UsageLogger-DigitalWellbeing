@@ -1,4 +1,5 @@
 using Microsoft.UI.Xaml.Media;
+using SkiaSharp;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
