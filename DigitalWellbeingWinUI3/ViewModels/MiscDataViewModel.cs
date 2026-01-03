@@ -113,6 +113,38 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 string hourStr = DateTime.Today.AddHours(peakHour.Key).ToString("h tt");
                 Stats.Add(new StatItem("\uE823", hourStr, "Busiest Hour", $"{peakHour.Count()} sessions"));
             }
+
+            // 9. Top Website (from browsers)
+            var browserProcesses = new HashSet<string>(StringComparer.OrdinalIgnoreCase) 
+            { 
+                "chrome", "msedge", "firefox", "opera", "brave", "vivaldi", "arc"
+            };
+            var browserSessions = sorted
+                .Where(s => !s.IsAfk && browserProcesses.Contains(s.ProcessName.ToLowerInvariant()))
+                .Where(s => !string.IsNullOrEmpty(s.ProgramName) && s.ProgramName != s.ProcessName)
+                .GroupBy(s => s.ProgramName)
+                .OrderByDescending(g => g.Sum(s => s.Duration.TotalSeconds))
+                .FirstOrDefault();
+            if (browserSessions != null)
+            {
+                var siteDuration = TimeSpan.FromSeconds(browserSessions.Sum(s => s.Duration.TotalSeconds));
+                string siteName = browserSessions.Key;
+                if (siteName.Length > 25) siteName = siteName.Substring(0, 25) + "...";
+                Stats.Add(new StatItem("\uE774", FormatDuration(siteDuration), "Top Website", siteName));
+            }
+
+            // 10. Top Category (by AppTag)
+            var categoryDurations = sorted
+                .Where(s => !s.IsAfk)
+                .GroupBy(s => Helpers.AppTagHelper.GetAppTag(s.ProcessName))
+                .Where(g => g.Key != DigitalWellbeing.Core.Models.AppTag.Untagged)
+                .Select(g => new { Tag = g.Key, Duration = TimeSpan.FromSeconds(g.Sum(s => s.Duration.TotalSeconds)) })
+                .OrderByDescending(x => x.Duration)
+                .FirstOrDefault();
+            if (categoryDurations != null)
+            {
+                Stats.Add(new StatItem("\uE8EC", Helpers.AppTagHelper.GetTagDisplayName(categoryDurations.Tag), "Top Category", FormatDuration(categoryDurations.Duration)));
+            }
         }
 
         private string FormatDuration(TimeSpan t)

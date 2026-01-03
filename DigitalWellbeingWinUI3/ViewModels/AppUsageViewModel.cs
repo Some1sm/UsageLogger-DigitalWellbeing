@@ -196,7 +196,8 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 {
                     var accent = uiSettings.GetColorValue(Windows.UI.ViewManagement.UIColorType.Accent);
                     var skAccent = new SKColor(accent.R, accent.G, accent.B, accent.A);
-                    var palette = ChartFactory.GenerateMultiHuePalette(skAccent, DayPieChartSeries.Count);
+                    // Use Monochromatic to match LoadWeeklyData logic
+                    var palette = ChartFactory.GenerateMonochromaticPalette(skAccent, DayPieChartSeries.Count);
 
                     for (int i = 0; i < DayPieChartSeries.Count; i++)
                     {
@@ -528,6 +529,22 @@ namespace DigitalWellbeingWinUI3.ViewModels
                         FocusManager.Instance.RegisterApp(app.ProcessName);
                     }
 
+                    // Pre-calculate visible slice count for palette generation (Monochromatic)
+                    int visibleSliceCount = 0;
+                    if (TotalDuration.TotalSeconds > 0)
+                    {
+                        visibleSliceCount = filteredUsageList.Count(a => 
+                            a.Duration >= UserPreferences.MinumumDuration && 
+                            (a.Duration.TotalSeconds / TotalDuration.TotalSeconds) * 100.0 >= 1.0);
+                    }
+                    visibleSliceCount = Math.Max(1, Math.Min(visibleSliceCount, 50)); // Clamp to [1, 50]
+                    
+                    // Generate Monochromatic Palette (matching Treemap design)
+                    var uiSettings = new Windows.UI.ViewManagement.UISettings();
+                    var accent = uiSettings.GetColorValue(Windows.UI.ViewManagement.UIColorType.Accent);
+                    var skAccent = new SKColor(accent.R, accent.G, accent.B, accent.A);
+                    var palette = ChartFactory.GenerateMonochromaticPalette(skAccent, visibleSliceCount);
+
                     foreach (AppUsage app in filteredUsageList)
                     {
                         // Enforce Minimum Duration Logic explicitly
@@ -550,13 +567,8 @@ namespace DigitalWellbeingWinUI3.ViewModels
                         }
                         else
                         {
-                            var uiSettings = new Windows.UI.ViewManagement.UISettings();
-                            var accent = uiSettings.GetColorValue(Windows.UI.ViewManagement.UIColorType.Accent);
-                            var skAccent = new SKColor(accent.R, accent.G, accent.B, accent.A);
-                            
                             if (pieSeriesList.Count < 50) // Cap slices
                             {
-                                var palette = ChartFactory.GenerateMultiHuePalette(skAccent, filteredUsageList.Count);
                                 int index = pieSeriesList.Count; 
                                                         
                                 var series = new PieSeries<double>
@@ -644,7 +656,8 @@ namespace DigitalWellbeingWinUI3.ViewModels
                         { 
                             Values = new ObservableCollection<double> { otherProcessesTotalMinutes },
                             Name = "Other Apps",
-                            Fill = new SolidColorPaint(SKColors.Gray)
+                            Fill = new SolidColorPaint(SKColors.Gray),
+                            ToolTipLabelFormatter = (point) => FormatMinutes(point.Coordinate.PrimaryValue)
                         });
                     }
 
@@ -873,6 +886,8 @@ namespace DigitalWellbeingWinUI3.ViewModels
                                 existingValues[0] = newValList[0];
                             }
                         }
+                        // Sync Fill (color) property to ensure palette updates are visible
+                        existingPie.Fill = newPie.Fill;
                     }
                     newDict.Remove(existing.Name);
                 }
@@ -886,6 +901,25 @@ namespace DigitalWellbeingWinUI3.ViewModels
             foreach (var newS in newDict.Values)
             {
                 existingSeries.Add(newS);
+            }
+
+            // Re-order existingSeries to match newSeries order (sorted by duration)
+            for (int i = 0; i < newSeries.Count && i < existingSeries.Count; i++)
+            {
+                var targetSeries = newSeries[i];
+                int currentIndex = -1;
+                for (int j = 0; j < existingSeries.Count; j++)
+                {
+                    if (existingSeries[j].Name == targetSeries.Name)
+                    {
+                        currentIndex = j;
+                        break;
+                    }
+                }
+                if (currentIndex != -1 && currentIndex != i)
+                {
+                    existingSeries.Move(currentIndex, i);
+                }
             }
         }
 
