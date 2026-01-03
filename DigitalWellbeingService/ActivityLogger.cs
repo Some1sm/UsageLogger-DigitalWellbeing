@@ -197,6 +197,18 @@ namespace DigitalWellbeingService
                 
                 // Audio Tracking with Persistence (Debounce) - use extracted tracker
                 var currentAudioApps = AudioSessionTracker.GetActiveAudioSessions();
+                
+                // Fallback: If no specific sessions found, check global audio peak
+                if (currentAudioApps.Count == 0 && AudioSessionTracker.IsGlobalAudioPlaying())
+                {
+                    // Heuristic: If audio is playing but we can't identify the source,
+                    // assume it's the foreground app (e.g., exclusive mode games, hidden sessions)
+                    if (!string.IsNullOrEmpty(processName))
+                    {
+                        currentAudioApps.Add(processName);
+                    }
+                }
+                
                 var validAudioApps = _audioTracker.UpdatePersistence(currentAudioApps);
 
                 _sessionManager.Update(processName, programName, validAudioApps);

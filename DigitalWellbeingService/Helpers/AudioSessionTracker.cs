@@ -125,5 +125,47 @@ namespace DigitalWellbeingService.Helpers
             {
             }
         }
+        
+        /// <summary>
+        /// Fallback: Check if ANY audio is playing on the default render device.
+        /// Returns true if global master peak > threshold (1%).
+        /// </summary>
+        public static bool IsGlobalAudioPlaying()
+        {
+            bool isPlaying = false;
+            var thread = new System.Threading.Thread(() =>
+            {
+                isPlaying = IsGlobalAudioPlayingInternal();
+            });
+            thread.SetApartmentState(System.Threading.ApartmentState.STA);
+            thread.Start();
+            thread.Join();
+            return isPlaying;
+        }
+
+        private static bool IsGlobalAudioPlayingInternal()
+        {
+            MMDeviceEnumerator enumerator = null;
+            try
+            {
+                enumerator = new MMDeviceEnumerator();
+                var defaultDevice = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
+                if (defaultDevice != null)
+                {
+                    float peak = defaultDevice.AudioMeterInformation.MasterPeakValue;
+                    // Log($"[Fallback] Global Peak: {peak:P2}");
+                    return peak > 0.01f; // 1% threshold to avoid noise
+                }
+            }
+            catch (Exception ex)
+            {
+                Log($"[Fallback] Error: {ex.Message}");
+            }
+            finally
+            {
+                enumerator?.Dispose();
+            }
+            return false;
+        }
     }
 }
