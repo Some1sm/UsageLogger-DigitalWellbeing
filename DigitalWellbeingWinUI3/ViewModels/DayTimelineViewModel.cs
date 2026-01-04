@@ -276,7 +276,8 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 if (baseBrush != null)
                 {
                     var c = baseBrush.Color;
-                    var tintedColor = Windows.UI.Color.FromArgb(64, c.R, c.G, c.B);
+                    // Apply Tint: Opacity 204 (~80%) for the indicator
+                    var tintedColor = Windows.UI.Color.FromArgb(204, c.R, c.G, c.B);
                     color = new SolidColorBrush(tintedColor);
                 }
 
