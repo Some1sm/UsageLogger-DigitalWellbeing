@@ -381,7 +381,8 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 DateTime t = s.StartTime;
                 while (t < s.EndTime)
                 {
-                    int day = (int)t.DayOfWeek;
+                    // Remap DayOfWeek: .NET uses 0=Sunday. We want 0=Monday, 6=Sunday.
+                    int day = ((int)t.DayOfWeek + 6) % 7; 
                     int hour = t.Hour;
                     
                     DateTime slotEnd = t.Date.AddHours(hour + 1);
@@ -406,7 +407,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
 
             // Store cell details for tooltips
             _heatmapCellDetails.Clear();
-            string[] dayNames = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+            string[] dayNames = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
             
             var heatmapPoints = new ObservableCollection<HeatmapDataPoint>();
             var uiSettings = new Windows.UI.ViewManagement.UISettings();
@@ -516,12 +517,15 @@ namespace DigitalWellbeingWinUI3.ViewModels
         }
         
         // Method for heatmap cell click -> navigate to that day
-        public void OnHeatmapCellClicked(int dayOfWeek, int hour)
+        public void OnHeatmapCellClicked(int dayOfWeekMapping, int hour)
         {
+            // dayOfWeekMapping: 0=Monday, 6=Sunday
+            int targetDayOfWeek = (dayOfWeekMapping + 1) % 7; // Convert back to 0=Sunday for .NET DayOfWeek
+
             // Find the actual date for this day of week within the selected range
             for (var d = StartDate.Date; d <= EndDate.Date; d = d.AddDays(1))
             {
-                if ((int)d.DayOfWeek == dayOfWeek)
+                if ((int)d.DayOfWeek == targetDayOfWeek)
                 {
                     NavigateToDate?.Invoke(d);
                     return;

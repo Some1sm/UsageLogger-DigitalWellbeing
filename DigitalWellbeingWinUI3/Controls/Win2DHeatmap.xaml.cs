@@ -58,7 +58,7 @@ namespace DigitalWellbeingWinUI3.Controls
             var ds = args.DrawingSession;
             float width = (float)sender.ActualWidth;
             float height = (float)sender.ActualHeight;
-            float margin = 20; // For labels
+            float margin = 28; // Increased for larger text
             float gridWidth = width - margin;
             float gridHeight = height - margin;
             
@@ -114,17 +114,17 @@ namespace DigitalWellbeingWinUI3.Controls
             }
             
             // Draw Axis Labels (Simplified)
-            // Y-Axis: Days
-            string[] days = { "S", "M", "T", "W", "T", "F", "S" };
+            // Y-Axis: Days (Monday Start)
+            string[] days = { "M", "T", "W", "T", "F", "S", "S" };
             for(int i=0; i<7; i++)
             {
-                 ds.DrawText(days[i], 0, margin + i * cellHeight + cellHeight/2 - 6, Colors.Gray, new CanvasTextFormat { FontSize = 10 });
+                 ds.DrawText(days[i], 4, margin + i * cellHeight + cellHeight/2 - 8, Colors.Gray, new CanvasTextFormat { FontSize = 14, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold });
             }
             
-            // X-Axis: Hours (every 6 hours)
-            for(int i=0; i<24; i+=6)
+            // X-Axis: Hours (every hour)
+            for(int i=0; i<24; i++)
             {
-                ds.DrawText(i.ToString(), margin + i * cellWidth, 0, Colors.Gray, new CanvasTextFormat { FontSize = 10 });
+                ds.DrawText(i.ToString(), margin + i * cellWidth + cellWidth/2 - 6, 2, Colors.Gray, new CanvasTextFormat { FontSize = 11 });
             }
             
             // Draw Tooltip for hovered cell (like other charts do)
@@ -203,7 +203,7 @@ namespace DigitalWellbeingWinUI3.Controls
             
             float width = (float)Canvas.ActualWidth;
             float height = (float)Canvas.ActualHeight;
-            float margin = 20;
+            float margin = 28;
             float gridWidth = width - margin;
             float gridHeight = height - margin;
             
