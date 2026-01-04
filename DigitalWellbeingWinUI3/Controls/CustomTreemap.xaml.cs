@@ -2,15 +2,18 @@ using DigitalWellbeingWinUI3.Helpers;
 using DigitalWellbeingWinUI3.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace DigitalWellbeingWinUI3.Controls
 {
     public sealed partial class CustomTreemap : UserControl
     {
+        // Store item rects for hit testing
+        private List<(TreemapItem Item, double X, double Y, double Width, double Height)> _itemRects = new();
+
         public static readonly DependencyProperty ItemsSourceProperty =
             DependencyProperty.Register(
                 nameof(ItemsSource),
@@ -40,17 +43,23 @@ namespace DigitalWellbeingWinUI3.Controls
 
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
+            // Resize inner canvas to match control size
+            TreemapCanvas.Width = e.NewSize.Width;
+            TreemapCanvas.Height = e.NewSize.Height;
+            RootCanvas.Width = e.NewSize.Width;
+            RootCanvas.Height = e.NewSize.Height;
             Render();
         }
 
         private void Render()
         {
             TreemapCanvas.Children.Clear();
+            _itemRects.Clear();
 
             var items = ItemsSource;
             if (items == null || items.Count == 0) return;
 
-            // Use the UserControl's dimensions, not the Canvas (Canvas doesn't auto-size)
+            // Use the UserControl's dimensions
             double width = this.ActualWidth;
             double height = this.ActualHeight;
 
@@ -71,7 +80,8 @@ namespace DigitalWellbeingWinUI3.Controls
                     Background = item.Fill ?? new SolidColorBrush(Microsoft.UI.Colors.Gray),
                     CornerRadius = new CornerRadius(4),
                     BorderThickness = new Thickness(0),
-                    Padding = new Thickness(6)
+                    Padding = new Thickness(6),
+                    Tag = item
                 };
 
                 // Calculate luminance of background color for text contrast
@@ -81,7 +91,8 @@ namespace DigitalWellbeingWinUI3.Controls
                 var stack = new StackPanel
                 {
                     VerticalAlignment = VerticalAlignment.Center,
-                    HorizontalAlignment = HorizontalAlignment.Center
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    IsHitTestVisible = false
                 };
 
                 // Only show text if box is big enough
@@ -97,7 +108,8 @@ namespace DigitalWellbeingWinUI3.Controls
                         MaxLines = 2,
                         TextWrapping = TextWrapping.Wrap,
                         HorizontalAlignment = HorizontalAlignment.Center,
-                        TextAlignment = Microsoft.UI.Xaml.TextAlignment.Center
+                        TextAlignment = Microsoft.UI.Xaml.TextAlignment.Center,
+                        IsHitTestVisible = false
                     };
                     stack.Children.Add(nameBlock);
 
@@ -109,7 +121,8 @@ namespace DigitalWellbeingWinUI3.Controls
                             FontSize = 10,
                             Foreground = textBrush,
                             Opacity = 0.9,
-                            HorizontalAlignment = HorizontalAlignment.Center
+                            HorizontalAlignment = HorizontalAlignment.Center,
+                            IsHitTestVisible = false
                         };
                         stack.Children.Add(valueBlock);
                     }
@@ -117,9 +130,8 @@ namespace DigitalWellbeingWinUI3.Controls
 
                 border.Child = stack;
 
-                // Tooltip
-                var tooltip = $"{item.Name}\n{item.FormattedValue} ({item.Percentage:F1}%)";
-                ToolTipService.SetToolTip(border, tooltip);
+                // Store rect for custom hit testing
+                _itemRects.Add((item, item.X + 1, item.Y + 1, item.Width - 2, item.Height - 2));
 
                 // Position on canvas
                 Canvas.SetLeft(border, item.X + 1);
@@ -127,6 +139,60 @@ namespace DigitalWellbeingWinUI3.Controls
 
                 TreemapCanvas.Children.Add(border);
             }
+        }
+
+        private void TreemapCanvas_PointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            var pt = e.GetCurrentPoint(TreemapCanvas).Position;
+            
+            // Find which item is under the cursor
+            TreemapItem hoveredItem = null;
+            foreach (var rect in _itemRects)
+            {
+                if (pt.X >= rect.X && pt.X <= rect.X + rect.Width &&
+                    pt.Y >= rect.Y && pt.Y <= rect.Y + rect.Height)
+                {
+                    hoveredItem = rect.Item;
+                    break;
+                }
+            }
+
+            if (hoveredItem != null)
+            {
+                // Update tooltip text
+                TooltipText.Text = $"{hoveredItem.Name}\n{hoveredItem.FormattedValue} ({hoveredItem.Percentage:F1}%)";
+                TooltipBorder.Visibility = Visibility.Visible;
+
+                // Measure tooltip
+                TooltipBorder.Measure(new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity));
+                double tipWidth = TooltipBorder.DesiredSize.Width;
+                double tipHeight = TooltipBorder.DesiredSize.Height;
+
+                // Position near cursor
+                double tipX = pt.X + 15;
+                double tipY = pt.Y + 15;
+
+                // Clamp to bounds
+                double maxWidth = this.ActualWidth;
+                double maxHeight = this.ActualHeight;
+                
+                if (tipX + tipWidth > maxWidth) tipX = pt.X - tipWidth - 5;
+                if (tipY + tipHeight > maxHeight) tipY = pt.Y - tipHeight - 5;
+                if (tipX < 0) tipX = 5;
+                if (tipY < 0) tipY = 5;
+
+                Canvas.SetLeft(TooltipBorder, tipX);
+                Canvas.SetTop(TooltipBorder, tipY);
+            }
+            else
+            {
+                TooltipBorder.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void TreemapCanvas_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            TooltipBorder.Visibility = Visibility.Collapsed;
         }
 
         /// <summary>
@@ -137,13 +203,11 @@ namespace DigitalWellbeingWinUI3.Controls
             if (background is SolidColorBrush solidBrush)
             {
                 var color = solidBrush.Color;
-                // Calculate relative luminance using sRGB formula
                 double luminance = (0.299 * color.R + 0.587 * color.G + 0.114 * color.B) / 255.0;
                 return luminance > 0.5 
                     ? new SolidColorBrush(Microsoft.UI.Colors.Black) 
                     : new SolidColorBrush(Microsoft.UI.Colors.White);
             }
-            // Default to white for non-solid brushes
             return new SolidColorBrush(Microsoft.UI.Colors.White);
         }
 

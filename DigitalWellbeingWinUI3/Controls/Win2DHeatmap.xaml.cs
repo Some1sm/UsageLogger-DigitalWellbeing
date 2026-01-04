@@ -1,5 +1,6 @@
 using DigitalWellbeingWinUI3.Models;
 using Microsoft.Graphics.Canvas;
+using Microsoft.Graphics.Canvas.Text;
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
@@ -15,6 +16,10 @@ namespace DigitalWellbeingWinUI3.Controls
     public sealed partial class Win2DHeatmap : UserControl
     {
         public event Action<int, int> CellClicked;
+
+        // Hover tracking
+        private (int day, int hour)? _hoverCell = null;
+        private Windows.Foundation.Point _lastMousePos;
 
         public Win2DHeatmap()
         {
@@ -60,6 +65,8 @@ namespace DigitalWellbeingWinUI3.Controls
             float cellWidth = gridWidth / 24f;
             float cellHeight = gridHeight / 7f;
 
+            HeatmapDataPoint hoveredItem = null;
+
             // Draw Items
             foreach (var item in items)
             {
@@ -73,15 +80,36 @@ namespace DigitalWellbeingWinUI3.Controls
                 if (opacity > 1) opacity = 1;
                 if (opacity < 0.1 && item.Intensity > 0) opacity = 0.1f;
                 
+                bool isHovered = _hoverCell.HasValue && 
+                                 _hoverCell.Value.day == item.DayOfWeek && 
+                                 _hoverCell.Value.hour == item.HourOne;
+                
+                if (isHovered)
+                {
+                    hoveredItem = item;
+                }
+                
                 if (item.Intensity > 0)
                 {
                     Color c = item.Color;
                     c.A = (byte)(opacity * 255);
                     ds.FillRectangle(x, y, cellWidth - 1, cellHeight - 1, c);
+                    
+                    // Draw highlight border for hovered cell
+                    if (isHovered)
+                    {
+                        ds.DrawRectangle(x, y, cellWidth - 1, cellHeight - 1, Colors.White, 2);
+                    }
                 }
                 else
                 {
                     ds.FillRectangle(x, y, cellWidth - 1, cellHeight - 1, Color.FromArgb(20, 100, 100, 100)); // faint grid
+                    
+                    // Draw highlight border for hovered empty cell too
+                    if (isHovered)
+                    {
+                        ds.DrawRectangle(x, y, cellWidth - 1, cellHeight - 1, Colors.Gray, 1);
+                    }
                 }
             }
             
@@ -90,42 +118,77 @@ namespace DigitalWellbeingWinUI3.Controls
             string[] days = { "S", "M", "T", "W", "T", "F", "S" };
             for(int i=0; i<7; i++)
             {
-                 ds.DrawText(days[i], 0, margin + i * cellHeight + cellHeight/2 - 6, Colors.Gray, new Microsoft.Graphics.Canvas.Text.CanvasTextFormat { FontSize = 10 });
+                 ds.DrawText(days[i], 0, margin + i * cellHeight + cellHeight/2 - 6, Colors.Gray, new CanvasTextFormat { FontSize = 10 });
             }
             
             // X-Axis: Hours (every 6 hours)
             for(int i=0; i<24; i+=6)
             {
-                ds.DrawText(i.ToString(), margin + i * cellWidth, 0, Colors.Gray, new Microsoft.Graphics.Canvas.Text.CanvasTextFormat { FontSize = 10 });
+                ds.DrawText(i.ToString(), margin + i * cellWidth, 0, Colors.Gray, new CanvasTextFormat { FontSize = 10 });
+            }
+            
+            // Draw Tooltip for hovered cell (like other charts do)
+            if (hoveredItem != null && !string.IsNullOrEmpty(hoveredItem.Tooltip))
+            {
+                string tooltipText = hoveredItem.Tooltip;
+                var format = new CanvasTextFormat 
+                { 
+                    FontSize = 12, 
+                    FontFamily = "Segoe UI",
+                    HorizontalAlignment = CanvasHorizontalAlignment.Left, 
+                    VerticalAlignment = CanvasVerticalAlignment.Top
+                };
+
+                using (var layout = new CanvasTextLayout(ds, tooltipText, format, 200.0f, 0.0f))
+                {
+                    float textWidth = (float)layout.LayoutBounds.Width;
+                    float textHeight = (float)layout.LayoutBounds.Height;
+                    float padding = 8;
+                    float tipWidth = textWidth + padding * 2;
+                    float tipHeight = textHeight + padding * 2;
+
+                    float tipX = (float)_lastMousePos.X + 15;
+                    float tipY = (float)_lastMousePos.Y + 15;
+
+                    // Clamp to bounds
+                    if (tipX + tipWidth > width) tipX = (float)_lastMousePos.X - tipWidth - 5;
+                    if (tipY + tipHeight > height) tipY = (float)_lastMousePos.Y - tipHeight - 5;
+                    if (tipX < 0) tipX = 5;
+                    if (tipY < 0) tipY = 5;
+
+                    ds.FillRoundedRectangle(tipX, tipY, tipWidth, tipHeight, 6, 6, Color.FromArgb(255, 43, 43, 43));
+                    ds.DrawRoundedRectangle(tipX, tipY, tipWidth, tipHeight, 6, 6, Color.FromArgb(255, 68, 68, 68), 1);
+                    ds.DrawTextLayout(layout, tipX + padding, tipY + padding, Colors.White);
+                }
             }
         }
 
         private void Canvas_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
+            if (Canvas == null) return;
+            
             var pt = e.GetCurrentPoint(Canvas).Position;
+            _lastMousePos = pt;
             var cell = GetCellAt(pt.X, pt.Y);
-            if (cell != null && ItemsSource != null)
-            {
-                var item = ItemsSource.FirstOrDefault(i => i.DayOfWeek == cell.Value.day && i.HourOne == cell.Value.hour);
-                if (item != null)
-                {
-                    Canvas.Opacity = 0.8;
-                    ToolTipService.SetToolTip(Canvas, item.Tooltip);
-                    return;
-                }
-            }
-            Canvas.Opacity = 1.0;
-            ToolTipService.SetToolTip(Canvas, null);
+            
+            _hoverCell = cell;
+            // Always invalidate so tooltip follows mouse
+            Canvas.Invalidate();
         }
 
         private void Canvas_PointerExited(object sender, PointerRoutedEventArgs e)
         {
-             Canvas.Opacity = 1.0;
-             ToolTipService.SetToolTip(Canvas, null);
+            if (_hoverCell != null)
+            {
+                _hoverCell = null;
+                Canvas?.Invalidate();
+            }
         }
 
         private void Canvas_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
+            if (Canvas == null) return;
+            
             var pt = e.GetCurrentPoint(Canvas).Position;
             var cell = GetCellAt(pt.X, pt.Y);
             if (cell != null)
@@ -136,6 +199,8 @@ namespace DigitalWellbeingWinUI3.Controls
 
         private (int day, int hour)? GetCellAt(double x, double y)
         {
+            if (Canvas == null) return null;
+            
             float width = (float)Canvas.ActualWidth;
             float height = (float)Canvas.ActualHeight;
             float margin = 20;

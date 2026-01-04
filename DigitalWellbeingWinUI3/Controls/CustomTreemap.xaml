@@ -8,5 +8,26 @@
     HorizontalAlignment="Stretch"
     VerticalAlignment="Stretch">
 
-    <Canvas x:Name="TreemapCanvas" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+    <Canvas x:Name="RootCanvas">
+        <!-- Treemap items go here -->
+        <Canvas x:Name="TreemapCanvas" Background="Transparent"
+                PointerMoved="TreemapCanvas_PointerMoved" 
+                PointerExited="TreemapCanvas_PointerExited"/>
+        
+        <!-- Floating Tooltip - positioned via Canvas.Left/Top -->
+        <Border x:Name="TooltipBorder" 
+                Visibility="Collapsed"
+                IsHitTestVisible="False"
+                Background="#FF2B2B2B"
+                BorderBrush="#FF444444"
+                BorderThickness="1"
+                CornerRadius="6"
+                Padding="10,8">
+            <TextBlock x:Name="TooltipText" 
+                       Foreground="White" 
+                       FontSize="12"
+                       TextWrapping="Wrap"
+                       MaxWidth="200"/>
+        </Border>
+    </Canvas>
 </UserControl>
