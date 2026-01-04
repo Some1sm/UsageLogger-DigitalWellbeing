@@ -130,6 +130,11 @@ namespace DigitalWellbeingWinUI3.ViewModels
                         ? s.ProcessName 
                         : (string.IsNullOrEmpty(s.ProgramName) ? s.ProcessName : s.ProgramName);
                     
+                    if (title.Length > 30)
+                    {
+                        title = title.Substring(0, 30) + "...";
+                    }
+                    
                     // Check for sub-app specific tag first, fallback to parent process tag
                     AppTag tag;
                     if (!string.IsNullOrEmpty(s.ProgramName))
