@@ -48,7 +48,7 @@ namespace DigitalWellbeing.Core.Helpers
             
             try
             {
-                string json = Newtonsoft.Json.JsonConvert.SerializeObject(allSessions);
+                string json = System.Text.Json.JsonSerializer.Serialize(allSessions, Contexts.AppJsonContext.Default.ListAppSession);
                 byte[] data = System.Text.Encoding.UTF8.GetBytes(json);
 
                 if (data.Length > MAP_SIZE - 4) return; // Too big
@@ -118,7 +118,7 @@ namespace DigitalWellbeing.Core.Helpers
                                 byte[] data = new byte[length];
                                 accessor.ReadArray(4, data, 0, length);
                                 string json = System.Text.Encoding.UTF8.GetString(data);
-                                return Newtonsoft.Json.JsonConvert.DeserializeObject<List<AppSession>>(json) 
+                                return System.Text.Json.JsonSerializer.Deserialize(json, Contexts.AppJsonContext.Default.ListAppSession) 
                                        ?? new List<AppSession>();
                             }
                         }
