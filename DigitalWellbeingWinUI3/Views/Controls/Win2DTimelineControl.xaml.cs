@@ -205,6 +205,7 @@ namespace DigitalWellbeingWinUI3.Views.Controls
             
             var drawnLabels = new List<Windows.Foundation.Rect>();
 
+            // Pass 1: Draw Main Blocks (Backgrounds + Text)
             foreach (var block in sessionBlocks)
             {
                 float top = (float)block.Top;
@@ -247,38 +248,19 @@ namespace DigitalWellbeingWinUI3.Views.Controls
                      float labelHeight = (float)layout.LayoutBounds.Height; // Approx
                      float textY = top + 2; // Default top
                      
-                     /*
-                     // If top is scrolled off screen (Top < Offset) but Bottom is still visible (Bottom > Offset)
-                     if (top < VerticalOffset && (top + height) > VerticalOffset + labelHeight)
-                     {
-                         textY = (float)VerticalOffset + 2;
-                         // Clamp to bottom of block
-                         if (textY + labelHeight > top + height)
-                         {
-                             textY = top + height - labelHeight - 2;
-                         }
-                     }
-                     else
-                     {
-                         // Centering logic if small block? Or just top align?
-                         // Original: top + height*0.1f. 
-                         textY = top + 2; // Keep it simple top aligned
-                     }
-                     */
                      textY = top + 2;
                      
                      ds.DrawTextLayout(layout, textX, textY, Colors.White);
                 }
-                
-                // Duration
-                if (height > 28)
-                {
-                     // Simple duration text drawing below title
-                     // I'll skip complex collision for speed, or implement if needed.
-                     // Skia implementation had complex collision.
-                }
+            }
 
-                // --- Background Audio Indicators ---
+            // Pass 2: Draw Background Audio Indicators (Always on top)
+            foreach (var block in sessionBlocks)
+            {
+                float top = (float)block.Top;
+                float height = (float)block.Height;
+                if (height < 1) continue;
+
                 if (block.HasAudio)
                 {
                      // Space on the right: 20% of width
@@ -303,8 +285,6 @@ namespace DigitalWellbeingWinUI3.Views.Controls
                              Color baseColor = audioBrush?.Color ?? Colors.Gray;
                              Color audioColor = Color.FromArgb(64, baseColor.R, baseColor.G, baseColor.B);
                              
-                             // Darken slightly to distinguish? Or same.
-                             
                              float ax = rightSpaceX + i * (sourceWidth + 2);
                              
                              // Draw
@@ -322,12 +302,8 @@ namespace DigitalWellbeingWinUI3.Views.Controls
              if (vm?.SessionBlocks == null) return;
              
              // Find block under mouse
-             // Simplified hit test
-             // Blocks are at X: 4 to 4+mainBlockWidth
-             // Y: block.Top to block.Top + Height
-             
-             // In Win2DBarChart we used a tooltip.
-             var block = vm.SessionBlocks.FirstOrDefault(b => 
+             // Use LastOrDefault to find the "top-most" (drawn last) element in case of overlaps
+             var block = vm.SessionBlocks.LastOrDefault(b => 
                  pt.Y >= b.Top && pt.Y <= b.Top + b.Height);
                  
              if (block != null)
