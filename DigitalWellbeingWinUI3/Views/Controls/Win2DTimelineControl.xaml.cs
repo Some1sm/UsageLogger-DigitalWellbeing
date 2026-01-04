@@ -267,7 +267,7 @@ namespace DigitalWellbeingWinUI3.Views.Controls
                      */
                      textY = top + 2;
                      
-                     ds.DrawTextLayout(layout, textX, textY, blockColor);
+                     ds.DrawTextLayout(layout, textX, textY, Colors.White);
                 }
                 
                 // Duration
