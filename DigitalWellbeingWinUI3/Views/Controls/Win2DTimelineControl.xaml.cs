@@ -151,8 +151,8 @@ namespace DigitalWellbeingWinUI3.Views.Controls
                     // However, for strict correctness with transforms (if we had them), passing region helps.
                     // Here we just draw to the session.
                     
-                    DrawGridLines(ds, width, vm);
                     DrawSessionBlocks(ds, width, vm);
+                    DrawGridLines(ds, width, vm);
                     
                     if (vm.CurrentTimeVisibility == Visibility.Visible)
                     {
@@ -299,7 +299,8 @@ namespace DigitalWellbeingWinUI3.Views.Controls
                              // Logic mimics DayTimelineViewModel selection
                              var audioTag = AppTagHelper.GetAppTag(audioApp);
                              var audioBrush = AppTagHelper.GetTagColor(audioTag) as SolidColorBrush;
-                             Color audioColor = audioBrush?.Color ?? Colors.Gray;
+                             Color baseColor = audioBrush?.Color ?? Colors.Gray;
+                             Color audioColor = Color.FromArgb(64, baseColor.R, baseColor.G, baseColor.B);
                              
                              // Darken slightly to distinguish? Or same.
                              
