@@ -1,24 +1,16 @@
 using DigitalWellbeing.Core.Models;
 using DigitalWellbeingWinUI3.Helpers;
 using DigitalWellbeingWinUI3.Models;
-using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
+using DigitalWellbeing.Core;
+using DigitalWellbeing.Core.Data;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using DigitalWellbeing.Core;
-using DigitalWellbeing.Core.Data;
-using LiveChartsCore.Defaults;
-using LiveChartsCore.Drawing;
-using LiveChartsCore.Measure;
-using LiveChartsCore.SkiaSharpView.Painting.Effects;
+using System.Diagnostics;
 
 namespace DigitalWellbeingWinUI3.ViewModels
 {
@@ -86,12 +78,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
 
         public ChartViewMode CurrentViewMode => (ChartViewMode)_selectedViewModeIndex;
 
-        private ObservableCollection<ISeries> _chartSeries;
-        public ObservableCollection<ISeries> ChartSeries
-        {
-            get => _chartSeries;
-            set { if (_chartSeries != value) { _chartSeries = value; OnPropertyChanged(); } }
-        }
+
 
         private ObservableCollection<TreemapItem> _treemapData;
         public ObservableCollection<TreemapItem> TreemapData
@@ -100,31 +87,25 @@ namespace DigitalWellbeingWinUI3.ViewModels
             set { if (_treemapData != value) { _treemapData = value; OnPropertyChanged(); } }
         }
 
-        private ObservableCollection<ISeries> _heatMapSeries;
-        public ObservableCollection<ISeries> HeatMapSeries
+        // HeatMap Data
+        private ObservableCollection<HeatmapDataPoint> _heatMapData;
+        public ObservableCollection<HeatmapDataPoint> HeatMapData
         {
-            get => _heatMapSeries;
-            set { if (_heatMapSeries != value) { _heatMapSeries = value; OnPropertyChanged(); } }
+            get => _heatMapData;
+            set { if (_heatMapData != value) { _heatMapData = value; OnPropertyChanged(); } }
         }
 
         // Heatmap cell details for tooltips and navigation
         private Dictionary<(int day, int hour), HeatmapCellData> _heatmapCellDetails = new();
         
-        // Trend chart series (day-by-day bar chart)
-        private ObservableCollection<ISeries> _trendSeries;
-        public ObservableCollection<ISeries> TrendSeries
+        // Trend chart data
+        private ObservableCollection<BarChartItem> _trendData;
+        public ObservableCollection<BarChartItem> TrendData
         {
-            get => _trendSeries;
-            set { if (_trendSeries != value) { _trendSeries = value; OnPropertyChanged(); } }
+            get => _trendData;
+            set { if (_trendData != value) { _trendData = value; OnPropertyChanged(); } }
         }
-        
-        // Trend X-Axis labels (dates)
-        private Axis[] _trendXAxes;
-        public Axis[] TrendXAxes
-        {
-            get => _trendXAxes;
-            set { if (_trendXAxes != value) { _trendXAxes = value; OnPropertyChanged(); } }
-        }
+
         
         // KPI: Total hours and % change
         private string _totalHoursText;
@@ -170,8 +151,9 @@ namespace DigitalWellbeingWinUI3.ViewModels
 
         public HistoryViewModel()
         {
-            ChartSeries = new ObservableCollection<ISeries>();
-            TrendSeries = new ObservableCollection<ISeries>();
+            // ChartSeries = new ObservableCollection<ISeries>(); // Removed
+            TrendData = new ObservableCollection<BarChartItem>();
+            HeatMapData = new ObservableCollection<HeatmapDataPoint>();
             GenerateChartCommand = new DelegateCommand(GenerateChart);
             
             // Apply initial date range (Last Week) without triggering chart generation yet
@@ -269,8 +251,8 @@ namespace DigitalWellbeingWinUI3.ViewModels
             {
                 // Clear previous data
                 TreemapData = null;
-                TrendSeries = null;
-                HeatMapSeries = null;
+                TrendData = null;
+                HeatMapData = null;
                 TotalHoursText = "Loading...";
                 TotalChangeText = "";
 
@@ -426,60 +408,46 @@ namespace DigitalWellbeingWinUI3.ViewModels
             _heatmapCellDetails.Clear();
             string[] dayNames = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
             
-            var weightedPoints = new ObservableCollection<WeightedPoint>();
+            var heatmapPoints = new ObservableCollection<HeatmapDataPoint>();
+            var uiSettings = new Windows.UI.ViewManagement.UISettings();
+            var accent = uiSettings.GetColorValue(Windows.UI.ViewManagement.UIColorType.Accent);
+
             for (int d = 0; d < 7; d++)
             {
                 for (int h = 0; h < 24; h++)
                 {
                     double val = grid[d, h];
-                    weightedPoints.Add(new WeightedPoint(h, d, (int)val));
                     
                     // Get top app for this cell
                     var topApp = cellApps[(d, h)].OrderByDescending(x => x.Value).FirstOrDefault();
+                    string topAppName = topApp.Key ?? "No activity";
+                    double topAppMinutes = topApp.Value;
+
+                    string timeStr = $"{h:D2}:00";
+                    string totalStr = FormatDuration(val);
+                    string tooltip = $"{dayNames[d]} at {timeStr} • {totalStr} • Top: {topAppName}";
+
+                    heatmapPoints.Add(new HeatmapDataPoint
+                    {
+                        HourOne = h,
+                        DayOfWeek = d,
+                        Intensity = val,
+                        Color = accent,
+                        Tooltip = tooltip
+                    });
+                    
                     _heatmapCellDetails[(d, h)] = new HeatmapCellData
                     {
                         DayName = dayNames[d],
                         Hour = h,
                         TotalMinutes = val,
-                        TopAppName = topApp.Key ?? "No activity",
-                        TopAppMinutes = topApp.Value
+                        TopAppName = topAppName,
+                        TopAppMinutes = topAppMinutes
                     };
                 }
             }
             
-            // Create HeatSeries with custom tooltip
-            var series = new HeatSeries<WeightedPoint>
-            {
-                Values = weightedPoints,
-                Name = LocalizationHelper.GetString("History_Activity"),
-                HeatMap = new[]
-                {
-                    new LvcColor(32, 32, 32),
-                    new LvcColor(0, 50, 100),
-                    new LvcColor(0, 120, 215),
-                    new LvcColor(100, 200, 255)
-                },
-                YToolTipLabelFormatter = (chartPoint) =>
-                {
-                    // Access the actual WeightedPoint model directly
-                    if (chartPoint.Model is WeightedPoint wp)
-                    {
-                        int hour = (int)(wp.X ?? 0);  // X = hour (0-23)
-                        int day = (int)(wp.Y ?? 0);   // Y = day (0-6)
-                        
-                        if (_heatmapCellDetails.TryGetValue((day, hour), out var cell))
-                        {
-                            string timeStr = $"{hour:D2}:00";
-                            string totalStr = FormatDuration(cell.TotalMinutes);
-                            return $"{cell.DayName} at {timeStr} • {totalStr} • Top: {cell.TopAppName}";
-                        }
-                        return FormatDuration(wp.Weight ?? 0);
-                    }
-                    return "";
-                }
-            };
-
-            HeatMapSeries = new ObservableCollection<ISeries> { series };
+            HeatMapData = heatmapPoints;
         }
 
         private void GenerateTrendChart(List<AppSession> currentSessions, List<AppSession> prevSessions, DateTime start, DateTime end)
@@ -523,41 +491,28 @@ namespace DigitalWellbeingWinUI3.ViewModels
             }
 
             // Create bar chart
-            var barValues = dailyTotals.OrderBy(x => x.Key).Select(x => x.Value / 60.0).ToList(); // Hours
-            var dateLabels = dailyTotals.OrderBy(x => x.Key).Select(x => x.Key.ToString("MM/dd")).ToArray();
-
-            var barSeries = new ColumnSeries<double>
+            // Create bar chart items
+            var trendItems = new ObservableCollection<BarChartItem>();
+            var uiSettings = new Windows.UI.ViewManagement.UISettings();
+            var accent = uiSettings.GetColorValue(Windows.UI.ViewManagement.UIColorType.Accent);
+            
+            foreach(var kvp in dailyTotals.OrderBy(x => x.Key))
             {
-                Values = barValues,
-                Name = LocalizationHelper.GetString("History_DailyUsage"),
-                Fill = new SolidColorPaint(new SKColor(0, 120, 215)),
-                MaxBarWidth = 30,
-                YToolTipLabelFormatter = (point) => FormatHours(point.Model)
-            };
-
-            // Previous period average line
-            var avgLine = new LineSeries<double>
-            {
-                Values = Enumerable.Repeat(prevAvg / 60.0, barValues.Count).ToList(),
-                Name = $"{LocalizationHelper.GetString("History_PrevPeriodAvg")} ({FormatDuration(prevAvg)})",
-                Stroke = new SolidColorPaint(new SKColor(255, 180, 0)) { StrokeThickness = 2, PathEffect = new DashEffect(new float[] { 6, 4 }) },
-                Fill = null,
-                GeometrySize = 0,
-                LineSmoothness = 0,
-                YToolTipLabelFormatter = (point) => FormatHours(point.Model)
-            };
-
-            TrendSeries = new ObservableCollection<ISeries> { barSeries, avgLine };
-            TrendXAxes = new Axis[]
-            {
-                new Axis
+                double hours = kvp.Value / 60.0;
+                string label = kvp.Key.ToString("MM/dd");
+                
+                trendItems.Add(new BarChartItem
                 {
-                    Labels = dateLabels,
-                    LabelsRotation = 45,
-                    TextSize = 10,
-                    LabelsPaint = new SolidColorPaint(SKColors.Gray)
-                }
-            };
+                    Value = hours,
+                    Label = label,
+                    Date = kvp.Key,
+                    Tooltip = ChartFactory.FormatHours(hours),
+                    Color = accent
+                });
+            }
+
+            TrendData = trendItems;
+            // Axis labels are handled by Win2DBarChart via BarChartItem.Label
         }
         
         // Method for heatmap cell click -> navigate to that day
@@ -680,17 +635,23 @@ namespace DigitalWellbeingWinUI3.ViewModels
             // Generate color palette based on accent color
             var uiSettings = new Windows.UI.ViewManagement.UISettings();
             var accent = uiSettings.GetColorValue(Windows.UI.ViewManagement.UIColorType.Accent);
-            var skAccent = new SkiaSharp.SKColor(accent.R, accent.G, accent.B, accent.A);
-            var palette = ChartFactory.GenerateMonochromaticPalette(skAccent, visibleApps.Count);
+            var palette = new List<Windows.UI.Color>();
+            for (int i = 0; i < visibleApps.Count; i++)
+            {
+                 float factor = 1.0f - (0.6f * i / (float)Math.Max(1, visibleApps.Count)); 
+                 palette.Add(Windows.UI.Color.FromArgb(accent.A, 
+                     (byte)(accent.R * factor), 
+                     (byte)(accent.G * factor), 
+                     (byte)(accent.B * factor)));
+            }
 
             var treemapItems = new ObservableCollection<TreemapItem>();
             int colorIndex = 0;
             foreach (var kvp in visibleApps)
             {
                 double percentage = totalDuration > 0 ? (kvp.Value / totalDuration) * 100 : 0;
-                var skColor = palette[colorIndex % palette.Count];
-                var brush = new Microsoft.UI.Xaml.Media.SolidColorBrush(
-                    Windows.UI.Color.FromArgb(skColor.Alpha, skColor.Red, skColor.Green, skColor.Blue));
+                var color = palette[colorIndex % palette.Count];
+                var brush = new Microsoft.UI.Xaml.Media.SolidColorBrush(color);
 
                 treemapItems.Add(new TreemapItem
                 {
@@ -773,17 +734,23 @@ namespace DigitalWellbeingWinUI3.ViewModels
             // Generate color palette based on accent color
             var uiSettings = new Windows.UI.ViewManagement.UISettings();
             var accent = uiSettings.GetColorValue(Windows.UI.ViewManagement.UIColorType.Accent);
-            var skAccent = new SkiaSharp.SKColor(accent.R, accent.G, accent.B, accent.A);
-            var palette = ChartFactory.GenerateMonochromaticPalette(skAccent, visibleApps.Count);
+            var palette = new List<Windows.UI.Color>();
+            for (int i = 0; i < visibleApps.Count; i++)
+            {
+                 float factor = 1.0f - (0.6f * i / (float)Math.Max(1, visibleApps.Count)); 
+                 palette.Add(Windows.UI.Color.FromArgb(accent.A, 
+                     (byte)(accent.R * factor), 
+                     (byte)(accent.G * factor), 
+                     (byte)(accent.B * factor)));
+            }
 
             var treemapItems = new ObservableCollection<TreemapItem>();
             int colorIndex = 0;
             foreach (var kvp in visibleApps)
             {
                 double percentage = totalDuration > 0 ? (kvp.Value.Minutes / totalDuration) * 100 : 0;
-                var skColor = palette[colorIndex % palette.Count];
-                var brush = new Microsoft.UI.Xaml.Media.SolidColorBrush(
-                    Windows.UI.Color.FromArgb(skColor.Alpha, skColor.Red, skColor.Green, skColor.Blue));
+                var color = palette[colorIndex % palette.Count];
+                var brush = new Microsoft.UI.Xaml.Media.SolidColorBrush(color);
 
                 treemapItems.Add(new TreemapItem
                 {
@@ -821,20 +788,9 @@ namespace DigitalWellbeingWinUI3.ViewModels
             return $"{(int)t.TotalHours}h {t.Minutes}m {t.Seconds}s";
         }
 
-        private void AddNoData(ObservableCollection<ISeries> series)
-        {
-            series.Add(new PieSeries<double>
-            {
-                Values = new ObservableCollection<double> { 1 },
-                Name = "No Data",
-                Fill = new SolidColorPaint(SKColors.LightGray)
-            });
-        }
 
-        private SKColor ConvertColor(Windows.UI.Color color)
-        {
-            return new SKColor(color.R, color.G, color.B, color.A);
-        }
+
+
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string name = null)

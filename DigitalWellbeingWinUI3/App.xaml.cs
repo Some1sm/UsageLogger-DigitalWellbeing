@@ -18,8 +18,6 @@ using Windows.Foundation.Collections;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
 using WinUI3Localizer;
 
 namespace DigitalWellbeingWinUI3
@@ -31,12 +29,7 @@ namespace DigitalWellbeingWinUI3
             this.InitializeComponent();
             this.UnhandledException += App_UnhandledException;
 
-            LiveCharts.Configure(config =>
-                config
-                    .AddSkiaSharp()
-                    .AddDefaultMappers()
-                    .AddDarkTheme()
-            );
+
         }
 
         private void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)

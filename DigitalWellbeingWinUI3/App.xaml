@@ -13,6 +13,8 @@
             </ResourceDictionary.MergedDictionaries>
             <!-- Other app resources here -->
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+            <converters:ColorToBrushConverter x:Key="ColorToBrushConverter"/>
+            <converters:PercentConverter x:Key="PercentConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:l="using:WinUI3Localizer"
+    xmlns:controls="using:DigitalWellbeingWinUI3.Controls"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -205,7 +206,9 @@
                             <RowDefinition Height="250"/> 
                         </Grid.RowDefinitions>
                         <TextBlock l:Uids.Uid="Dashboard_DailyActivity" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
-                        <ContentControl x:Name="BarChartContainer" Grid.Row="1" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
+                        <controls:Win2DBarChart x:Name="BarChartContainer" Grid.Row="1" ItemsSource="{x:Bind ViewModel.WeeklyChartItems, Mode=OneWay}" 
+                                        ItemClickCommand="{x:Bind ViewModel.BarChartClickCommand, Mode=OneWay}"
+                                        TargetLineValue="8" TargetLineLabel="Goal: 8h" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Height="250"/>
                     </Grid>
                 </Border>
 
@@ -217,7 +220,7 @@
                             <RowDefinition Height="250"/> 
                         </Grid.RowDefinitions>
                         <TextBlock l:Uids.Uid="Dashboard_UsageSummary" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
-                        <ContentControl x:Name="PieChartContainer" Grid.Row="1" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
+                        <controls:Win2DPieChart x:Name="PieChartContainer" Grid.Row="1" ItemsSource="{x:Bind ViewModel.PieChartItems, Mode=OneWay}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
                     </Grid>
                 </Border>
             </Grid>

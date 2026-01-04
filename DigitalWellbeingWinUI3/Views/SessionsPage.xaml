@@ -76,7 +76,7 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <controls:SkiaTimelineControl Width="{Binding TimelineWidth}"/>
+                            <controls:Win2DTimelineControl Width="{Binding TimelineWidth}"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

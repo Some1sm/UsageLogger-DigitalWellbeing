@@ -1,7 +1,7 @@
 using DigitalWellbeingWinUI3.ViewModels;
 using DigitalWellbeingWinUI3.Controls;
 using Microsoft.UI.Xaml.Controls;
-using LiveChartsCore.Kernel.Sketches;
+
 using System.Linq;
 
 namespace DigitalWellbeingWinUI3.Views
@@ -35,65 +35,11 @@ namespace DigitalWellbeingWinUI3.Views
 
         private void HistoryPage_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            var isDark = this.ActualTheme == Microsoft.UI.Xaml.ElementTheme.Dark;
-            if (this.ActualTheme == Microsoft.UI.Xaml.ElementTheme.Default)
-            {
-                isDark = Microsoft.UI.Xaml.Application.Current.RequestedTheme == Microsoft.UI.Xaml.ApplicationTheme.Dark;
-            }
-            var legendColor = isDark ? SkiaSharp.SKColors.White : SkiaSharp.SKColors.Black;
-            var labelPaint = new LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint(isDark ? SkiaSharp.SKColors.Gray : SkiaSharp.SKColors.DarkGray);
 
-            // Inject Trend Chart
-            try
-            {
-                if (TrendChartContainer.Content == null)
-                {
-                    var trendChart = new LiveChartsCore.SkiaSharpView.WinUI.CartesianChart
-                    {
-                        TooltipPosition = LiveChartsCore.Measure.TooltipPosition.Top,
-                        Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent),
-                        LegendPosition = LiveChartsCore.Measure.LegendPosition.Top,
-                        LegendTextPaint = new LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint(legendColor),
-                        YAxes = new[]
-                        {
-                            new LiveChartsCore.SkiaSharpView.Axis
-                            {
-                                Name = "Hours",
-                                NamePaint = labelPaint,
-                                LabelsPaint = labelPaint,
-                                TextSize = 10
-                            }
-                        }
-                    };
 
-                    // Bind Series
-                    var seriesBinding = new Microsoft.UI.Xaml.Data.Binding
-                    {
-                        Source = ViewModel,
-                        Path = new Microsoft.UI.Xaml.PropertyPath("TrendSeries"),
-                        Mode = Microsoft.UI.Xaml.Data.BindingMode.OneWay
-                    };
-                    trendChart.SetBinding(LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.SeriesProperty, seriesBinding);
+            // Inject Trend Chart Removed (Handled in XAML)
 
-                    // Bind X Axes
-                    var xAxesBinding = new Microsoft.UI.Xaml.Data.Binding
-                    {
-                        Source = ViewModel,
-                        Path = new Microsoft.UI.Xaml.PropertyPath("TrendXAxes"),
-                        Mode = Microsoft.UI.Xaml.Data.BindingMode.OneWay
-                    };
-                    trendChart.SetBinding(LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.XAxesProperty, xAxesBinding);
-
-                    TrendChartContainer.Content = trendChart;
-                }
-            }
-            catch (System.Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"[CRITICAL] Trend Chart Injection Failed: {ex}");
-                TrendChartContainer.Content = new TextBlock { Text = "Chart Error", Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(Windows.UI.Color.FromArgb(255, 255, 0, 0)) };
-            }
-
-            // Inject Custom Treemap
+            // Inject Custom Treemap (Unchanged)
             try
             {
                 if (HistoryChartContainer.Content == null)
@@ -117,57 +63,25 @@ namespace DigitalWellbeingWinUI3.Views
                 HistoryChartContainer.Content = new TextBlock { Text = "Chart Error", Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(Windows.UI.Color.FromArgb(255, 255, 0, 0)) };
             }
 
-            // Inject Heatmap Chart with click handler
-            try
+            // Inject Heatmap Chart Removed (Handled in XAML)
+            
+            /* 
+            // Wire up Heatmap Click Event (can be done via XAML EventBinding or here if exposed)
+            // Commented out until Win2DHeatmap.CellClicked is verified/exposed and control is restored.
+            HeatMapContainer.CellClicked += (day, hour) =>
             {
-                if (HeatMapContainer.Content == null)
-                {
-                    var heatChart = new LiveChartsCore.SkiaSharpView.WinUI.CartesianChart
-                    {
-                        XAxes = new [] 
-                        { 
-                            new LiveChartsCore.SkiaSharpView.Axis 
-                            { 
-                                Labels = new [] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23" },
-                                LabelsRotation = 0,
-                                LabelsPaint = labelPaint,
-                                TextSize = 10
-                            } 
-                        },
-                        YAxes = new [] 
-                        { 
-                            new LiveChartsCore.SkiaSharpView.Axis 
-                            { 
-                                Labels = new [] { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" },
-                                LabelsPaint = labelPaint,
-                                TextSize = 10,
-                                MinStep = 1,
-                                ForceStepToMin = true
-                            } 
-                        },
-                        TooltipPosition = LiveChartsCore.Measure.TooltipPosition.Top,
-                        Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent)
-                    };
-                    
-                    var binding = new Microsoft.UI.Xaml.Data.Binding 
-                    { 
-                        Source = ViewModel, 
-                        Path = new Microsoft.UI.Xaml.PropertyPath("HeatMapSeries"), 
-                        Mode = Microsoft.UI.Xaml.Data.BindingMode.OneWay 
-                    };
-                    heatChart.SetBinding(LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.SeriesProperty, binding);
-
-                    HeatMapContainer.Content = heatChart;
-                }
-            }
-            catch (System.Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"[CRITICAL] Heatmap Injection Failed: {ex}");
-                HeatMapContainer.Content = new TextBlock { Text = "Chart Error", Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(Windows.UI.Color.FromArgb(255, 255, 0, 0)) };
-            }
+                 if (App.MainWindow?.RootFrame != null)
+                 {
+                      // Logic to convert day/hour to date
+                      // This is tricky without knowing the StartDate context here if not using ViewModel.NavigateToDate.
+                      // But ViewModel has OnHeatmapCellClicked!
+                      ViewModel.OnHeatmapCellClicked(day, hour);
+                 }
+            };
+            */
 
             // Auto-Generate if empty
-            if (ViewModel.ChartSeries.Count == 0)
+            if (ViewModel.TrendData.Count == 0)
             {
                 ViewModel.GenerateChart();
             }

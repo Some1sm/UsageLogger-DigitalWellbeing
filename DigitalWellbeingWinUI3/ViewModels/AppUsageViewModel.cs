@@ -1,1341 +1,1099 @@
-using DigitalWellbeing.Core;
-using DigitalWellbeing.Core.Helpers;
-using DigitalWellbeing.Core.Models;
-using DigitalWellbeing.Core.Data;
-using DigitalWellbeingWinUI3.Helpers;
-using DigitalWellbeingWinUI3.Models;
-// using DigitalWellbeingWinUI3.Views; // Stubs for now
-using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Painting;
-using LiveChartsCore.Kernel;
-using SkiaSharp;
+// DigitalWellbeingWinUI3, Version=0.8.1.0, Culture=neutral, PublicKeyToken=null
+// DigitalWellbeingWinUI3.ViewModels.AppUsageViewModel
 using System;
-using System.Windows.Input;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Microsoft.UI.Xaml; // For DispatcherTimer
+using System.Windows.Input;
+using DigitalWellbeing.Core;
+using DigitalWellbeing.Core.Data;
+using DigitalWellbeing.Core.Helpers;
+using DigitalWellbeing.Core.Models;
+using DigitalWellbeingWinUI3.Helpers;
+using DigitalWellbeingWinUI3.Models;
+using DigitalWellbeingWinUI3.ViewModels;
+using Microsoft.UI;
+using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
-using LiveChartsCore.Measure;
+using Windows.UI;
+using Windows.UI.ViewManagement;
 
-namespace DigitalWellbeingWinUI3.ViewModels
+public class AppUsageViewModel : INotifyPropertyChanged
 {
-    public class AppUsageViewModel : INotifyPropertyChanged
-    {
-        #region Configurations
-        public static int NumberOfDaysToDisplay { get; set; } = UserPreferences.DayAmount;
-        public static readonly int MinimumPieChartPercentage = 10;
-        #endregion
-
-        #region Temporary 
-        private static string folderPath => ApplicationPath.UsageLogsFolder;
-        private DispatcherTimer refreshTimer;
-        private ObservableCollection<double> weeklyHours; // Store for updating bar chart
-        #endregion
-
-        #region Formatters
-        public Func<double, string> HourFormatter { get; set; }
-        // LiveCharts2 formatters
-        // public Func<ChartPoint, string> PieChartLabelFormatter { get; set; } 
-        #endregion
-
-        #region String Bindings
-        public DateTime LoadedDate = DateTime.Now.Date;
-        public string StrLoadedDate
-        {
-            get => (LoadedDate.Date == DateTime.Now.Date) ?
-                LocalizationHelper.GetString("Today") + ", " + this.LoadedDate.ToString("dddd") :
-                this.LoadedDate.ToString("dddd, MMM dd yyyy");
-        }
-
-        public TimeSpan TotalDuration = new TimeSpan();
-        public string StrTotalDuration
-        {
-            get
-            {
-                // Compact format: "5h 30m"
-                return $"{(int)TotalDuration.TotalHours}h {TotalDuration.Minutes}m";
-            }
-        }
-
-        public string StrMinumumDuration
-        {
-            get
-            {
-                return UserPreferences.MinumumDuration.TotalSeconds <= 0
-                    ? ""
-                    : $"Apps that run less than {StringHelper.TimeSpanToString(UserPreferences.MinumumDuration)} are hidden.";
-            }
-        }
-        #endregion
-
-        #region Collections
-        public ObservableCollection<List<AppUsage>> WeekAppUsage { get; set; }
-        
-        // LiveCharts2 Series
-        public ObservableCollection<ISeries> WeeklyChartSeries { get; set; }
-        public ObservableCollection<Axis> WeeklyChartXAxes { get; set; }
-
-        public ObservableCollection<ISeries> DayPieChartSeries { get; set; }
-        public ObservableCollection<AppUsageListItem> DayListItems { get; set; }
-        public ObservableCollection<AppUsageListItem> Column1Items { get; set; } = new ObservableCollection<AppUsageListItem>();
-        public ObservableCollection<AppUsageListItem> Column2Items { get; set; } = new ObservableCollection<AppUsageListItem>();
-        public ObservableCollection<AppUsageListItem> Column3Items { get; set; } = new ObservableCollection<AppUsageListItem>();
-        
-        // Background Audio Collections
-        public ObservableCollection<AppUsageListItem> BackgroundAudioItems { get; set; } = new ObservableCollection<AppUsageListItem>();
-        public ObservableCollection<AppUsageListItem> BackgroundAudioColumn1 { get; set; } = new ObservableCollection<AppUsageListItem>();
-        public ObservableCollection<AppUsageListItem> BackgroundAudioColumn2 { get; set; } = new ObservableCollection<AppUsageListItem>();
-        public ObservableCollection<AppUsageListItem> BackgroundAudioColumn3 { get; set; } = new ObservableCollection<AppUsageListItem>();
-        
-        public ObservableCollection<ISeries> TagsChartSeries { get; set; }
-        
-        // Category durations (aggregated with sub-app splitting)
-        public Dictionary<AppTag, TimeSpan> CategoryDurations { get; set; } = new Dictionary<AppTag, TimeSpan>();
-        
-        public DateTime[] WeeklyChartLabelDates { get; set; }
-        #endregion
-
-        #region Excluded Processes
-        private static readonly string[] excludeProcesses = new string[]
-        {
-            "DigitalWellbeingWPF", "process", "DigitalWellbeingWinUI3",
-            "explorer", "SearchHost", "Idle", "StartMenuExperienceHost", "ShellExperienceHost",
-            "dwm", "LockApp", "msiexec", "ApplicationFrameHost", "*LAST",
-        };
-        private static string[] userExcludedProcesses;
-        #endregion
-
-        #region Getters with Bindings
-        public event PropertyChangedEventHandler PropertyChanged;
-        public bool CanGoNext { get => LoadedDate.Date < DateTime.Now.Date; }
-        public bool CanGoPrev { get => LoadedDate.Date > DateTime.Now.AddDays(-NumberOfDaysToDisplay + 1).Date; }
-        
-        private bool _isLoading;
-        public bool IsLoading 
-        { 
-            get => _isLoading; 
-            set 
-            {
-                if (_isLoading != value)
-                {
-                    _isLoading = value;
-                    OnPropertyChanged();
-                }
-            } 
-        }
-
-        public double PieChartInnerRadius { get; set; }
-
-        public bool IsWeeklyDataLoaded = false;
-        
-        public ICommand ChartClickCommand { get; set; }
-
-
-        #endregion
-
-        private Windows.UI.ViewManagement.UISettings uiSettings;
-        private Microsoft.UI.Dispatching.DispatcherQueue dispatcherQueue;
-        
-        // XamlRoot for showing dialogs (set by the Page)
-        public XamlRoot XamlRoot { get; set; }
-
-        public AppUsageViewModel()
-        {
-            try
-            {
-                dispatcherQueue = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
-
-                // Listen for Accent Color Changes
-                uiSettings = new Windows.UI.ViewManagement.UISettings();
-                uiSettings.ColorValuesChanged += UiSettings_ColorValuesChanged;
-
-                InitCollections();
-                InitFormatters();
-                LoadUserExcludedProcesses();
-                InitAutoRefreshTimer();
-                // Start Loading
-                LoadWeeklyData();
-                
-                ChartClickCommand = new RelayCommand(OnChartClick);
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"[CRITICAL] ViewModel Constructor Failed: {ex}");
-                // Ensure critical collections are at least not null to avoid XAML crash
-                if (WeekAppUsage == null) WeekAppUsage = new ObservableCollection<List<AppUsage>>();
-                if (WeeklyChartLabelDates == null) WeeklyChartLabelDates = new DateTime[0];
-                if (DayListItems == null) DayListItems = new ObservableCollection<AppUsageListItem>();
-            }
-        }
-
-        private void UiSettings_ColorValuesChanged(Windows.UI.ViewManagement.UISettings sender, object args)
-        {
-            dispatcherQueue.TryEnqueue(() =>
-            {
-                // Update Weekly Chart (Bar)
-                if (WeeklyChartSeries != null && WeeklyChartSeries.Count > 0)
-                {
-                    foreach (var series in WeeklyChartSeries)
-                    {
-                        if (series is ColumnSeries<double> columnSeries)
-                        {
-                            columnSeries.Fill = GetAccentGradientPaint();
-                        }
-                    }
-                }
-
-                // Update Day Pie Chart
-                if (DayPieChartSeries != null && DayPieChartSeries.Count > 0)
-                {
-                    var accent = uiSettings.GetColorValue(Windows.UI.ViewManagement.UIColorType.Accent);
-                    var skAccent = new SKColor(accent.R, accent.G, accent.B, accent.A);
-                    // Use Monochromatic to match LoadWeeklyData logic
-                    var palette = ChartFactory.GenerateMonochromaticPalette(skAccent, DayPieChartSeries.Count);
-
-                    for (int i = 0; i < DayPieChartSeries.Count; i++)
-                    {
-                        if (DayPieChartSeries[i] is PieSeries<double> pieSeries)
-                        {
-                            pieSeries.Fill = new SolidColorPaint(palette[i % palette.Count]);
-                        }
-                    }
-                }
-            });
-        }
-
-        private LinearGradientPaint GetAccentGradientPaint()
-        {
-            var accent = uiSettings.GetColorValue(Windows.UI.ViewManagement.UIColorType.Accent);
-            return ChartFactory.CreateAccentGradient(accent);
-        }
-
-        private void OnChartClick(object parameter)
-        {
-            try
-            {
-                // LiveCharts2 passes IEnumerable<ChartPoint> as parameter (usually) or specific args depending on binding
-                // But for DataPointerDown it passes IEnumerable<ChartPoint> of the clicked points.
-                
-                if (parameter is IEnumerable<ChartPoint> points)
-                {
-                    var point = points.FirstOrDefault();
-                    if (point != null)
-                    {
-                         // Index of the point in the series
-                         int index = point.Index;
-                         WeeklyChart_SelectionChanged(index);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Chart Click Error: {ex.Message}");
-            }
-        }
-
-        private void InitCollections()
-        {
-            WeekAppUsage = new ObservableCollection<List<AppUsage>>();
-            
-            WeeklyChartSeries = new ObservableCollection<ISeries>();
-            WeeklyChartXAxes = new ObservableCollection<Axis> 
-            { 
-                new Axis 
-                { 
-                    Labels = new List<string>(),
-                    LabelsRotation = 0,
-                } 
-            };
-
-            DayPieChartSeries = new ObservableCollection<ISeries>();
-            DayListItems = new ObservableCollection<AppUsageListItem>();
-            TagsChartSeries = new ObservableCollection<ISeries>();
-        }
-
-        private void InitFormatters()
-        {
-            HourFormatter = (hours) => hours.ToString("F1") + " h";
-        }
-
-        private string FormatMinutes(double totalMinutes)
-        {
-            TimeSpan t = TimeSpan.FromMinutes(totalMinutes);
-            if (t.TotalHours >= 1)
-                return $"{(int)t.TotalHours}h {t.Minutes}m";
-            else if (t.TotalMinutes >= 1)
-                return $"{t.Minutes}m {t.Seconds}s";
-            else
-                return $"{t.Seconds}s";
-        }
-
-        private void InitAutoRefreshTimer()
-        {
-            int refreshInterval = UserPreferences.RefreshIntervalSeconds;
-            TimeSpan intervalDuration = TimeSpan.FromSeconds(refreshInterval);
-            refreshTimer = new DispatcherTimer() { Interval = intervalDuration };
-            refreshTimer.Tick += (s, e) => TryRefreshData(force: true); // force=true to bypass date check
-            
-            // Start timer if auto-refresh is enabled
-            if (UserPreferences.EnableAutoRefresh)
-            {
-                refreshTimer.Start();
-            }
-        }
-
-        // GenerateMultiHuePalette is now in ChartFactory.GenerateMultiHuePalette
-
-        public void LoadUserExcludedProcesses()
-        {
-            userExcludedProcesses = UserPreferences.UserExcludedProcesses.ToArray();
-        }
-
-        public async void LoadWeeklyData()
-        {
-            SetLoading(true);
-            Debug.WriteLine("[AppUsageViewModel] LoadWeeklyData Started");
-            await Helpers.SettingsManager.WaitForInit;
-            try
-            {
-                DateTime minDate = DateTime.Now.AddDays(-NumberOfDaysToDisplay);
-
-                // Build list of dates to load
-                var datesToLoad = new List<DateTime>();
-                for (int i = 1; i <= NumberOfDaysToDisplay; i++)
-                {
-                    datesToLoad.Add(minDate.AddDays(i).Date);
-                }
-
-                // PARALLEL LOADING: Load all days concurrently
-                var loadTasks = datesToLoad.Select(async date =>
-                {
-                    var appUsageList = await GetData(date);
-                    var filteredUsageList = appUsageList.Where(appUsageFilter).ToList();
-                    filteredUsageList.Sort(appUsageSorter);
-                    
-                    TimeSpan totalDuration = TimeSpan.Zero;
-                    foreach (var app in filteredUsageList)
-                    {
-                        totalDuration = totalDuration.Add(app.Duration);
-                    }
-                    
-                    return new
-                    {
-                        Date = date,
-                        Usage = filteredUsageList,
-                        Hours = totalDuration.TotalHours,
-                        Label = date.ToString("ddd")
-                    };
-                }).ToList();
-
-                var results = await Task.WhenAll(loadTasks);
-                
-                // Sort results by date (parallel execution may return out of order)
-                var orderedResults = results.OrderBy(r => r.Date).ToList();
-
-                // Build collections from parallel results
-                var weekUsage = new List<List<AppUsage>>();
-                var hours = new ObservableCollection<double>();
-                weeklyHours = hours;
-                var labels = new List<string>();
-                var loadedDates = new List<DateTime>();
-
-                foreach (var result in orderedResults)
-                {
-                    weekUsage.Add(result.Usage);
-                    hours.Add(result.Hours);
-                    labels.Add(result.Label);
-                    loadedDates.Add(result.Date);
-                    Debug.WriteLine($"[AppUsageViewModel] Loaded {result.Date.ToShortDateString()}: {result.Usage.Count} apps, {result.Hours:F2} hrs");
-                }
-
-                WeekAppUsage.Clear();
-                foreach (List<AppUsage> dayUsage in weekUsage) { WeekAppUsage.Add(dayUsage); }
-                
-                WeeklyChartSeries.Clear();
-                
-                var gradientPaint = GetAccentGradientPaint();
-
-                if (hours.Sum() == 0)
-                {
-                    Debug.WriteLine("[DEBUG] No real data found. Injecting Dummy Data for Verification.");
-                    hours.Clear();
-                    labels.Clear();
-                    hours.Add(2.5); labels.Add("Mon");
-                    hours.Add(4.0); labels.Add("Tue");
-                    hours.Add(3.0); labels.Add("Wed");
-                    hours.Add(5.5); labels.Add("Thu");
-                    hours.Add(1.0); labels.Add("Fri");
-                    hours.Add(3.5); labels.Add("Sat");
-                    hours.Add(4.5); labels.Add("Sun");
-                }
-
-                WeeklyChartSeries.Add(ChartFactory.CreateColumnSeries(hours, "Usage", gradientPaint));
-                
-                Debug.WriteLine($"[DEBUG] Loaded Weekly Data: {weekUsage.Count} days, {hours.Count} points.");
-
-                WeeklyChartXAxes[0].Labels = labels;
-                WeeklyChartLabelDates = loadedDates.ToArray();
-
-                IsWeeklyDataLoaded = true;
-                
-                // Select last day
-                WeeklyChart_SelectionChanged(WeekAppUsage.Count - 1);
-            }
-            catch (Exception ex)
-            {
-                AppLogger.WriteLine($"Load Weekly Data Exception {ex}");
-                Debug.WriteLine($"[DEBUG] Load Weekly Data Exception: {ex}");
-            }
-            finally
-            {
-                SetLoading(false);
-                Debug.WriteLine("[AppUsageViewModel] LoadWeeklyData Finished");
-            }
-        }
-
-        public async void WeeklyChart_SelectionChanged(int index)
-        {
-            try
-            {
-                if (index < 0 || index >= WeeklyChartLabelDates.Length) return;
-
-                DateTime selectedDate = WeeklyChartLabelDates.ElementAt(index);
-                
-                if (selectedDate == LoadedDate && selectedDate != DateTime.Now.Date)
-                {
-                    return;
-                }
-                else
-                {
-                    LoadedDate = selectedDate;
-                    TryRefreshData();
-                    UpdatePieChartAndList(WeekAppUsage.ElementAt(index));
-                    
-                    // Load background audio for the selected date
-                    List<AppUsage> backgroundAudioList = await GetBackgroundAudioData(selectedDate);
-                    List<AppUsage> filteredBackgroundAudio = backgroundAudioList.Where(appUsageFilter).ToList();
-                    filteredBackgroundAudio.Sort(appUsageSorter);
-                    UpdateBackgroundAudioList(filteredBackgroundAudio);
-                }
-            }
-            catch { }
-        }
-
-        Comparison<AppUsage> appUsageSorter = (a, b) => a.Duration.CompareTo(b.Duration) * -1;
-        Func<AppUsage, bool> appUsageFilter = (a) => !IsProcessExcluded(a.ProcessName);
-
-        public void RefreshDayView()
-        {
-            TryRefreshData(force: true);
-        }
-
-        private async void TryRefreshData(bool force = false)
-        {
-            if (!IsWeeklyDataLoaded) return;
-
-            if (force || DateTime.Now.Date == LoadedDate.Date)
-            {
-                try
-                {
-                    List<AppUsage> appUsageList = await GetData(LoadedDate.Date);
-                    List<AppUsage> backgroundAudioList = await GetBackgroundAudioData(LoadedDate.Date);
-                    
-                    // Update week usage if it exists for this day
-                    int weekIndex = -1;
-                    for(int i=0; i<WeeklyChartLabelDates.Length; i++)
-                    {
-                        if (WeeklyChartLabelDates[i].Date == LoadedDate.Date)
-                        {
-                            weekIndex = i;
-                            break;
-                        }
-                    }
-
-                    if (weekIndex != -1 && weekIndex < WeekAppUsage.Count)
-                    {
-                        WeekAppUsage[weekIndex] = appUsageList;
-                    }
-
-                    List<AppUsage> filteredUsageList = appUsageList.Where(appUsageFilter).ToList();
-                    filteredUsageList.Sort(appUsageSorter);
-                    
-                    // Update bar chart value for real-time display
-                    if (weekIndex != -1 && weeklyHours != null && weekIndex < weeklyHours.Count)
-                    {
-                        TimeSpan totalDuration = TimeSpan.Zero;
-                        foreach (AppUsage app in filteredUsageList)
-                        {
-                            totalDuration = totalDuration.Add(app.Duration);
-                        }
-                        weeklyHours[weekIndex] = totalDuration.TotalHours;
-                    }
-                    
-                    UpdatePieChartAndList(filteredUsageList);
-                    
-                    // Update background audio list
-                    List<AppUsage> filteredBackgroundAudio = backgroundAudioList.Where(appUsageFilter).ToList();
-                    filteredBackgroundAudio.Sort(appUsageSorter);
-                    UpdateBackgroundAudioList(filteredBackgroundAudio);
-                }
-                catch { }
-            }
-        }
-
-        private void UpdatePieChartAndList(List<AppUsage> appUsageList)
-        {
-            var dispatcher = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
-            if (dispatcher == null)
-            {
-                // Fallback if we can't find thread dispatcher (e.g. background task) - usually shouldn't happen for ViewModel driven by Page
-                // Try getting from Window? Or just Execute and hope?
-                // For safety, let's assume we might need to access via App reference if needed.
-                // But generally, if this is called, we want to be safe.
-                try 
-                {
-                     dispatcher = Microsoft.UI.Xaml.Window.Current?.DispatcherQueue; 
-                } catch {}
-            }
-
-            Action updateAction = () =>
-            {
-                SetLoading(true);
-                try
-                {
-                    List<AppUsage> filteredUsageList = appUsageList.Where(appUsageFilter).ToList();
-                    
-                    // Re-sort
-                    filteredUsageList.Sort(appUsageSorter);
-                    
-                    TotalDuration = TimeSpan.Zero;
-                    
-                    var pieSeriesList = new ObservableCollection<ISeries>();
-                    var listItems = new ObservableCollection<AppUsageListItem>();
-
-                    double otherProcessesTotalMinutes = 0;
-
-                    foreach (AppUsage app in filteredUsageList)
-                    {
-                        if (app.Duration.TotalSeconds > 0)
-                            TotalDuration = TotalDuration.Add(app.Duration);
-                        
-                        // Register app in cache for Focus Schedule picker
-                        FocusManager.Instance.RegisterApp(app.ProcessName);
-                    }
-
-                    // Pre-calculate visible slice count for palette generation (Monochromatic)
-                    int visibleSliceCount = 0;
-                    if (TotalDuration.TotalSeconds > 0)
-                    {
-                        visibleSliceCount = filteredUsageList.Count(a => 
-                            a.Duration >= UserPreferences.MinumumDuration && 
-                            (a.Duration.TotalSeconds / TotalDuration.TotalSeconds) * 100.0 >= 1.0);
-                    }
-                    visibleSliceCount = Math.Max(1, Math.Min(visibleSliceCount, 50)); // Clamp to [1, 50]
-                    
-                    // Generate Monochromatic Palette (matching Treemap design)
-                    var uiSettings = new Windows.UI.ViewManagement.UISettings();
-                    var accent = uiSettings.GetColorValue(Windows.UI.ViewManagement.UIColorType.Accent);
-                    var skAccent = new SKColor(accent.R, accent.G, accent.B, accent.A);
-                    var palette = ChartFactory.GenerateMonochromaticPalette(skAccent, visibleSliceCount);
-
-                    foreach (AppUsage app in filteredUsageList)
-                    {
-                        // Enforce Minimum Duration Logic explicitly
-                        if (app.Duration < UserPreferences.MinumumDuration) continue;
-
-                        double percentage = 0;
-                        if (TotalDuration.TotalSeconds > 0)
-                        {
-                            percentage = (app.Duration.TotalSeconds / TotalDuration.TotalSeconds) * 100.0;
-                        }
-
-                        // ... (Pie Chart Logic is fine, keep it) ...
-                        // Pie Chart Logic
-                        bool isOther = false;
-                        if (percentage < 1.0) isOther = true; 
-
-                        if (isOther)
-                        {
-                            otherProcessesTotalMinutes += app.Duration.TotalMinutes;
-                        }
-                        else
-                        {
-                            if (pieSeriesList.Count < 50) // Cap slices
-                            {
-                                int index = pieSeriesList.Count; 
-                                                        
-                                var series = new PieSeries<double>
-                                {
-                                    Values = new ObservableCollection<double> { app.Duration.TotalMinutes },
-                                    Name = UserPreferences.GetDisplayName(app.ProcessName),
-                                    ToolTipLabelFormatter = (point) => FormatMinutes(point.Coordinate.PrimaryValue),
-                                    DataLabelsFormatter = (point) => point.Context.Series.Name,
-                                    Fill = new SolidColorPaint(palette[index % palette.Count])
-                                };
-                                pieSeriesList.Add(series);
-                            }
-                        }
-
-                        // List Logic (Always add to list if it meets min duration/validity)
-                        
-                        // Resolve Tag (Standard)
-                        AppTag resolvedTag = AppTagHelper.GetAppTag(app.ProcessName);
-                        
-                        var listItem = new AppUsageListItem(app.ProcessName, app.ProgramName, app.Duration, (int)percentage, resolvedTag);
-                        
-                        // Populate Children
-                        if (app.ProgramBreakdown != null && app.ProgramBreakdown.Count > 0)
-                        {
-                            var sortedChildren = app.ProgramBreakdown.OrderByDescending(k => k.Value).ToList();
-                            foreach (var child in sortedChildren)
-                            {
-                                // Apply same min duration filter to sub-items
-                                if (child.Value < UserPreferences.MinumumDuration) continue;
-                                
-                                // Build the key for title-specific settings
-                                string titleKey = $"{app.ProcessName}|{child.Key}";
-                                
-                                // Skip excluded titles
-                                if (UserPreferences.ExcludedTitles.Contains(titleKey)) continue;
-                                
-                                // Get display name (with * prefix if custom)
-                                string displayTitle = child.Key;
-                                if (UserPreferences.TitleDisplayNames.TryGetValue(titleKey, out string customName))
-                                {
-                                    displayTitle = "* " + customName;
-                                }
-
-                                double totalSec = app.Duration.TotalSeconds > 1 ? app.Duration.TotalSeconds : 1; 
-                                int childPct = (int)Math.Round(child.Value.TotalSeconds / totalSec * 100);
-                                
-                                // Lookup Title Tag
-                                AppTag childTag = AppTagHelper.GetTitleTag(app.ProcessName, child.Key);
-                                
-                                // Pass null for icon to keep them distinct/clean
-                                var subItem = new AppUsageSubItem(displayTitle, app.ProcessName, child.Value, childPct, null, childTag);
-                                
-                                // Set Brushes
-                                if (childTag == AppTag.Untagged)
-                                {
-                                    subItem.TagIndicatorBrush = new SolidColorBrush(Microsoft.UI.Colors.Transparent);
-                                    subItem.TagTextBrush = null;
-                                    subItem.BackgroundBrush = new SolidColorBrush(Microsoft.UI.Colors.Transparent);
-                                }
-                                else
-                                {
-                                    var brush = AppTagHelper.GetTagColor(childTag) as SolidColorBrush;
-                                    subItem.TagIndicatorBrush = brush;
-                                    subItem.TagTextBrush = brush;
-                                    
-                                    // Set semi-transparent background (50% opacity)
-                                    if (brush != null)
-                                    {
-                                        var bgColor = brush.Color;
-                                        bgColor.A = 128; // 50% opacity
-                                        subItem.BackgroundBrush = new SolidColorBrush(bgColor);
-                                    }
-                                }
-
-                                listItem.Children.Add(subItem);
-                            }
-                        }
-                        
-                        listItems.Add(listItem);
-                    }
-
-                    if (otherProcessesTotalMinutes > 0)
-                    {
-                        pieSeriesList.Add(new PieSeries<double> 
-                        { 
-                            Values = new ObservableCollection<double> { otherProcessesTotalMinutes },
-                            Name = "Other Apps",
-                            Fill = new SolidColorPaint(SKColors.Gray),
-                            ToolTipLabelFormatter = (point) => FormatMinutes(point.Coordinate.PrimaryValue)
-                        });
-                    }
-
-                    if (pieSeriesList.Count == 0)
-                    {
-                        pieSeriesList.Add(new PieSeries<double> 
-                        { 
-                            Values = new ObservableCollection<double> { 1 },
-                            Name = "No Data",
-                            Fill = new SolidColorPaint(SKColors.LightGray)
-                        });
-                    }
-
-                    // IN-PLACE UPDATE for pie chart: Match by Name and update values
-                    UpdatePieChartInPlace(DayPieChartSeries, pieSeriesList);
-
-                    // IN-PLACE UPDATE: Match by ProcessName and update values instead of clearing
-                    // This preserves expanded state and prevents UI rebuild
-                    UpdateListInPlace(DayListItems, listItems);
-                    
-                    // Update column items too
-                    var col1 = new List<AppUsageListItem>();
-                    var col2 = new List<AppUsageListItem>();
-                    var col3 = new List<AppUsageListItem>();
-
-                    for (int i = 0; i < DayListItems.Count; i++)
-                    {
-                        int colIndex = i % 3;
-                        if (colIndex == 0) col1.Add(DayListItems[i]);
-                        else if (colIndex == 1) col2.Add(DayListItems[i]);
-                        else col3.Add(DayListItems[i]);
-                    }
-
-                    UpdateListInPlace(Column1Items, col1);
-                    UpdateListInPlace(Column2Items, col2);
-                    UpdateListInPlace(Column3Items, col3);
-
-                    RefreshTagChart(filteredUsageList);
-
-                    // Load Insights
-                    LoadTrendData(LoadedDate, TotalDuration);
-                    LoadGoalStreaks();
-                    
-                    // Check time limits (only for today to avoid spamming when looking at history)
-                    if (LoadedDate.Date == DateTime.Now.Date && XamlRoot != null)
-                    {
-                        _ = CheckTimeLimitsForCurrentDataAsync(filteredUsageList);
-                    }
-                }
-                finally
-                {
-                    NotifyChange();
-                    SetLoading(false);
-                }
-            };
-
-            if (dispatcher != null)
-            {
-                dispatcher.TryEnqueue(() => updateAction());
-            }
-            else
-            {
-                // Fallback attempt
-                updateAction();
-            }
-        }
-
-        /// <summary>
-        /// Collects usage data and triggers time limit checks.
-        /// </summary>
-        private async Task CheckTimeLimitsForCurrentDataAsync(List<AppUsage> appUsages)
-        {
-            try
-            {
-                // Build app usage dictionary
-                var appUsageDict = new Dictionary<string, TimeSpan>();
-                var titleUsageDict = new Dictionary<string, TimeSpan>();
-
-                foreach (var app in appUsages)
-                {
-                    if (!appUsageDict.ContainsKey(app.ProcessName))
-                        appUsageDict[app.ProcessName] = TimeSpan.Zero;
-                    appUsageDict[app.ProcessName] += app.Duration;
-
-                    // Collect title usage
-                    if (app.ProgramBreakdown != null)
-                    {
-                        foreach (var child in app.ProgramBreakdown)
-                        {
-                            string key = $"{app.ProcessName}|{child.Key}";
-                            if (!titleUsageDict.ContainsKey(key))
-                                titleUsageDict[key] = TimeSpan.Zero;
-                            titleUsageDict[key] += child.Value;
-                        }
-                    }
-                }
-
-                await TimeLimitEnforcer.CheckTimeLimitsAsync(appUsageDict, titleUsageDict, XamlRoot);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Time limit check failed: {ex.Message}");
-            }
-        }
-
-        /// <summary>
-        /// Updates an ObservableCollection in-place by matching items by ProcessName.
-        /// This preserves UI state (expanded items, scroll position, etc.)
-        /// </summary>
-        private void UpdateListInPlace(ObservableCollection<AppUsageListItem> existingList, IList<AppUsageListItem> newItems)
-        {
-            // Build dictionary of new items for quick lookup
-            var newDict = new Dictionary<string, AppUsageListItem>();
-            foreach (var item in newItems)
-            {
-                if (!newDict.ContainsKey(item.ProcessName))
-                    newDict[item.ProcessName] = item;
-            }
-
-            // Update existing items or remove if not in new list
-            for (int i = existingList.Count - 1; i >= 0; i--)
-            {
-                var existing = existingList[i];
-                if (newDict.TryGetValue(existing.ProcessName, out var newItem))
-                {
-                    // Update in place - preserve IsExpanded state
-                    existing.Duration = newItem.Duration;
-                    existing.Percentage = newItem.Percentage;
-                    
-                    // FORCE METADATA REFRESH: Updates DisplayName and Icon if they changed via context menu
-                    existing.Refresh();
-                    
-                    // Update Children if they changed (different day or data changed)
-                    // Compare by checking if children count differs or first child differs
-                    bool childrenChanged = existing.Children.Count != newItem.Children.Count;
-                    
-                    if (childrenChanged)
-                    {
-                        // Count changed - rebuild children list
-                        existing.Children.Clear();
-                        foreach (var child in newItem.Children)
-                        {
-                            existing.Children.Add(child);
-                        }
-                    }
-                    else
-                    {
-                        // Same count - update durations in place by matching titles
-                        foreach (var existingChild in existing.Children)
-                        {
-                            var matchingNew = newItem.Children.FirstOrDefault(c => c.Title == existingChild.Title);
-                            if (matchingNew != null)
-                            {
-                                existingChild.Duration = matchingNew.Duration;
-                                existingChild.Percentage = matchingNew.Percentage;
-                            }
-                        }
-                        // Add any new children that didn't exist
-                        foreach (var newChild in newItem.Children)
-                        {
-                            if (!existing.Children.Any(c => c.Title == newChild.Title))
-                            {
-                                existing.Children.Add(newChild);
-                            }
-                        }
-                    }
-                    
-                    // Mark as processed
-                    newDict.Remove(existing.ProcessName);
-                }
-                else
-                {
-                    // Item no longer exists
-                    existingList.RemoveAt(i);
-                }
-            }
-
-            // Add new items that didn't exist before
-            foreach (var newItem in newDict.Values)
-            {
-                existingList.Add(newItem);
-            }
-            
-            // Re-sort by Duration descending to ensure correct order after day change
-            var sorted = existingList.OrderByDescending(x => x.Duration).ToList();
-            for (int i = 0; i < sorted.Count; i++)
-            {
-                int currentIndex = existingList.IndexOf(sorted[i]);
-                if (currentIndex != i)
-                {
-                    existingList.Move(currentIndex, i);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Updates pie chart series in-place by matching by Name.
-        /// This prevents the animation from resetting on each update.
-        /// </summary>
-        private void UpdatePieChartInPlace(ObservableCollection<ISeries> existingSeries, IList<ISeries> newSeries)
-        {
-            // Build dictionary of new series for quick lookup
-            var newDict = new Dictionary<string, ISeries>();
-            foreach (var s in newSeries)
-            {
-                if (!string.IsNullOrEmpty(s.Name) && !newDict.ContainsKey(s.Name))
-                    newDict[s.Name] = s;
-            }
-
-            // Update existing series or remove if not in new list
-            for (int i = existingSeries.Count - 1; i >= 0; i--)
-            {
-                var existing = existingSeries[i];
-                if (!string.IsNullOrEmpty(existing.Name) && newDict.TryGetValue(existing.Name, out var newS))
-                {
-                    // Update value in-place if it's a PieSeries<double>
-                    if (existing is PieSeries<double> existingPie && newS is PieSeries<double> newPie)
-                    {
-                        var existingValues = existingPie.Values as ObservableCollection<double>;
-                        var newValues = newPie.Values as IEnumerable<double>;
-                        if (existingValues != null && newValues != null)
-                        {
-                            var newValList = newValues.ToList();
-                            if (existingValues.Count > 0 && newValList.Count > 0)
-                            {
-                                existingValues[0] = newValList[0];
-                            }
-                        }
-                        // Sync Fill (color) property to ensure palette updates are visible
-                        existingPie.Fill = newPie.Fill;
-                    }
-                    newDict.Remove(existing.Name);
-                }
-                else
-                {
-                    existingSeries.RemoveAt(i);
-                }
-            }
-
-            // Add new series that didn't exist before
-            foreach (var newS in newDict.Values)
-            {
-                existingSeries.Add(newS);
-            }
-
-            // Re-order existingSeries to match newSeries order (sorted by duration)
-            for (int i = 0; i < newSeries.Count && i < existingSeries.Count; i++)
-            {
-                var targetSeries = newSeries[i];
-                int currentIndex = -1;
-                for (int j = 0; j < existingSeries.Count; j++)
-                {
-                    if (existingSeries[j].Name == targetSeries.Name)
-                    {
-                        currentIndex = j;
-                        break;
-                    }
-                }
-                if (currentIndex != -1 && currentIndex != i)
-                {
-                    existingSeries.Move(currentIndex, i);
-                }
-            }
-        }
-
-        private void UpdateBackgroundAudioList(List<AppUsage> backgroundAudioList)
-        {
-            var dispatcher = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
-            
-            Action updateAction = () =>
-            {
-                try
-                {
-                    BackgroundAudioItems.Clear();
-                    BackgroundAudioColumn1.Clear();
-                    BackgroundAudioColumn2.Clear();
-                    BackgroundAudioColumn3.Clear();
-                    
-                    foreach (AppUsage app in backgroundAudioList)
-                    {
-                        // Enforce minimum duration
-                        if (app.Duration < UserPreferences.MinumumDuration) continue;
-                        
-                        // Background audio doesn't contribute to percentage (since it's not counted in total)
-                        int percentage = 0;
-                        
-                        AppTag resolvedTag = AppTagHelper.GetAppTag(app.ProcessName);
-                        var listItem = new AppUsageListItem(app.ProcessName, app.ProgramName, app.Duration, percentage, resolvedTag);
-                        
-                        BackgroundAudioItems.Add(listItem);
-                    }
-                    
-                    // Split into 3 columns (masonry layout)
-                    var col1 = new List<AppUsageListItem>();
-                    var col2 = new List<AppUsageListItem>();
-                    var col3 = new List<AppUsageListItem>();
-
-                    int index = 0;
-                    foreach (var item in BackgroundAudioItems)
-                    {
-                        if (index % 3 == 0) col1.Add(item);
-                        else if (index % 3 == 1) col2.Add(item);
-                        else col3.Add(item);
-                        index++;
-                    }
-
-                    foreach (var i in col1) BackgroundAudioColumn1.Add(i);
-                    foreach (var i in col2) BackgroundAudioColumn2.Add(i);
-                    foreach (var i in col3) BackgroundAudioColumn3.Add(i);
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Background Audio List Error: {ex.Message}");
-                }
-            };
-
-            if (dispatcher != null)
-            {
-                dispatcher.TryEnqueue(() => updateAction());
-            }
-            else
-            {
-                updateAction();
-            }
-        }
-
-        private void RefreshTagChart(List<AppUsage> usageList)
-        {
-            // Aggregate duration by category, accounting for sub-app tags
-            var tagDurations = new Dictionary<AppTag, TimeSpan>();
-
-            foreach (var app in usageList)
-            {
-                AppTag parentTag = AppTagHelper.GetAppTag(app.ProcessName);
-                TimeSpan remainingDuration = app.Duration;
-
-                // Process sub-apps first - if they have different tags, count them separately
-                if (app.ProgramBreakdown != null && app.ProgramBreakdown.Count > 0)
-                {
-                    foreach (var child in app.ProgramBreakdown)
-                    {
-                        string titleKey = $"{app.ProcessName}|{child.Key}";
-                        AppTag childTag = AppTagHelper.GetTitleTag(app.ProcessName, child.Key);
-
-                        if (childTag != AppTag.Untagged && childTag != parentTag)
-                        {
-                            // This sub-app has a different tag - count it separately
-                            if (!tagDurations.ContainsKey(childTag))
-                                tagDurations[childTag] = TimeSpan.Zero;
-                            tagDurations[childTag] += child.Value;
-
-                            // Subtract from parent's remaining duration
-                            remainingDuration -= child.Value;
-                            if (remainingDuration < TimeSpan.Zero)
-                                remainingDuration = TimeSpan.Zero;
-                        }
-                    }
-                }
-
-                // Add remaining duration to parent's tag
-                if (remainingDuration > TimeSpan.Zero)
-                {
-                    if (!tagDurations.ContainsKey(parentTag))
-                        tagDurations[parentTag] = TimeSpan.Zero;
-                    tagDurations[parentTag] += remainingDuration;
-                }
-            }
-
-            // Update TagsChartSeries (if UI exists for it)
-            TagsChartSeries.Clear();
-            // TODO: Add stacked bar/pie chart series if needed
-            // For now, store the aggregated data for potential future use
-            CategoryDurations = tagDurations;
-            OnPropertyChanged(nameof(CategoryDurations));
-        }
-
-        public void NotifyChange()
-        {
-            OnPropertyChanged(nameof(StrLoadedDate));
-            OnPropertyChanged(nameof(StrTotalDuration));
-            OnPropertyChanged(nameof(StrMinumumDuration));
-            OnPropertyChanged(nameof(CanGoNext));
-            OnPropertyChanged(nameof(CanGoPrev));
-        }
-
-        public static bool IsProcessExcluded(string processName)
-        {
-            return excludeProcesses.Contains(processName) || userExcludedProcesses.Contains(processName);
-        }
-
-        public static async Task<List<AppUsage>> GetData(DateTime date)
-        {
-             // Refactored to use Session Repository (Snapshot + Live RAM)
-             // This ensures Dashboard matches the Detailed Timeline and updates in real-time.
-             return await Task.Run(() => 
-             {
-                 var usageMap = new Dictionary<string, AppUsage>();
-                 var repo = new AppSessionRepository(folderPath);
-                 
-                 // GetSessionsForDate now merges Disk + Live MMF
-                 var sessions = repo.GetSessionsForDate(date);
-
-                 foreach (var session in sessions)
-                 {
-                     // Use ProcessName as key
-                     if (!usageMap.ContainsKey(session.ProcessName))
-                     {
-                         usageMap[session.ProcessName] = new AppUsage(session.ProcessName, session.ProgramName, TimeSpan.Zero);
-                     }
-                     
-                     // Aggregate Duration
-                     // Option: Exclude AFK? 
-                     // Legacy behavior included everything. Keeping it consistent for now.
-                     // (If we want to exclude AFK, just add: if (!session.IsAfk) ...)
-                     usageMap[session.ProcessName].Duration = usageMap[session.ProcessName].Duration.Add(session.Duration);
-                     
-                     // Update Program Name if missing
-                     if (string.IsNullOrEmpty(usageMap[session.ProcessName].ProgramName) && !string.IsNullOrEmpty(session.ProgramName))
-                     {
-                         usageMap[session.ProcessName].ProgramName = session.ProgramName;
-                     }
-
-                     // Breakdown by Window Title
-                     string title = !string.IsNullOrEmpty(session.ProgramName) ? session.ProgramName : session.ProcessName;
-                     if (usageMap[session.ProcessName].ProgramBreakdown.ContainsKey(title))
-                     {
-                         usageMap[session.ProcessName].ProgramBreakdown[title] = usageMap[session.ProcessName].ProgramBreakdown[title].Add(session.Duration);
-                     }
-                     else
-                     {
-                         usageMap[session.ProcessName].ProgramBreakdown[title] = session.Duration;
-                     }
-                 }
-                 
-                 return usageMap.Values.ToList();
-             });
-        }
-
-        /// <summary>
-        /// Gets background audio usage - apps that were playing audio but were NOT the active window.
-        /// This prevents double-counting in total screen time.
-        /// </summary>
-        public static async Task<List<AppUsage>> GetBackgroundAudioData(DateTime date)
-        {
-            return await Task.Run(() =>
-            {
-                var backgroundAudioMap = new Dictionary<string, TimeSpan>();
-                var repo = new AppSessionRepository(folderPath);
-                
-                var sessions = repo.GetSessionsForDate(date);
-
-                foreach (var session in sessions)
-                {
-                    // Skip if no audio sources
-                    if (session.AudioSources == null || session.AudioSources.Count == 0)
-                        continue;
-
-                    // Check each audio app
-                    foreach (var audioApp in session.AudioSources)
-                    {
-                        // Only count if audio app is NOT the active window
-                        if (audioApp != session.ProcessName)
-                        {
-                            // This is background audio!
-                            if (!backgroundAudioMap.ContainsKey(audioApp))
-                            {
-                                backgroundAudioMap[audioApp] = TimeSpan.Zero;
-                            }
-                            backgroundAudioMap[audioApp] = backgroundAudioMap[audioApp].Add(session.Duration);
-                        }
-                    }
-                }
-
-                // Convert to AppUsage list
-                var result = new List<AppUsage>();
-                foreach (var kvp in backgroundAudioMap)
-                {
-                    result.Add(new AppUsage(kvp.Key, kvp.Key, kvp.Value)); // Use process name as program name
-                }
-
-                return result;
-            });
-        }
-
-        #region Trend & Streaks
-        private string _trendPercentage;
-        public string TrendPercentage
-        {
-            get => _trendPercentage;
-            set { _trendPercentage = value; OnPropertyChanged(); }
-        }
-
-        private string _trendDescription;
-        public string TrendDescription
-        {
-            get => _trendDescription;
-            set { _trendDescription = value; OnPropertyChanged(); }
-        }
-        
-        private bool _trendIsGood;
-        public bool TrendIsGood
-        {
-            get => _trendIsGood;
-            set { _trendIsGood = value; OnPropertyChanged(); }
-        }
-
-        public ObservableCollection<GoalStreakItem> GoalStreaks { get; set; } = new ObservableCollection<GoalStreakItem>();
-        #endregion
-
-        // ... Existing methods ...
-
-        private async void LoadTrendData(DateTime currentDate, TimeSpan currentTotal)
-        {
-            await Task.Run(async () =>
-            {
-                // Compare with same day last week
-                DateTime pastDate = currentDate.AddDays(-7);
-                var pastUsageList = await GetData(pastDate);
-                var filtered = pastUsageList.Where(appUsageFilter).ToList();
-                
-                TimeSpan pastTotal = TimeSpan.Zero;
-                foreach (var app in filtered) pastTotal = pastTotal.Add(app.Duration);
-
-                // Calculate
-                double currentMin = currentTotal.TotalMinutes;
-                double pastMin = pastTotal.TotalMinutes;
-
-                string percentage = "";
-                string desc = $"{LocalizationHelper.GetString("FromLast")} {pastDate.ToString("dddd")}";
-                bool isGood = true;
-
-                if (pastMin == 0)
-                {
-                    percentage = currentMin > 0 ? "100%" : "0%";
-                    isGood = currentMin == 0; // If 0 -> 0, good. If 0 -> 100, bad (usage up).
-                }
-                else
-                {
-                    double diff = currentMin - pastMin;
-                    double pct = (diff / pastMin) * 100.0;
-                    
-                    if (pct > 0)
-                    {
-                        percentage = $"↑ {Math.Abs((int)pct)}%";
-                        isGood = true; // User requested: Green (Good) when usage goes UP
-                    }
-                    else
-                    {
-                        percentage = $"↓ {Math.Abs((int)pct)}%";
-                        isGood = false; // User requested: Red (Bad) when usage goes DOWN
-                    }
-                }
-
-                dispatcherQueue.TryEnqueue(() => 
-                {
-                    TrendPercentage = percentage;
-                    TrendDescription = desc;
-                    TrendIsGood = isGood;
-                });
-            });
-        }
-
-        private async void LoadGoalStreaks()
-        {
-            await Task.Run(async () =>
-            {
-                // 1. Gaming < 1h
-                // 2. Focus (Work/Edu) > 4h
-                // 3. Social < 30m
-
-                int gamingStreak = 0;
-                int focusStreak = 0;
-                int socialStreak = 0;
-
-                DateTime date = DateTime.Now.Date.AddDays(-1); // Start from yesterday for completed days? Or today?
-                // Usually streaks are "completed days".
-                
-                for (int i = 0; i < 30; i++)
-                {
-                    var data = await GetData(date);
-                    
-                    TimeSpan gameDur = TimeSpan.Zero;
-                    TimeSpan workDur = TimeSpan.Zero;
-                    TimeSpan socialDur = TimeSpan.Zero;
-
-                    foreach(var app in data)
-                    {
-                        if (IsProcessExcluded(app.ProcessName)) continue;
-                        
-                        var tag = AppTagHelper.GetAppTag(app.ProcessName);
-                        if (tag == AppTag.Game) gameDur += app.Duration;
-                        if (tag == AppTag.Work || tag == AppTag.Education) workDur += app.Duration;
-                        if (tag == AppTag.Social) socialDur += app.Duration;
-                    }
-
-                    // Check Gaming (< 1h)
-                    if (gameDur.TotalHours < 1) gamingStreak++; else break;
-                    
-                    // Check Focus (> 4h) - this is harder to maintain, maybe check > 1h for testing
-                    // if (workDur.TotalHours >= 4) focusStreak++; else break;
-                    
-                    // Check Social (< 30m)
-                    // if (socialDur.TotalMinutes < 30) socialStreak++; else break;
-
-                    date = date.AddDays(-1);
-                }
-                
-                // Optimized 2nd pass for other streaks (or combine loops carefully)
-                // For simplicity/speed in prototype, just doing Gaming 1st correctly.
-                // Assuming logic holds for others.
-
-                // Refetch/Reset for others or optimize? The GetData is cached? No.
-                // Let's do valid loop once.
-                
-                gamingStreak = 0; focusStreak = 0; socialStreak = 0;
-                bool gFail = false, fFail = false, sFail = false;
-                
-                date = DateTime.Now.Date.AddDays(-1); // Yesterday
-
-                for (int i = 0; i < 30; i++)
-                {
-                    if (gFail && fFail && sFail) break;
-
-                    var data = await GetData(date);
-                     
-                    TimeSpan gameDur = TimeSpan.Zero;
-                    TimeSpan workDur = TimeSpan.Zero;
-                    TimeSpan socialDur = TimeSpan.Zero;
-
-                    foreach(var app in data)
-                    {
-                        if (IsProcessExcluded(app.ProcessName)) continue;
-                        var tag = AppTagHelper.GetAppTag(app.ProcessName);
-                        if (tag == AppTag.Game) gameDur += app.Duration;
-                        if (tag == AppTag.Work || tag == AppTag.Education) workDur += app.Duration;
-                        if (tag == AppTag.Social) socialDur += app.Duration;
-                    }
-
-                    if (!gFail) { if (gameDur.TotalHours < 1) gamingStreak++; else gFail = true; }
-                    if (!fFail) { if (workDur.TotalHours >= 4) focusStreak++; else fFail = true; }
-                    if (!sFail) { if (socialDur.TotalMinutes < 30) socialStreak++; else sFail = true; }
-
-                    date = date.AddDays(-1);
-                }
-
-                dispatcherQueue.TryEnqueue(() => 
-                {
-                    GoalStreaks.Clear();
-                    GoalStreaks.Add(new GoalStreakItem 
-                    { 
-                        Count = gamingStreak.ToString(), 
-                        Label = "days with < 1h Gaming", 
-                        IconColor = new Microsoft.UI.Xaml.Media.SolidColorBrush(Windows.UI.Color.FromArgb(255, 0, 120, 215)) // Blue
-                    });
-                    GoalStreaks.Add(new GoalStreakItem 
-                    { 
-                        Count = focusStreak.ToString(), 
-                        Label = "days meeting Focus Goal (4h)", 
-                        IconColor = new Microsoft.UI.Xaml.Media.SolidColorBrush(Windows.UI.Color.FromArgb(255, 128, 0, 128)) // Purple
-                    });
-                    GoalStreaks.Add(new GoalStreakItem 
-                    { 
-                        Count = socialStreak.ToString(), 
-                        Label = "days for < 30m Social Media", 
-                        IconColor = new Microsoft.UI.Xaml.Media.SolidColorBrush(Windows.UI.Color.FromArgb(255, 128, 128, 128)) // Grey
-                    });
-                });
-            });
-        }
-        
-        private void SetLoading(bool value)
-        {
-            IsLoading = value;
-        }
-
-        private void OnPropertyChanged([CallerMemberName] String propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-    }
+	public static readonly int MinimumPieChartPercentage = 10;
+
+	private DispatcherTimer refreshTimer;
+
+	public DateTime LoadedDate = DateTime.Now.Date;
+
+	public TimeSpan TotalDuration;
+
+	private static readonly string[] excludeProcesses = new string[13]
+	{
+		"DigitalWellbeingWPF", "process", "DigitalWellbeingWinUI3", "explorer", "SearchHost", "Idle", "StartMenuExperienceHost", "ShellExperienceHost", "dwm", "LockApp",
+		"msiexec", "ApplicationFrameHost", "*LAST"
+	};
+
+	private static string[] userExcludedProcesses;
+
+	private bool _isLoading;
+
+	public bool IsWeeklyDataLoaded;
+
+	private UISettings uiSettings;
+
+	private DispatcherQueue dispatcherQueue;
+
+	private Comparison<AppUsage> appUsageSorter = (AppUsage a, AppUsage b) => a.Duration.CompareTo(b.Duration) * -1;
+
+	private Func<AppUsage, bool> appUsageFilter = (AppUsage a) => !IsProcessExcluded(a.ProcessName);
+
+	private string _trendPercentage;
+
+	private string _trendDescription;
+
+	private bool _trendIsGood;
+
+	public static int NumberOfDaysToDisplay { get; set; } = UserPreferences.DayAmount;
+
+	private static string folderPath => ApplicationPath.UsageLogsFolder;
+
+	public Func<double, string> HourFormatter { get; set; }
+
+	public string StrLoadedDate
+	{
+		get
+		{
+			if (!(LoadedDate.Date == DateTime.Now.Date))
+			{
+				return LoadedDate.ToString("dddd, MMM dd yyyy");
+			}
+			return LocalizationHelper.GetString("Today") + ", " + LoadedDate.ToString("dddd");
+		}
+	}
+
+	public string StrTotalDuration => $"{(int)TotalDuration.TotalHours}h {TotalDuration.Minutes}m";
+
+	public string StrMinumumDuration
+	{
+		get
+		{
+			if (!(UserPreferences.MinumumDuration.TotalSeconds <= 0.0))
+			{
+				return "Apps that run less than " + StringHelper.TimeSpanToString(UserPreferences.MinumumDuration) + " are hidden.";
+			}
+			return "";
+		}
+	}
+
+	public ObservableCollection<List<AppUsage>> WeekAppUsage { get; set; }
+
+	public ObservableCollection<BarChartItem> WeeklyChartItems { get; set; }
+
+	public ObservableCollection<PieChartItem> PieChartItems { get; set; }
+
+	public ObservableCollection<AppUsageListItem> DayListItems { get; set; }
+
+	public ObservableCollection<AppUsageListItem> Column1Items { get; set; } = new ObservableCollection<AppUsageListItem>();
+
+	public ObservableCollection<AppUsageListItem> Column2Items { get; set; } = new ObservableCollection<AppUsageListItem>();
+
+	public ObservableCollection<AppUsageListItem> Column3Items { get; set; } = new ObservableCollection<AppUsageListItem>();
+
+	public ObservableCollection<AppUsageListItem> BackgroundAudioItems { get; set; } = new ObservableCollection<AppUsageListItem>();
+
+	public ObservableCollection<AppUsageListItem> BackgroundAudioColumn1 { get; set; } = new ObservableCollection<AppUsageListItem>();
+
+	public ObservableCollection<AppUsageListItem> BackgroundAudioColumn2 { get; set; } = new ObservableCollection<AppUsageListItem>();
+
+	public ObservableCollection<AppUsageListItem> BackgroundAudioColumn3 { get; set; } = new ObservableCollection<AppUsageListItem>();
+
+	public ObservableCollection<PieChartItem> TagsChartItems { get; set; }
+
+	public Dictionary<AppTag, TimeSpan> CategoryDurations { get; set; } = new Dictionary<AppTag, TimeSpan>();
+
+	public DateTime[] WeeklyChartLabelDates { get; set; }
+
+	public bool CanGoNext => LoadedDate.Date < DateTime.Now.Date;
+
+	public bool CanGoPrev => LoadedDate.Date > DateTime.Now.AddDays(-NumberOfDaysToDisplay + 1).Date;
+
+	public bool IsLoading
+	{
+		get
+		{
+			return _isLoading;
+		}
+		set
+		{
+			if (_isLoading != value)
+			{
+				_isLoading = value;
+				OnPropertyChanged("IsLoading");
+			}
+		}
+	}
+
+	public double PieChartInnerRadius { get; set; }
+
+	public XamlRoot XamlRoot { get; set; }
+
+	public ICommand BarChartClickCommand { get; private set; }
+
+	public string TrendPercentage
+	{
+		get
+		{
+			return _trendPercentage;
+		}
+		set
+		{
+			_trendPercentage = value;
+			OnPropertyChanged("TrendPercentage");
+		}
+	}
+
+	public string TrendDescription
+	{
+		get
+		{
+			return _trendDescription;
+		}
+		set
+		{
+			_trendDescription = value;
+			OnPropertyChanged("TrendDescription");
+		}
+	}
+
+	public bool TrendIsGood
+	{
+		get
+		{
+			return _trendIsGood;
+		}
+		set
+		{
+			_trendIsGood = value;
+			OnPropertyChanged("TrendIsGood");
+		}
+	}
+
+	public ObservableCollection<GoalStreakItem> GoalStreaks { get; set; } = new ObservableCollection<GoalStreakItem>();
+
+	public event PropertyChangedEventHandler PropertyChanged;
+
+	private void OnBarChartClick(object param)
+	{
+		if (!(param is BarChartItem { Date: not null } barChartItem) || WeeklyChartLabelDates == null)
+		{
+			return;
+		}
+		for (int i = 0; i < WeeklyChartLabelDates.Length; i++)
+		{
+			if (WeeklyChartLabelDates[i].Date == barChartItem.Date.Value.Date)
+			{
+				WeeklyChart_SelectionChanged(i);
+				break;
+			}
+		}
+	}
+
+	public AppUsageViewModel()
+	{
+		try
+		{
+			dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+			uiSettings = new UISettings();
+			uiSettings.ColorValuesChanged += UiSettings_ColorValuesChanged;
+			InitCollections();
+			InitFormatters();
+			LoadUserExcludedProcesses();
+			InitAutoRefreshTimer();
+			BarChartClickCommand = new RelayCommand(OnBarChartClick);
+			LoadWeeklyData();
+		}
+		catch (Exception)
+		{
+			if (WeekAppUsage == null)
+			{
+				WeekAppUsage = new ObservableCollection<List<AppUsage>>();
+			}
+			if (WeeklyChartLabelDates == null)
+			{
+				WeeklyChartLabelDates = new DateTime[0];
+			}
+			if (DayListItems == null)
+			{
+				DayListItems = new ObservableCollection<AppUsageListItem>();
+			}
+		}
+	}
+
+	private void UiSettings_ColorValuesChanged(UISettings sender, object args)
+	{
+	}
+
+	private void InitCollections()
+	{
+		WeekAppUsage = new ObservableCollection<List<AppUsage>>();
+		WeeklyChartItems = new ObservableCollection<BarChartItem>();
+		PieChartItems = new ObservableCollection<PieChartItem>();
+		DayListItems = new ObservableCollection<AppUsageListItem>();
+		TagsChartItems = new ObservableCollection<PieChartItem>();
+	}
+
+	private void InitFormatters()
+	{
+		HourFormatter = (double hours) => hours.ToString("F1") + " h";
+	}
+
+	private string FormatMinutes(double totalMinutes)
+	{
+		TimeSpan timeSpan = TimeSpan.FromMinutes(totalMinutes);
+		if (!(timeSpan.TotalHours >= 1.0))
+		{
+			if (!(timeSpan.TotalMinutes >= 1.0))
+			{
+				return $"{timeSpan.Seconds}s";
+			}
+			return $"{timeSpan.Minutes}m {timeSpan.Seconds}s";
+		}
+		return $"{(int)timeSpan.TotalHours}h {timeSpan.Minutes}m";
+	}
+
+	private void InitAutoRefreshTimer()
+	{
+		TimeSpan interval = TimeSpan.FromSeconds(UserPreferences.RefreshIntervalSeconds);
+		refreshTimer = new DispatcherTimer
+		{
+			Interval = interval
+		};
+		refreshTimer.Tick += delegate
+		{
+			TryRefreshData(force: true);
+		};
+		if (UserPreferences.EnableAutoRefresh)
+		{
+			refreshTimer.Start();
+		}
+	}
+
+	public void LoadUserExcludedProcesses()
+	{
+		userExcludedProcesses = UserPreferences.UserExcludedProcesses.ToArray();
+	}
+
+	public async void LoadWeeklyData(DateTime? baseDate = null)
+	{
+		DateTime targetDate = baseDate ?? DateTime.Now.Date;
+		SetLoading(value: true);
+		await SettingsManager.WaitForInit;
+		try
+		{
+			DateTime dateTime = targetDate.AddDays(-NumberOfDaysToDisplay);
+			List<DateTime> list = new List<DateTime>();
+			for (int i = 1; i <= NumberOfDaysToDisplay; i++)
+			{
+				list.Add(dateTime.AddDays(i).Date);
+			}
+			var list2 = (await Task.WhenAll(list.Select(async delegate(DateTime date)
+			{
+				List<AppUsage> list6 = (await GetData(date)).Where(appUsageFilter).ToList();
+				list6.Sort(appUsageSorter);
+				TimeSpan timeSpan = TimeSpan.Zero;
+				foreach (AppUsage item in list6)
+				{
+					timeSpan = timeSpan.Add(item.Duration);
+				}
+				return new
+				{
+					Date = date,
+					Usage = list6,
+					Hours = timeSpan.TotalHours,
+					Label = date.ToString("ddd")
+				};
+			}).ToList())).OrderBy(r => r.Date).ToList();
+			List<List<AppUsage>> list3 = new List<List<AppUsage>>();
+			ObservableCollection<double> observableCollection = new ObservableCollection<double>();
+			List<string> list4 = new List<string>();
+			List<DateTime> list5 = new List<DateTime>();
+			foreach (var item2 in list2)
+			{
+				list3.Add(item2.Usage);
+				observableCollection.Add(item2.Hours);
+				list4.Add(item2.Label);
+				list5.Add(item2.Date);
+			}
+			WeekAppUsage.Clear();
+			foreach (List<AppUsage> item3 in list3)
+			{
+				WeekAppUsage.Add(item3);
+			}
+			WeeklyChartItems.Clear();
+			Color colorValue = new UISettings().GetColorValue(UIColorType.Accent);
+			for (int num = 0; num < list2.Count; num++)
+			{
+				var anon = list2[num];
+				WeeklyChartItems.Add(new BarChartItem
+				{
+					Label = anon.Label,
+					Value = anon.Hours,
+					Color = colorValue,
+					Tooltip = ChartFactory.FormatHours(anon.Hours),
+					Date = anon.Date
+				});
+			}
+			WeeklyChartLabelDates = list5.ToArray();
+			IsWeeklyDataLoaded = true;
+			int num2 = -1;
+			for (int num3 = 0; num3 < WeeklyChartLabelDates.Length; num3++)
+			{
+				if (WeeklyChartLabelDates[num3].Date == targetDate.Date)
+				{
+					num2 = num3;
+					break;
+				}
+			}
+			if (num2 != -1)
+			{
+				WeeklyChart_SelectionChanged(num2);
+			}
+			else
+			{
+				WeeklyChart_SelectionChanged(WeekAppUsage.Count - 1);
+			}
+		}
+		catch (Exception value)
+		{
+			AppLogger.WriteLine($"Load Weekly Data Exception {value}");
+		}
+		finally
+		{
+			SetLoading(value: false);
+		}
+	}
+
+	public async void WeeklyChart_SelectionChanged(int index)
+	{
+		try
+		{
+			if (index >= 0 && index < WeeklyChartLabelDates.Length)
+			{
+				DateTime dateTime = WeeklyChartLabelDates.ElementAt(index);
+				if (!(dateTime == LoadedDate) || !(dateTime != DateTime.Now.Date))
+				{
+					LoadedDate = dateTime;
+					TryRefreshData();
+					UpdatePieChartAndList(WeekAppUsage.ElementAt(index));
+					List<AppUsage> list = (await GetBackgroundAudioData(dateTime)).Where(appUsageFilter).ToList();
+					list.Sort(appUsageSorter);
+					UpdateBackgroundAudioList(list);
+				}
+			}
+		}
+		catch
+		{
+		}
+	}
+
+	public void RefreshDayView()
+	{
+		TryRefreshData(force: true);
+	}
+
+	private async void TryRefreshData(bool force = false)
+	{
+		if (!IsWeeklyDataLoaded || (!force && !(DateTime.Now.Date == LoadedDate.Date)))
+		{
+			return;
+		}
+		try
+		{
+			List<AppUsage> list = await GetData(LoadedDate.Date);
+			int num = -1;
+			for (int i = 0; i < WeeklyChartLabelDates.Length; i++)
+			{
+				if (WeeklyChartLabelDates[i].Date == LoadedDate.Date)
+				{
+					num = i;
+					break;
+				}
+			}
+			if (num != -1 && num < WeekAppUsage.Count)
+			{
+				WeekAppUsage[num] = list;
+			}
+			List<AppUsage> list2 = list.Where(appUsageFilter).ToList();
+			list2.Sort(appUsageSorter);
+			if (num != -1 && num < WeeklyChartItems.Count)
+			{
+				TimeSpan timeSpan = TimeSpan.Zero;
+				foreach (AppUsage item in list2)
+				{
+					timeSpan = timeSpan.Add(item.Duration);
+				}
+				BarChartItem barChartItem = WeeklyChartItems[num];
+				WeeklyChartItems[num] = new BarChartItem
+				{
+					Label = barChartItem.Label,
+					Value = timeSpan.TotalHours,
+					Color = barChartItem.Color,
+					Tooltip = ChartFactory.FormatHours(timeSpan.TotalHours),
+					Date = barChartItem.Date
+				};
+			}
+			UpdatePieChartAndList(list2);
+			List<AppUsage> list3 = (await GetBackgroundAudioData(LoadedDate.Date)).Where(appUsageFilter).ToList();
+			list3.Sort(appUsageSorter);
+			UpdateBackgroundAudioList(list3);
+		}
+		catch
+		{
+		}
+	}
+
+	private void UpdatePieChartAndList(List<AppUsage> appUsageList)
+	{
+		DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+		if (dispatcherQueue == null)
+		{
+			try
+			{
+				dispatcherQueue = Window.Current?.DispatcherQueue;
+			}
+			catch
+			{
+			}
+		}
+		Action updateAction = delegate
+		{
+			SetLoading(value: true);
+			try
+			{
+				List<AppUsage> list = appUsageList.Where(appUsageFilter).ToList();
+				list.Sort(appUsageSorter);
+				TotalDuration = TimeSpan.Zero;
+				ObservableCollection<PieChartItem> observableCollection = new ObservableCollection<PieChartItem>();
+				ObservableCollection<AppUsageListItem> observableCollection2 = new ObservableCollection<AppUsageListItem>();
+				double num = 0.0;
+				foreach (AppUsage item2 in list)
+				{
+					if (item2.Duration.TotalSeconds > 0.0)
+					{
+						TotalDuration = TotalDuration.Add(item2.Duration);
+					}
+					FocusManager.Instance.RegisterApp(item2.ProcessName);
+				}
+				int val = 0;
+				if (TotalDuration.TotalSeconds > 0.0)
+				{
+					val = list.Count((AppUsage a) => a.Duration >= UserPreferences.MinumumDuration && a.Duration.TotalSeconds / TotalDuration.TotalSeconds * 100.0 >= 1.0);
+				}
+				val = Math.Max(1, Math.Min(val, 50));
+				Color colorValue = new UISettings().GetColorValue(UIColorType.Accent);
+				List<Color> list2 = new List<Color>();
+				for (int num2 = 0; num2 < val; num2++)
+				{
+					float num3 = 1f - 0.6f * (float)num2 / (float)Math.Max(1, val);
+					list2.Add(Color.FromArgb(colorValue.A, (byte)((float)(int)colorValue.R * num3), (byte)((float)(int)colorValue.G * num3), (byte)((float)(int)colorValue.B * num3)));
+				}
+				foreach (AppUsage item3 in list)
+				{
+					if (!(item3.Duration < UserPreferences.MinumumDuration))
+					{
+						double num4 = 0.0;
+						if (TotalDuration.TotalSeconds > 0.0)
+						{
+							num4 = item3.Duration.TotalSeconds / TotalDuration.TotalSeconds * 100.0;
+						}
+						bool flag = false;
+						if (num4 < 1.0)
+						{
+							flag = true;
+						}
+						if (flag)
+						{
+							num += item3.Duration.TotalMinutes;
+						}
+						else if (observableCollection.Count < 50)
+						{
+							int count = observableCollection.Count;
+							Color color = list2[count % list2.Count];
+							PieChartItem item = new PieChartItem
+							{
+								Value = item3.Duration.TotalMinutes,
+								Name = UserPreferences.GetDisplayName(item3.ProcessName),
+								Tooltip = ChartFactory.FormatHours(item3.Duration.TotalHours),
+								Color = color,
+								ProcessName = item3.ProcessName,
+								Percentage = num4
+							};
+							observableCollection.Add(item);
+						}
+						AppTag appTag = AppTagHelper.GetAppTag(item3.ProcessName);
+						AppUsageListItem appUsageListItem = new AppUsageListItem(item3.ProcessName, item3.ProgramName, item3.Duration, (int)num4, appTag);
+						if (item3.ProgramBreakdown != null && item3.ProgramBreakdown.Count > 0)
+						{
+							foreach (KeyValuePair<string, TimeSpan> item4 in item3.ProgramBreakdown.OrderByDescending((KeyValuePair<string, TimeSpan> k) => k.Value).ToList())
+							{
+								if (!(item4.Value < UserPreferences.MinumumDuration))
+								{
+									string text = item3.ProcessName + "|" + item4.Key;
+									if (!UserPreferences.ExcludedTitles.Contains(text))
+									{
+										string title = item4.Key;
+										if (UserPreferences.TitleDisplayNames.TryGetValue(text, out var value))
+										{
+											title = "* " + value;
+										}
+										double num5 = ((item3.Duration.TotalSeconds > 1.0) ? item3.Duration.TotalSeconds : 1.0);
+										int percentage = (int)Math.Round(item4.Value.TotalSeconds / num5 * 100.0);
+										AppTag titleTag = AppTagHelper.GetTitleTag(item3.ProcessName, item4.Key);
+										AppUsageSubItem appUsageSubItem = new AppUsageSubItem(title, item3.ProcessName, item4.Value, percentage, null, titleTag);
+										if (titleTag == AppTag.Untagged)
+										{
+											appUsageSubItem.TagIndicatorBrush = new SolidColorBrush(Colors.Transparent);
+											appUsageSubItem.TagTextBrush = null;
+											appUsageSubItem.BackgroundBrush = new SolidColorBrush(Colors.Transparent);
+										}
+										else
+										{
+											SolidColorBrush solidColorBrush = (appUsageSubItem.TagTextBrush = (appUsageSubItem.TagIndicatorBrush = AppTagHelper.GetTagColor(titleTag) as SolidColorBrush));
+											if (solidColorBrush != null)
+											{
+												Color color2 = solidColorBrush.Color;
+												color2.A = 128;
+												appUsageSubItem.BackgroundBrush = new SolidColorBrush(color2);
+											}
+										}
+										appUsageListItem.Children.Add(appUsageSubItem);
+									}
+								}
+							}
+						}
+						observableCollection2.Add(appUsageListItem);
+					}
+				}
+				if (num > 0.0)
+				{
+					observableCollection.Add(new PieChartItem
+					{
+						Value = num,
+						Name = "Other Apps",
+						Color = Colors.Gray,
+						Tooltip = ChartFactory.FormatHours(TimeSpan.FromMinutes(num).TotalHours),
+						ProcessName = "Other",
+						Percentage = ((TotalDuration.TotalMinutes > 0.0) ? (num / TotalDuration.TotalMinutes * 100.0) : 0.0)
+					});
+				}
+				if (observableCollection.Count == 0)
+				{
+					observableCollection.Add(new PieChartItem
+					{
+						Value = 1.0,
+						Name = "No Data",
+						Color = Colors.LightGray,
+						Tooltip = "No Data",
+						ProcessName = "",
+						Percentage = 0.0
+					});
+				}
+				PieChartItems.Clear();
+				foreach (PieChartItem item5 in observableCollection)
+				{
+					PieChartItems.Add(item5);
+				}
+				UpdateListInPlace(DayListItems, observableCollection2);
+				List<AppUsageListItem> list3 = new List<AppUsageListItem>();
+				List<AppUsageListItem> list4 = new List<AppUsageListItem>();
+				List<AppUsageListItem> list5 = new List<AppUsageListItem>();
+				for (int num6 = 0; num6 < DayListItems.Count; num6++)
+				{
+					switch (num6 % 3)
+					{
+					case 0:
+						list3.Add(DayListItems[num6]);
+						break;
+					case 1:
+						list4.Add(DayListItems[num6]);
+						break;
+					default:
+						list5.Add(DayListItems[num6]);
+						break;
+					}
+				}
+				UpdateListInPlace(Column1Items, list3);
+				UpdateListInPlace(Column2Items, list4);
+				UpdateListInPlace(Column3Items, list5);
+				LoadTrendData(LoadedDate, TotalDuration);
+				LoadGoalStreaks();
+				if (LoadedDate.Date == DateTime.Now.Date && XamlRoot != null)
+				{
+					CheckTimeLimitsForCurrentDataAsync(list);
+				}
+			}
+			finally
+			{
+				NotifyChange();
+				SetLoading(value: false);
+			}
+		};
+		if (dispatcherQueue != null)
+		{
+			dispatcherQueue.TryEnqueue(delegate
+			{
+				updateAction();
+			});
+		}
+		else
+		{
+			updateAction();
+		}
+	}
+
+	private async Task CheckTimeLimitsForCurrentDataAsync(List<AppUsage> appUsages)
+	{
+		try
+		{
+			Dictionary<string, TimeSpan> dictionary = new Dictionary<string, TimeSpan>();
+			Dictionary<string, TimeSpan> dictionary2 = new Dictionary<string, TimeSpan>();
+			foreach (AppUsage appUsage in appUsages)
+			{
+				if (!dictionary.ContainsKey(appUsage.ProcessName))
+				{
+					dictionary[appUsage.ProcessName] = TimeSpan.Zero;
+				}
+				dictionary[appUsage.ProcessName] += appUsage.Duration;
+				if (appUsage.ProgramBreakdown == null)
+				{
+					continue;
+				}
+				foreach (KeyValuePair<string, TimeSpan> item in appUsage.ProgramBreakdown)
+				{
+					string key = appUsage.ProcessName + "|" + item.Key;
+					if (!dictionary2.ContainsKey(key))
+					{
+						dictionary2[key] = TimeSpan.Zero;
+					}
+					dictionary2[key] += item.Value;
+				}
+			}
+			await TimeLimitEnforcer.CheckTimeLimitsAsync(dictionary, dictionary2, XamlRoot);
+		}
+		catch (Exception)
+		{
+		}
+	}
+
+	private void UpdateListInPlace(ObservableCollection<AppUsageListItem> existingList, IList<AppUsageListItem> newItems)
+	{
+		Dictionary<string, AppUsageListItem> dictionary = new Dictionary<string, AppUsageListItem>();
+		foreach (AppUsageListItem newItem in newItems)
+		{
+			if (!dictionary.ContainsKey(newItem.ProcessName))
+			{
+				dictionary[newItem.ProcessName] = newItem;
+			}
+		}
+		for (int num = existingList.Count - 1; num >= 0; num--)
+		{
+			AppUsageListItem appUsageListItem = existingList[num];
+			if (dictionary.TryGetValue(appUsageListItem.ProcessName, out var value))
+			{
+				appUsageListItem.Duration = value.Duration;
+				appUsageListItem.Percentage = value.Percentage;
+				appUsageListItem.Refresh();
+				if (appUsageListItem.Children.Count != value.Children.Count)
+				{
+					appUsageListItem.Children.Clear();
+					foreach (AppUsageSubItem child in value.Children)
+					{
+						appUsageListItem.Children.Add(child);
+					}
+				}
+				else
+				{
+					foreach (AppUsageSubItem existingChild in appUsageListItem.Children)
+					{
+						AppUsageSubItem appUsageSubItem = value.Children.FirstOrDefault((AppUsageSubItem c) => c.Title == existingChild.Title);
+						if (appUsageSubItem != null)
+						{
+							existingChild.Duration = appUsageSubItem.Duration;
+							existingChild.Percentage = appUsageSubItem.Percentage;
+						}
+					}
+					foreach (AppUsageSubItem newChild in value.Children)
+					{
+						if (!appUsageListItem.Children.Any((AppUsageSubItem c) => c.Title == newChild.Title))
+						{
+							appUsageListItem.Children.Add(newChild);
+						}
+					}
+				}
+				dictionary.Remove(appUsageListItem.ProcessName);
+			}
+			else
+			{
+				existingList.RemoveAt(num);
+			}
+		}
+		foreach (AppUsageListItem value2 in dictionary.Values)
+		{
+			existingList.Add(value2);
+		}
+		List<AppUsageListItem> list = existingList.OrderByDescending((AppUsageListItem x) => x.Duration).ToList();
+		for (int num2 = 0; num2 < list.Count; num2++)
+		{
+			int num3 = existingList.IndexOf(list[num2]);
+			if (num3 != num2)
+			{
+				existingList.Move(num3, num2);
+			}
+		}
+	}
+
+	private void UpdateBackgroundAudioList(List<AppUsage> backgroundAudioList)
+	{
+		DispatcherQueue forCurrentThread = DispatcherQueue.GetForCurrentThread();
+		Action updateAction = delegate
+		{
+			try
+			{
+				BackgroundAudioItems.Clear();
+				BackgroundAudioColumn1.Clear();
+				BackgroundAudioColumn2.Clear();
+				BackgroundAudioColumn3.Clear();
+				foreach (AppUsage backgroundAudio in backgroundAudioList)
+				{
+					if (!(backgroundAudio.Duration < UserPreferences.MinumumDuration))
+					{
+						int percentage = 0;
+						AppTag appTag = AppTagHelper.GetAppTag(backgroundAudio.ProcessName);
+						AppUsageListItem item = new AppUsageListItem(backgroundAudio.ProcessName, backgroundAudio.ProgramName, backgroundAudio.Duration, percentage, appTag);
+						BackgroundAudioItems.Add(item);
+					}
+				}
+				List<AppUsageListItem> list = new List<AppUsageListItem>();
+				List<AppUsageListItem> list2 = new List<AppUsageListItem>();
+				List<AppUsageListItem> list3 = new List<AppUsageListItem>();
+				int num = 0;
+				foreach (AppUsageListItem backgroundAudioItem in BackgroundAudioItems)
+				{
+					if (num % 3 == 0)
+					{
+						list.Add(backgroundAudioItem);
+					}
+					else if (num % 3 == 1)
+					{
+						list2.Add(backgroundAudioItem);
+					}
+					else
+					{
+						list3.Add(backgroundAudioItem);
+					}
+					num++;
+				}
+				foreach (AppUsageListItem item2 in list)
+				{
+					BackgroundAudioColumn1.Add(item2);
+				}
+				foreach (AppUsageListItem item3 in list2)
+				{
+					BackgroundAudioColumn2.Add(item3);
+				}
+				foreach (AppUsageListItem item4 in list3)
+				{
+					BackgroundAudioColumn3.Add(item4);
+				}
+			}
+			catch (Exception)
+			{
+			}
+		};
+		if (forCurrentThread != null)
+		{
+			forCurrentThread.TryEnqueue(delegate
+			{
+				updateAction();
+			});
+		}
+		else
+		{
+			updateAction();
+		}
+	}
+
+	public void NotifyChange()
+	{
+		OnPropertyChanged("StrLoadedDate");
+		OnPropertyChanged("StrTotalDuration");
+		OnPropertyChanged("StrMinumumDuration");
+		OnPropertyChanged("CanGoNext");
+		OnPropertyChanged("CanGoPrev");
+	}
+
+	public static bool IsProcessExcluded(string processName)
+	{
+		if (!Enumerable.Contains(excludeProcesses, processName))
+		{
+			return Enumerable.Contains(userExcludedProcesses, processName);
+		}
+		return true;
+	}
+
+	public static async Task<List<AppUsage>> GetData(DateTime date)
+	{
+		return await Task.Run(delegate
+		{
+			Dictionary<string, AppUsage> dictionary = new Dictionary<string, AppUsage>();
+			foreach (AppSession item in new AppSessionRepository(folderPath).GetSessionsForDate(date))
+			{
+				if (!dictionary.ContainsKey(item.ProcessName))
+				{
+					dictionary[item.ProcessName] = new AppUsage(item.ProcessName, item.ProgramName, TimeSpan.Zero);
+				}
+				dictionary[item.ProcessName].Duration = dictionary[item.ProcessName].Duration.Add(item.Duration);
+				if (string.IsNullOrEmpty(dictionary[item.ProcessName].ProgramName) && !string.IsNullOrEmpty(item.ProgramName))
+				{
+					dictionary[item.ProcessName].ProgramName = item.ProgramName;
+				}
+				string key = ((!string.IsNullOrEmpty(item.ProgramName)) ? item.ProgramName : item.ProcessName);
+				if (dictionary[item.ProcessName].ProgramBreakdown.ContainsKey(key))
+				{
+					dictionary[item.ProcessName].ProgramBreakdown[key] = dictionary[item.ProcessName].ProgramBreakdown[key].Add(item.Duration);
+				}
+				else
+				{
+					dictionary[item.ProcessName].ProgramBreakdown[key] = item.Duration;
+				}
+			}
+			return dictionary.Values.ToList();
+		});
+	}
+
+	public static async Task<List<AppUsage>> GetBackgroundAudioData(DateTime date)
+	{
+		return await Task.Run(delegate
+		{
+			Dictionary<string, TimeSpan> dictionary = new Dictionary<string, TimeSpan>();
+			foreach (AppSession item in new AppSessionRepository(folderPath).GetSessionsForDate(date))
+			{
+				if (item.AudioSources != null && item.AudioSources.Count != 0)
+				{
+					foreach (string audioSource in item.AudioSources)
+					{
+						if (audioSource != item.ProcessName)
+						{
+							if (!dictionary.ContainsKey(audioSource))
+							{
+								dictionary[audioSource] = TimeSpan.Zero;
+							}
+							dictionary[audioSource] = dictionary[audioSource].Add(item.Duration);
+						}
+					}
+				}
+			}
+			List<AppUsage> list = new List<AppUsage>();
+			foreach (KeyValuePair<string, TimeSpan> item2 in dictionary)
+			{
+				list.Add(new AppUsage(item2.Key, item2.Key, item2.Value));
+			}
+			return list;
+		});
+	}
+
+	private async void LoadTrendData(DateTime currentDate, TimeSpan currentTotal)
+	{
+		await Task.Run(async delegate
+		{
+			DateTime pastDate = currentDate.AddDays(-7.0);
+			List<AppUsage> list = (await GetData(pastDate)).Where(appUsageFilter).ToList();
+			TimeSpan timeSpan = TimeSpan.Zero;
+			foreach (AppUsage item in list)
+			{
+				timeSpan = timeSpan.Add(item.Duration);
+			}
+			double totalMinutes = currentTotal.TotalMinutes;
+			double totalMinutes2 = timeSpan.TotalMinutes;
+			string percentage = "";
+			string desc = LocalizationHelper.GetString("FromLast") + " " + pastDate.ToString("dddd");
+			bool isGood = true;
+			if (totalMinutes2 == 0.0)
+			{
+				percentage = ((totalMinutes > 0.0) ? "100%" : "0%");
+				isGood = totalMinutes == 0.0;
+			}
+			else
+			{
+				double num = (totalMinutes - totalMinutes2) / totalMinutes2 * 100.0;
+				if (num > 0.0)
+				{
+					percentage = $"↑ {Math.Abs((int)num)}%";
+					isGood = true;
+				}
+				else
+				{
+					percentage = $"↓ {Math.Abs((int)num)}%";
+					isGood = false;
+				}
+			}
+			dispatcherQueue.TryEnqueue(delegate
+			{
+				TrendPercentage = percentage;
+				TrendDescription = desc;
+				TrendIsGood = isGood;
+			});
+		});
+	}
+
+	private async void LoadGoalStreaks()
+	{
+		await Task.Run(async delegate
+		{
+			int gamingStreak = 0;
+			int focusStreak = 0;
+			int socialStreak = 0;
+			DateTime date = DateTime.Now.Date.AddDays(-1.0);
+			for (int i = 0; i < 30; i++)
+			{
+				List<AppUsage> obj = await GetData(date);
+				TimeSpan zero = TimeSpan.Zero;
+				TimeSpan zero2 = TimeSpan.Zero;
+				TimeSpan zero3 = TimeSpan.Zero;
+				foreach (AppUsage item in obj)
+				{
+					if (!IsProcessExcluded(item.ProcessName))
+					{
+						AppTag appTag = AppTagHelper.GetAppTag(item.ProcessName);
+						if (appTag == AppTag.Game)
+						{
+							zero += item.Duration;
+						}
+						if (appTag == AppTag.Work || appTag == AppTag.Education)
+						{
+							zero2 += item.Duration;
+						}
+						if (appTag == AppTag.Social)
+						{
+							zero3 += item.Duration;
+						}
+					}
+				}
+				if (!(zero.TotalHours < 1.0))
+				{
+					break;
+				}
+				gamingStreak++;
+				date = date.AddDays(-1.0);
+			}
+			gamingStreak = 0;
+			focusStreak = 0;
+			socialStreak = 0;
+			bool gFail = false;
+			bool fFail = false;
+			bool sFail = false;
+			date = DateTime.Now.Date.AddDays(-1.0);
+			for (int i = 0; i < 30; i++)
+			{
+				if (gFail && fFail && sFail)
+				{
+					break;
+				}
+				List<AppUsage> obj2 = await GetData(date);
+				TimeSpan zero4 = TimeSpan.Zero;
+				TimeSpan zero5 = TimeSpan.Zero;
+				TimeSpan zero6 = TimeSpan.Zero;
+				foreach (AppUsage item2 in obj2)
+				{
+					if (!IsProcessExcluded(item2.ProcessName))
+					{
+						AppTag appTag2 = AppTagHelper.GetAppTag(item2.ProcessName);
+						if (appTag2 == AppTag.Game)
+						{
+							zero4 += item2.Duration;
+						}
+						if (appTag2 == AppTag.Work || appTag2 == AppTag.Education)
+						{
+							zero5 += item2.Duration;
+						}
+						if (appTag2 == AppTag.Social)
+						{
+							zero6 += item2.Duration;
+						}
+					}
+				}
+				if (!gFail)
+				{
+					if (zero4.TotalHours < 1.0)
+					{
+						gamingStreak++;
+					}
+					else
+					{
+						gFail = true;
+					}
+				}
+				if (!fFail)
+				{
+					if (zero5.TotalHours >= 4.0)
+					{
+						focusStreak++;
+					}
+					else
+					{
+						fFail = true;
+					}
+				}
+				if (!sFail)
+				{
+					if (zero6.TotalMinutes < 30.0)
+					{
+						socialStreak++;
+					}
+					else
+					{
+						sFail = true;
+					}
+				}
+				date = date.AddDays(-1.0);
+			}
+			dispatcherQueue.TryEnqueue(delegate
+			{
+				GoalStreaks.Clear();
+				GoalStreaks.Add(new GoalStreakItem
+				{
+					Count = gamingStreak.ToString(),
+					Label = "days with < 1h Gaming",
+					IconColor = new SolidColorBrush(Color.FromArgb(byte.MaxValue, 0, 120, 215))
+				});
+				GoalStreaks.Add(new GoalStreakItem
+				{
+					Count = focusStreak.ToString(),
+					Label = "days meeting Focus Goal (4h)",
+					IconColor = new SolidColorBrush(Color.FromArgb(byte.MaxValue, 128, 0, 128))
+				});
+				GoalStreaks.Add(new GoalStreakItem
+				{
+					Count = socialStreak.ToString(),
+					Label = "days for < 30m Social Media",
+					IconColor = new SolidColorBrush(Color.FromArgb(byte.MaxValue, 128, 128, 128))
+				});
+			});
+		});
+	}
+
+	private void SetLoading(bool value)
+	{
+		IsLoading = value;
+	}
+
+	private void OnPropertyChanged([CallerMemberName] string propertyName = "")
+	{
+		this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+	}
 }

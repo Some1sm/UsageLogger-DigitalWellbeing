@@ -4,10 +4,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:DigitalWellbeingWinUI3.Views"
     xmlns:vm="using:DigitalWellbeingWinUI3.ViewModels"
-    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
+
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:l="using:WinUI3Localizer"
+    xmlns:controls="using:DigitalWellbeingWinUI3.Controls"
     mc:Ignorable="d">
 
     <Grid Padding="20">
@@ -94,7 +95,7 @@
                 <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="20">
                     <StackPanel>
                         <TextBlock l:Uids.Uid="History_UsageTrends" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,10"/>
-                        <ContentControl x:Name="TrendChartContainer" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Height="250"/>
+                        <controls:Win2DBarChart x:Name="TrendChartContainer" ItemsSource="{x:Bind ViewModel.TrendData, Mode=OneWay}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Height="250"/>
                     </StackPanel>
                 </Border>
                 
@@ -111,7 +112,7 @@
                     <StackPanel>
                         <TextBlock l:Uids.Uid="History_ActivityHeatmap" FontSize="18" FontWeight="SemiBold"/>
                         <TextBlock l:Uids.Uid="History_HeatmapTooltip" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" Margin="0,2,0,10"/>
-                        <ContentControl x:Name="HeatMapContainer" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Height="280"/>
+                        <controls:Win2DHeatmap x:Name="HeatMapContainer" ItemsSource="{x:Bind ViewModel.HeatMapData, Mode=OneWay}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Height="250"/>
                     </StackPanel>
                 </Border>
                 
