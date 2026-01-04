@@ -95,7 +95,9 @@ namespace DigitalWellbeingWinUI3.Views.Controls
             {
                 if (e.PropertyName == nameof(DayTimelineViewModel.CanvasHeight))
                 {
-                    double h = Math.Max(100, Math.Min(_subscribedViewModel.CanvasHeight, 50000));
+                    double h = Math.Max(100, _subscribedViewModel.CanvasHeight);
+                    // CanvasVirtualControl supports huge heights, so we remove the arbitrary 50000 limit.
+                    // However, we MUST set the Height of the control itself.
                     TimelineCanvas.Height = h;
                     ContentGrid.Height = h;
                     ContentGrid.MinHeight = h;

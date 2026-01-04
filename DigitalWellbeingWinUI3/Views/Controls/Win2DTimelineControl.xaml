@@ -34,19 +34,18 @@
                 <Grid x:Name="ContentGrid" MinHeight="1440">
                      <canvas:CanvasVirtualControl x:Name="TimelineCanvas" RegionsInvalidated="TimelineCanvas_RegionsInvalidated" PointerMoved="TimelineCanvas_PointerMoved" PointerExited="TimelineCanvas_PointerExited" />
                      
-                     <!-- Tooltip Overlay -->
-                     <Border x:Name="TooltipBorder" 
-                             Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}" 
-                             BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" 
-                             BorderThickness="1" 
-                             CornerRadius="4" 
-                             Padding="8,4,8,4" 
-                             VerticalAlignment="Top" 
-                             HorizontalAlignment="Left"
-                             Visibility="Collapsed" 
-                             IsHitTestVisible="False">
-                        <TextBlock x:Name="TooltipText" Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}" FontSize="12"/>
-                     </Border>
+                     <!-- Tooltip Overlay Layer -->
+                     <Canvas IsHitTestVisible="False">
+                         <Border x:Name="TooltipBorder" 
+                                 Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}" 
+                                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" 
+                                 BorderThickness="1" 
+                                 CornerRadius="4" 
+                                 Padding="8,4,8,4" 
+                                 Visibility="Collapsed">
+                            <TextBlock x:Name="TooltipText" Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}" FontSize="12"/>
+                         </Border>
+                     </Canvas>
                 </Grid>
             </ScrollViewer>
         </Grid>
