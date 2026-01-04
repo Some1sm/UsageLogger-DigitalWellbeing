@@ -39,7 +39,7 @@ namespace DigitalWellbeingWinUI3.Controls
 
         private static void OnItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is Win2DHeatmap chart)
+            if (d is Win2DHeatmap chart && chart.Canvas != null)
             {
                 chart.Canvas.Invalidate();
             }

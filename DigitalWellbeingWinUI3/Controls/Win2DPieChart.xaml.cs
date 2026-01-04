@@ -60,14 +60,14 @@ namespace DigitalWellbeingWinUI3.Controls
                 }
 
                 chart.UpdateLegend();
-                chart.Canvas.Invalidate();
+                chart.Canvas?.Invalidate();
             }
         }
 
         private void OnCollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             UpdateLegend();
-            Canvas.Invalidate();
+            Canvas?.Invalidate();
         }
 
         private void UpdateLegend()
@@ -99,7 +99,7 @@ namespace DigitalWellbeingWinUI3.Controls
 
         private static void OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-             if (d is Win2DPieChart chart)
+             if (d is Win2DPieChart chart && chart.Canvas != null)
              {
                  chart.Canvas.Invalidate();
              }
@@ -263,7 +263,7 @@ namespace DigitalWellbeingWinUI3.Controls
         private void Canvas_PointerExited(object sender, PointerRoutedEventArgs e)
         {
             _hoverIndex = -1;
-            Canvas.Invalidate();
+            Canvas?.Invalidate();
         }
 
         private void LegendItem_PointerEntered(object sender, PointerRoutedEventArgs e)
@@ -283,7 +283,7 @@ namespace DigitalWellbeingWinUI3.Controls
         private void LegendItem_PointerExited(object sender, PointerRoutedEventArgs e)
         {
             _hoverIndex = -1;
-            Canvas.Invalidate();
+            Canvas?.Invalidate();
         }
     }
 }

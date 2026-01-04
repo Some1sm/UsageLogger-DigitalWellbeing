@@ -83,6 +83,9 @@ namespace DigitalWellbeingWinUI3.Views.Controls
 
         private void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
+            // Safety check - control might be unloaded
+            if (TimelineCanvas == null || _subscribedViewModel == null) return;
+            
             if (e.PropertyName == nameof(DayTimelineViewModel.SessionBlocks) ||
                 e.PropertyName == nameof(DayTimelineViewModel.GridLines) ||
                 e.PropertyName == nameof(DayTimelineViewModel.CanvasHeight) ||

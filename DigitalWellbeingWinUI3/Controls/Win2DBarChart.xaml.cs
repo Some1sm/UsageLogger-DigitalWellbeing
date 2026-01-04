@@ -41,7 +41,7 @@ namespace DigitalWellbeingWinUI3.Controls
 
         private static void OnItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is Win2DBarChart chart)
+            if (d is Win2DBarChart chart && chart.Canvas != null)
             {
                 chart.Canvas.Invalidate();
             }
@@ -67,7 +67,7 @@ namespace DigitalWellbeingWinUI3.Controls
 
         private static void OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is Win2DBarChart chart)
+            if (d is Win2DBarChart chart && chart.Canvas != null)
             {
                 chart.Canvas.Invalidate();
             }
@@ -253,7 +253,7 @@ namespace DigitalWellbeingWinUI3.Controls
             if (isHovering || wasHovering)
             {
                 _hoverIndex = newIndex;
-                Canvas.Invalidate(); // Redraw for tooltip follow
+                Canvas?.Invalidate(); // Redraw for tooltip follow
             }
         }
 
@@ -262,7 +262,7 @@ namespace DigitalWellbeingWinUI3.Controls
              if (_hoverIndex != -1)
              {
                  _hoverIndex = -1;
-                 Canvas.Invalidate();
+                 Canvas?.Invalidate();
              }
         }
 
