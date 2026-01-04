@@ -216,6 +216,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
                             OriginalSession = s,
                             IsAfk = s.IsAfk,
                             ShowDetails = height > 20,
+                            DurationText = DigitalWellbeing.Core.Helpers.StringHelper.TimeSpanToShortString(TimeSpan.FromMinutes(durationMinutes)),
                             AudioSources = s.AudioSources != null ? new List<string>(s.AudioSources) : new List<string>()
                         };
                         lastEnd = validEnd;

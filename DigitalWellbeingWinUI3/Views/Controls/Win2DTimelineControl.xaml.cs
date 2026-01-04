@@ -276,6 +276,40 @@ namespace DigitalWellbeingWinUI3.Views.Controls
                      // I'll skip complex collision for speed, or implement if needed.
                      // Skia implementation had complex collision.
                 }
+
+                // --- Background Audio Indicators ---
+                if (block.HasAudio)
+                {
+                     // Space on the right: 20% of width
+                     float rightSpaceX = 4f + mainBlockWidth + 4f;
+                     float rightSpaceW = (width - 50) - rightSpaceX;
+                     
+                     if (rightSpaceW > 2)
+                     {
+                         int count = block.AudioSources.Count;
+                         // Divide width among sources
+                         float sourceWidth = (rightSpaceW - (count - 1) * 2) / count;
+                         if (sourceWidth < 2) sourceWidth = 2; // Min width
+
+                         for (int i = 0; i < count; i++)
+                         {
+                             string audioApp = block.AudioSources[i];
+                             
+                             // Attempt to get color for audio app
+                             // Logic mimics DayTimelineViewModel selection
+                             var audioTag = AppTagHelper.GetAppTag(audioApp);
+                             var audioBrush = AppTagHelper.GetTagColor(audioTag) as SolidColorBrush;
+                             Color audioColor = audioBrush?.Color ?? Colors.Gray;
+                             
+                             // Darken slightly to distinguish? Or same.
+                             
+                             float ax = rightSpaceX + i * (sourceWidth + 2);
+                             
+                             // Draw
+                             ds.FillRoundedRectangle(ax, top, sourceWidth, height, 2, 2, audioColor);
+                         }
+                     }
+                }
             }
         }
 
