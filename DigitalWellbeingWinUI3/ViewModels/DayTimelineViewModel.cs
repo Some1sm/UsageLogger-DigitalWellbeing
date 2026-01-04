@@ -104,12 +104,9 @@ namespace DigitalWellbeingWinUI3.ViewModels
             if (_cachedSessions == null) return;
 
             var newBlocks = new ObservableCollection<SessionBlock>();
-            // Force GroupBy ProcessName in Incognito mode to merge fragmented sessions
-            var processGroups = _cachedSessions.GroupBy(s => 
-                UserPreferences.IncognitoMode 
-                    ? s.ProcessName 
-                    : (!string.IsNullOrEmpty(s.ProgramName) ? s.ProgramName : s.ProcessName)
-            );
+            // Always group by ProcessName to allow merging across different window titles (e.g., song changes)
+            // This fixes fragmentation for apps like YouTube Music where each song creates a new session
+            var processGroups = _cachedSessions.GroupBy(s => s.ProcessName);
             var mergedBlocks = new List<SessionBlock>();
 
             foreach (var group in processGroups)

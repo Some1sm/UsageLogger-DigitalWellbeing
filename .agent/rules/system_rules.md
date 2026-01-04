@@ -52,6 +52,12 @@ The solution uses a **Hybrid Architecture** with two distinct processes:
     *   **Clutter Control**: Use label collision detection (hide overlapping text) and enforces minimum height thresholds (16px text, 28px sub-details).
     *   **Smart Tooltips**: Prioritize the smallest/most specific non-AFK block under the cursor to handle overlapping elements (e.g. Chrome vs Background).
     *   **Incognito Merging**: When `IncognitoMode` is true, force app grouping by `ProcessName` (ignoring Window Titles) to merge fragmented sessions into single continuous blocks.
+*   **Interactive Spin/Physics**:
+        *   **Animation Conflict**: LiveCharts internal animations (`AnimationsSpeed`) conflict with high-frequency manual updates. **Solution**: Use Hybrid Animation Strategy (TimeSpan.Zero during drag/spin, Restore defaults when idle).
+        *   **Input Handling**: Standard [PointerPressed](cci:1://file:///h:/Coding/DigitalWellbeing/DigitalWellbeing_myworkGemini2/DigitalWellbeingWinUI3/Views/DayAppUsagePage.xaml.cs:805:8-836:9) on Chart controls is flaky (misses gaps between slices). **Solution**: Always attach input handlers to the **Container** (Grid/Border), not the Chart control itself.
+        *   **UX / Tooltips**: Hide tooltips during drag interactions (`TooltipPosition.Hidden`) to prevent them from blocking clicks or creating visual noise ("Passthrough" effect).
+        *   **Math**: Use **Absolute Angle Tracking** (StartAngle + Delta) instead of relative accumulation to prevent drift/jitter.
+
 
 ## 6. Coding Standards
 *   **Service Robustness**:

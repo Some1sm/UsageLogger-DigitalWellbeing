@@ -3,11 +3,16 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using DigitalWellbeingWinUI3.ViewModels;
 using DigitalWellbeingWinUI3.Models;
-using SkiaSharp;
-using SkiaSharp.Views.Windows;
+using Microsoft.Graphics.Canvas.UI.Xaml;
+using Microsoft.Graphics.Canvas.Text;
+using Microsoft.Graphics.Canvas.Geometry;
 using System;
 using System.Linq;
+using System.Numerics;
 using Microsoft.UI.Xaml.Media;
+using Windows.UI;
+using Microsoft.UI;
+using static Microsoft.UI.Colors;
 
 namespace DigitalWellbeingWinUI3.Views.Controls
 {
@@ -23,9 +28,32 @@ namespace DigitalWellbeingWinUI3.Views.Controls
         private double _lastCanvasHeight = 1440;
         private DayTimelineViewModel _subscribedViewModel = null;
 
+        // Win2D Text Formats (cached for performance)
+        private CanvasTextFormat _gridTextFormat;
+        private CanvasTextFormat _titleTextFormat;
+        private CanvasTextFormat _durationTextFormat;
+        private CanvasTextFormat _audioTextFormat;
+        
+        // Win2D CanvasControl - created programmatically to bypass XAML compiler issues
+        private CanvasControl TimelineCanvas;
+
         public DayTimelineControl()
         {
             this.InitializeComponent();
+            
+            // Create Win2D CanvasControl programmatically (bypasses XAML compiler issues with Win2D types)
+            TimelineCanvas = new CanvasControl();
+            TimelineCanvas.Draw += TimelineCanvas_Draw;
+            TimelineCanvas.PointerMoved += TimelineCanvas_PointerMoved;
+            TimelineCanvas.PointerExited += TimelineCanvas_PointerExited;
+            CanvasContainer.Children.Add(TimelineCanvas);
+            
+            // Initialize Win2D text formats
+            _gridTextFormat = new CanvasTextFormat { FontSize = 11, FontFamily = "Segoe UI" };
+            _titleTextFormat = new CanvasTextFormat { FontSize = 12, FontFamily = "Segoe UI", FontWeight = Microsoft.UI.Text.FontWeights.Bold };
+            _durationTextFormat = new CanvasTextFormat { FontSize = 10, FontFamily = "Segoe UI" };
+            _audioTextFormat = new CanvasTextFormat { FontSize = 9, FontFamily = "Segoe UI" };
+            
             this.Loaded += (s, e) => 
             {
                 TimelineCanvas?.Invalidate();
@@ -101,54 +129,46 @@ namespace DigitalWellbeingWinUI3.Views.Controls
                 args.PropertyName == nameof(DayTimelineViewModel.CanvasHeight) ||
                 args.PropertyName == nameof(DayTimelineViewModel.ContentWidth))
             {
-                //TimelineCanvas?.Invalidate();
+                TimelineCanvas?.Invalidate();
             }
         }
 
-        private void TimelineCanvas_PaintSurface(object sender, SKPaintSurfaceEventArgs e)
+        private void TimelineCanvas_Draw(CanvasControl sender, CanvasDrawEventArgs args)
         {
             try
             {
-                var canvas = e.Surface.Canvas;
-                canvas.Clear(SKColors.Transparent);
+                var ds = args.DrawingSession;
+                ds.Clear(Colors.Transparent);
 
                 if (ViewModel == null) return;
                 
                 // Safety check for dimensions
                 if (ViewModel.ContentWidth <= 0 || ViewModel.CanvasHeight <= 0) return;
 
-                // Handle DPI Scaling
-                // e.Info.Width is in Pixels. ViewModel properties are in DIPs.
-                // We need to scale the canvas to match DIPs.
-                float scale = (float)e.Info.Width / (float)this.ActualWidth;
-                if (float.IsNaN(scale) || scale <= 0) scale = 1;
-                
-                canvas.Scale(scale);
-                
-                // Virtualization: Apply scroll offset translation
+                // Get scroll offset for virtualization
                 float scrollOffset = (float)TimelineScrollViewer.VerticalOffset;
-                canvas.Translate(0, -scrollOffset);
-
                 float width = (float)ViewModel.ContentWidth;
 
                 // Draw Grid Lines
-                using var linePaint = new SKPaint { Color = SKColors.Gray.WithAlpha(50), StrokeWidth = 1, IsAntialias = true };
-                using var textPaint = new SKPaint { Color = SKColors.Gray, TextSize = 11, IsAntialias = true };
-                
                 if (ViewModel.GridLines != null)
                 {
                     foreach (var line in ViewModel.GridLines)
                     {
-                        float y = (float)line.Top;
+                        float y = (float)line.Top - scrollOffset;
+                        
+                        // Skip lines outside viewport
+                        if (y < -50 || y > sender.ActualHeight + 50) continue;
+                        
                         byte alpha = (byte)(line.Opacity * 255);
-                        linePaint.Color = SKColors.Gray.WithAlpha(alpha);
-                        canvas.DrawLine(0, y, width, y, linePaint);
+                        var lineColor = Color.FromArgb(alpha, 128, 128, 128);
+                        ds.DrawLine(0, y, width, y, lineColor, 1);
 
                         if (!string.IsNullOrEmpty(line.TimeText))
                         {
-                            textPaint.TextSize = (float)line.FontSize;
-                            float textWidth = textPaint.MeasureText(line.TimeText);
-                            canvas.DrawText(line.TimeText, width - textWidth - 35, y + 4, textPaint);
+                            _gridTextFormat.FontSize = (float)line.FontSize;
+                            var textLayout = new CanvasTextLayout(sender, line.TimeText, _gridTextFormat, 100, 20);
+                            float textWidth = (float)textLayout.LayoutBounds.Width;
+                            ds.DrawText(line.TimeText, width - textWidth - 35, y - 6, Colors.Gray, _gridTextFormat);
                         }
                     }
                 }
@@ -158,72 +178,61 @@ namespace DigitalWellbeingWinUI3.Views.Controls
                 {
                     foreach (var block in ViewModel.SessionBlocks)
                     {
-                        float top = (float)block.Top;
+                        float top = (float)block.Top - scrollOffset;
                         float height = (float)block.Height;
                         float left = (float)block.Left;
                         float blockWidth = (float)block.Width - 140; // Right margin
 
+                        // Skip blocks outside viewport
+                        if (top + height < -50 || top > sender.ActualHeight + 50) continue;
+
                         if (blockWidth < 1) blockWidth = 1;
                         if (height < 1) height = 1;
 
-                        var skColor = BrushToSKColor(block.BackgroundColor);
+                        var color = BrushToColor(block.BackgroundColor);
 
                         // Left Accent Bar
-                        using var accentPaint = new SKPaint { Color = skColor.WithAlpha(255), IsAntialias = true };
-                        var accentRect = new SKRect(left, top, left + 4, top + height);
-                        canvas.DrawRoundRect(accentRect, 2, 2, accentPaint);
+                        var accentColor = Color.FromArgb(255, color.R, color.G, color.B);
+                        var accentRect = new Windows.Foundation.Rect(left, top, 4, height);
+                        ds.FillRoundedRectangle(accentRect, 2, 2, accentColor);
 
                         // Main Block
-                        using var blockPaint = new SKPaint { Color = skColor.WithAlpha(50), IsAntialias = true };
-                        var mainRect = new SKRect(left + 4, top, left + blockWidth, top + height);
-                        canvas.DrawRoundRect(mainRect, 0, 4, blockPaint);
+                        var blockColor = Color.FromArgb(50, color.R, color.G, color.B);
+                        var mainRect = new Windows.Foundation.Rect(left + 4, top, blockWidth - 4, height);
+                        ds.FillRoundedRectangle(mainRect, 0, 4, blockColor);
 
                         // AFK Overlay
                         if (block.IsAfk)
                         {
-                            using var afkPaint = new SKPaint { Color = new SKColor(255, 193, 7, 100), IsAntialias = true };
-                            canvas.DrawRoundRect(mainRect, 0, 4, afkPaint);
+                            var afkColor = Color.FromArgb(100, 255, 193, 7);
+                            ds.FillRoundedRectangle(mainRect, 0, 4, afkColor);
                         }
 
                         // Text
                         if (block.ShowDetails && height > 16)
                         {
-                            using var titlePaint = new SKPaint 
-                            { 
-                                Color = SKColors.White, 
-                                TextSize = 12, 
-                                IsAntialias = true,
-                                Typeface = SKTypeface.FromFamilyName("Segoe UI", SKFontStyle.Bold)
-                            };
-                            
                             string title = block.Title ?? "";
                             if (title.Length > 25) title = title.Substring(0, 25) + "...";
                             
-                            float textY = top + 14;
-                            canvas.DrawText(title, left + 12, textY, titlePaint);
+                            float textY = top + 2;
+                            ds.DrawText(title, left + 12, textY, Colors.White, _titleTextFormat);
 
                             if (height > 32)
                             {
-                                using var durationPaint = new SKPaint
-                                {
-                                    Color = SKColors.White.WithAlpha(180),
-                                    TextSize = 10,
-                                    IsAntialias = true
-                                };
-                                canvas.DrawText(block.DurationText ?? "", left + 12, textY + 14, durationPaint);
+                                var durationColor = Color.FromArgb(180, 255, 255, 255);
+                                ds.DrawText(block.DurationText ?? "", left + 12, textY + 14, durationColor, _durationTextFormat);
                             }
                         }
 
                         // Audio indicator
                         if (block.HasAudio && blockWidth > 120)
                         {
-                            using var audioPaint = new SKPaint { Color = SKColors.LightBlue.WithAlpha(200), IsAntialias = true };
-                            var audioRect = new SKRect(left + blockWidth - 40, top + 2, left + blockWidth - 4, top + height - 2);
+                            var audioColor = Color.FromArgb(200, 173, 216, 230);
+                            var audioRect = new Windows.Foundation.Rect(left + blockWidth - 40, top + 2, 36, height - 4);
                             if (audioRect.Height > 8)
                             {
-                                canvas.DrawRoundRect(audioRect, 4, 4, audioPaint);
-                                using var audioTextPaint = new SKPaint { Color = SKColors.White, TextSize = 9, IsAntialias = true };
-                                canvas.DrawText("♪", audioRect.Left + 12, audioRect.Top + 12, audioTextPaint);
+                                ds.FillRoundedRectangle(audioRect, 4, 4, audioColor);
+                                ds.DrawText("♪", (float)audioRect.X + 12, (float)audioRect.Y + 2, Colors.White, _audioTextFormat);
                             }
                         }
                     }
@@ -232,9 +241,7 @@ namespace DigitalWellbeingWinUI3.Views.Controls
             catch (Exception ex)
             {
                 // Fallback: Draw usage error text on canvas so we know it crashed
-                var canvas = e.Surface.Canvas;
-                using var errorPaint = new SKPaint { Color = SKColors.Red, TextSize = 12 };
-                canvas.DrawText("Render Error", 10, 20, errorPaint);
+                args.DrawingSession.DrawText("Render Error", 10, 20, Colors.Red);
                 System.Diagnostics.Debug.WriteLine($"Timeline Render Error: {ex}");
             }
         }
@@ -283,15 +290,14 @@ namespace DigitalWellbeingWinUI3.Views.Controls
             TooltipOverlay.Visibility = Visibility.Collapsed;
         }
 
-        private static SKColor BrushToSKColor(Brush brush)
+        private static Color BrushToColor(Brush brush)
         {
             if (brush is SolidColorBrush scb)
             {
                 var c = scb.Color;
-                return new SKColor(c.R, c.G, c.B, c.A);
+                return Color.FromArgb(c.A, c.R, c.G, c.B);
             }
-            return SKColors.Gray;
+            return Colors.Gray;
         }
-
     }
 }
