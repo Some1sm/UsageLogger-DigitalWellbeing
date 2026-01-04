@@ -238,6 +238,7 @@ namespace DigitalWellbeingWinUI3.Views.Controls
                      
                      var displayName = UserPreferences.GetDisplayName(block.ProcessName);
                      string title = string.IsNullOrEmpty(displayName) ? block.Title : displayName;
+                     if (!string.IsNullOrEmpty(block.DurationText)) title += $" ({block.DurationText})";
                      
                      using var layout = new CanvasTextLayout(ds, title, titleFormat, mainBlockWidth, height);
                      float textX = 8.0f;
