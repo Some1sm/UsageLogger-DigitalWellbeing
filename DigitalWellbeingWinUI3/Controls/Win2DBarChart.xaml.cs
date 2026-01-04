@@ -139,6 +139,18 @@ namespace DigitalWellbeingWinUI3.Controls
             // Draw X-Axis Line (Bottom Anchor)
             ds.DrawLine(marginLeft, height - marginBottom, width - marginOther, height - marginBottom, Colors.Gray, 1);
 
+            // DRAW TARGET LINE (Average)
+            if (TargetLineValue > 0 && TargetLineValue <= maxVal)
+            {
+                float targetY = height - marginBottom - (float)(TargetLineValue / maxVal * chartHeight);
+                
+                var strokeStyle = new CanvasStrokeStyle { DashStyle = CanvasDashStyle.Dash };
+                ds.DrawLine(marginLeft, targetY, width - marginOther, targetY, Colors.Orange, 2, strokeStyle);
+                
+                // Optional Label
+                // ds.DrawText("Avg", width - marginOther - 20, targetY - 10, Colors.Orange, new CanvasTextFormat { FontSize = 10 });
+            }
+
             // Cache bar rects for hit testing
             _barRects.Clear();
 

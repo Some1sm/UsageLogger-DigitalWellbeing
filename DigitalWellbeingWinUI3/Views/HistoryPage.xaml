@@ -95,7 +95,7 @@
                 <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="20">
                     <StackPanel>
                         <TextBlock l:Uids.Uid="History_UsageTrends" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,10"/>
-                        <controls:Win2DBarChart x:Name="TrendChartContainer" ItemsSource="{x:Bind ViewModel.TrendData, Mode=OneWay}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Height="250"/>
+                        <controls:Win2DBarChart x:Name="TrendChartContainer" ItemsSource="{x:Bind ViewModel.TrendData, Mode=OneWay}" TargetLineValue="{x:Bind ViewModel.PreviousPeriodAverage, Mode=OneWay}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Height="250"/>
                     </StackPanel>
                 </Border>
                 

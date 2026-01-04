@@ -208,7 +208,7 @@
                         <TextBlock l:Uids.Uid="Dashboard_DailyActivity" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
                         <controls:Win2DBarChart x:Name="BarChartContainer" Grid.Row="1" ItemsSource="{x:Bind ViewModel.WeeklyChartItems, Mode=OneWay}" 
                                         ItemClickCommand="{x:Bind ViewModel.BarChartClickCommand, Mode=OneWay}"
-                                        TargetLineValue="8" TargetLineLabel="Goal: 8h" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Height="250"/>
+                                        HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Height="250"/>
                     </Grid>
                 </Border>
 

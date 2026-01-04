@@ -472,7 +472,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
             int prevDays = (int)(start - start.AddDays(-(end - start).Days - 1)).Days;
             if (prevDays <= 0) prevDays = 1;
             double prevAvg = prevTotal / prevDays;
-            PreviousPeriodAverage = prevAvg;
+            PreviousPeriodAverage = prevAvg / 60.0;
 
             // Calculate KPIs
             double currentTotal = dailyTotals.Values.Sum();
