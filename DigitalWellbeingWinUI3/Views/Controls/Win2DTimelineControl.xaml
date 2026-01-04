@@ -32,7 +32,7 @@
             <!-- ScrollViewer containing the Win2D canvas -->
             <ScrollViewer x:Name="MainScrollViewer" Grid.Row="1" VerticalScrollBarVisibility="Auto">
                 <Grid x:Name="ContentGrid" MinHeight="1440">
-                     <canvas:CanvasControl x:Name="TimelineCanvas" Draw="TimelineCanvas_Draw" PointerMoved="TimelineCanvas_PointerMoved" PointerExited="TimelineCanvas_PointerExited" />
+                     <canvas:CanvasVirtualControl x:Name="TimelineCanvas" RegionsInvalidated="TimelineCanvas_RegionsInvalidated" PointerMoved="TimelineCanvas_PointerMoved" PointerExited="TimelineCanvas_PointerExited" />
                      
                      <!-- Tooltip Overlay -->
                      <Border x:Name="TooltipBorder" 

@@ -116,9 +116,8 @@ namespace DigitalWellbeingWinUI3.Views.Controls
             }
         }
 
-        private void TimelineCanvas_Draw(CanvasControl sender, CanvasDrawEventArgs args)
+        private void TimelineCanvas_RegionsInvalidated(Microsoft.Graphics.Canvas.UI.Xaml.CanvasVirtualControl sender, Microsoft.Graphics.Canvas.UI.Xaml.CanvasRegionsInvalidatedEventArgs args)
         {
-            var ds = args.DrawingSession;
             var vm = ViewModel;
             if (vm == null) return;
             
@@ -131,33 +130,34 @@ namespace DigitalWellbeingWinUI3.Views.Controls
             float renderWidth = vm.TimelineWidth > 0 ? (float)(vm.TimelineWidth - 30) : 400f;
             if (width <= 0) width = renderWidth;
              
-            // Calculate scales
-            // Win2D: We align with 0,0 but scale Y based on CanvasHeight
-            
-            float scale = 1.0f; // Simplified scale, assuming Canvas Width matches logic
-            // In Skia implementation: scale = width / Math.Max(actualWidth, 1);
-            // Here actualWidth IS width. So scale is 1.
-            _scaleX = scale;
+            _scaleX = 1.0f;
             _scaleY = 1.0f;
-
-            // Win2D coordinates are pixels. ViewModel coordinates are pixels (CanvasTop).
-            // So we mostly draw 1:1, maybe dpi adjustment? CanvasControl handles DPI automatically?
-            // "By default, Win2D commands operate in DIPs" 
-            // So we don't need manual scaling if ViewModel provides DIPs.
-            // Skia implementation had weird scaling logic because it seemed to render to a specific non-DIP surface? 
-            // Or maybe handling resize.
-            // We will trust DIPs. 
-            // Note: CanvasControl might be larger than viewport.
             
-            ds.Clear(Colors.Transparent);
-            
-            DrawGridLines(ds, width, vm);
-            DrawSessionBlocks(ds, width, vm);
-            
-            if (vm.CurrentTimeVisibility == Visibility.Visible)
+            // Loop through invalidated regions
+            foreach (var region in args.InvalidatedRegions)
             {
-                float y = (float)vm.CurrentTimeTop;
-                ds.DrawLine(0, y, width, y, Colors.Red, 2);
+                using (var ds = sender.CreateDrawingSession(region))
+                {
+                    ds.Clear(Colors.Transparent);
+                    
+                    // Optimization: Only draw things inside the region? 
+                    // For now, simpler to just draw everything and let Win2D clip, 
+                    // or implement basic clipping if performance issues arise.
+                    // Given the simple vector graphics, drawing all shouldn't be too expensive 
+                    // unless there are thousands of blocks.
+                    
+                    // However, for strict correctness with transforms (if we had them), passing region helps.
+                    // Here we just draw to the session.
+                    
+                    DrawGridLines(ds, width, vm);
+                    DrawSessionBlocks(ds, width, vm);
+                    
+                    if (vm.CurrentTimeVisibility == Visibility.Visible)
+                    {
+                        float y = (float)vm.CurrentTimeTop;
+                        ds.DrawLine(0, y, width, y, Colors.Red, 2);
+                    }
+                }
             }
         }
 
