@@ -19,7 +19,7 @@
             <ColumnDefinition Width="Auto" MinWidth="120" MaxWidth="180"/>
         </Grid.ColumnDefinitions>
 
-        <canvas:CanvasControl x:Name="Canvas" Grid.Column="0" Draw="Canvas_Draw" PointerMoved="Canvas_PointerMoved" PointerExited="Canvas_PointerExited" ClearColor="Transparent"/>
+        <canvas:CanvasControl x:Name="Canvas" Grid.Column="0" Draw="Canvas_Draw" PointerPressed="Canvas_PointerPressed" PointerReleased="Canvas_PointerReleased" PointerMoved="Canvas_PointerMoved" PointerExited="Canvas_PointerExited" ClearColor="Transparent"/>
 
         <ListView x:Name="LegendList" Grid.Column="1" ItemsSource="{x:Bind LegendItems, Mode=OneWay}" 
                   SelectionMode="None" Margin="10,0,0,0" Padding="0" VerticalAlignment="Center">

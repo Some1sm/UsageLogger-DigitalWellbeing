@@ -16,18 +16,51 @@ namespace DigitalWellbeingWinUI3.Controls
 {
     public sealed partial class Win2DPieChart : UserControl
     {
+        private float _rotationOffset = 0f;
+        private float _angularVelocity = 0f;
+        private bool _isDragging = false;
+        private float _lastDragAngle = 0f;
+        private long _lastFrameTime = 0;
+
         public Win2DPieChart()
         {
             this.InitializeComponent();
             this.Unloaded += Win2DPieChart_Unloaded;
+            this.Loaded += Win2DPieChart_Loaded;
+        }
+
+        private void Win2DPieChart_Loaded(object sender, RoutedEventArgs e)
+        {
+             Microsoft.UI.Xaml.Media.CompositionTarget.Rendering += CompositionTarget_Rendering;
         }
 
         private void Win2DPieChart_Unloaded(object sender, RoutedEventArgs e)
         {
+            Microsoft.UI.Xaml.Media.CompositionTarget.Rendering -= CompositionTarget_Rendering;
             Canvas.RemoveFromVisualTree();
             Canvas = null;
         }
 
+        private void CompositionTarget_Rendering(object sender, object e)
+        {
+            if (!_isDragging && Math.Abs(_angularVelocity) > 0.001f)
+            {
+                _rotationOffset += _angularVelocity;
+                _angularVelocity *= 0.99f; // Low Friction for long spin
+                
+                // Normalize rotation
+                if (_rotationOffset > Math.PI * 2) _rotationOffset -= (float)(Math.PI * 2);
+                if (_rotationOffset < 0) _rotationOffset += (float)(Math.PI * 2);
+
+                Canvas?.Invalidate();
+            }
+            else if (!_isDragging && Math.Abs(_angularVelocity) <= 0.001f && _angularVelocity != 0)
+            {
+                _angularVelocity = 0;
+            }
+        }
+
+        // ... Dependencies ...
         public static readonly DependencyProperty ItemsSourceProperty =
             DependencyProperty.Register(nameof(ItemsSource), typeof(IEnumerable<PieChartItem>), typeof(Win2DPieChart), new PropertyMetadata(null, OnItemsSourceChanged));
 
@@ -77,7 +110,6 @@ namespace DigitalWellbeingWinUI3.Controls
                 LegendItems = ItemsSource.Take(10).ToList();
             }
         }
-
         
         public static readonly DependencyProperty HoleRadiusProperty =
             DependencyProperty.Register(nameof(HoleRadius), typeof(float), typeof(Win2DPieChart), new PropertyMetadata(0.0f, OnPropertyChanged));
@@ -128,7 +160,8 @@ namespace DigitalWellbeingWinUI3.Controls
             double total = items.Sum(i => i.Value);
             if (total <= 0) total = 1;
 
-            float currentAngle = -90f * (float)(Math.PI / 180.0); // Start at top
+            // Start angle includes Rotation Offset physics
+            float currentAngle = _rotationOffset - 90f * (float)(Math.PI / 180.0); 
             _slices.Clear();
 
             for (int i = 0; i < items.Count; i++)
@@ -141,7 +174,7 @@ namespace DigitalWellbeingWinUI3.Controls
                 Vector2 sliceCenter = center;
                 float sliceRadius = radius;
 
-                bool isHovered = (i == _hoverIndex);
+                bool isHovered = (!_isDragging && i == _hoverIndex);
 
                 if (isHovered)
                 {
@@ -174,8 +207,8 @@ namespace DigitalWellbeingWinUI3.Controls
                 currentAngle += sweepAngle;
             }
 
-            // Draw Tooltip
-            if (_hoverIndex != -1 && _hoverIndex < items.Count)
+            // Draw Tooltip (Only if NOT dragging and hovering valid item)
+            if (!_isDragging && _hoverIndex != -1 && _hoverIndex < items.Count)
             {
                 var item = items[_hoverIndex];
                 string tooltipText = $"{item.Name}\n{item.Tooltip} ({item.Percentage:0.0}%)";
@@ -207,6 +240,28 @@ namespace DigitalWellbeingWinUI3.Controls
             }
         }
 
+        private void Canvas_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+             _isDragging = true;
+             _angularVelocity = 0;
+             Canvas.CapturePointer(e.Pointer);
+             Canvas.Invalidate(); // Clear hover effects immediately
+
+             var pt = e.GetCurrentPoint(Canvas).Position;
+             float width = (float)Canvas.ActualWidth;
+             float height = (float)Canvas.ActualHeight;
+             Vector2 center = new Vector2(width / 2, height / 2);
+             Vector2 vec = new Vector2((float)pt.X, (float)pt.Y) - center;
+             
+             _lastDragAngle = (float)Math.Atan2(vec.Y, vec.X);
+        }
+
+        private void Canvas_PointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+             _isDragging = false;
+             Canvas.ReleasePointerCapture(e.Pointer);
+        }
+
         private void Canvas_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
             var pt = e.GetCurrentPoint(Canvas).Position;
@@ -218,23 +273,92 @@ namespace DigitalWellbeingWinUI3.Controls
             Vector2 vec = new Vector2((float)pt.X, (float)pt.Y) - center;
             float dist = vec.Length();
 
+            // PHYSICS DRAG LOGIC
+            if (_isDragging)
+            {
+                float currentAngle = (float)Math.Atan2(vec.Y, vec.X);
+                float delta = currentAngle - _lastDragAngle;
+
+                // Handle wrapping (e.g. going from PI to -PI)
+                if (delta > Math.PI) delta -= (float)(2 * Math.PI);
+                if (delta < -Math.PI) delta += (float)(2 * Math.PI);
+
+                _rotationOffset += delta;
+                _angularVelocity = delta; // Velocity is derived from mouse movement
+                _lastDragAngle = currentAngle;
+
+                Canvas.Invalidate();
+                return; // Don't process hover logic while dragging
+            }
+
+            // HOVER LOGIC (Normalized for Rotation)
             float margin = 20;
             float radius = (Math.Min(width, height) - 2 * margin) / 2;
-
             int newIndex = -1;
 
-            if (dist <= radius + 10) // Small buffer for exploded slices
+            if (dist <= radius + 10) 
             {
-                float angle = (float)Math.Atan2(vec.Y, vec.X);
-                if (angle < -Math.PI / 2) angle += (float)(2 * Math.PI);
-
-                for (int i = 0; i < _slices.Count; i++)
+                // Calculate Raw Angle
+                float rawAngle = (float)Math.Atan2(vec.Y, vec.X);
+                
+                // Adjust for Rotation Offset
+                // The Slice angles in _slices list were captured at draw time including rotation.
+                // However, looping through _slices (which recorded Draw-Time Angles) is valid 
+                // IF we consistently compare against the raw angle.
+                // WAIT: _slices stores the `currentAngle` used during draw. 
+                // `currentAngle` in Draw loops from `_rotationOffset - 90deg` onwards.
+                // So the angle in _slices IS the correct visual angle. No math needed here.
+                
+                // We just need to normalize both to 0 - 2PI range for easy comparison? 
+                // Actually Atan2 returns -PI to PI.
+                
+                // Let's normalize rawAngle to be "continuous" relative to slices?
+                // Simplest: Check visual angle directly.
+                
+                // Normalize Visual Angle to -PI to PI or 0 to 2PI?
+                // Canvas_Draw: currentAngle starts at arbitrary offset.
+                // Let's simplify: 
+                // The angle from mouse is 'rawAngle'.
+                // We just need to see if 'rawAngle' falls within (slice.Start, slice.End).
+                // BUT slice.Start might be > PI (wrapped).
+                
+                // Better approach:
+                // Normalize rawAngle to [0, 2PI]
+                // Normalize slice.Start and slice.End to [0, 2PI] (handling wrap).
+                // This is hard with arbitrary offset.
+                
+                // EASIEST WAY: 
+                // Calculate "Local Angle" relative to the Pie (subtract rotation).
+                float localAngle = rawAngle - _rotationOffset + (float)(Math.PI / 2); // Undo the -90deg too? 
+                // Draw starts at: _rotationOffset - PI/2.
+                // So (Angle - Start) should be [0..2PI).
+                
+                float angleFromStart = rawAngle - (_rotationOffset - (float)(Math.PI / 2));
+                
+                // Normalize to [0, 2PI]
+                while (angleFromStart < 0) angleFromStart += (float)(2 * Math.PI);
+                while (angleFromStart >= 2 * Math.PI) angleFromStart -= (float)(2 * Math.PI);
+                
+                // Now match against static slices (0 to 360 relative to start)
+                if (ItemsSource != null)
                 {
-                    var slice = _slices[i];
-                    if (angle >= slice.StartAngle && angle < slice.StartAngle + slice.SweepAngle)
+                    double currentTotal = 0;
+                    var items = ItemsSource.ToList();
+                    double totalValue = items.Sum(i => i.Value);
+                    if (totalValue <= 0) totalValue = 1;
+
+                    for (int i = 0; i < items.Count; i++)
                     {
-                        newIndex = i;
-                        break;
+                        var item = items[i];
+                        float sweep = (float)(item.Value / totalValue * 2 * Math.PI);
+                        
+                        // Check if angleFromStart is in this segment
+                        if (angleFromStart >= currentTotal && angleFromStart < currentTotal + sweep)
+                        {
+                            newIndex = i;
+                            break;
+                        }
+                        currentTotal += sweep;
                     }
                 }
             }
@@ -244,17 +368,18 @@ namespace DigitalWellbeingWinUI3.Controls
                 _hoverIndex = newIndex;
                 Canvas.Invalidate();
 
-                // Highlight in legend if possible
-                if (_hoverIndex != -1 && LegendItems != null)
+                // Highlight in legend
+                if (_hoverIndex != -1 && LegendItems != null && ItemsSource != null)
                 {
                     var items = ItemsSource.ToList();
-                    var hoveredItem = items[_hoverIndex];
-                    var legendList = LegendItems.ToList();
-                    if (legendList.Contains(hoveredItem))
+                    if (_hoverIndex < items.Count) 
                     {
-                        LegendList.ScrollIntoView(hoveredItem);
-                        // We can't easily "Select" if SelectionMode=None, 
-                        // but ScrollIntoView gives visibility.
+                        var hoveredItem = items[_hoverIndex];
+                         var legendList = LegendItems.ToList();
+                        if (legendList.Contains(hoveredItem))
+                        {
+                            LegendList.ScrollIntoView(hoveredItem);
+                        }
                     }
                 }
             }
