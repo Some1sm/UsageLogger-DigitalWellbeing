@@ -19,5 +19,24 @@ namespace DigitalWellbeingWinUI3.Views
             base.OnNavigatedTo(e);
             await ViewModel.LoadDataAsync();
         }
+
+        private void CalendarPicker_SelectedDatesChanged(CalendarView sender, CalendarViewSelectedDatesChangedEventArgs args)
+        {
+            if (args.AddedDates.Count > 0)
+            {
+                ViewModel.SelectedDate = args.AddedDates[0];
+                CalendarFlyout.Hide();
+            }
+        }
+
+        private void BtnPrev_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            ViewModel.PreviousDay();
+        }
+
+        private void BtnNext_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            ViewModel.NextDay();
+        }
     }
 }

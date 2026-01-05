@@ -18,11 +18,36 @@
         </Grid.RowDefinitions>
 
         <!-- Header -->
-        <StackPanel Grid.Row="0" Margin="0,0,0,16">
-            <TextBlock l:Uids.Uid="MiscData_Title" Text="Fun Facts" Style="{ThemeResource TitleTextBlockStyle}"/>
-            <TextBlock l:Uids.Uid="MiscData_Subtitle" Text="Today's random stats and insights" 
+        <Grid Grid.Row="0" Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel>
+                <TextBlock l:Uids.Uid="MiscData_Title" Text="Fun Facts" Style="{ThemeResource TitleTextBlockStyle}"/>
+                <TextBlock l:Uids.Uid="MiscData_Subtitle" Text="Daily Snapshot &amp; Insights" 
                        Style="{ThemeResource SubtitleTextBlockStyle}" Opacity="0.7"/>
-        </StackPanel>
+            </StackPanel>
+            
+            <!-- Date Selector (Dashboard Style) -->
+            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top">
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="10,5">
+                    <StackPanel Orientation="Horizontal">
+                        <Button Background="Transparent" VerticalAlignment="Center" BorderThickness="0" Padding="0" Margin="0,0,10,0" ToolTipService.ToolTip="Select Date">
+                            <TextBlock Text="📅" VerticalAlignment="Center"/>
+                            <Button.Flyout>
+                                <Flyout x:Name="CalendarFlyout" Placement="Bottom">
+                                    <CalendarView x:Name="CalendarPicker" SelectionMode="Single" SelectedDatesChanged="CalendarPicker_SelectedDatesChanged" />
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
+                        <TextBlock Text="{x:Bind ViewModel.StrLoadedDate, Mode=OneWay}" Style="{ThemeResource SubtitleTextBlockStyle}" FontSize="16" VerticalAlignment="Center" Width="220" TextAlignment="Center"/>
+                        <Button Content="&lt;" Click="BtnPrev_Click" Background="Transparent" BorderThickness="0" Margin="5,0,0,0"/>
+                        <Button Content="&gt;" IsEnabled="{x:Bind ViewModel.CanGoNext, Mode=OneWay}" Click="BtnNext_Click" Background="Transparent" BorderThickness="0"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </Grid>
 
         <!-- Stats Grid -->
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">

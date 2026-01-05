@@ -30,18 +30,59 @@ namespace DigitalWellbeingWinUI3.ViewModels
         /// </summary>
         public ObservableCollection<StatItem> Stats { get; }
 
+        private DateTimeOffset? _selectedDate = DateTime.Today;
+        public DateTimeOffset? SelectedDate
+        {
+            get => _selectedDate;
+            set
+            {
+                if (_selectedDate != value)
+                {
+                    _selectedDate = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(StrLoadedDate));
+                    OnPropertyChanged(nameof(CanGoNext));
+                    _ = LoadDataAsync();
+                }
+            }
+        }
+
+        public string StrLoadedDate
+        {
+            get
+            {
+                var d = (SelectedDate ?? DateTime.Today).Date;
+                if (d == DateTime.Today) return $"Today, {d:M/d}";
+                if (d == DateTime.Today.AddDays(-1)) return $"Yesterday, {d:M/d}";
+                return d.ToString("dddd, MMMM d, yyyy");
+            }
+        }
+
+        public bool CanGoNext => (SelectedDate ?? DateTime.Today).Date < DateTime.Today;
+
+        public void NextDay()
+        {
+            if (CanGoNext) SelectedDate = (SelectedDate ?? DateTime.Today).AddDays(1);
+        }
+
+        public void PreviousDay()
+        {
+            SelectedDate = (SelectedDate ?? DateTime.Today).AddDays(-1);
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string name = null)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
         /// <summary>
-        /// Loads and computes all statistics for today.
+        /// Loads and computes all statistics for the selected date.
         /// </summary>
         public async Task LoadDataAsync()
         {
             Stats.Clear();
 
-            var sessions = await Task.Run(() => _repository.GetSessionsForDate(DateTime.Today));
+            var targetDate = SelectedDate?.Date ?? DateTime.Today;
+            var sessions = await Task.Run(() => _repository.GetSessionsForDate(targetDate));
             if (sessions == null || sessions.Count == 0)
             {
                 Stats.Add(new StatItem("\uE8B7", "No Data", "Start using your PC to see stats!", ""));
