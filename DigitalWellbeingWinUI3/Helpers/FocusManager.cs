@@ -126,7 +126,7 @@ namespace DigitalWellbeingWinUI3.Helpers
                 if (!Directory.Exists(dir))
                     Directory.CreateDirectory(dir);
 
-                string json = JsonSerializer.Serialize(_sessions, typeof(List<FocusSession>), new JsonSerializerOptions { WriteIndented = true, TypeInfoResolver = DigitalWellbeing.Core.Contexts.AppJsonContext.Default });
+                string json = JsonSerializer.Serialize(_sessions, DigitalWellbeing.Core.Contexts.AppJsonContext.Default.ListFocusSession);
                 File.WriteAllText(_filePath, json);
             }
             catch (Exception ex)
@@ -443,7 +443,7 @@ namespace DigitalWellbeingWinUI3.Helpers
                     Directory.CreateDirectory(dir);
 
                 var list = _knownAppsCache.OrderBy(a => a).ToList();
-                string json = JsonSerializer.Serialize(list, typeof(List<string>), new JsonSerializerOptions { TypeInfoResolver = DigitalWellbeing.Core.Contexts.AppJsonContext.Default });
+                string json = JsonSerializer.Serialize(list, DigitalWellbeing.Core.Contexts.AppJsonContext.Default.ListString);
                 File.WriteAllText(_appCachePath, json);
                 Debug.WriteLine($"[FocusManager] Saved {list.Count} apps to cache");
             }

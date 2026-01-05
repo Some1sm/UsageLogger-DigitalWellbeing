@@ -27,6 +27,16 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
+  <!-- AOT Trimming: Preserve WinUI3Localizer assembly -->
+  <ItemGroup>
+    <TrimmerRootAssembly Include="WinUI3Localizer" />
+  </ItemGroup>
+
+  <!-- Roots.xml for Native AOT metadata preservation -->
+  <ItemGroup>
+    <RdXmlFile Include="Roots.xml" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="H.NotifyIcon.WinUI" Version="2.1.0" />
     <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.3.2" />

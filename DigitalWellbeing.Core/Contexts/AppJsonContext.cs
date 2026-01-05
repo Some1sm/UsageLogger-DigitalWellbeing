@@ -13,6 +13,7 @@ namespace DigitalWellbeing.Core.Contexts
     [JsonSerializable(typeof(System.Collections.Generic.Dictionary<string, string>))]
     [JsonSerializable(typeof(System.Collections.Generic.List<DigitalWellbeing.Core.Models.CustomAppTag>))]
     [JsonSerializable(typeof(System.Collections.Generic.List<DigitalWellbeing.Core.Models.FocusSession>))]
+    [JsonSerializable(typeof(DigitalWellbeing.Core.Models.UserPreferencesData))]
     public partial class AppJsonContext : JsonSerializerContext
     {
     }

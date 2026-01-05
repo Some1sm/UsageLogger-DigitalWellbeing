@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  RD.XML (Roots) file for Native AOT.
+  This file tells the AOT compiler to preserve types and their metadata
+  even if they appear "unused" at compile time, which is essential for:
+  - WinUI3Localizer (uses reflection to set Content/Text properties)
+  - XAML Data Binding (requires property metadata)
+  - System.Text.Json with polymorphism (if used)
+-->
+<Directives xmlns="http://schemas.microsoft.com/netfx/2013/01/metadata">
+  <Application>
+    
+    <!-- Preserve all types in our Models namespace for data binding -->
+    <Assembly Name="DigitalWellbeingWinUI3" Dynamic="Required All" />
+    
+    <!-- Preserve Core library models used by XAML -->
+    <Assembly Name="DigitalWellbeing.Core" Dynamic="Required All" />
+    
+    <!-- Preserve WinUI3Localizer types for reflection-based localization -->
+    <Assembly Name="WinUI3Localizer" Dynamic="Required All" />
+    
+  </Application>
+</Directives>

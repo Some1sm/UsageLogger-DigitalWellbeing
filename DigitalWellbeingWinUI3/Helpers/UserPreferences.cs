@@ -44,32 +44,34 @@ namespace DigitalWellbeingWinUI3.Helpers
         {
             try
             {
-                var data = new
+                var data = new UserPreferencesData
                 {
-                    DayAmount,
-                    DetailedUsageDayCount,
-                    MinumumDuration,
-                    EnableAutoRefresh,
-                    RefreshIntervalSeconds,
-                    DataFlushIntervalSeconds,
-                    TimelineMergeThresholdSeconds,
-                    UserExcludedProcesses,
-                    ThemeMode,
-                    MinimizeOnExit,
-                    AppTimeLimits,
-                    CustomTags,
-                    IncognitoMode,
-                    ShowCombinedAudioView,
-                    ProcessDisplayNames,
-                    CustomIconPaths,
-                    TitleDisplayNames,
-                    TitleTimeLimits,
-                    ExcludedTitles,
-                    LanguageCode,
-                    UseRamCache
+                    DayAmount = DayAmount,
+                    DetailedUsageDayCount = DetailedUsageDayCount,
+                    MinumumDuration = MinumumDuration,
+                    EnableAutoRefresh = EnableAutoRefresh,
+                    RefreshIntervalSeconds = RefreshIntervalSeconds,
+                    DataFlushIntervalSeconds = DataFlushIntervalSeconds,
+                    TimelineMergeThresholdSeconds = TimelineMergeThresholdSeconds,
+                    UserExcludedProcesses = UserExcludedProcesses,
+                    ThemeMode = ThemeMode,
+                    MinimizeOnExit = MinimizeOnExit,
+                    AppTimeLimits = AppTimeLimits,
+                    CustomTags = CustomTags,
+                    IncognitoMode = IncognitoMode,
+                    ShowCombinedAudioView = ShowCombinedAudioView,
+                    ProcessDisplayNames = ProcessDisplayNames,
+                    CustomIconPaths = CustomIconPaths,
+                    TitleDisplayNames = TitleDisplayNames,
+                    TitleTimeLimits = TitleTimeLimits,
+                    ExcludedTitles = ExcludedTitles,
+                    LanguageCode = LanguageCode,
+                    UseRamCache = UseRamCache
                 };
 
-                string json = JsonSerializer.Serialize(data, data.GetType(), new JsonSerializerOptions { WriteIndented = true, TypeInfoResolver = DigitalWellbeing.Core.Contexts.AppJsonContext.Default });
+                // Use Source Generated context - Fully AOT Safe
+                string json = JsonSerializer.Serialize(data, DigitalWellbeing.Core.Contexts.AppJsonContext.Default.UserPreferencesData);
+                
                 Directory.CreateDirectory(Path.GetDirectoryName(SettingsPath));
                 File.WriteAllText(SettingsPath, json);
             }
@@ -86,31 +88,35 @@ namespace DigitalWellbeingWinUI3.Helpers
                 if (File.Exists(SettingsPath))
                 {
                     string json = File.ReadAllText(SettingsPath);
-                    var data = JsonSerializer.Deserialize(json, DigitalWellbeing.Core.Contexts.AppJsonContext.Default.JsonElement);
+                    // Use Source Generated context
+                    var data = JsonSerializer.Deserialize(json, DigitalWellbeing.Core.Contexts.AppJsonContext.Default.UserPreferencesData);
 
-                    if (data.TryGetProperty(nameof(DayAmount), out var prop)) DayAmount = prop.GetInt32();
-                    if (data.TryGetProperty(nameof(DetailedUsageDayCount), out prop)) DetailedUsageDayCount = prop.GetInt32();
-                    if (data.TryGetProperty(nameof(MinumumDuration), out prop)) MinumumDuration = JsonSerializer.Deserialize(prop.GetRawText(), DigitalWellbeing.Core.Contexts.AppJsonContext.Default.TimeSpan);
-                    if (data.TryGetProperty(nameof(EnableAutoRefresh), out prop)) EnableAutoRefresh = prop.GetBoolean();
-                    if (data.TryGetProperty(nameof(RefreshIntervalSeconds), out prop)) RefreshIntervalSeconds = prop.GetInt32();
-                    if (data.TryGetProperty(nameof(DataFlushIntervalSeconds), out prop)) DataFlushIntervalSeconds = prop.GetInt32();
-                    if (data.TryGetProperty(nameof(TimelineMergeThresholdSeconds), out prop)) TimelineMergeThresholdSeconds = prop.GetInt32();
-                    if (data.TryGetProperty(nameof(UserExcludedProcesses), out prop)) UserExcludedProcesses = JsonSerializer.Deserialize(prop.GetRawText(), DigitalWellbeing.Core.Contexts.AppJsonContext.Default.ListString) ?? new List<string>();
-                    if (data.TryGetProperty(nameof(ThemeMode), out prop)) ThemeMode = prop.GetString();
-                    if (data.TryGetProperty(nameof(MinimizeOnExit), out prop)) MinimizeOnExit = prop.GetBoolean();
-                    if (data.TryGetProperty(nameof(AppTimeLimits), out prop)) AppTimeLimits = JsonSerializer.Deserialize(prop.GetRawText(), DigitalWellbeing.Core.Contexts.AppJsonContext.Default.DictionaryStringInt32) ?? new Dictionary<string, int>();
-                    if (data.TryGetProperty(nameof(CustomTags), out prop)) CustomTags = JsonSerializer.Deserialize(prop.GetRawText(), DigitalWellbeing.Core.Contexts.AppJsonContext.Default.ListCustomAppTag) ?? new List<CustomAppTag>();
-                    if (data.TryGetProperty(nameof(IncognitoMode), out prop)) IncognitoMode = prop.GetBoolean();
-                    if (data.TryGetProperty(nameof(ShowCombinedAudioView), out prop)) ShowCombinedAudioView = prop.GetBoolean();
-                    if (data.TryGetProperty(nameof(ProcessDisplayNames), out prop)) ProcessDisplayNames = JsonSerializer.Deserialize(prop.GetRawText(), DigitalWellbeing.Core.Contexts.AppJsonContext.Default.DictionaryStringString) ?? new Dictionary<string, string>();
-                    if (data.TryGetProperty(nameof(CustomIconPaths), out prop)) CustomIconPaths = JsonSerializer.Deserialize(prop.GetRawText(), DigitalWellbeing.Core.Contexts.AppJsonContext.Default.DictionaryStringString) ?? new Dictionary<string, string>();
-                    if (data.TryGetProperty(nameof(TitleDisplayNames), out prop)) TitleDisplayNames = JsonSerializer.Deserialize(prop.GetRawText(), DigitalWellbeing.Core.Contexts.AppJsonContext.Default.DictionaryStringString) ?? new Dictionary<string, string>();
-                    if (data.TryGetProperty(nameof(TitleTimeLimits), out prop)) TitleTimeLimits = JsonSerializer.Deserialize(prop.GetRawText(), DigitalWellbeing.Core.Contexts.AppJsonContext.Default.DictionaryStringInt32) ?? new Dictionary<string, int>();
-                    if (data.TryGetProperty(nameof(ExcludedTitles), out prop)) ExcludedTitles = JsonSerializer.Deserialize(prop.GetRawText(), DigitalWellbeing.Core.Contexts.AppJsonContext.Default.ListString) ?? new List<string>();
-                    if (data.TryGetProperty(nameof(LanguageCode), out prop)) LanguageCode = prop.GetString() ?? "";
-                    if (data.TryGetProperty(nameof(UseRamCache), out prop)) UseRamCache = prop.GetBoolean();
+                    if (data != null)
+                    {
+                        DayAmount = data.DayAmount;
+                        DetailedUsageDayCount = data.DetailedUsageDayCount;
+                        MinumumDuration = data.MinumumDuration;
+                        EnableAutoRefresh = data.EnableAutoRefresh;
+                        RefreshIntervalSeconds = data.RefreshIntervalSeconds;
+                        DataFlushIntervalSeconds = data.DataFlushIntervalSeconds;
+                        TimelineMergeThresholdSeconds = data.TimelineMergeThresholdSeconds;
+                        UserExcludedProcesses = data.UserExcludedProcesses ?? new List<string>();
+                        ThemeMode = data.ThemeMode;
+                        MinimizeOnExit = data.MinimizeOnExit;
+                        AppTimeLimits = data.AppTimeLimits ?? new Dictionary<string, int>();
+                        CustomTags = data.CustomTags ?? new List<CustomAppTag>();
+                        IncognitoMode = data.IncognitoMode;
+                        ShowCombinedAudioView = data.ShowCombinedAudioView;
+                        ProcessDisplayNames = data.ProcessDisplayNames ?? new Dictionary<string, string>();
+                        CustomIconPaths = data.CustomIconPaths ?? new Dictionary<string, string>();
+                        TitleDisplayNames = data.TitleDisplayNames ?? new Dictionary<string, string>();
+                        TitleTimeLimits = data.TitleTimeLimits ?? new Dictionary<string, int>();
+                        ExcludedTitles = data.ExcludedTitles ?? new List<string>();
+                        LanguageCode = data.LanguageCode ?? "";
+                        UseRamCache = data.UseRamCache;
+                    }
                 }
-
+                
                 // Default Initialization
                 if (CustomTags == null || CustomTags.Count == 0)
                 {
@@ -128,7 +134,10 @@ namespace DigitalWellbeingWinUI3.Helpers
                     Save();
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"UserPreferences Load Error: {ex}");
+            }
         }
 
         public static void UpdateAppTimeLimit(string processName, TimeSpan timeLimit)
