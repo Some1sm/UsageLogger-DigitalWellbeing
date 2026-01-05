@@ -28,8 +28,14 @@ namespace DigitalWellbeingWinUI3
         {
             this.InitializeComponent();
             this.UnhandledException += App_UnhandledException;
+            System.Threading.Tasks.TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
+        }
 
+        private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+        {
+            LogCrash(e.Exception);
+            e.SetObserved();
         }
 
         private void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)

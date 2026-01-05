@@ -14,6 +14,7 @@
     <FileVersion>0.8.1.0</FileVersion>
     <UseWindowsForms>false</UseWindowsForms>
     <UseWPF>false</UseWPF>
+    <PublishAot>true</PublishAot>
   </PropertyGroup>
 
   <ItemGroup>

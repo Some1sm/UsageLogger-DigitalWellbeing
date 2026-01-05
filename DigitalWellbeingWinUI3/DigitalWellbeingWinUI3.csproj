@@ -11,6 +11,8 @@
     <UseWinUI>true</UseWinUI>
     <WindowsPackageType>None</WindowsPackageType>
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+    <PublishAot>true</PublishAot>
+    <IsAotCompatible>true</IsAotCompatible>
     <EnableMsixTooling>true</EnableMsixTooling>
     <Authors>David Cepero López</Authors>
     <Company>Some1sm</Company>
@@ -22,6 +24,7 @@
     <NoWarn>$(NoWarn)</NoWarn>
     <!-- Win2D: Suppress platform warning for AnyCPU builds -->
     <Win2DWarnNoPlatform>false</Win2DWarnNoPlatform>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>

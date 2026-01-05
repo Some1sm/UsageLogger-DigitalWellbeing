@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
-using DigitalWellbeingWinUI3.Models;
+using DigitalWellbeing.Core.Models;
 
 namespace DigitalWellbeingWinUI3.Helpers
 {
@@ -69,7 +69,7 @@ namespace DigitalWellbeingWinUI3.Helpers
                     UseRamCache
                 };
 
-                string json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
+                string json = JsonSerializer.Serialize(data, data.GetType(), new JsonSerializerOptions { WriteIndented = true, TypeInfoResolver = DigitalWellbeing.Core.Contexts.AppJsonContext.Default });
                 Directory.CreateDirectory(Path.GetDirectoryName(SettingsPath));
                 File.WriteAllText(SettingsPath, json);
             }
@@ -86,27 +86,27 @@ namespace DigitalWellbeingWinUI3.Helpers
                 if (File.Exists(SettingsPath))
                 {
                     string json = File.ReadAllText(SettingsPath);
-                    var data = JsonSerializer.Deserialize<JsonElement>(json);
+                    var data = JsonSerializer.Deserialize(json, DigitalWellbeing.Core.Contexts.AppJsonContext.Default.JsonElement);
 
                     if (data.TryGetProperty(nameof(DayAmount), out var prop)) DayAmount = prop.GetInt32();
                     if (data.TryGetProperty(nameof(DetailedUsageDayCount), out prop)) DetailedUsageDayCount = prop.GetInt32();
-                    if (data.TryGetProperty(nameof(MinumumDuration), out prop)) MinumumDuration = JsonSerializer.Deserialize<TimeSpan>(prop.GetRawText());
+                    if (data.TryGetProperty(nameof(MinumumDuration), out prop)) MinumumDuration = JsonSerializer.Deserialize(prop.GetRawText(), DigitalWellbeing.Core.Contexts.AppJsonContext.Default.TimeSpan);
                     if (data.TryGetProperty(nameof(EnableAutoRefresh), out prop)) EnableAutoRefresh = prop.GetBoolean();
                     if (data.TryGetProperty(nameof(RefreshIntervalSeconds), out prop)) RefreshIntervalSeconds = prop.GetInt32();
                     if (data.TryGetProperty(nameof(DataFlushIntervalSeconds), out prop)) DataFlushIntervalSeconds = prop.GetInt32();
                     if (data.TryGetProperty(nameof(TimelineMergeThresholdSeconds), out prop)) TimelineMergeThresholdSeconds = prop.GetInt32();
-                    if (data.TryGetProperty(nameof(UserExcludedProcesses), out prop)) UserExcludedProcesses = JsonSerializer.Deserialize<List<string>>(prop.GetRawText()) ?? new List<string>();
+                    if (data.TryGetProperty(nameof(UserExcludedProcesses), out prop)) UserExcludedProcesses = JsonSerializer.Deserialize(prop.GetRawText(), DigitalWellbeing.Core.Contexts.AppJsonContext.Default.ListString) ?? new List<string>();
                     if (data.TryGetProperty(nameof(ThemeMode), out prop)) ThemeMode = prop.GetString();
                     if (data.TryGetProperty(nameof(MinimizeOnExit), out prop)) MinimizeOnExit = prop.GetBoolean();
-                    if (data.TryGetProperty(nameof(AppTimeLimits), out prop)) AppTimeLimits = JsonSerializer.Deserialize<Dictionary<string, int>>(prop.GetRawText()) ?? new Dictionary<string, int>();
-                    if (data.TryGetProperty(nameof(CustomTags), out prop)) CustomTags = JsonSerializer.Deserialize<List<CustomAppTag>>(prop.GetRawText()) ?? new List<CustomAppTag>();
+                    if (data.TryGetProperty(nameof(AppTimeLimits), out prop)) AppTimeLimits = JsonSerializer.Deserialize(prop.GetRawText(), DigitalWellbeing.Core.Contexts.AppJsonContext.Default.DictionaryStringInt32) ?? new Dictionary<string, int>();
+                    if (data.TryGetProperty(nameof(CustomTags), out prop)) CustomTags = JsonSerializer.Deserialize(prop.GetRawText(), DigitalWellbeing.Core.Contexts.AppJsonContext.Default.ListCustomAppTag) ?? new List<CustomAppTag>();
                     if (data.TryGetProperty(nameof(IncognitoMode), out prop)) IncognitoMode = prop.GetBoolean();
                     if (data.TryGetProperty(nameof(ShowCombinedAudioView), out prop)) ShowCombinedAudioView = prop.GetBoolean();
-                    if (data.TryGetProperty(nameof(ProcessDisplayNames), out prop)) ProcessDisplayNames = JsonSerializer.Deserialize<Dictionary<string, string>>(prop.GetRawText()) ?? new Dictionary<string, string>();
-                    if (data.TryGetProperty(nameof(CustomIconPaths), out prop)) CustomIconPaths = JsonSerializer.Deserialize<Dictionary<string, string>>(prop.GetRawText()) ?? new Dictionary<string, string>();
-                    if (data.TryGetProperty(nameof(TitleDisplayNames), out prop)) TitleDisplayNames = JsonSerializer.Deserialize<Dictionary<string, string>>(prop.GetRawText()) ?? new Dictionary<string, string>();
-                    if (data.TryGetProperty(nameof(TitleTimeLimits), out prop)) TitleTimeLimits = JsonSerializer.Deserialize<Dictionary<string, int>>(prop.GetRawText()) ?? new Dictionary<string, int>();
-                    if (data.TryGetProperty(nameof(ExcludedTitles), out prop)) ExcludedTitles = JsonSerializer.Deserialize<List<string>>(prop.GetRawText()) ?? new List<string>();
+                    if (data.TryGetProperty(nameof(ProcessDisplayNames), out prop)) ProcessDisplayNames = JsonSerializer.Deserialize(prop.GetRawText(), DigitalWellbeing.Core.Contexts.AppJsonContext.Default.DictionaryStringString) ?? new Dictionary<string, string>();
+                    if (data.TryGetProperty(nameof(CustomIconPaths), out prop)) CustomIconPaths = JsonSerializer.Deserialize(prop.GetRawText(), DigitalWellbeing.Core.Contexts.AppJsonContext.Default.DictionaryStringString) ?? new Dictionary<string, string>();
+                    if (data.TryGetProperty(nameof(TitleDisplayNames), out prop)) TitleDisplayNames = JsonSerializer.Deserialize(prop.GetRawText(), DigitalWellbeing.Core.Contexts.AppJsonContext.Default.DictionaryStringString) ?? new Dictionary<string, string>();
+                    if (data.TryGetProperty(nameof(TitleTimeLimits), out prop)) TitleTimeLimits = JsonSerializer.Deserialize(prop.GetRawText(), DigitalWellbeing.Core.Contexts.AppJsonContext.Default.DictionaryStringInt32) ?? new Dictionary<string, int>();
+                    if (data.TryGetProperty(nameof(ExcludedTitles), out prop)) ExcludedTitles = JsonSerializer.Deserialize(prop.GetRawText(), DigitalWellbeing.Core.Contexts.AppJsonContext.Default.ListString) ?? new List<string>();
                     if (data.TryGetProperty(nameof(LanguageCode), out prop)) LanguageCode = prop.GetString() ?? "";
                     if (data.TryGetProperty(nameof(UseRamCache), out prop)) UseRamCache = prop.GetBoolean();
                 }

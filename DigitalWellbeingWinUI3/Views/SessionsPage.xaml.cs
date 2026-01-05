@@ -57,7 +57,7 @@ namespace DigitalWellbeingWinUI3.Views
 
     }
 
-    public class DateFormatConverter : Microsoft.UI.Xaml.Data.IValueConverter
+    public sealed partial class DateFormatConverter : Microsoft.UI.Xaml.Data.IValueConverter
     {
         public object Convert(object value, System.Type targetType, object parameter, string language)
         {

@@ -470,7 +470,7 @@ public class AppUsageViewModel : INotifyPropertyChanged
 			{
 			}
 		}
-		Action updateAction = delegate
+		Action updateAction = async delegate
 		{
 			SetLoading(value: true);
 			try
@@ -630,11 +630,11 @@ public class AppUsageViewModel : INotifyPropertyChanged
 				UpdateListInPlace(Column1Items, list3);
 				UpdateListInPlace(Column2Items, list4);
 				UpdateListInPlace(Column3Items, list5);
-				LoadTrendData(LoadedDate, TotalDuration);
-				LoadGoalStreaks();
+				await LoadTrendData(LoadedDate, TotalDuration);
+				await LoadGoalStreaks();
 				if (LoadedDate.Date == DateTime.Now.Date && XamlRoot != null)
 				{
-					CheckTimeLimitsForCurrentDataAsync(list);
+					await CheckTimeLimitsForCurrentDataAsync(list);
 				}
 			}
 			finally
@@ -907,7 +907,7 @@ public class AppUsageViewModel : INotifyPropertyChanged
 		});
 	}
 
-	private async void LoadTrendData(DateTime currentDate, TimeSpan currentTotal)
+	private async Task LoadTrendData(DateTime currentDate, TimeSpan currentTotal)
 	{
 		await Task.Run(async delegate
 		{
@@ -951,7 +951,7 @@ public class AppUsageViewModel : INotifyPropertyChanged
 		});
 	}
 
-	private async void LoadGoalStreaks()
+	private async Task LoadGoalStreaks()
 	{
 		await Task.Run(async delegate
 		{

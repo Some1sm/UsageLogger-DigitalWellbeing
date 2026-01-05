@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace DigitalWellbeingWinUI3.Models
+namespace DigitalWellbeing.Core.Models
 {
     public class CustomAppTag
     {

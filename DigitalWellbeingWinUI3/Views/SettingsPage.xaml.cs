@@ -11,6 +11,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Windows.ApplicationModel;
 using DigitalWellbeingWinUI3.Models;
+using DigitalWellbeing.Core.Models;
 
 namespace DigitalWellbeingWinUI3.Views
 {

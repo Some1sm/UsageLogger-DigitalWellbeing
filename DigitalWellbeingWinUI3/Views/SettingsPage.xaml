@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:helpers="using:DigitalWellbeingWinUI3.Helpers"
-    xmlns:models="using:DigitalWellbeingWinUI3.Models"
+    xmlns:coreModels="using:DigitalWellbeing.Core.Models"
     xmlns:l="using:WinUI3Localizer"
     mc:Ignorable="d">
 
@@ -286,7 +286,7 @@
 
                  <ListView Grid.Row="1" ItemsSource="{x:Bind Tags}" SelectionMode="None">
                      <ListView.ItemTemplate>
-                         <DataTemplate x:DataType="models:CustomAppTag">
+                         <DataTemplate x:DataType="coreModels:CustomAppTag">
                              <Grid Margin="0,4">
                                  <Grid.ColumnDefinitions>
                                      <ColumnDefinition Width="Auto"/> <!-- Color -->

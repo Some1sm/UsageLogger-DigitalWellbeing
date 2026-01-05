@@ -4,7 +4,7 @@ using System;
 
 namespace DigitalWellbeingWinUI3.Converters
 {
-    public class BoolToVisibilityConverter : IValueConverter
+    public sealed partial class BoolToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {

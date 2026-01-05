@@ -1,4 +1,4 @@
-using DigitalWellbeingWinUI3.Models;
+using DigitalWellbeing.Core.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Windows.AppNotifications;
@@ -108,7 +108,7 @@ namespace DigitalWellbeingWinUI3.Helpers
                 if (File.Exists(_filePath))
                 {
                     string json = File.ReadAllText(_filePath);
-                    _sessions = JsonSerializer.Deserialize<List<FocusSession>>(json) ?? new List<FocusSession>();
+                    _sessions = JsonSerializer.Deserialize(json, DigitalWellbeing.Core.Contexts.AppJsonContext.Default.ListFocusSession) ?? new List<FocusSession>();
                 }
             }
             catch (Exception ex)
@@ -126,7 +126,7 @@ namespace DigitalWellbeingWinUI3.Helpers
                 if (!Directory.Exists(dir))
                     Directory.CreateDirectory(dir);
 
-                string json = JsonSerializer.Serialize(_sessions, new JsonSerializerOptions { WriteIndented = true });
+                string json = JsonSerializer.Serialize(_sessions, typeof(List<FocusSession>), new JsonSerializerOptions { WriteIndented = true, TypeInfoResolver = DigitalWellbeing.Core.Contexts.AppJsonContext.Default });
                 File.WriteAllText(_filePath, json);
             }
             catch (Exception ex)
@@ -416,7 +416,7 @@ namespace DigitalWellbeingWinUI3.Helpers
                 if (File.Exists(_appCachePath))
                 {
                     string json = File.ReadAllText(_appCachePath);
-                    var list = JsonSerializer.Deserialize<List<string>>(json);
+                    var list = JsonSerializer.Deserialize(json, DigitalWellbeing.Core.Contexts.AppJsonContext.Default.ListString);
                     if (list != null)
                     {
                         Debug.WriteLine($"[FocusManager] Loaded {list.Count} apps from cache");
@@ -443,7 +443,7 @@ namespace DigitalWellbeingWinUI3.Helpers
                     Directory.CreateDirectory(dir);
 
                 var list = _knownAppsCache.OrderBy(a => a).ToList();
-                string json = JsonSerializer.Serialize(list);
+                string json = JsonSerializer.Serialize(list, typeof(List<string>), new JsonSerializerOptions { TypeInfoResolver = DigitalWellbeing.Core.Contexts.AppJsonContext.Default });
                 File.WriteAllText(_appCachePath, json);
                 Debug.WriteLine($"[FocusManager] Saved {list.Count} apps to cache");
             }

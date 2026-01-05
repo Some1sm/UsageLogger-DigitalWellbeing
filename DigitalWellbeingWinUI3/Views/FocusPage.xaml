@@ -4,7 +4,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:DigitalWellbeingWinUI3.Views"
-    xmlns:models="using:DigitalWellbeingWinUI3.Models"
+    xmlns:coreModels="using:DigitalWellbeing.Core.Models"
     Background="Transparent"
     Loaded="Page_Loaded">
 
@@ -57,7 +57,7 @@
         <ScrollViewer Grid.Row="1">
             <ItemsControl x:Name="ScheduleList" ItemsSource="{x:Bind Sessions}">
                 <ItemsControl.ItemTemplate>
-                    <DataTemplate x:DataType="models:FocusSession">
+                    <DataTemplate x:DataType="coreModels:FocusSession">
                         <Grid Margin="0,0,0,12" Padding="16" CornerRadius="8"
                               Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
                             <Grid.ColumnDefinitions>
@@ -79,7 +79,7 @@
                                 <StackPanel Orientation="Horizontal" Spacing="8">
                                     <TextBlock Style="{StaticResource CaptionTextBlockStyle}" 
                                                Foreground="{ThemeResource TextFillColorSecondaryBrush}">
-                                        <Run Text="{x:Bind DisplayName}"/>
+                                        <Run Text="{x:Bind ProcessName}"/>
                                         <Run Text=" • "/>
                                         <Run Text="{x:Bind StartTime}"/>
                                         <Run Text=" - "/>

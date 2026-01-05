@@ -1,5 +1,6 @@
 using DigitalWellbeingWinUI3.Helpers;
 using DigitalWellbeingWinUI3.Models;
+using DigitalWellbeing.Core.Models;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -127,7 +128,7 @@ namespace DigitalWellbeingWinUI3.Views
     }
 
     #region Converters
-    public class FocusModeToIconConverter : IValueConverter
+    public sealed partial class FocusModeToIconConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
@@ -150,7 +151,7 @@ namespace DigitalWellbeingWinUI3.Views
         }
     }
 
-    public class FocusModeToColorConverter : IValueConverter
+    public sealed partial class FocusModeToColorConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
@@ -179,7 +180,7 @@ namespace DigitalWellbeingWinUI3.Views
         }
     }
 
-    public class BoolToVisibilityConverter : IValueConverter
+    public sealed partial class BoolToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {

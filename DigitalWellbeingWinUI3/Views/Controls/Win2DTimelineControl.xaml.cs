@@ -11,6 +11,7 @@ using System.Linq;
 using System.Numerics;
 using Windows.UI;
 using DigitalWellbeingWinUI3.Models;
+using DigitalWellbeing.Core.Models;
 using DigitalWellbeingWinUI3.ViewModels;
 using DigitalWellbeingWinUI3.Helpers;
 
@@ -19,8 +20,8 @@ namespace DigitalWellbeingWinUI3.Views.Controls
     public sealed partial class Win2DTimelineControl : UserControl
     {
         private DayTimelineViewModel _subscribedViewModel;
-        private float _scaleX = 1.0f;
-        private float _scaleY = 1.0f;
+
+
 
         public Win2DTimelineControl()
         {
@@ -132,8 +133,7 @@ namespace DigitalWellbeingWinUI3.Views.Controls
             float renderWidth = vm.TimelineWidth > 0 ? (float)(vm.TimelineWidth - 30) : 400f;
             if (width <= 0) width = renderWidth;
              
-            _scaleX = 1.0f;
-            _scaleY = 1.0f;
+
             
             // Loop through invalidated regions
             foreach (var region in args.InvalidatedRegions)

@@ -3,7 +3,7 @@ using System;
 
 namespace DigitalWellbeingWinUI3.Converters
 {
-    public class PercentConverter : IValueConverter
+    public sealed partial class PercentConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {

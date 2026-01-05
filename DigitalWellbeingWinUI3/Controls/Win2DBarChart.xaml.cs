@@ -1,4 +1,5 @@
 using DigitalWellbeingWinUI3.Models;
+using DigitalWellbeing.Core.Models;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Geometry;
 using Microsoft.Graphics.Canvas.Text;

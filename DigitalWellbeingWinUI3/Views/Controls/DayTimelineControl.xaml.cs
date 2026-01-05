@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using DigitalWellbeingWinUI3.ViewModels;
 using DigitalWellbeingWinUI3.Models;
+using DigitalWellbeing.Core.Models;
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using Microsoft.Graphics.Canvas.Text;
 using Microsoft.Graphics.Canvas.Geometry;

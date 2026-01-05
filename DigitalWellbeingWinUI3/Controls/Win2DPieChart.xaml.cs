@@ -1,4 +1,5 @@
 using DigitalWellbeingWinUI3.Models;
+using DigitalWellbeing.Core.Models;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Geometry;
 using Microsoft.Graphics.Canvas.UI.Xaml;
@@ -20,7 +21,7 @@ namespace DigitalWellbeingWinUI3.Controls
         private float _angularVelocity = 0f;
         private bool _isDragging = false;
         private float _lastDragAngle = 0f;
-        private long _lastFrameTime = 0;
+
 
         public Win2DPieChart()
         {

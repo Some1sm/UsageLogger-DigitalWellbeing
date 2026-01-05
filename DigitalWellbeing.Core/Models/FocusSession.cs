@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace DigitalWellbeingWinUI3.Models
+namespace DigitalWellbeing.Core.Models
 {
     /// <summary>
     /// Represents an enforcement level for a Focus Session.
@@ -55,11 +55,6 @@ namespace DigitalWellbeingWinUI3.Models
         /// The process name of the target app (e.g., "chrome", "Code").
         /// </summary>
         public string ProcessName { get; set; }
-
-        /// <summary>
-        /// Gets the user-friendly display name for the target app.
-        /// </summary>
-        public string DisplayName => Helpers.UserPreferences.GetDisplayName(ProcessName ?? "");
 
         /// <summary>
         /// Optional: Specific window title / sub-app (e.g., "GitHub", "YouTube").

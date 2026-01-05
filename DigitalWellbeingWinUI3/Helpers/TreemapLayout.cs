@@ -1,4 +1,5 @@
 using DigitalWellbeingWinUI3.Models;
+using DigitalWellbeing.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

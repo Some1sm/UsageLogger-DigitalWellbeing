@@ -1,5 +1,6 @@
 using DigitalWellbeingWinUI3.Helpers;
 using DigitalWellbeingWinUI3.Models;
+using DigitalWellbeing.Core.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
