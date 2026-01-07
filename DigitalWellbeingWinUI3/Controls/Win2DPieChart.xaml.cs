@@ -152,8 +152,21 @@ namespace DigitalWellbeingWinUI3.Controls
             var ds = args.DrawingSession;
             float width = (float)sender.ActualWidth;
             float height = (float)sender.ActualHeight;
+            // Start angle includes Rotation Offset physics
+            float currentAngle = _rotationOffset - 90f * (float)(Math.PI / 180.0); 
+            _slices.Clear();
+
+            float minDim = Math.Min(width, height);
             float margin = 20;
-            float diameter = Math.Min(width, height) - 2 * margin;
+
+            // Proportional margin for small sizes (smooth shrink)
+            // If smaller than 100px, use 20% margin to maintain relative proportions down to 0
+            if (minDim < 100)
+            {
+                margin = minDim * 0.2f; 
+            }
+
+            float diameter = minDim - 2 * margin;
             if (diameter <= 0) return;
 
             float radius = diameter / 2;
@@ -161,10 +174,6 @@ namespace DigitalWellbeingWinUI3.Controls
 
             double total = items.Sum(i => i.Value);
             if (total <= 0) total = 1;
-
-            // Start angle includes Rotation Offset physics
-            float currentAngle = _rotationOffset - 90f * (float)(Math.PI / 180.0); 
-            _slices.Clear();
 
             for (int i = 0; i < items.Count; i++)
             {
@@ -411,6 +420,66 @@ namespace DigitalWellbeingWinUI3.Controls
         {
             _hoverIndex = -1;
             Canvas?.Invalidate();
+        }
+        private void MainGrid_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            ApplyResponsiveLayout(e.NewSize.Width);
+        }
+
+        private void ApplyResponsiveLayout(double width)
+        {
+            if (MainGrid == null || LegendList == null || Canvas == null) return;
+
+            // Threshold for switching to vertical layout
+            // Side menu takes space, so if control is squeezed < 300px, go vertical
+            bool useVertical = width < 300;
+
+            if (useVertical)
+            {
+                // VERTICAL LAYOUT (Narrow)
+                // Grid: 2 Rows (*, Auto), 1 Col (*)
+                MainGrid.ColumnDefinitions.Clear();
+                MainGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+
+                MainGrid.RowDefinitions.Clear();
+                MainGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }); // Chart
+                MainGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Legend
+
+                // Position Canvas
+                Grid.SetRow(Canvas, 0);
+                Grid.SetColumn(Canvas, 0);
+
+                // Position Legend
+                Grid.SetRow(LegendList, 1);
+                Grid.SetColumn(LegendList, 0);
+                LegendList.Margin = new Thickness(0, 10, 0, 0); 
+                
+                // Use a horizontal wrap or list for legend if needed? 
+                // Creating a WrapGrid or Horizontal stack in code is hard. 
+                // For now, keep vertical list but let it stretch.
+                // Or maybe change ItemsPanel to WrapGrid?
+                // Let's stick to standard vertical list but full width.
+            }
+            else
+            {
+                // HORIZONTAL LAYOUT (Wide - Default)
+                // Grid: 1 Row (*), 2 Cols (*, Auto)
+                MainGrid.RowDefinitions.Clear();
+                MainGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+
+                MainGrid.ColumnDefinitions.Clear();
+                MainGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+                MainGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto, MinWidth = 120, MaxWidth = 180 });
+
+                // Position Canvas
+                Grid.SetRow(Canvas, 0);
+                Grid.SetColumn(Canvas, 0);
+
+                // Position Legend
+                Grid.SetRow(LegendList, 0);
+                Grid.SetColumn(LegendList, 1);
+                LegendList.Margin = new Thickness(10, 0, 0, 0);
+            }
         }
     }
 }

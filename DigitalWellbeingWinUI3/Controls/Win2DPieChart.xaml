@@ -13,7 +13,11 @@
         <!-- Use App resources or local definition if needed -->
     </UserControl.Resources>
 
-    <Grid>
+    <Grid x:Name="MainGrid" SizeChanged="MainGrid_SizeChanged">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto" MinWidth="120" MaxWidth="180"/>
