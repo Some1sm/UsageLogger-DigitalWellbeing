@@ -34,27 +34,27 @@
             <TextBlock l:Uids.Uid="Settings_AppRuntime" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,10,0,5"/>
             <StackPanel Spacing="5">
                 <!-- Run on Startup -->
-                <Grid Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
+                <Grid x:Name="GridRunOnStartup" Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0" Spacing="2">
                         <TextBlock l:Uids.Uid="Settings_RunOnStartup" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                        <TextBlock l:Uids.Uid="Settings_RunOnStartupDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock l:Uids.Uid="Settings_RunOnStartupDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
                     </StackPanel>
                     <ToggleSwitch x:Name="EnableRunOnStartup" Grid.Column="1" Toggled="EnableRunOnStartup_Toggled"/>
                 </Grid>
 
                 <!-- Minimize on Exit -->
-                <Grid Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
+                <Grid x:Name="GridMinimizeOnExit" Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0" Spacing="2">
                         <TextBlock l:Uids.Uid="Settings_MinimizeOnExit" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                        <TextBlock l:Uids.Uid="Settings_MinimizeOnExitDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock l:Uids.Uid="Settings_MinimizeOnExitDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
                     </StackPanel>
                     <ToggleSwitch x:Name="ToggleMinimizeOnExit" Grid.Column="1" Toggled="ToggleMinimizeOnExit_Toggled"/>
                 </Grid>
@@ -64,7 +64,7 @@
             <TextBlock l:Uids.Uid="Settings_UsageData" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,10,0,5"/>
 
             <!-- Incognito Mode -->
-            <Grid Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
+            <Grid x:Name="GridIncognito" Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
@@ -74,7 +74,7 @@
                         <FontIcon Glyph="&#xE72E;" FontFamily="Segoe MDL2 Assets" FontSize="16"/>
                         <TextBlock l:Uids.Uid="Settings_IncognitoMode" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
                     </StackPanel>
-                    <TextBlock l:Uids.Uid="Settings_IncognitoModeDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    <TextBlock l:Uids.Uid="Settings_IncognitoModeDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
                 </StackPanel>
                 <ToggleSwitch x:Name="ToggleIncognitoMode" Grid.Column="1" Toggled="ToggleIncognitoMode_Toggled"/>
             </Grid>
@@ -87,7 +87,7 @@
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Spacing="2" Margin="0,0,0,10">
                     <TextBlock l:Uids.Uid="Settings_ExcludedApps" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                    <TextBlock l:Uids.Uid="Settings_ExcludedAppsDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    <TextBlock l:Uids.Uid="Settings_ExcludedAppsDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
                 </StackPanel>
                 <ListView Grid.Row="1" x:Name="ExcludedAppList" Height="150" DoubleTapped="ExcludedAppList_DoubleTapped" BorderThickness="1" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" CornerRadius="4"/>
             </Grid>
@@ -100,7 +100,7 @@
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Spacing="2" Margin="0,0,0,10">
                     <TextBlock l:Uids.Uid="Settings_TimeLimits" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                    <TextBlock l:Uids.Uid="Settings_TimeLimitsDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    <TextBlock l:Uids.Uid="Settings_TimeLimitsDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
                 </StackPanel>
                 <ListView Grid.Row="1" x:Name="AppTimeLimitsList" Height="150" DoubleTapped="AppTimeLimitsList_DoubleTapped" BorderThickness="1" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" CornerRadius="4"/>
             </Grid>
@@ -109,14 +109,14 @@
             <TextBlock l:Uids.Uid="Settings_Display" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,10,0,5"/>
              <StackPanel Spacing="5">
                 <!-- Days to Show -->
-                 <Grid Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
+                 <Grid x:Name="GridDaysToShow" Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
                      <Grid.ColumnDefinitions>
                          <ColumnDefinition Width="*"/>
                          <ColumnDefinition Width="Auto"/>
                      </Grid.ColumnDefinitions>
                      <StackPanel Grid.Column="0" Spacing="2">
                          <TextBlock l:Uids.Uid="Settings_DaysToShow" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                          <TextBlock l:Uids.Uid="Settings_DaysToShowDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                          <TextBlock l:Uids.Uid="Settings_DaysToShowDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
                      </StackPanel>
                       <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="10">
                           <NumberBox x:Name="DaysToShowTextBox" Value="7" SpinButtonPlacementMode="Compact" Width="150" Minimum="1" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp"/>
@@ -124,14 +124,14 @@
                  </Grid>
 
                  <!-- Days to Show on Detailed Usage -->
-                 <Grid Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
+                 <Grid x:Name="GridDetailedDays" Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
                      <Grid.ColumnDefinitions>
                          <ColumnDefinition Width="*"/>
                          <ColumnDefinition Width="Auto"/>
                      </Grid.ColumnDefinitions>
                      <StackPanel Grid.Column="0" Spacing="2">
                           <TextBlock l:Uids.Uid="Settings_DetailedDays" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                          <TextBlock l:Uids.Uid="Settings_DetailedDaysDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                          <TextBlock l:Uids.Uid="Settings_DetailedDaysDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
                      </StackPanel>
                      <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="10">
                          <NumberBox x:Name="DetailedDaysTextBox" Value="1" SpinButtonPlacementMode="Compact" Width="150" Minimum="1" Maximum="7" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp"/>
@@ -139,14 +139,14 @@
                  </Grid>
 
                  <!-- Minimum Duration -->
-                <Grid Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
+                <Grid x:Name="GridMinDuration" Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0" Spacing="2">
                         <TextBlock l:Uids.Uid="Settings_MinDuration" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                        <TextBlock l:Uids.Uid="Settings_MinDurationDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock l:Uids.Uid="Settings_MinDurationDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="10">
                         <NumberBox x:Name="MinDurationTextBox" Value="0" SpinButtonPlacementMode="Compact" Width="150" Minimum="0" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp"/>
@@ -154,14 +154,14 @@
                 </Grid>
 
                 <!-- Refresh Interval -->
-                <Grid Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
+                <Grid x:Name="GridAutoRefresh" Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0" Spacing="2">
                         <TextBlock l:Uids.Uid="Settings_AutoRefresh" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                         <TextBlock l:Uids.Uid="Settings_AutoRefreshDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                         <TextBlock l:Uids.Uid="Settings_AutoRefreshDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
                     </StackPanel>
                      <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="10">
                          <ToggleSwitch x:Name="EnableAutoRefresh" Toggled="EnableAutoRefresh_Toggled"/>
@@ -172,7 +172,7 @@
 
 
                  <!-- Theme Mode -->
-                <Grid Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
+                <Grid x:Name="GridTheme" Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
@@ -188,14 +188,14 @@
                 </Grid>
 
                  <!-- Language -->
-                <Grid Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
+                <Grid x:Name="GridLanguage" Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0" Spacing="2">
                         <TextBlock l:Uids.Uid="Settings_Language" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                        <TextBlock l:Uids.Uid="Settings_LanguageDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock l:Uids.Uid="Settings_LanguageDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
                     </StackPanel>
                     <ComboBox x:Name="CBLanguage" Grid.Column="1" Width="200" SelectionChanged="CBLanguage_SelectionChanged">
                         <ComboBoxItem Content="System Default" Tag=""/>
@@ -210,14 +210,14 @@
                 </Grid>
                 
                 <!-- Combined Audio View -->
-                <Grid Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
+                <Grid x:Name="GridCombinedAudio" Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0" Spacing="2">
                         <TextBlock l:Uids.Uid="Settings_CombinedAudio" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                        <TextBlock l:Uids.Uid="Settings_CombinedAudioDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock l:Uids.Uid="Settings_CombinedAudioDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
                     </StackPanel>
                     <ToggleSwitch x:Name="ToggleCombinedAudioView" Grid.Column="1" Toggled="ToggleCombinedAudioView_Toggled"/>
                 </Grid>

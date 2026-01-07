@@ -24,10 +24,101 @@ namespace DigitalWellbeingWinUI3.Views
             LoadCurrentSettings();
             
             // Version
-            // var version = Package.Current.Id.Version; 
-            // Package API fails in unpackaged apps.
             var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             TxtCurrentVersion.Text = string.Format(LocalizationHelper.GetString("Settings_AppVersion"), $"{version.Major}.{version.Minor}.{version.Build}");
+            
+            // Add SizeChanged handler
+            this.SizeChanged += SettingsPage_SizeChanged;
+        }
+
+        private void SettingsPage_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            ApplyResponsiveLayout(e.NewSize.Width);
+        }
+        
+        // List of all Settings Grids to apply responsive logic to
+        // We use FindName or just access them since they are x:Name'd
+        private void ApplyResponsiveLayout(double width)
+        {
+            bool narrow = width < 500;
+            
+            // Helper to modify Grid (1 Row/2 Col  vs  2 Row/1 Col)
+            void SetGridLayout(Grid g)
+            {
+                if (g == null) return;
+                g.RowDefinitions.Clear();
+                g.ColumnDefinitions.Clear();
+                
+                if (narrow)
+                {
+                    // Vertical Stack
+                    g.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+                    g.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+                    g.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+                    
+                    // Text (StackPanel) -> Row 0
+                    if (g.Children.Count >= 1 && g.Children[0] is FrameworkElement textPanel)
+                    {
+                        Grid.SetRow(textPanel, 0);
+                        Grid.SetColumn(textPanel, 0);
+                        Grid.SetColumnSpan(textPanel, 1);
+                    }
+                    
+                    // Control (Toggle/NumberBox) -> Row 1
+                    if (g.Children.Count >= 2 && g.Children[1] is FrameworkElement control)
+                    {
+                        Grid.SetRow(control, 1);
+                        Grid.SetColumn(control, 0);
+                        Grid.SetColumnSpan(control, 1);
+                        control.HorizontalAlignment = HorizontalAlignment.Left;
+                        control.Margin = new Thickness(0, 10, 0, 0);
+                    }
+                }
+                else
+                {
+                    // Horizontal Side-by-Side
+                    // g.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Not needed, implied single? No, let's keep it simple.
+                    // Actually original XAML didn't have RowDefs for these simple grids.
+                    // But if we cleared them, we must restore if needed.
+                    // Wait, original XAML had NO RowDefinitions, just 2 ColumnDefinitions.
+                    
+                    g.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+                    g.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                    
+                    // Text -> Col 0
+                    if (g.Children.Count >= 1 && g.Children[0] is FrameworkElement textPanel)
+                    {
+                        Grid.SetRow(textPanel, 0);
+                        Grid.SetColumn(textPanel, 0);
+                    }
+                    
+                    // Control -> Col 1
+                    if (g.Children.Count >= 2 && g.Children[1] is FrameworkElement control)
+                    {
+                        Grid.SetRow(control, 0);
+                        Grid.SetColumn(control, 1);
+                        control.HorizontalAlignment = HorizontalAlignment.Right; // Default? Or toggle default. Toggle is usually right aligned in grid col.
+                        // Let's check original XAML. Grid.Column="1" no alignment usually implies Stretch? 
+                        // ToggleSwitch default horizontal alignment is Left. In a Grid Column Auto?
+                        // Actually, let's assume Stretch or Left. 
+                        // But for visual consistency let's set it to Right or Stretch.
+                        control.HorizontalAlignment = HorizontalAlignment.Stretch; 
+                        control.Margin = new Thickness(0);
+                    }
+                }
+            }
+
+            // Apply to all named grids
+            SetGridLayout(GridRunOnStartup);
+            SetGridLayout(GridMinimizeOnExit);
+            SetGridLayout(GridIncognito);
+            SetGridLayout(GridDaysToShow);
+            SetGridLayout(GridDetailedDays);
+            SetGridLayout(GridMinDuration);
+            SetGridLayout(GridAutoRefresh);
+            SetGridLayout(GridTheme);
+            SetGridLayout(GridLanguage);
+            SetGridLayout(GridCombinedAudio);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
