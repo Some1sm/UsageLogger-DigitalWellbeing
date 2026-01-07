@@ -99,6 +99,8 @@ namespace DigitalWellbeingWinUI3.Controls
             
             float chartHeight = height - marginBottom - marginOther;
             float chartWidth = width - marginLeft - marginOther;
+            
+            if (chartWidth <= 0 || chartHeight <= 0) return;
 
             // SCALING LOGIC:
             // 1. Find max data value
@@ -128,22 +130,45 @@ namespace DigitalWellbeingWinUI3.Controls
                 }
             }
 
-            // Updated Layout: Fill available width
-            float totalGapSpace = chartWidth * 0.2f; // 20% gap total
-            float gap = items.Count > 1 ? totalGapSpace / (items.Count - 1) : 0;
-            float barWidth = (chartWidth - totalGapSpace) / items.Count;
-            if (items.Count == 1) 
-            {
-                 barWidth = Math.Min(100, chartWidth * 0.5f);
-                 gap = 0;
-            }
-            // Clamp min/max bar width
-            if (barWidth > MaxBarWidth) barWidth = (float)MaxBarWidth;
-            if (barWidth < 4) barWidth = 4;
+            // Updated Layout: Fill available width with Uniform Spacing including Sides
+            // "make it work like if sides also had a bar" -> Total gaps = Items + 1
+            // Layout: GAP - BAR - GAP - BAR ... - GAP
             
-            // Re-calculate startX based on new marginLeft
-            float totalContentWidth = items.Count * barWidth + (items.Count - 1) * gap;
-            float startX = marginLeft + (chartWidth - totalContentWidth) / 2;
+            // 1. Calculate max possible bar width if we reserve space for (Items + 1) gaps of equal width?
+            // Simplified approach: calculate RemainingSpace after applying MaxBarWidth clamp.
+            
+            // Max space available for Bars if Gap was 0:
+            float maxPossibleBarWidth = chartWidth / items.Count;
+            
+            // Apply clamps (Default Max 50, but don't clamp min yet, wait to see if it fits)
+            float barWidth = Math.Min(maxPossibleBarWidth, (float)MaxBarWidth);
+            
+            // Enforce minimum VISIBLE width (e.g. 1px). 
+            // Previous min was 4, which might cause overflow on very small charts.
+            // Let's try to maintain 4 if possible, but shrink if needed.
+            if (barWidth < 4 && maxPossibleBarWidth >= 4) barWidth = 4;
+            
+            // 3. Calculate remaining space and distribute as gaps (Items.Count + 1 intervals)
+            float totalBarWidth = items.Count * barWidth;
+            float remainingSpace = chartWidth - totalBarWidth;
+            
+            // Handle Overflow (if min width caused it)
+            if (remainingSpace < 0) 
+            {
+                 // We don't have enough space for bars + gaps.
+                 // Shrink bars to fit exactly with 0 gap, or minimal gap?
+                 // Let's prioritize fitting the bars.
+                 remainingSpace = 0;
+                 barWidth = chartWidth / items.Count; 
+                 totalBarWidth = chartWidth;
+            }
+
+            // Distribute gaps: N+1 gaps
+            float gap = remainingSpace / (items.Count + 1);
+            
+            // Calculate StartX
+            // Start at MarginLeft + First Gap
+            float startX = marginLeft + gap;
 
             // Draw X-Axis Line (Bottom Anchor)
             ds.DrawLine(marginLeft, height - marginBottom, width - marginOther, height - marginBottom, Colors.Gray, 1);
@@ -185,7 +210,9 @@ namespace DigitalWellbeingWinUI3.Controls
                         (byte)Math.Min(255, item.Color.B + 40));
                 }
                 
-                ds.FillRoundedRectangle(rect, 4, 4, barColor);
+                // Dynamic corner radius to avoid artifacts on thin bars
+                float radius = Math.Min(4, barWidth / 2);
+                ds.FillRoundedRectangle(rect, radius, radius, barColor);
 
                 if (!string.IsNullOrEmpty(item.Label))
                 {
