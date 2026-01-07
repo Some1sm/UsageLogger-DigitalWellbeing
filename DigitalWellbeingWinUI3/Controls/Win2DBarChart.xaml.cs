@@ -65,6 +65,15 @@ namespace DigitalWellbeingWinUI3.Controls
             set => SetValue(TargetLineLabelProperty, value);
         }
 
+        public static readonly DependencyProperty MaxBarWidthProperty =
+            DependencyProperty.Register(nameof(MaxBarWidth), typeof(double), typeof(Win2DBarChart), new PropertyMetadata(50.0, OnPropertyChanged));
+
+        public double MaxBarWidth
+        {
+            get => (double)GetValue(MaxBarWidthProperty);
+            set => SetValue(MaxBarWidthProperty, value);
+        }
+
         private static void OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is Win2DBarChart chart && chart.Canvas != null)
@@ -129,7 +138,7 @@ namespace DigitalWellbeingWinUI3.Controls
                  gap = 0;
             }
             // Clamp min/max bar width
-            if (barWidth > 100) barWidth = 100;
+            if (barWidth > MaxBarWidth) barWidth = (float)MaxBarWidth;
             if (barWidth < 4) barWidth = 4;
             
             // Re-calculate startX based on new marginLeft
