@@ -17,7 +17,6 @@ namespace DigitalWellbeingWinUI3.Helpers
         public static bool EnableAutoRefresh { get; set; } = true;
         public static int RefreshIntervalSeconds { get; set; } = 60;
         public static int DataFlushIntervalSeconds { get; set; } = 300; // Service: how often RAM data is flushed to disk (5 min default)
-        public static int TimelineMergeThresholdSeconds { get; set; } = 30; // Default 30s
         public static List<string> UserExcludedProcesses { get; set; } = new List<string>();
         public static string ThemeMode { get; set; } = "System"; // System, Light, Dark
         public static bool MinimizeOnExit { get; set; } = true;
@@ -51,8 +50,8 @@ namespace DigitalWellbeingWinUI3.Helpers
                     MinumumDuration,
                     EnableAutoRefresh,
                     RefreshIntervalSeconds,
+
                     DataFlushIntervalSeconds,
-                    TimelineMergeThresholdSeconds,
                     UserExcludedProcesses,
                     ThemeMode,
                     MinimizeOnExit,
@@ -94,7 +93,6 @@ namespace DigitalWellbeingWinUI3.Helpers
                     if (data.TryGetProperty(nameof(EnableAutoRefresh), out prop)) EnableAutoRefresh = prop.GetBoolean();
                     if (data.TryGetProperty(nameof(RefreshIntervalSeconds), out prop)) RefreshIntervalSeconds = prop.GetInt32();
                     if (data.TryGetProperty(nameof(DataFlushIntervalSeconds), out prop)) DataFlushIntervalSeconds = prop.GetInt32();
-                    if (data.TryGetProperty(nameof(TimelineMergeThresholdSeconds), out prop)) TimelineMergeThresholdSeconds = prop.GetInt32();
                     if (data.TryGetProperty(nameof(UserExcludedProcesses), out prop)) UserExcludedProcesses = JsonSerializer.Deserialize<List<string>>(prop.GetRawText()) ?? new List<string>();
                     if (data.TryGetProperty(nameof(ThemeMode), out prop)) ThemeMode = prop.GetString();
                     if (data.TryGetProperty(nameof(MinimizeOnExit), out prop)) MinimizeOnExit = prop.GetBoolean();

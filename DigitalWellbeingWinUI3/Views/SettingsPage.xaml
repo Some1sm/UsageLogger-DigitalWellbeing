@@ -169,20 +169,7 @@
                      </StackPanel>
                 </Grid>
 
-                <!-- Timeline Merge Threshold -->
-                <Grid Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
-                     <Grid.ColumnDefinitions>
-                         <ColumnDefinition Width="*"/>
-                         <ColumnDefinition Width="Auto"/>
-                     </Grid.ColumnDefinitions>
-                     <StackPanel Grid.Column="0" Spacing="2">
-                          <TextBlock l:Uids.Uid="Settings_TimelineThreshold" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                          <TextBlock l:Uids.Uid="Settings_TimelineThresholdDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                     </StackPanel>
-                     <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="10">
-                         <NumberBox x:Name="TimelineThresholdTextBox" Value="30" SpinButtonPlacementMode="Compact" Width="150" Minimum="0" Maximum="300" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp"/>
-                     </StackPanel>
-                 </Grid>
+
 
                  <!-- Theme Mode -->
                 <Grid Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">

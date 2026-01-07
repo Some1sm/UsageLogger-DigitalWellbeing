@@ -80,9 +80,6 @@ namespace DigitalWellbeingWinUI3.Views
             // Detailed Usage Days
             DetailedDaysTextBox.Value = UserPreferences.DetailedUsageDayCount;
 
-             // Timeline Threshold
-            TimelineThresholdTextBox.Value = UserPreferences.TimelineMergeThresholdSeconds;
-
             // Data Flush Interval
             DataFlushIntervalTextBox.Value = UserPreferences.DataFlushIntervalSeconds;
             ToggleUseRamCache.IsOn = UserPreferences.UseRamCache;
@@ -240,8 +237,8 @@ namespace DigitalWellbeingWinUI3.Views
             // Gather all values
             UserPreferences.DayAmount = (int)DaysToShowTextBox.Value;
             UserPreferences.DetailedUsageDayCount = (int)DetailedDaysTextBox.Value;
+            UserPreferences.DetailedUsageDayCount = (int)DetailedDaysTextBox.Value;
             UserPreferences.MinumumDuration = TimeSpan.FromSeconds(MinDurationTextBox.Value);
-            UserPreferences.TimelineMergeThresholdSeconds = (int)TimelineThresholdTextBox.Value;
             
             UserPreferences.MinimizeOnExit = ToggleMinimizeOnExit.IsOn;
             UserPreferences.IncognitoMode = ToggleIncognitoMode.IsOn;

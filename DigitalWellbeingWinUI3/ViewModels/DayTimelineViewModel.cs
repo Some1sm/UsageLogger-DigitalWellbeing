@@ -347,7 +347,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
 
                     if (keysMatch)
                     {
-                        int threshold = DigitalWellbeingWinUI3.Helpers.UserPreferences.TimelineMergeThresholdSeconds;
+                        int threshold = 30;
                         
                         if (lastEnd.HasValue && (validStart - lastEnd.Value).TotalSeconds < threshold)
                         {
