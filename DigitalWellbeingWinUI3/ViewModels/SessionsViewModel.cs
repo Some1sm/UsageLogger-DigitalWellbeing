@@ -56,6 +56,36 @@ namespace DigitalWellbeingWinUI3.ViewModels
             }
         }
 
+        // View Mode Toggle (App, SubApp, Category)
+        public List<string> ViewModeOptions { get; } = new List<string> { "App", "SubApp", "Category" };
+        
+        private int _selectedViewModeIndex = 1; // Default to SubApp
+        public int SelectedViewModeIndex
+        {
+            get => _selectedViewModeIndex;
+            set
+            {
+                if (_selectedViewModeIndex != value)
+                {
+                    _selectedViewModeIndex = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(ViewMode));
+                    RefreshViewMode();
+                }
+            }
+        }
+        
+        public string ViewMode => ViewModeOptions[_selectedViewModeIndex];
+        
+        private void RefreshViewMode()
+        {
+            foreach (var day in Days)
+            {
+                day.ViewMode = ViewMode;
+                day.RefreshSessionLayout(PixelsPerHour);
+            }
+        }
+
         private double _totalAvailableWidth;
         public double TotalAvailableWidth
         {
@@ -203,12 +233,14 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 if (existingVM != null)
                 {
                     // Update in place
+                    existingVM.ViewMode = ViewMode;
                     existingVM.LoadSessions(result.Sessions, PixelsPerHour);
                 }
                 else
                 {
                     // Add new
                     var dayVM = new DayTimelineViewModel(result.Date);
+                    dayVM.ViewMode = ViewMode;
                     dayVM.LoadSessions(result.Sessions, PixelsPerHour);
                     // Insert in order?
                     // Simple append if we assume chronological generation, but safer to insert.

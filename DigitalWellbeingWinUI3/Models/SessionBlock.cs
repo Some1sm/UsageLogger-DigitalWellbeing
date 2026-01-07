@@ -30,12 +30,20 @@ namespace DigitalWellbeingWinUI3.Models
         public System.Collections.Generic.List<string> AudioSources { get; set; } = new System.Collections.Generic.List<string>();
         public bool HasAudio => AudioSources != null && AudioSources.Count > 0;
         public string AudioSourcesText => HasAudio ? string.Join(", ", AudioSources) : "";
+        
+        public System.DateTime StartTime { get; set; }
+        public System.DateTime EndTime { get; set; }
+
         public string TooltipText 
         {
             get
             {
                 string text = Title;
                 if (!string.IsNullOrEmpty(DurationText)) text += $" ({DurationText})";
+                
+                // Add exact time range on new line
+                text += $"\n{StartTime:HH:mm:ss} - {EndTime:HH:mm:ss}";
+                
                 if (IsAfk) text += " [AFK]";
                 if (HasAudio) text += $"\n🔊 {AudioSourcesText}";
                 return text;

@@ -237,8 +237,47 @@ namespace DigitalWellbeingWinUI3.Views.Controls
                      float mainFontSize = Math.Max(9, Math.Min(12, height * 0.6f));
                      titleFormat.FontSize = mainFontSize;
                      
-                     var displayName = UserPreferences.GetDisplayName(block.ProcessName);
-                     string title = string.IsNullOrEmpty(displayName) ? block.Title : displayName;
+                     // Title selection based on ViewMode
+                     string title;
+                     string viewMode = vm.ViewMode ?? "SubApp";
+                     
+                     if (viewMode == "App")
+                     {
+                         // App mode: show process name or display name
+                         var displayName = UserPreferences.GetDisplayName(block.ProcessName);
+                         title = !string.IsNullOrEmpty(displayName) ? displayName : (block.ProcessName ?? "Unknown");
+                     }
+                     else if (viewMode == "Category")
+                     {
+                         // Category mode: show tag name
+                         var appTag = AppTagHelper.GetTitleTag(block.ProcessName, block.Title);
+                         if (appTag == DigitalWellbeing.Core.Models.AppTag.Untagged)
+                         {
+                             appTag = AppTagHelper.GetAppTag(block.ProcessName);
+                         }
+                         var tagName = AppTagHelper.GetTagDisplayName(appTag);
+                         title = !string.IsNullOrEmpty(tagName) ? tagName : "Untagged";
+                     }
+                     else // SubApp (default)
+                     {
+                         // SubApp mode: prefer specific title over process name
+                         var displayName = UserPreferences.GetDisplayName(block.ProcessName);
+                         
+                         if (!string.IsNullOrEmpty(block.Title) && 
+                             !block.Title.Equals(block.ProcessName, StringComparison.OrdinalIgnoreCase))
+                         {
+                             title = block.Title;
+                         }
+                         else if (!string.IsNullOrEmpty(displayName))
+                         {
+                             title = displayName;
+                         }
+                         else
+                         {
+                             title = block.Title ?? block.ProcessName ?? "";
+                         }
+                     }
+                     
                      if (!string.IsNullOrEmpty(block.DurationText)) title += $" ({block.DurationText})";
                      
                      using var layout = new CanvasTextLayout(ds, title, titleFormat, mainBlockWidth, height);

@@ -70,6 +70,14 @@ namespace DigitalWellbeingWinUI3.ViewModels
             set { _currentTimeTop = value; OnPropertyChanged(); }
         }
 
+        // View Mode: "App", "SubApp", or "Category"
+        private string _viewMode = "SubApp";
+        public string ViewMode
+        {
+            get => _viewMode;
+            set { _viewMode = value; OnPropertyChanged(); }
+        }
+
         public DayTimelineViewModel(DateTime date)
         {
             Date = date;
@@ -99,7 +107,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
             UpdateCurrentTime(pixelsPerHour);
         }
 
-        private void RefreshSessionLayout(double pixelsPerHour)
+        public void RefreshSessionLayout(double pixelsPerHour)
         {
             if (_cachedSessions == null) return;
 
@@ -251,14 +259,9 @@ namespace DigitalWellbeingWinUI3.ViewModels
 
                 if (validEnd <= validStart) continue;
 
-                // PREPARE DATA
-                string title = UserPreferences.IncognitoMode 
-                    ? s.ProcessName 
-                    : (string.IsNullOrEmpty(s.ProgramName) ? s.ProcessName : s.ProgramName);
+                // PREPARE DATA & VIEW MODE LOGIC
                 
-                if (title.Length > 30) title = title.Substring(0, 30) + "...";
-                
-                // Tagging & Color
+                // 1. Calculate Tag (needed for Category mode and Coloring)
                 AppTag tag;
                 if (!string.IsNullOrEmpty(s.ProgramName))
                 {
@@ -270,13 +273,58 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 {
                     tag = DigitalWellbeingWinUI3.Helpers.AppTagHelper.GetAppTag(s.ProcessName);
                 }
+
+                // 2. Determine Merge Key and Display Title based on ViewMode
+                string mergeKey = s.ProcessName;
+                string displayName = DigitalWellbeingWinUI3.Helpers.UserPreferences.GetDisplayName(s.ProcessName);
+                if (string.IsNullOrEmpty(displayName)) displayName = s.ProcessName;
+
+                string title = displayName;
                 
+                if (ViewMode == "Category")
+                {
+                    // Merge by Tag Name
+                    string tagName = DigitalWellbeingWinUI3.Helpers.AppTagHelper.GetTagDisplayName(tag);
+                    if (string.IsNullOrEmpty(tagName)) tagName = "Untagged";
+                    
+                    title = tagName;
+                    mergeKey = tagName; // For Category, we merge by the visible Title (Tag Name)
+                }
+                else if (ViewMode == "App")
+                {
+                    // Merge by ProcessName, Title is Display Name
+                    mergeKey = s.ProcessName;
+                    title = displayName;
+                }
+                else // SubApp (Default)
+                {
+                    mergeKey = s.ProcessName;
+                    
+                    if (UserPreferences.IncognitoMode)
+                    {
+                        title = displayName;
+                    }
+                    else
+                    {
+                        if (!string.IsNullOrEmpty(s.ProgramName) && !s.ProgramName.Equals(s.ProcessName, StringComparison.OrdinalIgnoreCase))
+                        {
+                            title = s.ProgramName;
+                        }
+                        else
+                        {
+                            title = displayName;
+                        }
+                    }
+                }
+                
+                if (title != null && title.Length > 30) title = title.Substring(0, 30) + "...";
+                
+                // 3. Color
                 var baseBrush = DigitalWellbeingWinUI3.Helpers.AppTagHelper.GetTagColor(tag) as SolidColorBrush;
                 Brush color = baseBrush;
                 if (baseBrush != null)
                 {
                     var c = baseBrush.Color;
-                    // Apply Tint: Opacity 204 (~80%) for the indicator
                     var tintedColor = Windows.UI.Color.FromArgb(204, c.R, c.G, c.B);
                     color = new SolidColorBrush(tintedColor);
                 }
@@ -285,22 +333,25 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 bool isCompatible = false;
                 if (pendingBlock != null)
                 {
-                    // MUST be same process to merge
-                    if (pendingBlock.ProcessName == s.ProcessName)
+                    bool keysMatch = false;
+                    if (ViewMode == "Category")
                     {
-                         // Check Time threshold (Gap)
-                        int threshold = DigitalWellbeingWinUI3.Helpers.UserPreferences.TimelineMergeThresholdSeconds; // e.g. 60s
-                        // However, we just processed de-overlaps. 
-                        // So 'lastEnd' should be very close to 'validStart' if they are adjacent.
+                        // In Category mode, mergeKey is the Tag Name (Title)
+                        keysMatch = pendingBlock.Title == mergeKey;
+                    }
+                    else
+                    {
+                        // In App/SubApp mode, mergeKey is ProcessName
+                        keysMatch = pendingBlock.ProcessName == mergeKey;
+                    }
+
+                    if (keysMatch)
+                    {
+                        int threshold = DigitalWellbeingWinUI3.Helpers.UserPreferences.TimelineMergeThresholdSeconds;
                         
                         if (lastEnd.HasValue && (validStart - lastEnd.Value).TotalSeconds < threshold)
                         {
-                            // Audio check
-                            var pendingAudio = pendingBlock.AudioSources ?? new List<string>();
-                            var currentAudio = s.AudioSources ?? new List<string>();
-                            bool audioEqual = pendingAudio.Count == currentAudio.Count && new HashSet<string>(pendingAudio).SetEquals(currentAudio);
-
-                            if (audioEqual && pendingBlock.IsAfk == s.IsAfk)
+                            if (pendingBlock.IsAfk == s.IsAfk)
                             {
                                 isCompatible = true;
                             }
@@ -310,14 +361,37 @@ namespace DigitalWellbeingWinUI3.ViewModels
 
                 if (isCompatible)
                 {
+                    // Update Title Logic for SubApp mode
+                    if (ViewMode == "SubApp" || ViewMode == null)
+                    {
+                        bool newSessionHasSpecificTitle = !UserPreferences.IncognitoMode && 
+                            !string.IsNullOrEmpty(s.ProgramName) && 
+                            !s.ProgramName.Equals(s.ProcessName, StringComparison.OrdinalIgnoreCase);
+                        
+                        bool currentTitleIsGeneric = pendingBlock.Title != null && 
+                            pendingBlock.Title.Equals(s.ProcessName, StringComparison.OrdinalIgnoreCase);
+                        
+                        if (newSessionHasSpecificTitle || (currentTitleIsGeneric && !string.IsNullOrEmpty(title) && title != s.ProcessName))
+                        {
+                            if (newSessionHasSpecificTitle)
+                            {
+                                pendingBlock.Title = title;
+                                pendingBlock.OriginalSession = s;
+
+                        }
+                    }
+                    }
+
                     // EXTEND
                     double newEndMinutes = (validEnd - dayStart).TotalMinutes;
                     double newHeight = (newEndMinutes * pixelsPerHour / 60.0) - pendingBlock.Top;
                     if (newHeight < 1) newHeight = 1;
                     pendingBlock.Height = newHeight;
-                    // Update duration text immediately? Or at end? 
-                    // Updating here ensures if we trim it later, it has correct data.
-                    // Actually we set it on finalizing typically, but for safety let's update.
+                    
+                    // Update Time Range
+                    pendingBlock.EndTime = validEnd;
+                    
+                    // Update duration text
                     double totalMin = newHeight * 60.0 / pixelsPerHour;
                     pendingBlock.DurationText = DigitalWellbeing.Core.Helpers.StringHelper.TimeSpanToString(TimeSpan.FromMinutes(totalMin));
                     pendingBlock.ShowDetails = newHeight > 20;
@@ -350,7 +424,9 @@ namespace DigitalWellbeingWinUI3.ViewModels
                         IsAfk = s.IsAfk,
                         ShowDetails = height > 20,
                         DurationText = DigitalWellbeing.Core.Helpers.StringHelper.TimeSpanToString(TimeSpan.FromMinutes(durationMinutes)),
-                        AudioSources = s.AudioSources != null ? new List<string>(s.AudioSources) : new List<string>()
+                        AudioSources = s.AudioSources != null ? new List<string>(s.AudioSources) : new List<string>(),
+                        StartTime = validStart,
+                        EndTime = validEnd
                     };
                     lastEnd = validEnd;
                     globalLastEnd = validEnd;
@@ -374,6 +450,33 @@ namespace DigitalWellbeingWinUI3.ViewModels
 
                newBlocks.Add(block);
             }
+            
+            // Post-process: Remove generic blocks if a specific sub-app block exists for the same process
+            // This prevents "msedge" from showing when "Netflix" exists for that process
+            var blocksToRemove = new List<SessionBlock>();
+            foreach (var block in newBlocks)
+            {
+                bool isGeneric = (block.Title ?? "").Equals(block.ProcessName ?? "", StringComparison.OrdinalIgnoreCase);
+                if (isGeneric)
+                {
+                    // Check if any specific block exists for this process
+                    bool hasSpecificBlock = newBlocks.Any(other =>
+                        other != block &&
+                        (other.ProcessName ?? "").Equals(block.ProcessName ?? "", StringComparison.OrdinalIgnoreCase) &&
+                        !(other.Title ?? "").Equals(other.ProcessName ?? "", StringComparison.OrdinalIgnoreCase));
+                    
+                    if (hasSpecificBlock)
+                    {
+                        blocksToRemove.Add(block);
+                    }
+                }
+            }
+            
+            foreach (var block in blocksToRemove)
+            {
+                newBlocks.Remove(block);
+            }
+            
             SessionBlocks = newBlocks;
             OnPropertyChanged(nameof(SessionBlocks));
             UpdateLayoutWidths(); 
