@@ -634,7 +634,7 @@ public class AppUsageViewModel : INotifyPropertyChanged
 				LoadGoalStreaks();
 				if (LoadedDate.Date == DateTime.Now.Date && XamlRoot != null)
 				{
-					CheckTimeLimitsForCurrentDataAsync(list);
+					_ = CheckTimeLimitsForCurrentDataAsync(list);
 				}
 			}
 			finally
