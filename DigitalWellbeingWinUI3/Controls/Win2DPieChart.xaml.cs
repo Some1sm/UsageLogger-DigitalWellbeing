@@ -154,6 +154,8 @@ namespace DigitalWellbeingWinUI3.Controls
             float height = (float)sender.ActualHeight;
             float margin = 20;
             float diameter = Math.Min(width, height) - 2 * margin;
+            if (diameter <= 0) return;
+
             float radius = diameter / 2;
             System.Numerics.Vector2 center = new System.Numerics.Vector2(width / 2, height / 2);
 
