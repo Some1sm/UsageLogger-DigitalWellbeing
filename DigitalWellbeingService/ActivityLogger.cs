@@ -114,10 +114,17 @@ public class ActivityLogger
 
         TryCreateAutoRunFile();
         
-        // Initial Load for buffer (SYNC warning: ideally this should be async init)
-        // We'll call GetResult for now or move to InitializeAsync method
-        _cachedUsage = _repository.GetUsageForDateAsync(DateTime.Now).GetAwaiter().GetResult();
+        // Initialize with empty list, actual load happens in InitializeAsync
+        _cachedUsage = [];
         _lastFlushTime = DateTime.Now;
+    }
+
+    /// <summary>
+    /// Async initialization - call before starting the timer loop.
+    /// </summary>
+    public async Task InitializeAsync()
+    {
+        _cachedUsage = await _repository.GetUsageForDateAsync(DateTime.Now);
     }
 
     // AutoRun only

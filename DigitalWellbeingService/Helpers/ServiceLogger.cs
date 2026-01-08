@@ -2,53 +2,49 @@ using System;
 using System.IO;
 using static System.Environment;
 
-namespace DigitalWellbeingService.Helpers
+namespace DigitalWellbeingService.Helpers;
+
+/// <summary>
+/// Provides file-based logging for the background service.
+/// </summary>
+public static class ServiceLogger
 {
-    public static class ServiceLogger
+    private static string? _logPath;
+    private static readonly object _lock = new();
+
+    private static string GetLogPath()
     {
-        private static string _logPath;
-        private static readonly object _lock = new object();
-
-        private static string GetLogPath()
+        if (_logPath is null)
         {
-            if (_logPath == null)
+            string folder = Path.Combine(GetFolderPath(SpecialFolder.LocalApplicationData), "digital-wellbeing");
+            if (!Directory.Exists(folder))
             {
-                string folder = Path.Combine(GetFolderPath(SpecialFolder.LocalApplicationData), "digital-wellbeing");
-                if (!Directory.Exists(folder))
-                {
-                    try { Directory.CreateDirectory(folder); } catch { }
-                }
-                _logPath = Path.Combine(folder, "service_debug.log");
+                try { Directory.CreateDirectory(folder); } catch { /* Ignore */ }
             }
-            return _logPath;
+            _logPath = Path.Combine(folder, "service_debug.log");
         }
+        return _logPath;
+    }
 
-        public static void Log(string message)
+    public static void Log(string message)
+    {
+        try
         {
-            try
+            lock (_lock)
             {
-                lock (_lock)
-                {
-                    string path = GetLogPath();
-                    // Keep file size in check? Maybe rotate if > 1MB. For now just append.
-                    string line = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {message}";
-                    File.AppendAllText(path, line + Environment.NewLine);
-                }
-            }
-            catch (Exception)
-            {
-                // Last resort: fail silently to avoid recursive crashes
+                string path = GetLogPath();
+                string line = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {message}";
+                File.AppendAllText(path, line + Environment.NewLine);
             }
         }
-
-        public static void Log(string category, string message)
+        catch
         {
-            Log($"[{category}] {message}");
-        }
-
-        public static void LogError(string context, Exception ex)
-        {
-            Log($"[ERROR] [{context}] {ex.Message}\n{ex.StackTrace}");
+            // Fail silently to avoid recursive crashes
         }
     }
+
+    public static void Log(string category, string message) => Log($"[{category}] {message}");
+
+    public static void LogError(string context, Exception ex) => 
+        Log($"[ERROR] [{context}] {ex.Message}\n{ex.StackTrace}");
 }

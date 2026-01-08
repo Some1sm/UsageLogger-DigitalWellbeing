@@ -18,6 +18,9 @@ class Program
         
         var sessionManager = new SessionManager(sessionsRepo);
         var activityLogger = new ActivityLogger(usageRepo, sessionManager);
+        
+        // Async initialization
+        await activityLogger.InitializeAsync();
 
         Helpers.ServiceLogger.Log("Service", "Service started successfully (Async Mode).");
 

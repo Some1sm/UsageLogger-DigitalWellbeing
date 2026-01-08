@@ -504,12 +504,16 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 double hours = kvp.Value / 60.0;
                 string label = kvp.Key.ToString("MM/dd");
                 
+                // Enhanced tooltip: Include date for context when labels are hidden
+                string tooltipDate = kvp.Key.ToString("ddd, MMM d");
+                string tooltipDuration = ChartFactory.FormatHours(hours);
+                
                 trendItems.Add(new BarChartItem
                 {
                     Value = hours,
                     Label = label,
                     Date = kvp.Key,
-                    Tooltip = ChartFactory.FormatHours(hours),
+                    Tooltip = $"{tooltipDate} • {tooltipDuration}",
                     Color = accent
                 });
             }

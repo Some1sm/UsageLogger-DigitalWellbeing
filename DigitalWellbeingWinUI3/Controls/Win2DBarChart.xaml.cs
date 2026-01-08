@@ -230,6 +230,12 @@ namespace DigitalWellbeingWinUI3.Controls
                 // ds.DrawText("Avg", width - marginOther - 20, targetY - 10, Colors.Orange, new CanvasTextFormat { FontSize = 10 });
             }
 
+            // Calculate label stride to prevent overlap
+            // Assume each label needs ~40px of width
+            const float minLabelWidth = 40f;
+            float spacePerBar = barWidth + gap;
+            int labelStride = spacePerBar > 0 ? Math.Max(1, (int)Math.Ceiling(minLabelWidth / spacePerBar)) : 1;
+
             // Cache bar rects for hit testing
             _barRects.Clear();
 
@@ -259,7 +265,8 @@ namespace DigitalWellbeingWinUI3.Controls
                 float radius = Math.Min(4, barWidth / 2);
                 ds.FillRoundedRectangle(rect, radius, radius, barColor);
 
-                if (!string.IsNullOrEmpty(item.Label))
+                // Only draw label if stride allows (prevents overlap)
+                if (!string.IsNullOrEmpty(item.Label) && i % labelStride == 0)
                 {
                     var format = new CanvasTextFormat { FontSize = 10, HorizontalAlignment = CanvasHorizontalAlignment.Center, FontFamily = "Segoe UI" };
                     ds.DrawText(item.Label, x + barWidth / 2, height - marginBottom + 2, Colors.Gray, format);

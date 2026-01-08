@@ -1,120 +1,105 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using static System.Environment;
 
-namespace DigitalWellbeing.Core
+namespace DigitalWellbeing.Core;
+
+/// <summary>
+/// Provides centralized paths for application data storage.
+/// </summary>
+public static class ApplicationPath
 {
-    public static class ApplicationPath
+    private static readonly SpecialFolder ApplicationPathFolder = SpecialFolder.LocalApplicationData;
+    private const string ApplicationFolderName = "digital-wellbeing";
+    private const string ImageCacheFolderName = "processicons";
+    private const string DailyLogsFolderName = "dailylogs";
+    private const string InternalLogsFolderName = "internal-logs";
+    private const string SettingsFolderName = "settings";
+    private const string AutorunFileName = ".autorun";
+    private const string CustomLogPathFileName = "custom_log_path.txt";
+
+    public static readonly string AUTORUN_REGPATH = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
+
+#if DEBUG
+    public static readonly string AUTORUN_REGKEY = "DigitalWellbeingWPFDEBUG";
+#else
+    public static readonly string AUTORUN_REGKEY = "DigitalWellbeingWPF";
+#endif
+
+    public static string APP_LOCATION =>
+#if DEBUG
+        Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DigitalWellbeingDebug");
+#else
+        Path.Combine(GetFolderPath(ApplicationPathFolder), ApplicationFolderName);
+#endif
+
+    public static string autorunFilePath => Path.Combine(APP_LOCATION, AutorunFileName);
+
+    public static string UsageLogsFolder
     {
-        static readonly SpecialFolder applicationPath = SpecialFolder.LocalApplicationData;
-        static readonly string applicationFolderName = "digital-wellbeing";
-        static readonly string imageCacheFolderName = "processicons";
-        static readonly string dailyLogsFolderName = "dailylogs";
-        static readonly string internalLogsFolder = "internal-logs";
-        static readonly string settingsFolder = "settings";
-        static readonly string autorunFileName = ".autorun";
-
-        public static readonly string AUTORUN_REGPATH = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run";
-#if DEBUG
-        public static readonly string AUTORUN_REGKEY = "DigitalWellbeingWPFDEBUG";
-#else
-        public static readonly string AUTORUN_REGKEY = "DigitalWellbeingWPF";
-#endif
-
-
-
-        public static string APP_LOCATION
+        get
         {
-            get 
-            {
-#if DEBUG
-                return System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DigitalWellbeingDebug");
-#else
-                return GetFolderPath(applicationPath) + $@"\{applicationFolderName}";
-#endif
-            }
-        }
-
-        public static string autorunFilePath
-        {
-            get => APP_LOCATION + $@"\{autorunFileName}";
-        }
-
-        public static string UsageLogsFolder
-        {
-            get
-            {
-                // Check for custom path
-                string customPathFile = System.IO.Path.Combine(APP_LOCATION, "custom_log_path.txt");
-                if (System.IO.File.Exists(customPathFile))
-                {
-                    try
-                    {
-                        string customPath = System.IO.File.ReadAllText(customPathFile).Trim();
-                        if (!string.IsNullOrEmpty(customPath) && System.IO.Directory.Exists(customPath))
-                        {
-                            return customPath.EndsWith("\\") ? customPath : customPath + "\\";
-                        }
-                    }
-                    catch { }
-                }
-                // Default
-                return APP_LOCATION + $@"\{dailyLogsFolderName}\";
-            }
-        }
-
-        public static void SetCustomLogsFolder(string path)
-        {
-            string customPathFile = System.IO.Path.Combine(APP_LOCATION, "custom_log_path.txt");
-            System.IO.Directory.CreateDirectory(APP_LOCATION);
-            System.IO.File.WriteAllText(customPathFile, path ?? "");
-        }
-
-        public static void ClearCustomLogsFolder()
-        {
-            string customPathFile = System.IO.Path.Combine(APP_LOCATION, "custom_log_path.txt");
-            if (System.IO.File.Exists(customPathFile))
-                System.IO.File.Delete(customPathFile);
-        }
-
-        public static string GetCustomLogsFolderRaw()
-        {
-            string customPathFile = System.IO.Path.Combine(APP_LOCATION, "custom_log_path.txt");
-            if (System.IO.File.Exists(customPathFile))
+            string customPathFile = Path.Combine(APP_LOCATION, CustomLogPathFileName);
+            if (File.Exists(customPathFile))
             {
                 try
                 {
-                    return System.IO.File.ReadAllText(customPathFile).Trim();
+                    string customPath = File.ReadAllText(customPathFile).Trim();
+                    if (!string.IsNullOrEmpty(customPath) && Directory.Exists(customPath))
+                    {
+                        return customPath.EndsWith(Path.DirectorySeparatorChar.ToString()) 
+                            ? customPath 
+                            : customPath + Path.DirectorySeparatorChar;
+                    }
                 }
-                catch { }
+                catch { /* Fallback to default */ }
             }
-            return null;
-        }
-
-        public static string SettingsFolder
-        {
-            get => APP_LOCATION + $@"\{settingsFolder}\";
-        }
-
-        public static string InternalLogsFolder
-        {
-            get => APP_LOCATION + $@"\{internalLogsFolder}\";
-        }
-
-        public static string GetImageCacheLocation(string appName = "")
-        {
-            string location = APP_LOCATION + $@"\{imageCacheFolderName}\";
-            if (appName != "") { location += $"{appName}.ico"; }
-            return location;
-        }
-
-        public static string GetCustomIconsLocation()
-        {
-            return APP_LOCATION + @"\CustomIcons\";
+            return Path.Combine(APP_LOCATION, DailyLogsFolderName) + Path.DirectorySeparatorChar;
         }
     }
 
+    public static void SetCustomLogsFolder(string? path)
+    {
+        string customPathFile = Path.Combine(APP_LOCATION, CustomLogPathFileName);
+        Directory.CreateDirectory(APP_LOCATION);
+        File.WriteAllText(customPathFile, path ?? "");
+    }
+
+    public static void ClearCustomLogsFolder()
+    {
+        string customPathFile = Path.Combine(APP_LOCATION, CustomLogPathFileName);
+        if (File.Exists(customPathFile))
+            File.Delete(customPathFile);
+    }
+
+    public static string? GetCustomLogsFolderRaw()
+    {
+        string customPathFile = Path.Combine(APP_LOCATION, CustomLogPathFileName);
+        if (File.Exists(customPathFile))
+        {
+            try
+            {
+                return File.ReadAllText(customPathFile).Trim();
+            }
+            catch { /* Return null */ }
+        }
+        return null;
+    }
+
+    public static string SettingsFolder => Path.Combine(APP_LOCATION, SettingsFolderName) + Path.DirectorySeparatorChar;
+
+    public static string InternalLogsFolder => Path.Combine(APP_LOCATION, InternalLogsFolderName) + Path.DirectorySeparatorChar;
+
+    public static string GetImageCacheLocation(string appName = "")
+    {
+        string location = Path.Combine(APP_LOCATION, ImageCacheFolderName) + Path.DirectorySeparatorChar;
+        if (!string.IsNullOrEmpty(appName))
+        {
+            location = Path.Combine(location, $"{appName}.ico");
+        }
+        return location;
+    }
+
+    public static string GetCustomIconsLocation() => Path.Combine(APP_LOCATION, "CustomIcons") + Path.DirectorySeparatorChar;
 }
+
