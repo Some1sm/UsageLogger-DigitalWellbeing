@@ -35,11 +35,11 @@ namespace DigitalWellbeingWinUI3.ViewModels
 
         public ObservableCollection<DayTimelineViewModel> Days { get; } = new ObservableCollection<DayTimelineViewModel>();
 
-        public DelegateCommand NextDayCommand { get; }
-        public DelegateCommand PreviousDayCommand { get; }
-        public DelegateCommand TodayCommand { get; }
-        public DelegateCommand ZoomInCommand { get; }
-        public DelegateCommand ZoomOutCommand { get; }
+        public RelayCommand NextDayCommand { get; }
+        public RelayCommand PreviousDayCommand { get; }
+        public RelayCommand TodayCommand { get; }
+        public RelayCommand ZoomInCommand { get; }
+        public RelayCommand ZoomOutCommand { get; }
 
         private double _pixelsPerHour = 60.0;
         public double PixelsPerHour
@@ -121,16 +121,16 @@ namespace DigitalWellbeingWinUI3.ViewModels
         public SessionsViewModel()
         {
             _repository = new AppSessionRepository(ApplicationPath.UsageLogsFolder);
-            NextDayCommand = new DelegateCommand(() => SelectedDate = SelectedDate.AddDays(1));
-            PreviousDayCommand = new DelegateCommand(() => SelectedDate = SelectedDate.AddDays(-1));
-            TodayCommand = new DelegateCommand(() => SelectedDate = DateTime.Now);
+            NextDayCommand = new RelayCommand(_ => SelectedDate = SelectedDate.AddDays(1));
+            PreviousDayCommand = new RelayCommand(_ => SelectedDate = SelectedDate.AddDays(-1));
+            TodayCommand = new RelayCommand(_ => SelectedDate = DateTime.Now);
             
-            ZoomInCommand = new DelegateCommand(() => 
+            ZoomInCommand = new RelayCommand(_ => 
             {
                 if (PixelsPerHour < 3600) PixelsPerHour *= 1.5;
             });
             
-            ZoomOutCommand = new DelegateCommand(() => 
+            ZoomOutCommand = new RelayCommand(_ => 
             {
                 if (PixelsPerHour > 40) PixelsPerHour /= 1.5;
             });

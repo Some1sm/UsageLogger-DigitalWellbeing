@@ -1,5 +1,6 @@
 using DigitalWellbeing.Core;
 using DigitalWellbeing.Core.Data;
+using DigitalWellbeing.Core.Helpers;
 using DigitalWellbeing.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -112,11 +113,11 @@ namespace DigitalWellbeingWinUI3.ViewModels
 
             // 3. AFK Time
             var afkTime = TimeSpan.FromSeconds(sorted.Where(s => s.IsAfk).Sum(s => s.Duration.TotalSeconds));
-            Stats.Add(new StatItem("\uE916", FormatDuration(afkTime), "AFK Time", "Time spent away from keyboard"));
+            Stats.Add(new StatItem("\uE916", StringHelper.FormatDurationCompact(afkTime), "AFK Time", "Time spent away from keyboard"));
 
             // 4. Active Time (non-AFK)
             var activeTime = TimeSpan.FromSeconds(sorted.Where(s => !s.IsAfk).Sum(s => s.Duration.TotalSeconds));
-            Stats.Add(new StatItem("\uE770", FormatDuration(activeTime), "Active Time", "Time actively using PC"));
+            Stats.Add(new StatItem("\uE770", StringHelper.FormatDurationCompact(activeTime), "Active Time", "Time actively using PC"));
 
             // 5. Longest Session
             var longest = sorted.Where(s => !s.IsAfk).OrderByDescending(s => s.Duration).FirstOrDefault();
@@ -124,7 +125,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
             {
                 string appName = string.IsNullOrEmpty(longest.ProgramName) ? longest.ProcessName : longest.ProgramName;
                 if (appName.Length > 20) appName = appName.Substring(0, 20) + "...";
-                Stats.Add(new StatItem("\uE768", FormatDuration(longest.Duration), "Longest Session", appName));
+                Stats.Add(new StatItem("\uE768", StringHelper.FormatDurationCompact(longest.Duration), "Longest Session", appName));
             }
 
             // 6. Most Used App
@@ -136,7 +137,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
             if (topApp != null)
             {
                 var topDuration = TimeSpan.FromSeconds(topApp.Sum(s => s.Duration.TotalSeconds));
-                Stats.Add(new StatItem("\uE734", FormatDuration(topDuration), "Top App", topApp.Key));
+                Stats.Add(new StatItem("\uE734", StringHelper.FormatDurationCompact(topDuration), "Top App", topApp.Key));
             }
 
             // 7. Unique Apps Used
@@ -171,7 +172,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 var siteDuration = TimeSpan.FromSeconds(browserSessions.Sum(s => s.Duration.TotalSeconds));
                 string siteName = browserSessions.Key;
                 if (siteName.Length > 25) siteName = siteName.Substring(0, 25) + "...";
-                Stats.Add(new StatItem("\uE774", FormatDuration(siteDuration), "Top Website", siteName));
+                Stats.Add(new StatItem("\uE774", StringHelper.FormatDurationCompact(siteDuration), "Top Website", siteName));
             }
 
             // 10. Top Category (by AppTag)
@@ -184,18 +185,8 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 .FirstOrDefault();
             if (categoryDurations != null)
             {
-                Stats.Add(new StatItem("\uE8EC", Helpers.AppTagHelper.GetTagDisplayName(categoryDurations.Tag), "Top Category", FormatDuration(categoryDurations.Duration)));
+                Stats.Add(new StatItem("\uE8EC", Helpers.AppTagHelper.GetTagDisplayName(categoryDurations.Tag), "Top Category", StringHelper.FormatDurationCompact(categoryDurations.Duration)));
             }
-        }
-
-        private string FormatDuration(TimeSpan t)
-        {
-            if (t.TotalHours >= 1)
-                return $"{(int)t.TotalHours}h {t.Minutes}m";
-            else if (t.TotalMinutes >= 1)
-                return $"{t.Minutes}m {t.Seconds}s";
-            else
-                return $"{t.Seconds}s";
         }
     }
 

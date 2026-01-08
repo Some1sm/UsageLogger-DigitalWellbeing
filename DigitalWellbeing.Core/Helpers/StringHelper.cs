@@ -28,6 +28,27 @@ namespace DigitalWellbeing.Core.Helpers
             return $"{duration.Hours}h {duration.Minutes}m";
         }
 
+        /// <summary>
+        /// Formats duration as "Xh Ym Zs" - full format for tooltips.
+        /// </summary>
+        public static string FormatDurationFull(TimeSpan t)
+        {
+            return $"{(int)t.TotalHours}h {t.Minutes}m {t.Seconds}s";
+        }
+
+        /// <summary>
+        /// Formats duration as "Xh Ym" or "Ym Zs" - compact format for UI labels.
+        /// </summary>
+        public static string FormatDurationCompact(TimeSpan t)
+        {
+            if (t.TotalHours >= 1)
+                return $"{(int)t.TotalHours}h {t.Minutes}m";
+            else if (t.TotalMinutes >= 1)
+                return $"{t.Minutes}m {t.Seconds}s";
+            else
+                return $"{t.Seconds}s";
+        }
+
         public static string ShortenBytes(ulong bytes)
         {
             ulong MB = bytes / 1048576;

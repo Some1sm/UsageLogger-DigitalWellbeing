@@ -3,6 +3,7 @@ using DigitalWellbeingWinUI3.Helpers;
 using DigitalWellbeingWinUI3.Models;
 using DigitalWellbeing.Core;
 using DigitalWellbeing.Core.Data;
+using DigitalWellbeing.Core.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -147,14 +148,14 @@ namespace DigitalWellbeingWinUI3.ViewModels
             set { if (_isLoading != value) { _isLoading = value; OnPropertyChanged(); } }
         }
 
-        public DelegateCommand GenerateChartCommand { get; }
+        public RelayCommand GenerateChartCommand { get; }
 
         public HistoryViewModel()
         {
             // ChartSeries = new ObservableCollection<ISeries>(); // Removed
             TrendData = new ObservableCollection<BarChartItem>();
             HeatMapData = new ObservableCollection<HeatmapDataPoint>();
-            GenerateChartCommand = new DelegateCommand(GenerateChart);
+            GenerateChartCommand = new RelayCommand(_ => GenerateChart());
             
             // Apply initial date range (Last Week) without triggering chart generation yet
             ApplyDateRangeWithoutGenerate();
@@ -425,7 +426,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
                     double topAppMinutes = topApp.Value;
 
                     string timeStr = $"{h:D2}:00";
-                    string totalStr = FormatDuration(val);
+                    string totalStr = StringHelper.FormatDurationCompact(TimeSpan.FromMinutes(val));
                     string tooltip = $"{dayNames[d]} at {timeStr} • {totalStr} • Top: {topAppName}";
 
                     heatmapPoints.Add(new HeatmapDataPoint
@@ -476,7 +477,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
 
             // Calculate KPIs
             double currentTotal = dailyTotals.Values.Sum();
-            TotalHoursText = FormatDuration(currentTotal);
+            TotalHoursText = StringHelper.FormatDurationFull(TimeSpan.FromMinutes(currentTotal));
             
             if (prevTotal > 0)
             {
@@ -597,7 +598,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
                         Name = AppTagHelper.GetTagDisplayName(kvp.Key),
                         Value = kvp.Value,
                         Percentage = percentage,
-                        FormattedValue = FormatDuration(kvp.Value),
+                        FormattedValue = StringHelper.FormatDurationFull(TimeSpan.FromMinutes(kvp.Value)),
                         Fill = brush
                     });
                 }
@@ -610,7 +611,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
                         Name = AppTagHelper.GetTagDisplayName(kvp.Key),
                         Value = kvp.Value,
                         Percentage = percentage,
-                        FormattedValue = FormatDuration(kvp.Value),
+                        FormattedValue = StringHelper.FormatDurationFull(TimeSpan.FromMinutes(kvp.Value)),
                         Fill = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Gray)
                     });
                 }
@@ -662,7 +663,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
                     Name = TruncateName(UserPreferences.GetDisplayName(kvp.Key)),
                     Value = kvp.Value,
                     Percentage = percentage,
-                    FormattedValue = FormatDuration(kvp.Value),
+                    FormattedValue = StringHelper.FormatDurationFull(TimeSpan.FromMinutes(kvp.Value)),
                     Fill = brush
                 });
                 colorIndex++;
@@ -761,7 +762,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
                     Name = TruncateName(kvp.Value.DisplayName),
                     Value = kvp.Value.Minutes,
                     Percentage = percentage,
-                    FormattedValue = FormatDuration(kvp.Value.Minutes),
+                    FormattedValue = StringHelper.FormatDurationFull(TimeSpan.FromMinutes(kvp.Value.Minutes)),
                     Fill = brush
                 });
                 colorIndex++;
@@ -777,20 +778,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
             return name.Substring(0, maxLength - 3) + "...";
         }
 
-        private string FormatDuration(double totalMinutes)
-        {
-            TimeSpan t = TimeSpan.FromMinutes(totalMinutes);
-            if (t.TotalHours >= 1)
-                return $"{(int)t.TotalHours}h {t.Minutes}m {t.Seconds}s";
-            else
-                return $"{t.Minutes}m {t.Seconds}s";
-        }
 
-        private string FormatHours(double hours)
-        {
-            TimeSpan t = TimeSpan.FromHours(hours);
-            return $"{(int)t.TotalHours}h {t.Minutes}m {t.Seconds}s";
-        }
 
 
 
@@ -803,29 +791,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
         }
     }
 
-    public class DelegateCommand : System.Windows.Input.ICommand
-    {
-        private readonly Action _action;
 
-        public DelegateCommand(Action action)
-        {
-            _action = action;
-        }
-
-        public bool CanExecute(object parameter)
-        {
-            return true;
-        }
-
-        public void Execute(object parameter)
-        {
-            _action();
-        }
-
-        #pragma warning disable CS0067
-        public event EventHandler CanExecuteChanged;
-        #pragma warning restore CS0067
-    }
 
     public class HeatmapCellData
     {

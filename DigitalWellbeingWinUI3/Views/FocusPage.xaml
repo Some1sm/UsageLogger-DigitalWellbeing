@@ -12,7 +12,7 @@
         <!-- Mode to Icon Converter -->
         <local:FocusModeToIconConverter x:Key="ModeToIconConverter"/>
         <local:FocusModeToColorConverter x:Key="ModeToColorConverter"/>
-        <local:BoolToVisibilityConverter x:Key="BoolToVisConverter"/>
+
     </Page.Resources>
 
     <Grid Padding="24">

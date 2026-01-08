@@ -1,4 +1,5 @@
 using System;
+using DigitalWellbeing.Core.Helpers;
 
 namespace DigitalWellbeingWinUI3.Helpers
 {
@@ -13,8 +14,7 @@ namespace DigitalWellbeingWinUI3.Helpers
         /// </summary>
         public static string FormatHours(double hours)
         {
-            TimeSpan t = TimeSpan.FromHours(hours);
-            return $"{(int)t.TotalHours}h {t.Minutes}m {t.Seconds}s";
+            return StringHelper.FormatDurationFull(TimeSpan.FromHours(hours));
         }
 
         /// <summary>
@@ -22,13 +22,7 @@ namespace DigitalWellbeingWinUI3.Helpers
         /// </summary>
         public static string FormatMinutes(double totalMinutes)
         {
-            TimeSpan t = TimeSpan.FromMinutes(totalMinutes);
-            if (t.TotalHours >= 1)
-                return $"{(int)t.TotalHours}h {t.Minutes}m";
-            else if (t.TotalMinutes >= 1)
-                return $"{t.Minutes}m {t.Seconds}s";
-            else
-                return $"{t.Seconds}s";
+            return StringHelper.FormatDurationCompact(TimeSpan.FromMinutes(totalMinutes));
         }
     }
 }

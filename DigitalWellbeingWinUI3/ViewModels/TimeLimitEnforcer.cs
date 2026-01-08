@@ -1,4 +1,5 @@
 using DigitalWellbeingWinUI3.Helpers;
+using DigitalWellbeing.Core.Helpers;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Windows.AppNotifications;
@@ -93,7 +94,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
             var dialog = new ContentDialog
             {
                 Title = "⏰ Time Limit Exceeded",
-                Content = $"You've spent {FormatDuration(usage)} on '{displayName}'.\n\nYour limit was {FormatDuration(limit)}.",
+                Content = $"You've spent {StringHelper.FormatDurationCompact(usage)} on '{displayName}'.\n\nYour limit was {StringHelper.FormatDurationCompact(limit)}.",
                 PrimaryButtonText = "Ignore",
                 SecondaryButtonText = "+5 min",
                 CloseButtonText = "Close App",
@@ -136,7 +137,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
             {
                 var builder = new AppNotificationBuilder()
                     .AddText($"⏰ Time Limit Exceeded: {appName}")
-                    .AddText($"You've spent {FormatDuration(usage)} (limit: {FormatDuration(limit)})");
+                    .AddText($"You've spent {StringHelper.FormatDurationCompact(usage)} (limit: {StringHelper.FormatDurationCompact(limit)})");
 
                 var notification = builder.BuildNotification();
                 AppNotificationManager.Default.Show(notification);
@@ -175,12 +176,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
             }
         }
 
-        private static string FormatDuration(TimeSpan ts)
-        {
-            if (ts.TotalHours >= 1)
-                return $"{(int)ts.TotalHours}h {ts.Minutes}m";
-            return $"{ts.Minutes}m";
-        }
+
         
         /// <summary>
         /// Allows manually resetting the notification state (e.g., for testing).
