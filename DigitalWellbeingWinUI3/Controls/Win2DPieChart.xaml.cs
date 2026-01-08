@@ -37,8 +37,8 @@ namespace DigitalWellbeingWinUI3.Controls
         private void Win2DPieChart_Unloaded(object sender, RoutedEventArgs e)
         {
             Microsoft.UI.Xaml.Media.CompositionTarget.Rendering -= CompositionTarget_Rendering;
-            Canvas.RemoveFromVisualTree();
-            Canvas = null;
+            // Canvas.RemoveFromVisualTree();
+            // Canvas = null;
         }
 
         private void CompositionTarget_Rendering(object sender, object e)

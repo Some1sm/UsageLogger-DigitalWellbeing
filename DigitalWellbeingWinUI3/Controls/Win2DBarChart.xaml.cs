@@ -22,13 +22,37 @@ namespace DigitalWellbeingWinUI3.Controls
         {
             this.InitializeComponent();
             this.Unloaded += Win2DBarChart_Unloaded;
+            this.Loaded += Win2DBarChart_Loaded;
+            this.SizeChanged += Win2DBarChart_SizeChanged;
+        }
+
+        private void Win2DBarChart_Loaded(object sender, RoutedEventArgs e)
+        {
+             // Ensure canvas redraws when coming back from cached state
+             // Use DispatcherQueue to delay the invalidation, ensuring layout is complete
+             DispatcherQueue?.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+             {
+                 Canvas?.Invalidate();
+             });
+        }
+
+        private void Win2DBarChart_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            // Force redraw when size changes (e.g., layout pass completes)
+            Canvas?.Invalidate();
         }
 
         private void Win2DBarChart_Unloaded(object sender, RoutedEventArgs e)
         {
-            Canvas.RemoveFromVisualTree();
-            Canvas = null;
+            // Unsubscribe from collection changes if subscribed
+            if (_subscribedCollection != null)
+            {
+                _subscribedCollection.CollectionChanged -= OnCollectionChanged;
+                _subscribedCollection = null;
+            }
         }
+
+        private System.Collections.Specialized.INotifyCollectionChanged _subscribedCollection;
 
         public static readonly DependencyProperty ItemsSourceProperty =
             DependencyProperty.Register(nameof(ItemsSource), typeof(IEnumerable<BarChartItem>), typeof(Win2DBarChart), new PropertyMetadata(null, OnItemsSourceChanged));
@@ -41,10 +65,31 @@ namespace DigitalWellbeingWinUI3.Controls
 
         private static void OnItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is Win2DBarChart chart && chart.Canvas != null)
+            if (d is Win2DBarChart chart)
             {
-                chart.Canvas.Invalidate();
+                // Unsubscribe from old collection
+                if (chart._subscribedCollection != null)
+                {
+                    chart._subscribedCollection.CollectionChanged -= chart.OnCollectionChanged;
+                    chart._subscribedCollection = null;
+                }
+
+                // Subscribe to new collection if it's observable
+                if (e.NewValue is System.Collections.Specialized.INotifyCollectionChanged newCollection)
+                {
+                    newCollection.CollectionChanged += chart.OnCollectionChanged;
+                    chart._subscribedCollection = newCollection;
+                }
+
+                // Invalidate immediately if canvas is ready
+                chart.Canvas?.Invalidate();
             }
+        }
+
+        private void OnCollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            // Redraw when items are added/removed from the observable collection
+            Canvas?.Invalidate();
         }
 
         public static readonly DependencyProperty TargetLineValueProperty =

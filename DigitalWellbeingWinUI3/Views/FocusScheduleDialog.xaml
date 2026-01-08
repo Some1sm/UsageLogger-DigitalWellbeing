@@ -43,8 +43,9 @@
             <TimePicker x:Name="StartTimePicker" Header="Start Time" Grid.Column="0"/>
             <NumberBox x:Name="DurationBox" Header="Duration (minutes)" 
                        Grid.Column="2" 
-                       Value="60" Minimum="5" Maximum="480"
-                       SpinButtonPlacementMode="Inline"/>
+                       Value="60" Minimum="1" Maximum="480"
+                       SpinButtonPlacementMode="Inline"
+                       Width="150"/>
         </Grid>
 
         <!-- Days -->

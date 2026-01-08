@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace DigitalWellbeingWinUI3.Models
 {
@@ -27,8 +29,15 @@ namespace DigitalWellbeingWinUI3.Models
     /// <summary>
     /// Represents a scheduled focus block where the user commits to using a specific app.
     /// </summary>
-    public class FocusSession
+    public class FocusSession : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         public string Id { get; set; } = Guid.NewGuid().ToString();
         
         /// <summary>
@@ -72,10 +81,22 @@ namespace DigitalWellbeingWinUI3.Models
         /// </summary>
         public FocusMode Mode { get; set; } = FocusMode.Normal;
 
+        private bool _isEnabled = true;
         /// <summary>
         /// Whether this session is currently active (user can toggle on/off).
         /// </summary>
-        public bool IsEnabled { get; set; } = true;
+        public bool IsEnabled
+        {
+            get => _isEnabled;
+            set
+            {
+                if (_isEnabled != value)
+                {
+                    _isEnabled = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// Calculates whether the current time falls within this session.

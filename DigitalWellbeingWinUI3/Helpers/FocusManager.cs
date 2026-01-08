@@ -387,7 +387,7 @@ namespace DigitalWellbeingWinUI3.Helpers
         /// </summary>
         public async Task<List<string>> GetHistoricalAppNamesAsync()
         {
-            return await Task.Run(() =>
+            return await Task.Run(async () =>
             {
                 // Try to load from cache first
                 if (_knownAppsCache == null)
@@ -399,7 +399,7 @@ namespace DigitalWellbeingWinUI3.Helpers
                 if (_knownAppsCache.Count == 0)
                 {
                     Debug.WriteLine("[FocusManager] Cache empty, scanning last 30 days...");
-                    ScanAndCacheApps(30);
+                    await ScanAndCacheAppsAsync(30);
                 }
 
                 return _knownAppsCache.OrderBy(a => a).ToList();
@@ -456,7 +456,7 @@ namespace DigitalWellbeingWinUI3.Helpers
         /// <summary>
         /// Scans the last N days of logs and updates the cache.
         /// </summary>
-        private void ScanAndCacheApps(int days)
+        private async Task ScanAndCacheAppsAsync(int days)
         {
             try
             {
@@ -465,7 +465,7 @@ namespace DigitalWellbeingWinUI3.Helpers
 
                 for (int i = 0; i < days; i++)
                 {
-                    var sessions = repo.GetSessionsForDate(DateTime.Now.AddDays(-i));
+                    var sessions = await repo.GetSessionsForDateAsync(DateTime.Now.AddDays(-i));
                     foreach (var s in sessions)
                     {
                         if (!string.IsNullOrEmpty(s.ProcessName))

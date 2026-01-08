@@ -846,42 +846,46 @@ public class AppUsageViewModel : INotifyPropertyChanged
 		return true;
 	}
 
-	public static async Task<List<AppUsage>> GetData(DateTime date)
-	{
-		return await Task.Run(delegate
-		{
-			Dictionary<string, AppUsage> dictionary = new Dictionary<string, AppUsage>();
-			foreach (AppSession item in new AppSessionRepository(folderPath).GetSessionsForDate(date))
-			{
-				if (!dictionary.ContainsKey(item.ProcessName))
-				{
-					dictionary[item.ProcessName] = new AppUsage(item.ProcessName, item.ProgramName, TimeSpan.Zero);
-				}
-				dictionary[item.ProcessName].Duration = dictionary[item.ProcessName].Duration.Add(item.Duration);
-				if (string.IsNullOrEmpty(dictionary[item.ProcessName].ProgramName) && !string.IsNullOrEmpty(item.ProgramName))
-				{
-					dictionary[item.ProcessName].ProgramName = item.ProgramName;
-				}
-				string key = ((!string.IsNullOrEmpty(item.ProgramName)) ? item.ProgramName : item.ProcessName);
-				if (dictionary[item.ProcessName].ProgramBreakdown.ContainsKey(key))
-				{
-					dictionary[item.ProcessName].ProgramBreakdown[key] = dictionary[item.ProcessName].ProgramBreakdown[key].Add(item.Duration);
-				}
-				else
-				{
-					dictionary[item.ProcessName].ProgramBreakdown[key] = item.Duration;
-				}
-			}
-			return dictionary.Values.ToList();
-		});
-	}
+	        public static async Task<List<AppUsage>> GetData(DateTime date)
+        {
+            var sessions = await new AppSessionRepository(folderPath).GetSessionsForDateAsync(date);
+
+            return await Task.Run(() =>
+            {
+                Dictionary<string, AppUsage> dictionary = new Dictionary<string, AppUsage>();
+                foreach (AppSession item in sessions)
+                {
+                    if (!dictionary.ContainsKey(item.ProcessName))
+                    {
+                        dictionary[item.ProcessName] = new AppUsage(item.ProcessName, item.ProgramName, TimeSpan.Zero);
+                    }
+                    dictionary[item.ProcessName].Duration = dictionary[item.ProcessName].Duration.Add(item.Duration);
+                    if (string.IsNullOrEmpty(dictionary[item.ProcessName].ProgramName) && !string.IsNullOrEmpty(item.ProgramName))
+                    {
+                        dictionary[item.ProcessName].ProgramName = item.ProgramName;
+                    }
+                    string key = ((!string.IsNullOrEmpty(item.ProgramName)) ? item.ProgramName : item.ProcessName);
+                    if (dictionary[item.ProcessName].ProgramBreakdown.ContainsKey(key))
+                    {
+                        dictionary[item.ProcessName].ProgramBreakdown[key] = dictionary[item.ProcessName].ProgramBreakdown[key].Add(item.Duration);
+                    }
+                    else
+                    {
+                        dictionary[item.ProcessName].ProgramBreakdown[key] = item.Duration;
+                    }
+                }
+                return dictionary.Values.ToList();
+            });
+        }
 
 	public static async Task<List<AppUsage>> GetBackgroundAudioData(DateTime date)
 	{
-		return await Task.Run(delegate
+        var sessions = await new AppSessionRepository(folderPath).GetSessionsForDateAsync(date);
+
+		return await Task.Run(() =>
 		{
 			Dictionary<string, TimeSpan> dictionary = new Dictionary<string, TimeSpan>();
-			foreach (AppSession item in new AppSessionRepository(folderPath).GetSessionsForDate(date))
+			foreach (AppSession item in sessions)
 			{
 				if (item.AudioSources != null && item.AudioSources.Count != 0)
 				{

@@ -1,32 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
+﻿using DigitalWellbeing.Core;
+using DigitalWellbeing.Core.Data;
+using System;
 using System.Threading.Tasks;
 
-namespace DigitalWellbeingService
-{
-    class Program
-    {
-        [STAThread]
-        static void Main(string[] args)
-        {
-            ActivityLogger _al = new ActivityLogger();
-            Helpers.ServiceLogger.Log("Service", "Service started successfully.");
+namespace DigitalWellbeingService;
 
-            while (true)
+class Program
+{
+    [STAThread]
+    static async Task Main(string[] args)
+    {
+        // Composition Root
+        string logsPath = ApplicationPath.UsageLogsFolder;
+        
+        var sessionsRepo = new AppSessionRepository(logsPath);
+        var usageRepo = new AppUsageRepository(logsPath);
+        
+        var sessionManager = new SessionManager(sessionsRepo);
+        var activityLogger = new ActivityLogger(usageRepo, sessionManager);
+
+        Helpers.ServiceLogger.Log("Service", "Service started successfully (Async Mode).");
+
+        // Main Loop
+        while (true)
+        {
+            try
             {
-                try
-                {
-                    _al.OnTimer();
-                }
-                catch (Exception ex)
-                {
-                    Helpers.ServiceLogger.LogError("OnTimer", ex);
-                }
-                Thread.Sleep(ActivityLogger.TIMER_INTERVAL_SEC * 1000);
+                await activityLogger.OnTimerAsync();
             }
+            catch (Exception ex)
+            {
+                Helpers.ServiceLogger.LogError("OnTimer", ex);
+            }
+            await Task.Delay(ActivityLogger.TIMER_INTERVAL_SEC * 1000);
         }
     }
 }

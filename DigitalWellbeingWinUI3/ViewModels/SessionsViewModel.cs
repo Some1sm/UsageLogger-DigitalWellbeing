@@ -191,9 +191,9 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 // and previous items go back in time. Preserves Left->Right chronological order.
                 DateTime targetDate = currentSelection.Date.AddDays(i - (daysToShow - 1));
                 
-                tasks.Add(Task.Run(() => 
+                tasks.Add(Task.Run(async () => 
                 {
-                    var sessions = _repository.GetSessionsForDate(targetDate);
+                    var sessions = await _repository.GetSessionsForDateAsync(targetDate);
                     // Filter out excluded processes
                     sessions = sessions.Where(s => !AppUsageViewModel.IsProcessExcluded(s.ProcessName)).ToList();
                     return (targetDate, sessions);
@@ -264,7 +264,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
             var todayVM = Days.FirstOrDefault(d => d.IsToday);
             if (todayVM != null)
             {
-                var sessions = await Task.Run(() => _repository.GetSessionsForDate(DateTime.Now));
+                var sessions = await _repository.GetSessionsForDateAsync(DateTime.Now);
                 // Filter out excluded processes
                 sessions = sessions.Where(s => !AppUsageViewModel.IsProcessExcluded(s.ProcessName)).ToList();
                 todayVM.LoadSessions(sessions, PixelsPerHour);

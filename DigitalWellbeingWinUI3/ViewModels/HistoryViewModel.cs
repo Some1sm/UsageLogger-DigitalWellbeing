@@ -316,7 +316,8 @@ namespace DigitalWellbeingWinUI3.ViewModels
 
         private async Task<List<AppSession>> LoadSessionsForDateRange(DateTime start, DateTime end)
         {
-            return await Task.Run(() =>
+            // We use Task.Run to ensure the loop and list range operations don't block UI if large
+            return await Task.Run(async () =>
             {
                 List<AppSession> total = new List<AppSession>();
                 string folder = ApplicationPath.UsageLogsFolder;
@@ -324,7 +325,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
 
                 for (DateTime date = start; date <= end; date = date.AddDays(1))
                 {
-                    var sessions = repo.GetSessionsForDate(date);
+                    var sessions = await repo.GetSessionsForDateAsync(date);
                     total.AddRange(sessions);
                 }
                 return total;

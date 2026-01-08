@@ -83,7 +83,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
             Stats.Clear();
 
             var targetDate = SelectedDate?.Date ?? DateTime.Today;
-            var sessions = await Task.Run(() => _repository.GetSessionsForDate(targetDate));
+            var sessions = await _repository.GetSessionsForDateAsync(targetDate);
             if (sessions == null || sessions.Count == 0)
             {
                 Stats.Add(new StatItem("\uE8B7", "No Data", "Start using your PC to see stats!", ""));
