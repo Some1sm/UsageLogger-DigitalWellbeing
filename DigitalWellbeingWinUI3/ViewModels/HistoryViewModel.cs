@@ -328,6 +328,20 @@ namespace DigitalWellbeingWinUI3.ViewModels
                     var sessions = await repo.GetSessionsForDateAsync(date);
                     total.AddRange(sessions);
                 }
+
+                // RETROACTIVE RULE APPLICATION:
+                if (UserPreferences.CustomTitleRules != null && UserPreferences.CustomTitleRules.Count > 0)
+                {
+                    foreach (var s in total)
+                    {
+                        s.ProgramName = DigitalWellbeing.Core.Helpers.WindowTitleParser.Parse(
+                            s.ProcessName, 
+                            s.ProgramName, 
+                            UserPreferences.CustomTitleRules
+                        );
+                    }
+                }
+
                 return total;
             });
         }

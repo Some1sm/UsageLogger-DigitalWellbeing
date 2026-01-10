@@ -855,6 +855,18 @@ public class AppUsageViewModel : INotifyPropertyChanged
                 Dictionary<string, AppUsage> dictionary = new Dictionary<string, AppUsage>();
                 foreach (AppSession item in sessions)
                 {
+                    // RETROACTIVE RULE APPLICATION:
+                    // Re-parse the ProgramName using current rules. This allows users to see
+                    // changes immediately after adding a rule, even for past sessions.
+                    if (UserPreferences.CustomTitleRules != null && UserPreferences.CustomTitleRules.Count > 0)
+                    {
+                        item.ProgramName = DigitalWellbeing.Core.Helpers.WindowTitleParser.Parse(
+                            item.ProcessName, 
+                            item.ProgramName, 
+                            UserPreferences.CustomTitleRules
+                        );
+                    }
+
                     if (!dictionary.ContainsKey(item.ProcessName))
                     {
                         dictionary[item.ProcessName] = new AppUsage(item.ProcessName, item.ProgramName, TimeSpan.Zero);

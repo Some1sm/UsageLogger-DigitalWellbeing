@@ -102,6 +102,19 @@ namespace DigitalWellbeingWinUI3.ViewModels
 
         public void LoadSessions(List<AppSession> sessions, double pixelsPerHour)
         {
+            // RETROACTIVE RULE APPLICATION:
+            if (UserPreferences.CustomTitleRules != null && UserPreferences.CustomTitleRules.Count > 0)
+            {
+                foreach (var s in sessions)
+                {
+                    s.ProgramName = DigitalWellbeing.Core.Helpers.WindowTitleParser.Parse(
+                        s.ProcessName, 
+                        s.ProgramName, 
+                        UserPreferences.CustomTitleRules
+                    );
+                }
+            }
+
             _cachedSessions = sessions;
             RefreshSessionLayout(pixelsPerHour);
             UpdateCurrentTime(pixelsPerHour);

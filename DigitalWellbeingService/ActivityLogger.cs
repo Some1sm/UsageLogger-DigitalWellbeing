@@ -30,21 +30,49 @@ public class ActivityLogger
 
     private int GetBufferFlushInterval()
     {
-        // Re-check settings file every 30 seconds
-        if ((DateTime.Now - _lastSettingsRead).TotalSeconds < 30)
-            return _bufferFlushIntervalSec;
+        // Check file timestamp every loop (cheap) to detect changes instantly
+        if (File.Exists(_settingsPath))
+        {
+            var currentWriteTime = File.GetLastWriteTime(_settingsPath);
+            if (currentWriteTime != _lastFileWriteTime)
+            {
+                // File changed! Force read immediately (bypass 30s throttle)
+                _lastFileWriteTime = currentWriteTime;
+                _lastSettingsRead = DateTime.Now; // Update read time so we don't re-read in the throttle block if we just read it
+                
+                // Continue to read logic...
+            }
+            else
+            {
+                 // File hasn't changed. Check if we should re-read anyway based on timer?
+                 // No, if file hasn't changed, no need to read.
+                 // BUT we still need to respect the 30s throttle for other reasons? 
+                 // Actually, if file hasn't changed, we NEVER need to read it.
+                 // So we can just return cached value.
+                 
+                 // However, to be safe and mimicking old behavior (maybe external change without timestamp change? unlikely):
+                 if ((DateTime.Now - _lastSettingsRead).TotalSeconds < 30)
+                     return _bufferFlushIntervalSec;
+                 
+                 // If > 30s, we might check again (redundant if we trust timestamp, but harmless)
+                 _lastSettingsRead = DateTime.Now;
+            }
+        }
+        else
+        {
+             if ((DateTime.Now - _lastSettingsRead).TotalSeconds < 30)
+                return _bufferFlushIntervalSec;
+             _lastSettingsRead = DateTime.Now;
+        }
 
-        _lastSettingsRead = DateTime.Now;
-        
         try
         {
             if (!File.Exists(_settingsPath)) return _bufferFlushIntervalSec;
 
-            var currentWriteTime = File.GetLastWriteTime(_settingsPath);
-            if (currentWriteTime == _lastFileWriteTime) return _bufferFlushIntervalSec;
-            _lastFileWriteTime = currentWriteTime;
-
+            // _lastFileWriteTime is already updated above if changed
+            
             string json;
+
             using (var fs = new FileStream(_settingsPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             using (var sr = new StreamReader(fs))
             {
