@@ -491,16 +491,22 @@ namespace DigitalWellbeingWinUI3.Views
             if (_currentSubItem == null) return;
             
             string title = _currentSubItem.Title;
-            string key = $"{_currentSubItem.ParentProcessName}|{title}";
+            string processName = _currentSubItem.ParentProcessName;
             
-            // Get current display name if one exists
-            string currentDisplayName = UserPreferences.GetTitleDisplayName(key);
-            bool hasCustomName = currentDisplayName != title;
+            // Check if a rule already exists for this exact title
+            // We assume a rule created by this UI matches: Regex Escaped Title
+            string matchPattern = $"^{System.Text.RegularExpressions.Regex.Escape(title)}$";
+            
+            var existingRule = DigitalWellbeingWinUI3.Helpers.UserPreferences.CustomTitleRules?
+                .FirstOrDefault(r => r.ProcessName == processName && r.MatchPattern == matchPattern);
+
+            string currentDisplayName = existingRule != null ? existingRule.Replacement : title;
+            bool hasCustomRule = existingRule != null;
             
             var inputTextBox = new TextBox 
             { 
                 PlaceholderText = $"Enter display name for '{title}'", 
-                Text = hasCustomName ? currentDisplayName : ""
+                Text = hasCustomRule ? currentDisplayName : ""
             };
             
             var dialog = new ContentDialog
@@ -517,11 +523,21 @@ namespace DigitalWellbeingWinUI3.Views
                             Margin = new Microsoft.UI.Xaml.Thickness(0, 0, 0, 12),
                             Opacity = 0.7
                         },
-                        inputTextBox
+                        inputTextBox,
+                        
+                        // Hint about advanced rules
+                        new TextBlock
+                        {
+                            Text = "This will create a custom title rule. For more advanced matching (like 'Contains' or 'Regex'), use Settings > Custom Title Rules.",
+                            FontSize = 11,
+                            Opacity = 0.5,
+                            Margin = new Microsoft.UI.Xaml.Thickness(0, 10, 0, 0),
+                            TextWrapping = Microsoft.UI.Xaml.TextWrapping.Wrap
+                        }
                     }
                 },
                 PrimaryButtonText = "Save",
-                SecondaryButtonText = hasCustomName ? "Remove" : "Cancel",
+                SecondaryButtonText = hasCustomRule ? "Remove Rule" : "Cancel",
                 CloseButtonText = "Cancel",
                 XamlRoot = this.XamlRoot
             };
@@ -532,17 +548,33 @@ namespace DigitalWellbeingWinUI3.Views
                 string newDisplayName = inputTextBox.Text.Trim();
                 if (!string.IsNullOrWhiteSpace(newDisplayName) && newDisplayName != title)
                 {
-                    UserPreferences.SetTitleDisplayName(key, newDisplayName);
+                    // Create (or Update) Rule
+                    // Remove existing if any to avoid duplicates logic
+                    if (existingRule != null) 
+                    {
+                        UserPreferences.RemoveCustomTitleRule(processName, matchPattern);
+                    }
+
+                    var newRule = new DigitalWellbeing.Core.Models.CustomTitleRule
+                    {
+                        ProcessName = processName,
+                        MatchPattern = matchPattern,
+                        Replacement = newDisplayName,
+                        IsRegex = true
+                    };
+                    
+                    UserPreferences.AddCustomTitleRule(newRule);
                 }
                 else
                 {
-                    UserPreferences.RemoveTitleDisplayName(key);
+                    // If empty, remove rule
+                    UserPreferences.RemoveCustomTitleRule(processName, matchPattern);
                 }
                 ViewModel.RefreshDayView();
             }
-            else if (result == ContentDialogResult.Secondary && hasCustomName)
+            else if (result == ContentDialogResult.Secondary && hasCustomRule)
             {
-                UserPreferences.RemoveTitleDisplayName(key);
+                UserPreferences.RemoveCustomTitleRule(processName, matchPattern);
                 ViewModel.RefreshDayView();
             }
         }

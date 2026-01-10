@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using System.Linq;
 using DigitalWellbeingWinUI3.Models;
 
 namespace DigitalWellbeingWinUI3.Helpers
@@ -349,6 +350,28 @@ namespace DigitalWellbeingWinUI3.Helpers
             else
             {
                 TitleTimeLimits[key] = totalMins;
+                Save();
+            }
+        }
+
+        public static void AddCustomTitleRule(DigitalWellbeing.Core.Models.CustomTitleRule rule)
+        {
+            if (CustomTitleRules == null) CustomTitleRules = new List<DigitalWellbeing.Core.Models.CustomTitleRule>();
+            CustomTitleRules.Add(rule);
+            Save();
+        }
+
+        public static void RemoveCustomTitleRule(string processName, string matchPattern)
+        {
+            if (CustomTitleRules == null) return;
+            
+            var rule = CustomTitleRules.FirstOrDefault(r => 
+                r.ProcessName == processName && 
+                r.MatchPattern == matchPattern);
+                
+            if (rule != null)
+            {
+                CustomTitleRules.Remove(rule);
                 Save();
             }
         }
