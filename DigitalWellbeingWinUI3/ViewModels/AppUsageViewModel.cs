@@ -92,7 +92,16 @@ public class AppUsageViewModel : INotifyPropertyChanged
 
 	public ObservableCollection<List<AppUsage>> WeekAppUsage { get; set; }
 
-	public ObservableCollection<BarChartItem> WeeklyChartItems { get; set; }
+	private ObservableCollection<BarChartItem> _weeklyChartItems;
+	public ObservableCollection<BarChartItem> WeeklyChartItems
+	{
+		get => _weeklyChartItems;
+		set
+		{
+			_weeklyChartItems = value;
+			OnPropertyChanged("WeeklyChartItems");
+		}
+	}
 
 	public ObservableCollection<PieChartItem> PieChartItems { get; set; }
 
@@ -334,12 +343,13 @@ public class AppUsageViewModel : INotifyPropertyChanged
 			{
 				WeekAppUsage.Add(item3);
 			}
-			WeeklyChartItems.Clear();
+			// Atomic Update: Build list locally first
+			var newWeeklyItems = new ObservableCollection<BarChartItem>();
 			Color colorValue = new UISettings().GetColorValue(UIColorType.Accent);
 			for (int num = 0; num < list2.Count; num++)
 			{
 				var anon = list2[num];
-				WeeklyChartItems.Add(new BarChartItem
+				newWeeklyItems.Add(new BarChartItem
 				{
 					Label = anon.Label,
 					Value = anon.Hours,
@@ -348,6 +358,8 @@ public class AppUsageViewModel : INotifyPropertyChanged
 					Date = anon.Date
 				});
 			}
+			// Assign atomically to trigger single notification
+			WeeklyChartItems = newWeeklyItems;
 			WeeklyChartLabelDates = list5.ToArray();
 			IsWeeklyDataLoaded = true;
 			int num2 = -1;

@@ -18,6 +18,13 @@ namespace DigitalWellbeingWinUI3.Controls
 {
     public sealed partial class Win2DBarChart : UserControl
     {
+        private float _rotationOffset = 0f; // Unused but kept for structure if needed
+        
+        // Per-Bar Animation State
+        // Key: Date String (or Label) -> Start Time
+        private Dictionary<string, DateTime> _animatingBars = new Dictionary<string, DateTime>();
+        private const double ANIMATION_DURATION_MS = 600;
+
         public Win2DBarChart()
         {
             this.InitializeComponent();
@@ -34,6 +41,8 @@ namespace DigitalWellbeingWinUI3.Controls
              {
                  Canvas?.Invalidate();
              });
+             
+             Microsoft.UI.Xaml.Media.CompositionTarget.Rendering += CompositionTarget_Rendering;
         }
 
         private void Win2DBarChart_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -44,12 +53,100 @@ namespace DigitalWellbeingWinUI3.Controls
 
         private void Win2DBarChart_Unloaded(object sender, RoutedEventArgs e)
         {
+            Microsoft.UI.Xaml.Media.CompositionTarget.Rendering -= CompositionTarget_Rendering;
+
             // Unsubscribe from collection changes if subscribed
             if (_subscribedCollection != null)
             {
                 _subscribedCollection.CollectionChanged -= OnCollectionChanged;
                 _subscribedCollection = null;
             }
+        }
+
+        private void CompositionTarget_Rendering(object sender, object e)
+        {
+            if (_animatingBars.Count > 0)
+            {
+                bool anyAnimating = false;
+                List<string> keysToRemove = new List<string>();
+
+                foreach (var kvp in _animatingBars)
+                {
+                    double elapsed = (DateTime.Now - kvp.Value).TotalMilliseconds;
+                    if (elapsed < ANIMATION_DURATION_MS)
+                    {
+                        anyAnimating = true;
+                    }
+                    else
+                    {
+                        keysToRemove.Add(kvp.Key);
+                    }
+                }
+
+                // Cleanup finished animations
+                foreach (var key in keysToRemove)
+                {
+                    _animatingBars.Remove(key);
+                }
+
+                if (anyAnimating || keysToRemove.Count > 0)
+                {
+                    Canvas?.Invalidate();
+                }
+            }
+        }
+        
+        private void SyncAnimations()
+        {
+            if (ItemsSource == null) return;
+
+            var currentKeys = new HashSet<string>();
+            foreach (var item in ItemsSource)
+            {
+                string key = GetItemKey(item);
+                currentKeys.Add(key);
+
+                // If this is a NEW bar we haven't seen in this session (or since it was last removed)
+                // We should check if we should animate it. 
+                // BUT wait, we need to distinguish "First Load" vs "App Running".
+                // Actually, if it's not in our 'displayed' set, we animate it.
+                // WE NEED A 'DISPLAYED KEYS' SET separate from 'ANIMATING KEYS'.
+                
+                // Let's refine: 
+                // We trust the View Model to largely keep keys stable.
+                // If key is NOT in _displayedBars, it's new -> Animate it + Add to _displayedBars.
+                // If key IS in _displayedBars, do nothing.
+                
+                if (!_displayedBars.Contains(key))
+                {
+                    _displayedBars.Add(key);
+                    // Start animation
+                    _animatingBars[key] = DateTime.Now;
+                }
+            }
+            
+            // Prune _displayedBars that are no longer present? 
+            // If we navigate away (Rolling Window), old dates drop off. We should remove them.
+            // So if _displayedBars has keys not in currentKeys, remove them.
+            
+            // Use ToList to avoid modification exception
+            var oldKeys = _displayedBars.Where(k => !currentKeys.Contains(k)).ToList();
+            foreach (var k in oldKeys)
+            {
+                 _displayedBars.Remove(k);
+                 _animatingBars.Remove(k); // Stop animating if removed
+            }
+
+            Canvas?.Invalidate();
+        }
+
+        private HashSet<string> _displayedBars = new HashSet<string>();
+
+        private string GetItemKey(BarChartItem item)
+        {
+            // Use Date if available, else Label
+            if (item.Date.HasValue) return item.Date.Value.ToString("yyyy-MM-dd");
+            return item.Label ?? Guid.NewGuid().ToString();
         }
 
         private System.Collections.Specialized.INotifyCollectionChanged _subscribedCollection;
@@ -81,15 +178,15 @@ namespace DigitalWellbeingWinUI3.Controls
                     chart._subscribedCollection = newCollection;
                 }
 
-                // Invalidate immediately if canvas is ready
-                chart.Canvas?.Invalidate();
+                // Sync Animations instead of full trigger
+                chart.SyncAnimations();
             }
         }
 
         private void OnCollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            // Redraw when items are added/removed from the observable collection
-            Canvas?.Invalidate();
+            // Redraw/Re-animate when items are added/removed from the observable collection
+            SyncAnimations();
         }
 
         public static readonly DependencyProperty TargetLineValueProperty =
@@ -242,13 +339,33 @@ namespace DigitalWellbeingWinUI3.Controls
             for (int i = 0; i < items.Count; i++)
             {
                 var item = items[i];
-                float barHeight = (float)(item.Value / maxVal * chartHeight);
-                if (barHeight < 2 && item.Value > 0) barHeight = 2; // Min height
+                float targetBarHeight = (float)(item.Value / maxVal * chartHeight);
+                if (targetBarHeight < 2 && item.Value > 0) targetBarHeight = 2; // Min height target
+
+                // Apply Animation (Per-Bar)
+                float animationFactor = 1f;
+                string key = GetItemKey(item);
+                if (_animatingBars.TryGetValue(key, out DateTime startTime))
+                {
+                    double elapsed = (DateTime.Now - startTime).TotalMilliseconds;
+                    double t = Math.Clamp(elapsed / ANIMATION_DURATION_MS, 0, 1);
+                    // Cubic Ease Out
+                    animationFactor = 1f - (float)Math.Pow(1 - t, 3);
+                    
+                    // Note: If t >= 1, the Rendering loop will eventually remove it, 
+                    // but for smooth rendering, we calculate it here based on real time.
+                }
+
+                float barHeight = targetBarHeight * animationFactor;
 
                 float x = startX + i * (barWidth + gap);
                 float y = height - marginBottom - barHeight;
 
-                var rect = new Windows.Foundation.Rect(x, y, barWidth, barHeight);
+                // Adjust hit rect to target height (so tooltip works even during animation)
+                // Or maybe animate hit rect too? 
+                // Let's use target height for hit rect so user can hover while it's growing
+                float targetY = height - marginBottom - targetBarHeight;
+                var rect = new Windows.Foundation.Rect(x, targetY, barWidth, targetBarHeight);
                 _barRects.Add(rect);
 
                 // HOVER HIGHLIGHT LOGIC
@@ -263,7 +380,10 @@ namespace DigitalWellbeingWinUI3.Controls
                 
                 // Dynamic corner radius to avoid artifacts on thin bars
                 float radius = Math.Min(4, barWidth / 2);
-                ds.FillRoundedRectangle(rect, radius, radius, barColor);
+                
+                // Draw Animated Bar
+                var drawRect = new Windows.Foundation.Rect(x, y, barWidth, barHeight);
+                ds.FillRoundedRectangle(drawRect, radius, radius, barColor);
 
                 // Only draw label if stride allows (prevents overlap)
                 if (!string.IsNullOrEmpty(item.Label) && i % labelStride == 0)
