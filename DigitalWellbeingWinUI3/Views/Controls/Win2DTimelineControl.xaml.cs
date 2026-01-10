@@ -248,14 +248,8 @@ namespace DigitalWellbeingWinUI3.Views.Controls
                      }
                      else if (viewMode == "Category")
                      {
-                         // Category mode: show tag name
-                         var appTag = AppTagHelper.GetTitleTag(block.ProcessName, block.Title);
-                         if (appTag == DigitalWellbeing.Core.Models.AppTag.Untagged)
-                         {
-                             appTag = AppTagHelper.GetAppTag(block.ProcessName);
-                         }
-                         var tagName = AppTagHelper.GetTagDisplayName(appTag);
-                         title = !string.IsNullOrEmpty(tagName) ? tagName : "Untagged";
+                         // Category mode: block.Title is already set to the tag name by the ViewModel
+                         title = block.Title ?? "Untagged";
                      }
                      else // SubApp (default)
                      {

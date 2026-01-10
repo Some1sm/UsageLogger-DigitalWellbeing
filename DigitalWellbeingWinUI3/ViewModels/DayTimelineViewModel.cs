@@ -261,13 +261,38 @@ namespace DigitalWellbeingWinUI3.ViewModels
 
                 // PREPARE DATA & VIEW MODE LOGIC
                 
+                // Apply retroactive hide filter: if HideSubAppsRetroactively is ON and ProgramName matches
+                // an ignored keyword, treat this session as the parent process
+                string effectiveProgramName = s.ProgramName;
+                if (UserPreferences.ShouldHideSubApp(s.ProgramName))
+                {
+                    effectiveProgramName = s.ProcessName; // Hide sub-app, merge into parent
+                }
+                
                 // 1. Calculate Tag (needed for Category mode and Coloring)
                 AppTag tag;
-                if (!string.IsNullOrEmpty(s.ProgramName))
+                if (!string.IsNullOrEmpty(effectiveProgramName) && 
+                    !effectiveProgramName.Equals(s.ProcessName, StringComparison.OrdinalIgnoreCase))
                 {
-                    int? titleTagId = DigitalWellbeingWinUI3.Helpers.SettingsManager.GetTitleTagId(s.ProcessName, s.ProgramName);
-                    if (titleTagId.HasValue) tag = (AppTag)titleTagId.Value;
-                    else tag = DigitalWellbeingWinUI3.Helpers.AppTagHelper.GetAppTag(s.ProcessName);
+                    // Priority: Title-specific tag > ProgramName tag > Process tag
+                    int? titleTagId = DigitalWellbeingWinUI3.Helpers.SettingsManager.GetTitleTagId(s.ProcessName, effectiveProgramName);
+                    if (titleTagId.HasValue)
+                    {
+                        tag = (AppTag)titleTagId.Value;
+                    }
+                    else
+                    {
+                        // Try to get tag for ProgramName (e.g., "YouTube" might have its own tag)
+                        var programTag = DigitalWellbeingWinUI3.Helpers.AppTagHelper.GetAppTag(effectiveProgramName);
+                        if (programTag != AppTag.Untagged)
+                        {
+                            tag = programTag; // Use ProgramName's tag
+                        }
+                        else
+                        {
+                            tag = DigitalWellbeingWinUI3.Helpers.AppTagHelper.GetAppTag(s.ProcessName); // Fallback to process
+                        }
+                    }
                 }
                 else
                 {
@@ -283,7 +308,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 
                 if (ViewMode == "Category")
                 {
-                    // Merge by Tag Name
+                    // Use the calculated tag (respects sub-app tags like YouTube → Entertainment)
                     string tagName = DigitalWellbeingWinUI3.Helpers.AppTagHelper.GetTagDisplayName(tag);
                     if (string.IsNullOrEmpty(tagName)) tagName = "Untagged";
                     
@@ -293,27 +318,23 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 else if (ViewMode == "App")
                 {
                     // Merge by ProcessName, Title is Display Name
+                    // In App mode, always use ProcessName's tag (ignore sub-app tags)
                     mergeKey = s.ProcessName;
                     title = displayName;
+                    tag = DigitalWellbeingWinUI3.Helpers.AppTagHelper.GetAppTag(s.ProcessName);
                 }
                 else // SubApp (Default)
                 {
                     mergeKey = s.ProcessName;
                     
-                    if (UserPreferences.IncognitoMode)
+                    // Show effectiveProgramName if it differs from ProcessName (respects retroactive hide)
+                    if (!string.IsNullOrEmpty(effectiveProgramName) && !effectiveProgramName.Equals(s.ProcessName, StringComparison.OrdinalIgnoreCase))
                     {
-                        title = displayName;
+                        title = effectiveProgramName;
                     }
                     else
                     {
-                        if (!string.IsNullOrEmpty(s.ProgramName) && !s.ProgramName.Equals(s.ProcessName, StringComparison.OrdinalIgnoreCase))
-                        {
-                            title = s.ProgramName;
-                        }
-                        else
-                        {
-                            title = displayName;
-                        }
+                        title = displayName;
                     }
                 }
                 
@@ -364,7 +385,8 @@ namespace DigitalWellbeingWinUI3.ViewModels
                     // Update Title Logic for SubApp mode
                     if (ViewMode == "SubApp" || ViewMode == null)
                     {
-                        bool newSessionHasSpecificTitle = !UserPreferences.IncognitoMode && 
+                        // IncognitoMode only affects logging, not display - always check for specific titles
+                        bool newSessionHasSpecificTitle = 
                             !string.IsNullOrEmpty(s.ProgramName) && 
                             !s.ProgramName.Equals(s.ProcessName, StringComparison.OrdinalIgnoreCase);
                         
@@ -377,7 +399,8 @@ namespace DigitalWellbeingWinUI3.ViewModels
                             {
                                 pendingBlock.Title = title;
                                 pendingBlock.OriginalSession = s;
-
+                                // Also update color to match the new specific session's tag
+                                pendingBlock.BackgroundColor = color;
                         }
                     }
                     }
@@ -453,28 +476,32 @@ namespace DigitalWellbeingWinUI3.ViewModels
             
             // Post-process: Remove generic blocks if a specific sub-app block exists for the same process
             // This prevents "msedge" from showing when "Netflix" exists for that process
-            var blocksToRemove = new List<SessionBlock>();
-            foreach (var block in newBlocks)
+            // SKIP this when HideSubAppsRetroactively is ON - hidden sessions intentionally become generic blocks
+            if (!UserPreferences.HideSubAppsRetroactively)
             {
-                bool isGeneric = (block.Title ?? "").Equals(block.ProcessName ?? "", StringComparison.OrdinalIgnoreCase);
-                if (isGeneric)
+                var blocksToRemove = new List<SessionBlock>();
+                foreach (var block in newBlocks)
                 {
-                    // Check if any specific block exists for this process
-                    bool hasSpecificBlock = newBlocks.Any(other =>
-                        other != block &&
-                        (other.ProcessName ?? "").Equals(block.ProcessName ?? "", StringComparison.OrdinalIgnoreCase) &&
-                        !(other.Title ?? "").Equals(other.ProcessName ?? "", StringComparison.OrdinalIgnoreCase));
-                    
-                    if (hasSpecificBlock)
+                    bool isGeneric = (block.Title ?? "").Equals(block.ProcessName ?? "", StringComparison.OrdinalIgnoreCase);
+                    if (isGeneric)
                     {
-                        blocksToRemove.Add(block);
+                        // Check if any specific block exists for this process
+                        bool hasSpecificBlock = newBlocks.Any(other =>
+                            other != block &&
+                            (other.ProcessName ?? "").Equals(block.ProcessName ?? "", StringComparison.OrdinalIgnoreCase) &&
+                            !(other.Title ?? "").Equals(other.ProcessName ?? "", StringComparison.OrdinalIgnoreCase));
+                        
+                        if (hasSpecificBlock)
+                        {
+                            blocksToRemove.Add(block);
+                        }
                     }
                 }
-            }
-            
-            foreach (var block in blocksToRemove)
-            {
-                newBlocks.Remove(block);
+                
+                foreach (var block in blocksToRemove)
+                {
+                    newBlocks.Remove(block);
+                }
             }
             
             SessionBlocks = newBlocks;

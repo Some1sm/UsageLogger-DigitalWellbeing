@@ -352,7 +352,13 @@ namespace DigitalWellbeingWinUI3.ViewModels
                  }
 
                  // Aggregate Sub-App / Title breakdown
-                 string title = !string.IsNullOrEmpty(session.ProgramName) ? session.ProgramName : session.ProcessName;
+                 // Apply retroactive hide filter
+                 string effectiveProgramName = session.ProgramName;
+                 if (UserPreferences.ShouldHideSubApp(session.ProgramName))
+                 {
+                     effectiveProgramName = session.ProcessName; // Merge into parent
+                 }
+                 string title = !string.IsNullOrEmpty(effectiveProgramName) ? effectiveProgramName : session.ProcessName;
                  if (appUsage.ProgramBreakdown.ContainsKey(title))
                  {
                      appUsage.ProgramBreakdown[title] = appUsage.ProgramBreakdown[title].Add(session.Duration);
@@ -694,6 +700,9 @@ namespace DigitalWellbeingWinUI3.ViewModels
                     // Add each sub-app as its own entry
                     foreach (var subApp in app.ProgramBreakdown)
                     {
+                        // Skip hidden sub-apps when retroactive hide is ON
+                        if (UserPreferences.ShouldHideSubApp(subApp.Key)) continue;
+                        
                         string titleKey = $"{app.ProcessName}|{subApp.Key}";
                         
                         // Skip excluded titles

@@ -33,6 +33,8 @@ namespace DigitalWellbeingWinUI3.Helpers
         public static List<string> ExcludedTitles { get; set; } = new List<string>();
         public static string LanguageCode { get; set; } = "";
         public static bool UseRamCache { get; set; } = true; // True = RAM buffer + 5 min flush; False = Direct disk writes
+        public static List<string> IgnoredWindowTitles { get; set; } = new List<string>(); // Keywords to hide sub-apps (merge into parent process)
+        public static bool HideSubAppsRetroactively { get; set; } = false; // When true, also hides matching sub-apps in historical data display
 
         static UserPreferences()
         {
@@ -65,7 +67,9 @@ namespace DigitalWellbeingWinUI3.Helpers
                     TitleTimeLimits,
                     ExcludedTitles,
                     LanguageCode,
-                    UseRamCache
+                    UseRamCache,
+                    IgnoredWindowTitles,
+                    HideSubAppsRetroactively
                 };
 
                 string json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
@@ -107,6 +111,8 @@ namespace DigitalWellbeingWinUI3.Helpers
                     if (data.TryGetProperty(nameof(ExcludedTitles), out prop)) ExcludedTitles = JsonSerializer.Deserialize<List<string>>(prop.GetRawText()) ?? new List<string>();
                     if (data.TryGetProperty(nameof(LanguageCode), out prop)) LanguageCode = prop.GetString() ?? "";
                     if (data.TryGetProperty(nameof(UseRamCache), out prop)) UseRamCache = prop.GetBoolean();
+                    if (data.TryGetProperty(nameof(IgnoredWindowTitles), out prop)) IgnoredWindowTitles = JsonSerializer.Deserialize<List<string>>(prop.GetRawText()) ?? new List<string>();
+                    if (data.TryGetProperty(nameof(HideSubAppsRetroactively), out prop)) HideSubAppsRetroactively = prop.GetBoolean();
                 }
 
                 // Default Initialization
@@ -203,6 +209,27 @@ namespace DigitalWellbeingWinUI3.Helpers
                 ProcessDisplayNames.Remove(processName);
                 Save();
             }
+        }
+
+        /// <summary>
+        /// Checks if a sub-app (ProgramName) should be hidden based on IgnoredWindowTitles.
+        /// Only applies when HideSubAppsRetroactively is true.
+        /// </summary>
+        public static bool ShouldHideSubApp(string programName)
+        {
+            if (!HideSubAppsRetroactively) return false;
+            if (string.IsNullOrEmpty(programName)) return false;
+            if (IgnoredWindowTitles == null || IgnoredWindowTitles.Count == 0) return false;
+
+            foreach (var keyword in IgnoredWindowTitles)
+            {
+                if (!string.IsNullOrEmpty(keyword) && 
+                    programName.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         /// <summary>

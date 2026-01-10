@@ -125,6 +125,7 @@ namespace DigitalWellbeingWinUI3.Views
         {
             LoadExcludedProcessItems();
             LoadAppTimeLimits();
+            LoadHiddenSubApps();
         }
 
         private bool _isLoading = false;
@@ -258,6 +259,90 @@ namespace DigitalWellbeingWinUI3.Views
                 // Format: "[Sub] ProcessName|Title → 1h 30m"
                 AppTimeLimitsList.Items.Add($"[Sub] {limit.Key}{APP_TIMELIMIT_SEPARATOR}{time.Hours}h {time.Minutes}m");
             }
+        }
+
+        // ===== Hidden SubApps =====
+        private bool _hiddenKeywordsVisible = false; // Track if keywords are currently revealed
+        
+        private void LoadHiddenSubApps()
+        {
+            LoadHiddenSubApps(_hiddenKeywordsVisible);
+        }
+        
+        private void LoadHiddenSubApps(bool showActualText)
+        {
+            HiddenSubAppsList.Items.Clear();
+            foreach (string keyword in UserPreferences.IgnoredWindowTitles)
+            {
+                if (showActualText)
+                {
+                    HiddenSubAppsList.Items.Add(keyword);
+                }
+                else
+                {
+                    // Mask the keyword with bullets (same length)
+                    HiddenSubAppsList.Items.Add(new string('●', keyword.Length));
+                }
+            }
+            // Load toggle state
+            TglHideRetroactively.IsOn = UserPreferences.HideSubAppsRetroactively;
+        }
+
+        private void BtnAddHiddenKeyword_Click(object sender, RoutedEventArgs e)
+        {
+            string keyword = TxtNewHiddenKeyword.Text?.Trim();
+            if (!string.IsNullOrEmpty(keyword) && !UserPreferences.IgnoredWindowTitles.Contains(keyword, StringComparer.OrdinalIgnoreCase))
+            {
+                UserPreferences.IgnoredWindowTitles.Add(keyword);
+                UserPreferences.Save();
+                LoadHiddenSubApps();
+                TxtNewHiddenKeyword.Text = "";
+            }
+        }
+
+        private void HiddenSubAppsList_DoubleTapped(object sender, Microsoft.UI.Xaml.Input.DoubleTappedRoutedEventArgs e)
+        {
+            if (HiddenSubAppsList.SelectedItem != null && _hiddenKeywordsVisible)
+            {
+                // Only allow deletion when keywords are visible (user has focused the textbox)
+                int index = HiddenSubAppsList.SelectedIndex;
+                if (index >= 0 && index < UserPreferences.IgnoredWindowTitles.Count)
+                {
+                    UserPreferences.IgnoredWindowTitles.RemoveAt(index);
+                    UserPreferences.Save();
+                    LoadHiddenSubApps();
+                }
+            }
+        }
+        
+        private void HiddenSubAppsList_Tapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            // Clicking on the masked list reveals the keywords
+            if (!_hiddenKeywordsVisible)
+            {
+                _hiddenKeywordsVisible = true;
+                LoadHiddenSubApps(showActualText: true);
+            }
+        }
+        
+        private void TxtNewHiddenKeyword_GotFocus(object sender, RoutedEventArgs e)
+        {
+            // Reveal actual keywords when editing
+            _hiddenKeywordsVisible = true;
+            LoadHiddenSubApps(showActualText: true);
+        }
+        
+        private void TxtNewHiddenKeyword_LostFocus(object sender, RoutedEventArgs e)
+        {
+            // Mask keywords when focus leaves
+            _hiddenKeywordsVisible = false;
+            LoadHiddenSubApps(showActualText: false);
+        }
+
+        private void TglHideRetroactively_Toggled(object sender, RoutedEventArgs e)
+        {
+            UserPreferences.HideSubAppsRetroactively = TglHideRetroactively.IsOn;
+            UserPreferences.Save();
         }
 
         // EVENTS

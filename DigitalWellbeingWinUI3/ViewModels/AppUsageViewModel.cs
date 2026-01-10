@@ -864,7 +864,15 @@ public class AppUsageViewModel : INotifyPropertyChanged
                     {
                         dictionary[item.ProcessName].ProgramName = item.ProgramName;
                     }
-                    string key = ((!string.IsNullOrEmpty(item.ProgramName)) ? item.ProgramName : item.ProcessName);
+                    
+                    // Apply retroactive hide filter: use ProcessName if sub-app should be hidden
+                    string effectiveProgramName = item.ProgramName;
+                    if (UserPreferences.ShouldHideSubApp(item.ProgramName))
+                    {
+                        effectiveProgramName = item.ProcessName; // Merge into parent
+                    }
+                    
+                    string key = ((!string.IsNullOrEmpty(effectiveProgramName)) ? effectiveProgramName : item.ProcessName);
                     if (dictionary[item.ProcessName].ProgramBreakdown.ContainsKey(key))
                     {
                         dictionary[item.ProcessName].ProgramBreakdown[key] = dictionary[item.ProcessName].ProgramBreakdown[key].Add(item.Duration);

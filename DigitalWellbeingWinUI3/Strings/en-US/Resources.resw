@@ -157,6 +157,24 @@
   <data name="Settings_ExcludedAppsDesc.Text" xml:space="preserve">
     <value>Double-click to remove an excluded app.</value>
   </data>
+  <data name="Settings_HiddenSubApps.Text" xml:space="preserve">
+    <value>Hidden SubApps</value>
+  </data>
+  <data name="Settings_HiddenSubAppsDesc.Text" xml:space="preserve">
+    <value>Keywords to hide from timelines. Matching window titles are merged into the parent app (e.g. add "YouTube" to hide YouTube activity under "Chrome"). Double-click to remove.</value>
+  </data>
+  <data name="Settings_BtnAdd.Content" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="Settings_HideRetroactively.Header" xml:space="preserve">
+    <value>Apply retroactively</value>
+  </data>
+  <data name="Settings_HideRetroactively.OnContent" xml:space="preserve">
+    <value>Also hide from historical data</value>
+  </data>
+  <data name="Settings_HideRetroactively.OffContent" xml:space="preserve">
+    <value>Only affects new activity</value>
+  </data>
   <data name="Settings_TimeLimits.Text" xml:space="preserve">
     <value>Time Limits per App</value>
   </data>

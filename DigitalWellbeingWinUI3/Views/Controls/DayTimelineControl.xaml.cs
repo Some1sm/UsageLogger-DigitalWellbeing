@@ -255,10 +255,11 @@ namespace DigitalWellbeingWinUI3.Views.Controls
             double y = pos.Y + TimelineScrollViewer.VerticalOffset;
             double x = pos.X;
 
-            // Find deepest (smallest, most specific) block under cursor
+            // Find the top-most (last drawn, visually on top) block under cursor
+            // Using Reverse() to get the last block in draw order (which is on top)
             var candidates = ViewModel.SessionBlocks
                 .Where(b => y >= b.Top && y <= b.Top + b.Height && x >= b.Left && x <= b.Left + b.Width - 140)
-                .OrderBy(b => b.Height) // Prefer smaller (more specific) blocks
+                .Reverse() // Prefer last-drawn (visually on top) blocks
                 .ToList();
 
             var hit = candidates.FirstOrDefault();

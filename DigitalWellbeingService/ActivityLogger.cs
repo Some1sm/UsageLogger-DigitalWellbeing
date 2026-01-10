@@ -19,6 +19,7 @@ public class ActivityLogger
 {
     public static readonly int TIMER_INTERVAL_SEC = 3;
     private static int _bufferFlushIntervalSec = 300; // Default: 5 minutes
+    private static List<string> _ignoredWindowTitles = new List<string>(); // Cached keywords to hide
     private static DateTime _lastSettingsRead = DateTime.MinValue;
     private static DateTime _lastFileWriteTime = DateTime.MinValue;
     private static readonly string _settingsPath = Path.Combine(
@@ -79,10 +80,42 @@ public class ActivityLogger
                     _bufferFlushIntervalSec = val;
                 }
             }
+            
+            // Parse IgnoredWindowTitles array
+            try
+            {
+                using var doc = System.Text.Json.JsonDocument.Parse(json);
+                if (doc.RootElement.TryGetProperty("IgnoredWindowTitles", out var titlesElement) && 
+                    titlesElement.ValueKind == System.Text.Json.JsonValueKind.Array)
+                {
+                    _ignoredWindowTitles = titlesElement.EnumerateArray()
+                        .Where(e => e.ValueKind == System.Text.Json.JsonValueKind.String)
+                        .Select(e => e.GetString() ?? "")
+                        .Where(s => !string.IsNullOrEmpty(s))
+                        .ToList();
+                }
+            }
+            catch { } // If parsing fails, keep existing list
         }
         catch { }
 
         return _bufferFlushIntervalSec;
+    }
+    
+    /// <summary>
+    /// Checks if a window title should be hidden (merged into parent process).
+    /// </summary>
+    private bool ShouldHideSubApp(string windowTitle)
+    {
+        if (string.IsNullOrEmpty(windowTitle) || _ignoredWindowTitles.Count == 0)
+            return false;
+            
+        foreach (var keyword in _ignoredWindowTitles)
+        {
+            if (windowTitle.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0)
+                return true;
+        }
+        return false;
     }
 
     private string folderPath;
@@ -141,6 +174,9 @@ public class ActivityLogger
     // Main Timer Logic
     public async Task OnTimerAsync()
     {
+        // Refresh settings cache (includes IgnoredWindowTitles)
+        GetBufferFlushInterval();
+        
         // Use fallback-aware method instead of direct GetForegroundWindow
         IntPtr handle = ForegroundWindowManager.GetActiveWindowHandle();
         uint currProcessId = ForegroundWindowManager.GetForegroundProcessId(handle);
@@ -186,8 +222,15 @@ public class ActivityLogger
                 try 
                 { 
                     string rawTitle = ForegroundWindowManager.GetWindowTitle(handle);
+                    
+                    // Check Hidden SubApps filter FIRST (on raw title)
+                    // If keyword matches, skip parsing and use process name
+                    if (ShouldHideSubApp(rawTitle))
+                    {
+                        programName = processName;
+                    }
                     // Fallback to Product Name if Title is empty
-                    if (string.IsNullOrWhiteSpace(rawTitle))
+                    else if (string.IsNullOrWhiteSpace(rawTitle))
                     {
                         programName = ForegroundWindowManager.GetActiveProgramName(proc);
                     }
