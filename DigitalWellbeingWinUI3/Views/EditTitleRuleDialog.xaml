@@ -1,0 +1,45 @@
+
+<ContentDialog
+    x:Class="DigitalWellbeingWinUI3.Views.EditTitleRuleDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:DigitalWellbeingWinUI3.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:l="using:WinUI3Localizer"
+    mc:Ignorable="d"
+    Title="Edit Rule"
+    PrimaryButtonText="Save"
+    SecondaryButtonText="Cancel"
+    IsPrimaryButtonEnabled="False"
+    DefaultButton="Primary">
+
+    <Grid RowSpacing="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Process Filter -->
+        <TextBox x:Name="TxtProcess" Header="Process Name (Optional)" PlaceholderText="e.g. chrome (leave empty for all)" Grid.Row="0"/>
+
+        <!-- Pattern -->
+        <TextBox x:Name="TxtPattern" Header="Match Pattern (Title)" PlaceholderText="Text or Regex to match" TextChanged="TxtPattern_TextChanged" Grid.Row="1"/>
+        <CheckBox x:Name="ChkRegex" Content="Use Regular Expression" IsChecked="False" Grid.Row="2"/>
+
+        <!-- Replacement -->
+        <TextBox x:Name="TxtReplacement" Header="Replacement" PlaceholderText="New text (supports $1 capture groups)" Grid.Row="3"/>
+
+        <!-- Test Playground -->
+        <Expander Header="Test Rule" Grid.Row="4" ExpandDirection="Down" HorizontalAlignment="Stretch">
+            <StackPanel Spacing="8">
+                <TextBox x:Name="TxtTestInput" Header="Test Input" PlaceholderText="Paste a sample window title here" TextChanged="TxtTestInput_TextChanged"/>
+                <TextBlock Text="Result:" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                <TextBlock x:Name="TxtTestResult" Text="-" Style="{ThemeResource BodyStrongTextBlockStyle}" TextWrapping="Wrap"/>
+            </StackPanel>
+        </Expander>
+    </Grid>
+</ContentDialog>

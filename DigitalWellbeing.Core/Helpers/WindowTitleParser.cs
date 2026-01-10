@@ -7,10 +7,36 @@ namespace DigitalWellbeing.Core.Helpers
 {
     public static class WindowTitleParser
     {
-        public static string Parse(string processName, string rawTitle)
+        public static string Parse(string processName, string rawTitle, System.Collections.Generic.List<Models.CustomTitleRule> rules = null)
         {
             if (string.IsNullOrWhiteSpace(rawTitle)) return rawTitle;
 
+            // 1. Apply Custom Rules First
+            if (rules != null && rules.Count > 0)
+            {
+                // Simple filter: ProcessName match (or empty for all)
+                var applicableRules = rules.Where(r => 
+                    string.IsNullOrEmpty(r.ProcessName) || 
+                    r.ProcessName.Equals(processName, StringComparison.OrdinalIgnoreCase))
+                    .OrderBy(r => r.Order);
+
+                foreach (var rule in applicableRules)
+                {
+                    if (rule.IsValid())
+                    {
+                        string result = rule.Apply(rawTitle);
+                        // If the rule actually changed something, return immediately (Short-circuit)
+                        // Or should we process all rules? Usually chaining is powerful but "First Match Wins" is safer/simpler for now.
+                        // Let's go with "First Change Wins" to avoid conflicts.
+                        if (result != rawTitle)
+                        {
+                            return result;
+                        }
+                    }
+                }
+            }
+
+            // 2. Default Logic
             switch (processName.ToLower())
             {
                 case "chrome":

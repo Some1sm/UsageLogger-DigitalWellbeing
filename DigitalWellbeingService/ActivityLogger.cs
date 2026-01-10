@@ -20,6 +20,7 @@ public class ActivityLogger
     public static readonly int TIMER_INTERVAL_SEC = 3;
     private static int _bufferFlushIntervalSec = 300; // Default: 5 minutes
     private static List<string> _ignoredWindowTitles = new List<string>(); // Cached keywords to hide
+    private static List<CustomTitleRule> _customTitleRules = new List<CustomTitleRule>();
     private static DateTime _lastSettingsRead = DateTime.MinValue;
     private static DateTime _lastFileWriteTime = DateTime.MinValue;
     private static readonly string _settingsPath = Path.Combine(
@@ -96,6 +97,19 @@ public class ActivityLogger
                 }
             }
             catch { } // If parsing fails, keep existing list
+
+            // Parse CustomTitleRules array
+            try
+            {
+                using var doc = System.Text.Json.JsonDocument.Parse(json);
+                if (doc.RootElement.TryGetProperty("CustomTitleRules", out var rulesElement) && 
+                    rulesElement.ValueKind == System.Text.Json.JsonValueKind.Array)
+                {
+                    _customTitleRules = System.Text.Json.JsonSerializer.Deserialize<List<CustomTitleRule>>(rulesElement.GetRawText()) 
+                                        ?? new List<CustomTitleRule>();
+                }
+            }
+            catch { }
         }
         catch { }
 
@@ -236,7 +250,7 @@ public class ActivityLogger
                     }
                     else
                     {
-                        programName = DigitalWellbeing.Core.Helpers.WindowTitleParser.Parse(processName, rawTitle);
+                        programName = DigitalWellbeing.Core.Helpers.WindowTitleParser.Parse(processName, rawTitle, _customTitleRules);
                     }
                 } 
                 catch {}

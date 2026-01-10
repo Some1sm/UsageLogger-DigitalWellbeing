@@ -157,6 +157,7 @@ namespace DigitalWellbeingWinUI3.Views
             // Usage Data
             LoadExcludedProcessItems();
             LoadTags();
+            LoadCustomRules();
 
             // Display
             DaysToShowTextBox.Value = UserPreferences.DayAmount;
@@ -297,6 +298,53 @@ namespace DigitalWellbeingWinUI3.Views
                 UserPreferences.Save();
                 LoadHiddenSubApps();
                 TxtNewHiddenKeyword.Text = "";
+            }
+        }
+
+        // ===== Custom Title Rules =====
+        private void LoadCustomRules()
+        {
+            CustomRulesList.ItemsSource = null;
+            CustomRulesList.ItemsSource = UserPreferences.CustomTitleRules;
+        }
+
+        private async void BtnAddRule_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new EditTitleRuleDialog();
+            dialog.XamlRoot = this.XamlRoot;
+            if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+            {
+                UserPreferences.CustomTitleRules.Add(dialog.Result);
+                UserPreferences.Save();
+                LoadCustomRules();
+            }
+        }
+
+        private async void BtnEditRule_Click(object sender, RoutedEventArgs e)
+        {
+            var btn = sender as Button;
+            var rule = btn?.Tag as DigitalWellbeing.Core.Models.CustomTitleRule;
+            if (rule == null) return;
+
+            var dialog = new EditTitleRuleDialog(rule);
+            dialog.XamlRoot = this.XamlRoot;
+            if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+            {
+                // Result is already updated by reference in dialog but we need to trigger save/refresh
+                UserPreferences.Save();
+                LoadCustomRules(); // Refresh list to show changes
+            }
+        }
+
+        private void BtnDeleteRule_Click(object sender, RoutedEventArgs e)
+        {
+            var btn = sender as Button;
+            var rule = btn?.Tag as DigitalWellbeing.Core.Models.CustomTitleRule;
+            if (rule != null)
+            {
+                UserPreferences.CustomTitleRules.Remove(rule);
+                UserPreferences.Save();
+                LoadCustomRules();
             }
         }
 

@@ -1,3 +1,4 @@
+using DigitalWellbeing.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -35,6 +36,7 @@ namespace DigitalWellbeingWinUI3.Helpers
         public static bool UseRamCache { get; set; } = true; // True = RAM buffer + 5 min flush; False = Direct disk writes
         public static List<string> IgnoredWindowTitles { get; set; } = new List<string>(); // Keywords to hide sub-apps (merge into parent process)
         public static bool HideSubAppsRetroactively { get; set; } = false; // When true, also hides matching sub-apps in historical data display
+        public static List<CustomTitleRule> CustomTitleRules { get; set; } = new List<CustomTitleRule>();
 
         static UserPreferences()
         {
@@ -69,7 +71,8 @@ namespace DigitalWellbeingWinUI3.Helpers
                     LanguageCode,
                     UseRamCache,
                     IgnoredWindowTitles,
-                    HideSubAppsRetroactively
+                    HideSubAppsRetroactively,
+                    CustomTitleRules
                 };
 
                 string json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
@@ -113,6 +116,7 @@ namespace DigitalWellbeingWinUI3.Helpers
                     if (data.TryGetProperty(nameof(UseRamCache), out prop)) UseRamCache = prop.GetBoolean();
                     if (data.TryGetProperty(nameof(IgnoredWindowTitles), out prop)) IgnoredWindowTitles = JsonSerializer.Deserialize<List<string>>(prop.GetRawText()) ?? new List<string>();
                     if (data.TryGetProperty(nameof(HideSubAppsRetroactively), out prop)) HideSubAppsRetroactively = prop.GetBoolean();
+                    if (data.TryGetProperty(nameof(CustomTitleRules), out prop)) CustomTitleRules = JsonSerializer.Deserialize<List<CustomTitleRule>>(prop.GetRawText()) ?? new List<CustomTitleRule>();
                 }
 
                 // Default Initialization
