@@ -32,9 +32,9 @@ public class AppUsageViewModel : INotifyPropertyChanged
 
 	public TimeSpan TotalDuration;
 
-	private static readonly string[] excludeProcesses = new string[13]
+	private static readonly string[] excludeProcesses = new string[11]
 	{
-		"DigitalWellbeingWPF", "process", "DigitalWellbeingWinUI3", "explorer", "SearchHost", "Idle", "StartMenuExperienceHost", "ShellExperienceHost", "dwm", "LockApp",
+		"process", "explorer", "SearchHost", "Idle", "StartMenuExperienceHost", "ShellExperienceHost", "dwm", "LockApp",
 		"msiexec", "ApplicationFrameHost", "*LAST"
 	};
 
