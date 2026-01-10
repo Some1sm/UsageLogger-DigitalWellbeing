@@ -84,28 +84,11 @@ namespace DigitalWellbeingWinUI3.Views
                 {
                     // If future, reset to Today
                     sender.SelectedDates.Clear();
-                    ViewModel.LoadedDate = System.DateTime.Now;
-                }
-                else
-                {
-                    ViewModel.LoadedDate = newDate;
+                    newDate = System.DateTime.Now.Date;
                 }
 
-                // If the selected date is not in the current weekly chart range, reload the chart range
-                bool rangeContainsDate = false;
-                if (ViewModel.WeeklyChartLabelDates != null)
-                {
-                    rangeContainsDate = ViewModel.WeeklyChartLabelDates.Any(d => d.Date == ViewModel.LoadedDate.Date);
-                }
-
-                if (!rangeContainsDate)
-                {
-                    ViewModel.LoadWeeklyData(ViewModel.LoadedDate);
-                }
-                else
-                {
-                    ViewModel.RefreshDayView();
-                }
+                // Rolling Window: Always reload chart centered on the selected date
+                ViewModel.LoadWeeklyData(newDate);
                 
                 // Hide flyout
                 CalendarFlyout.Hide();
@@ -114,36 +97,15 @@ namespace DigitalWellbeingWinUI3.Views
 
         private void ChangeDay(int offset)
         {
-             // Find current index
-             if (ViewModel == null || ViewModel.WeeklyChartLabelDates == null) return;
-             
-             int currentIndex = -1;
-             for(int i=0; i<ViewModel.WeeklyChartLabelDates.Length; i++)
-             {
-                 if (ViewModel.WeeklyChartLabelDates[i].Date == ViewModel.LoadedDate.Date)
-                 {
-                     currentIndex = i;
-                     break;
-                 }
-             }
-             
-             if (currentIndex != -1)
-             {
-                 int newIndex = currentIndex + offset;
-                 if (newIndex >= 0 && newIndex < ViewModel.WeeklyChartLabelDates.Length)
-                 {
-                     ViewModel.WeeklyChart_SelectionChanged(newIndex);
-                 }
-                 else
-                 {
-                     // If out of range, reload the chart range relative to next/prev day
-                     DateTime newDate = ViewModel.LoadedDate.AddDays(offset);
-                     if (newDate <= DateTime.Now.Date)
-                     {
-                         ViewModel.LoadWeeklyData(newDate);
-                     }
-                 }
-             }
+            if (ViewModel == null) return;
+            
+            DateTime newDate = ViewModel.LoadedDate.AddDays(offset);
+            
+            // Prevent navigating to future dates
+            if (newDate > DateTime.Now.Date) return;
+            
+            // Rolling Window: Always reload the chart centered on the new date
+            ViewModel.LoadWeeklyData(newDate);
         }
 
         private void Grid_RightTapped(object sender, Microsoft.UI.Xaml.Input.RightTappedRoutedEventArgs e)

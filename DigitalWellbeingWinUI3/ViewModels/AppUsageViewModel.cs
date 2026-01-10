@@ -120,7 +120,7 @@ public class AppUsageViewModel : INotifyPropertyChanged
 
 	public bool CanGoNext => LoadedDate.Date < DateTime.Now.Date;
 
-	public bool CanGoPrev => LoadedDate.Date > DateTime.Now.AddDays(-NumberOfDaysToDisplay + 1).Date;
+	public bool CanGoPrev => true;
 
 	public bool IsLoading
 	{
@@ -603,11 +603,8 @@ public class AppUsageViewModel : INotifyPropertyChanged
 						Percentage = 0.0
 					});
 				}
-				PieChartItems.Clear();
-				foreach (PieChartItem item5 in observableCollection)
-				{
-					PieChartItems.Add(item5);
-				}
+				UpdatePieChartInPlace(PieChartItems, observableCollection);
+
 				UpdateListInPlace(DayListItems, observableCollection2);
 				List<AppUsageListItem> list3 = new List<AppUsageListItem>();
 				List<AppUsageListItem> list4 = new List<AppUsageListItem>();
@@ -750,6 +747,57 @@ public class AppUsageViewModel : INotifyPropertyChanged
 		for (int num2 = 0; num2 < list.Count; num2++)
 		{
 			int num3 = existingList.IndexOf(list[num2]);
+			if (num3 != num2)
+			{
+				existingList.Move(num3, num2);
+			}
+		}
+	}
+
+	private void UpdatePieChartInPlace(ObservableCollection<PieChartItem> existingList, ObservableCollection<PieChartItem> newItems)
+	{
+		Dictionary<string, PieChartItem> dictionary = new Dictionary<string, PieChartItem>();
+		foreach (PieChartItem newItem in newItems)
+		{
+			// Unique key using ProcessName or Name
+			string key = !string.IsNullOrEmpty(newItem.ProcessName) ? newItem.ProcessName : newItem.Name;
+			if (!dictionary.ContainsKey(key))
+			{
+				dictionary[key] = newItem;
+			}
+		}
+
+		for (int num = existingList.Count - 1; num >= 0; num--)
+		{
+			PieChartItem existingItem = existingList[num];
+			string key = !string.IsNullOrEmpty(existingItem.ProcessName) ? existingItem.ProcessName : existingItem.Name;
+
+			if (dictionary.TryGetValue(key, out var newItem))
+			{
+				existingItem.Value = newItem.Value;
+				existingItem.Percentage = newItem.Percentage;
+				existingItem.Color = newItem.Color;
+				existingItem.Tooltip = newItem.Tooltip;
+				existingItem.Name = newItem.Name; // Display name might change
+				
+				dictionary.Remove(key);
+			}
+			else
+			{
+				existingList.RemoveAt(num);
+			}
+		}
+
+		foreach (PieChartItem value2 in dictionary.Values)
+		{
+			existingList.Add(value2);
+		}
+
+		// Sort by Value Descending
+		List<PieChartItem> sortedList = existingList.OrderByDescending(x => x.Value).ToList();
+		for (int num2 = 0; num2 < sortedList.Count; num2++)
+		{
+			int num3 = existingList.IndexOf(sortedList[num2]);
 			if (num3 != num2)
 			{
 				existingList.Move(num3, num2);

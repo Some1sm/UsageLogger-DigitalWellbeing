@@ -105,9 +105,60 @@ namespace DigitalWellbeingWinUI3.Controls
 
         private void UpdateLegend()
         {
-            if (ItemsSource != null)
+            if (ItemsSource == null) return;
+
+            var targetList = ItemsSource.Take(10).ToList();
+
+            // Initialize or reuse persistent collection
+            if (LegendItems is not System.Collections.ObjectModel.ObservableCollection<PieChartItem> obsList)
             {
-                LegendItems = ItemsSource.Take(10).ToList();
+                obsList = new System.Collections.ObjectModel.ObservableCollection<PieChartItem>(targetList);
+                LegendItems = obsList;
+                return;
+            }
+
+            // Sync obsList with targetList (In-Place)
+            for (int i = 0; i < targetList.Count; i++)
+            {
+                var targetItem = targetList[i];
+                if (i < obsList.Count)
+                {
+                    if (obsList[i] != targetItem)
+                    {
+                        // Try to find if it moved
+                        int existingIdx = obsList.IndexOf(targetItem);
+                        if (existingIdx != -1 && existingIdx > i)
+                        {
+                            obsList.Move(existingIdx, i);
+                        }
+                        else
+                        {
+                            // It's a new item or significantly moved logic failed
+                            // Just replace/insert
+                            if (existingIdx == -1)
+                            {
+                                obsList.Insert(i, targetItem);
+                            }
+                            else
+                            {
+                                // Should imply remove?
+                                // Let's use simple Replace if no complex move
+                                obsList[i] = targetItem;
+                            }
+                        }
+                    }
+                    // Else: Match, do nothing (INotifyPropertyChanged handles content updates)
+                }
+                else
+                {
+                    obsList.Add(targetItem);
+                }
+            }
+
+            // Remove extra items
+            while (obsList.Count > targetList.Count)
+            {
+                obsList.RemoveAt(obsList.Count - 1);
             }
         }
         

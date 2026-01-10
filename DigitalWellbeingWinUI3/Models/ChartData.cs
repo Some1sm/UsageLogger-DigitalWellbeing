@@ -6,16 +6,31 @@ namespace DigitalWellbeingWinUI3.Models
     /// <summary>
     /// POCO data item for pie chart slices.
     /// </summary>
-    public class PieChartItem
+    public class PieChartItem : System.ComponentModel.INotifyPropertyChanged
     {
-        public string Name { get; set; }
-        public double Value { get; set; }
-        public Color Color { get; set; }
-        public string Tooltip { get; set; }
-        public double Percentage { get; set; }
+        private string _name;
+        public string Name { get => _name; set { _name = value; OnPropertyChanged(); } }
+
+        private double _value;
+        public double Value { get => _value; set { _value = value; OnPropertyChanged(); } }
+
+        private Color _color;
+        public Color Color { get => _color; set { _color = value; OnPropertyChanged(); } }
+
+        private string _tooltip;
+        public string Tooltip { get => _tooltip; set { _tooltip = value; OnPropertyChanged(); } }
+
+        private double _percentage;
+        public double Percentage { get => _percentage; set { _percentage = value; OnPropertyChanged(); } }
         
         // Optional: For click handling
         public string ProcessName { get; set; }
+
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        }
     }
     
     /// <summary>
