@@ -38,6 +38,7 @@ namespace DigitalWellbeingWinUI3.Helpers
         public static List<string> IgnoredWindowTitles { get; set; } = new List<string>(); // Keywords to hide sub-apps (merge into parent process)
         public static bool HideSubAppsRetroactively { get; set; } = false; // When true, also hides matching sub-apps in historical data display
         public static List<CustomTitleRule> CustomTitleRules { get; set; } = new List<CustomTitleRule>();
+        public static int IdleThresholdSeconds { get; set; } = 300; // AFK threshold in seconds (5 min default)
 
         static UserPreferences()
         {
@@ -73,7 +74,8 @@ namespace DigitalWellbeingWinUI3.Helpers
                     UseRamCache,
                     IgnoredWindowTitles,
                     HideSubAppsRetroactively,
-                    CustomTitleRules
+                    CustomTitleRules,
+                    IdleThresholdSeconds
                 };
 
                 string json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
@@ -118,6 +120,7 @@ namespace DigitalWellbeingWinUI3.Helpers
                     if (data.TryGetProperty(nameof(IgnoredWindowTitles), out prop)) IgnoredWindowTitles = JsonSerializer.Deserialize<List<string>>(prop.GetRawText()) ?? new List<string>();
                     if (data.TryGetProperty(nameof(HideSubAppsRetroactively), out prop)) HideSubAppsRetroactively = prop.GetBoolean();
                     if (data.TryGetProperty(nameof(CustomTitleRules), out prop)) CustomTitleRules = JsonSerializer.Deserialize<List<CustomTitleRule>>(prop.GetRawText()) ?? new List<CustomTitleRule>();
+                    if (data.TryGetProperty(nameof(IdleThresholdSeconds), out prop)) IdleThresholdSeconds = prop.GetInt32();
                 }
 
                 // Default Initialization

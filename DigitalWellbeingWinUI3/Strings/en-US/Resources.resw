@@ -373,4 +373,25 @@
   <data name="MiscData_Subtitle.Text" xml:space="preserve">
     <value>Today's random stats and insights</value>
   </data>
+  <data name="Settings_AppRuntimeSummary.Text" xml:space="preserve">
+    <value>Run on Startup, Minimize on Exit</value>
+  </data>
+  <data name="Settings_UsageDataSummary.Text" xml:space="preserve">
+    <value>Incognito Mode, Excluded Apps, Hidden Sub-Apps, Custom Title Rules, Time Limits</value>
+  </data>
+  <data name="Settings_DisplaySummary.Text" xml:space="preserve">
+    <value>Theme, Language, Days to Show, Refresh Interval, Combined Audio</value>
+  </data>
+  <data name="Settings_DataSummary.Text" xml:space="preserve">
+    <value>Log Storage Location, RAM Cache, Data Flush Interval</value>
+  </data>
+  <data name="Settings_AppTagsSummary.Text" xml:space="preserve">
+    <value>Manage Custom Tags and Colors</value>
+  </data>
+  <data name="Settings_IdleThreshold.Text" xml:space="preserve">
+    <value>Idle Threshold (seconds)</value>
+  </data>
+  <data name="Settings_IdleThresholdDesc.Text" xml:space="preserve">
+    <value>Time of inactivity before logging as "AFK" (default 300s = 5 min).</value>
+  </data>
 </root>

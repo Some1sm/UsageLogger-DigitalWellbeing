@@ -167,10 +167,49 @@ public class ActivityLogger
     private List<AppUsage> _cachedUsage;
     private DateTime _lastFlushTime;
     private readonly SessionManager _sessionManager;
+    private bool _isLocked = false; // Track workstation lock/unlock state
+    private static int _idleThresholdSec = 300; // AFK threshold (default 5 min), updated from settings
     
     // Extracted Components
     private readonly AudioUsageTracker _audioTracker;
     private readonly IncognitoMonitor _incognitoMonitor;
+
+    /// <summary>
+    /// Gets the idle threshold in milliseconds, reading from settings if available.
+    /// </summary>
+    private int GetIdleThresholdMs()
+    {
+        // Parse IdleThresholdSeconds from settings (same approach as GetBufferFlushInterval)
+        try
+        {
+            if (File.Exists(_settingsPath))
+            {
+                string json;
+                using (var fs = new FileStream(_settingsPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                using (var sr = new StreamReader(fs))
+                {
+                    json = sr.ReadToEnd();
+                }
+
+                int idx = json.IndexOf("\"IdleThresholdSeconds\":");
+                if (idx >= 0)
+                {
+                    int colonIdx = json.IndexOf(':', idx);
+                    int endIdx = json.IndexOf(',', colonIdx);
+                    if (endIdx < 0) endIdx = json.IndexOf('}', colonIdx);
+                    
+                    string valueStr = json.Substring(colonIdx + 1, endIdx - colonIdx - 1).Trim();
+                    if (int.TryParse(valueStr, out int val) && val >= 60)
+                    {
+                        _idleThresholdSec = val;
+                    }
+                }
+            }
+        }
+        catch { }
+
+        return _idleThresholdSec * 1000; // Convert to ms
+    }
 
     public ActivityLogger(IAppUsageRepository repository, SessionManager sessionManager)
     {
@@ -192,6 +231,32 @@ public class ActivityLogger
         // Initialize with empty list, actual load happens in InitializeAsync
         _cachedUsage = [];
         _lastFlushTime = DateTime.Now;
+
+        // Subscribe to Session events (Lock/Unlock) - wrapped in try-catch for console app compatibility
+        try
+        {
+            Microsoft.Win32.SystemEvents.SessionSwitch += OnSessionSwitch;
+            Helpers.ServiceLogger.Log("ActivityLogger", "SessionSwitch event subscribed successfully.");
+        }
+        catch (Exception ex)
+        {
+            Helpers.ServiceLogger.LogError("SessionSwitch", ex);
+            // Continue without session events - AFK detection will still work
+        }
+    }
+
+    private void OnSessionSwitch(object sender, Microsoft.Win32.SessionSwitchEventArgs e)
+    {
+        if (e.Reason == Microsoft.Win32.SessionSwitchReason.SessionLock)
+        {
+            _isLocked = true;
+            Helpers.ServiceLogger.Log("SessionSwitch", "Workstation LOCKED");
+        }
+        else if (e.Reason == Microsoft.Win32.SessionSwitchReason.SessionUnlock)
+        {
+            _isLocked = false;
+            Helpers.ServiceLogger.Log("SessionSwitch", "Workstation UNLOCKED");
+        }
     }
 
     /// <summary>
@@ -216,9 +281,33 @@ public class ActivityLogger
     // Main Timer Logic
     public async Task OnTimerAsync()
     {
-        // Refresh settings cache (includes IgnoredWindowTitles)
+        // Refresh settings cache (includes IgnoredWindowTitles and IdleThreshold)
         GetBufferFlushInterval();
         
+        // --- Priority 1: Locked Screen ---
+        if (_isLocked)
+        {
+            await UpdateTimeEntryAsync("LogonUI", "Windows Lock");
+            _sessionManager.Update("LogonUI", "Windows Lock", new List<string>());
+            return;
+        }
+
+        // --- Priority 2: AFK (Idle Timeout) - but NOT if media is playing ---
+        uint idleMs = Helpers.UserInputInfo.GetIdleTime();
+        int idleThresholdMs = GetIdleThresholdMs();
+        if (idleMs > idleThresholdMs)
+        {
+            // Check if audio is playing (e.g., watching a video without mouse/keyboard input)
+            if (!Helpers.AudioSessionTracker.IsGlobalAudioPlaying())
+            {
+                await UpdateTimeEntryAsync("Away", "AFK");
+                _sessionManager.Update("Away", "AFK", new List<string>());
+                return;
+            }
+            // Audio is playing, so we consider the user "engaged" - fall through to Active App
+        }
+
+        // --- Priority 3: Active App ---
         // Use fallback-aware method instead of direct GetForegroundWindow
         IntPtr handle = ForegroundWindowManager.GetActiveWindowHandle();
         uint currProcessId = ForegroundWindowManager.GetForegroundProcessId(handle);
@@ -369,9 +458,11 @@ public class ActivityLogger
         }
     }
     
-    // Ensure we save on shutdown
     public async Task SaveOnExitAsync()
     {
+        // Unsubscribe from session events to prevent memory leaks
+        Microsoft.Win32.SystemEvents.SessionSwitch -= OnSessionSwitch;
+        
         await FlushBufferAsync();
         await _sessionManager.SaveOnExitAsync();
     }

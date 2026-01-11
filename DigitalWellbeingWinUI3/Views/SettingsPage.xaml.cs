@@ -174,6 +174,9 @@ namespace DigitalWellbeingWinUI3.Views
             DataFlushIntervalTextBox.Value = UserPreferences.DataFlushIntervalSeconds;
             ToggleUseRamCache.IsOn = UserPreferences.UseRamCache;
             
+            // Idle Threshold (AFK Detection)
+            IdleThresholdTextBox.Value = UserPreferences.IdleThresholdSeconds;
+            
             // Theme
             string theme = UserPreferences.ThemeMode;
             foreach (ComboBoxItem item in CBTheme.Items)
@@ -466,6 +469,7 @@ namespace DigitalWellbeingWinUI3.Views
             UserPreferences.RefreshIntervalSeconds = (int)RefreshInterval.Value;
             UserPreferences.DataFlushIntervalSeconds = (int)DataFlushIntervalTextBox.Value;
             UserPreferences.UseRamCache = ToggleUseRamCache.IsOn;
+            UserPreferences.IdleThresholdSeconds = (int)IdleThresholdTextBox.Value;
 
             // Startup
             try
