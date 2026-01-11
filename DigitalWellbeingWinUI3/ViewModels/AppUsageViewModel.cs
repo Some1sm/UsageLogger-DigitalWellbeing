@@ -32,10 +32,10 @@ public class AppUsageViewModel : INotifyPropertyChanged
 
 	public TimeSpan TotalDuration;
 
-	private static readonly string[] excludeProcesses = new string[11]
+	private static readonly string[] excludeProcesses = new string[13]
 	{
 		"process", "explorer", "SearchHost", "Idle", "StartMenuExperienceHost", "ShellExperienceHost", "dwm", "LockApp",
-		"msiexec", "ApplicationFrameHost", "*LAST"
+		"msiexec", "ApplicationFrameHost", "Away", "LogonUI", "*LAST"
 	};
 
 	private static string[] userExcludedProcesses;
@@ -193,6 +193,23 @@ public class AppUsageViewModel : INotifyPropertyChanged
 	}
 
 	public ObservableCollection<GoalStreakItem> GoalStreaks { get; set; } = new ObservableCollection<GoalStreakItem>();
+
+	// AFK Time properties for dashboard display
+	private TimeSpan _afkDuration = TimeSpan.Zero;
+	public TimeSpan AfkDuration
+	{
+		get => _afkDuration;
+		set { _afkDuration = value; OnPropertyChanged(nameof(AfkDuration)); OnPropertyChanged(nameof(AfkDurationStr)); }
+	}
+	public string AfkDurationStr => DigitalWellbeing.Core.Helpers.StringHelper.FormatDurationCompact(_afkDuration);
+
+	private TimeSpan _lockDuration = TimeSpan.Zero;
+	public TimeSpan LockDuration
+	{
+		get => _lockDuration;
+		set { _lockDuration = value; OnPropertyChanged(nameof(LockDuration)); OnPropertyChanged(nameof(LockDurationStr)); }
+	}
+	public string LockDurationStr => DigitalWellbeing.Core.Helpers.StringHelper.FormatDurationCompact(_lockDuration);
 
 	public event PropertyChangedEventHandler PropertyChanged;
 
@@ -402,6 +419,14 @@ public class AppUsageViewModel : INotifyPropertyChanged
 					LoadedDate = dateTime;
 					TryRefreshData();
 					UpdatePieChartAndList(WeekAppUsage.ElementAt(index));
+					
+					// Immediately update AFK from pre-loaded data for selected day
+					var dayUsage = WeekAppUsage.ElementAt(index);
+					var afkApp = dayUsage.FirstOrDefault(a => a.ProcessName.Equals("Away", StringComparison.OrdinalIgnoreCase));
+					var lockApp = dayUsage.FirstOrDefault(a => a.ProcessName.Equals("LogonUI", StringComparison.OrdinalIgnoreCase));
+					AfkDuration = afkApp?.Duration ?? TimeSpan.Zero;
+					LockDuration = lockApp?.Duration ?? TimeSpan.Zero;
+					
 					List<AppUsage> list = (await GetBackgroundAudioData(dateTime)).Where(appUsageFilter).ToList();
 					list.Sort(appUsageSorter);
 					UpdateBackgroundAudioList(list);
@@ -427,6 +452,13 @@ public class AppUsageViewModel : INotifyPropertyChanged
 		try
 		{
 			List<AppUsage> list = await GetData(LoadedDate.Date);
+			
+			// Calculate AFK and Lock duration from unfiltered data
+			var afkApp = list.FirstOrDefault(a => a.ProcessName.Equals("Away", StringComparison.OrdinalIgnoreCase));
+			var lockApp = list.FirstOrDefault(a => a.ProcessName.Equals("LogonUI", StringComparison.OrdinalIgnoreCase));
+			AfkDuration = afkApp?.Duration ?? TimeSpan.Zero;
+			LockDuration = lockApp?.Duration ?? TimeSpan.Zero;
+			
 			int num = -1;
 			for (int i = 0; i < WeeklyChartLabelDates.Length; i++)
 			{

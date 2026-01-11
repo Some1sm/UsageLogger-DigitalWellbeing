@@ -726,6 +726,22 @@ namespace DigitalWellbeingWinUI3.Views
             return count == 0 ? Visibility.Visible : Visibility.Collapsed;
         }
 
+        // Helper method for AFK section visibility
+        public Visibility IsAfkVisible(TimeSpan afkDuration, TimeSpan lockDuration)
+        {
+            return (afkDuration > TimeSpan.Zero || lockDuration > TimeSpan.Zero) 
+                ? Visibility.Visible 
+                : Visibility.Collapsed;
+        }
+
+        // Helper method for AFK empty state visibility
+        public Visibility IsAfkEmpty(TimeSpan afkDuration, TimeSpan lockDuration)
+        {
+            return (afkDuration <= TimeSpan.Zero && lockDuration <= TimeSpan.Zero) 
+                ? Visibility.Visible 
+                : Visibility.Collapsed;
+        }
+
         private void UpdateViewMode(bool showCombined)
         {
             if (showCombined)

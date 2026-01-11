@@ -111,12 +111,25 @@ namespace DigitalWellbeingWinUI3.ViewModels
             }
             Stats.Add(new StatItem("\uE995", audioPlays.ToString("N0"), "Audio Events", "Times audio started playing"));
 
-            // 3. AFK Time
-            var afkTime = TimeSpan.FromSeconds(sorted.Where(s => s.IsAfk).Sum(s => s.Duration.TotalSeconds));
+            // Define AFK process names (for new Lock/AFK tracking)
+            var afkProcesses = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "Away", "LogonUI" };
+            
+            // Helper: Check if session is AFK (either by IsAfk flag or by process name)
+            Func<AppSession, bool> isAfkSession = s => s.IsAfk || afkProcesses.Contains(s.ProcessName);
+
+            // 3. AFK Time (includes Away process sessions)
+            var afkTime = TimeSpan.FromSeconds(sorted.Where(s => s.ProcessName == "Away").Sum(s => s.Duration.TotalSeconds));
             Stats.Add(new StatItem("\uE916", StringHelper.FormatDurationCompact(afkTime), "AFK Time", "Time spent away from keyboard"));
 
-            // 4. Active Time (non-AFK)
-            var activeTime = TimeSpan.FromSeconds(sorted.Where(s => !s.IsAfk).Sum(s => s.Duration.TotalSeconds));
+            // 3b. Lock Time (LogonUI process sessions)
+            var lockTime = TimeSpan.FromSeconds(sorted.Where(s => s.ProcessName == "LogonUI").Sum(s => s.Duration.TotalSeconds));
+            if (lockTime.TotalMinutes > 0)
+            {
+                Stats.Add(new StatItem("\uE72E", StringHelper.FormatDurationCompact(lockTime), "Lock Time", "Time with screen locked"));
+            }
+
+            // 4. Active Time (non-AFK, excluding Away and LogonUI)
+            var activeTime = TimeSpan.FromSeconds(sorted.Where(s => !isAfkSession(s)).Sum(s => s.Duration.TotalSeconds));
             Stats.Add(new StatItem("\uE770", StringHelper.FormatDurationCompact(activeTime), "Active Time", "Time actively using PC"));
 
             // 5. Longest Session
