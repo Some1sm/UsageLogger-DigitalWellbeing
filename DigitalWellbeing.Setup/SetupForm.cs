@@ -189,11 +189,17 @@ namespace DigitalWellbeing.Setup
             if (isInstalled)
             {
                 statusLabel.Text = "DigitalWellbeing is currently installed.";
+                
+                // Set the install path and scope to match existing installation (for repair)
+                txtInstallPath.Text = existingPath ?? (isUserInstall ? DefaultUserPath : DefaultDevicePath);
+                rbUserInstall.Checked = isUserInstall;
+                rbDeviceInstall.Checked = !isUserInstall;
+                
                 HideInstallOptions();
                 btnInstall.Visible = false;
                 
-                // For user installs, don't allow modifications (repair)
-                btnRepair.Visible = !isUserInstall;
+                // Show repair and uninstall for both install types
+                btnRepair.Visible = true;
                 btnUninstall.Visible = true;
             }
             else
@@ -266,6 +272,26 @@ namespace DigitalWellbeing.Setup
             {
                 // User cancelled UAC
                 MessageBox.Show("Administrator privileges are required to install for all users.", "Elevation Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void RestartAsAdminForUninstall()
+        {
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+            startInfo.FileName = Process.GetCurrentProcess().MainModule.FileName;
+            startInfo.UseShellExecute = true;
+            startInfo.Verb = "runas";
+            startInfo.Arguments = "/uninstall";
+            
+            try
+            {
+                Process.Start(startInfo);
+                Application.Exit();
+            }
+            catch (System.ComponentModel.Win32Exception)
+            {
+                // User cancelled UAC
+                MessageBox.Show("Administrator privileges are required to uninstall a system-wide installation.", "Elevation Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -406,14 +432,7 @@ namespace DigitalWellbeing.Setup
 
         private async Task RunUninstall()
         {
-            UpdateStatus("Stopping application...");
-            
-            foreach (var proc in Process.GetProcessesByName("DigitalWellbeingWinUI3")) { try { proc.Kill(); } catch { } }
-            foreach (var proc in Process.GetProcessesByName("DigitalWellbeingService")) { try { proc.Kill(); } catch { } }
-
-            await Task.Delay(2000);
-
-            // Determine install type from registry
+            // Check if device install first to determine if elevation is needed
             bool isDeviceInstall = false;
             string installPath = null;
 
@@ -425,6 +444,31 @@ namespace DigitalWellbeing.Setup
                     installPath = key.GetValue("InstallLocation") as string;
                 }
             }
+
+            // Require elevation for device uninstall
+            if (isDeviceInstall && !IsRunningAsAdmin())
+            {
+                RestartAsAdminForUninstall();
+                return;
+            }
+
+            if (installPath == null)
+            {
+                using (RegistryKey key = Registry.CurrentUser.OpenSubKey(RegistryKeyPath))
+                {
+                    if (key != null)
+                    {
+                        installPath = key.GetValue("InstallLocation") as string;
+                    }
+                }
+            }
+
+            UpdateStatus("Stopping application...");
+            
+            foreach (var proc in Process.GetProcessesByName("DigitalWellbeingWinUI3")) { try { proc.Kill(); } catch { } }
+            foreach (var proc in Process.GetProcessesByName("DigitalWellbeingService")) { try { proc.Kill(); } catch { } }
+
+            await Task.Delay(2000);
 
             if (installPath == null)
             {
