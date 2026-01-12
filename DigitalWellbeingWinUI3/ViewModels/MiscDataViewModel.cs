@@ -152,7 +152,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
                     EndDate = new DateTime(lastMonth.Year, lastMonth.Month, DateTime.DaysInMonth(lastMonth.Year, lastMonth.Month));
                     break;
                 case DateRangeOption.AllTime:
-                    StartDate = DateTime.MinValue; // Will be clamped by logic or repo
+                    StartDate = new DateTime(2020, 1, 1); // Safe minimum for UI binding
                     EndDate = today;
                     break;
                 case DateRangeOption.Custom:
@@ -182,12 +182,11 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 // Just in case
                 if (SelectedDateRange == DateRangeOption.AllTime)
                 {
-                    start = DateTime.MinValue; // Repo handles this? Or we just pick a reasonable past?
-                    // Actually repository LoadSessionsForDateRange iterates days. AllTime might vary.
-                    // Let's safe-guard: 2020-01-01
-                    start = new DateTime(2024, 1, 1); 
-                    // Better: Check files? For now, let's use a reasonable "App Start" date or just last year if AllTime
-                    start = new DateTime(2024, 1, 1); 
+                    // Ensure we use a safe minimum date consistent with UpdateDateRangeFromOption
+                    if (start < new DateTime(2020, 1, 1))
+                    {
+                        start = new DateTime(2020, 1, 1);
+                    }
                 }
 
                 var sessions = await LoadSessionsForDateRange(start, end);

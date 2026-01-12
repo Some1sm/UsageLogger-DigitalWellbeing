@@ -427,7 +427,13 @@
   <data name="MiscData_AFKTime" xml:space="preserve">
     <value>AFK Time</value>
   </data>
+  <data name="MiscData_AFKTimeDesc" xml:space="preserve">
+    <value>Time away from keyboard (idle)</value>
+  </data>
   <data name="MiscData_LockTime" xml:space="preserve">
     <value>Lock Time</value>
+  </data>
+  <data name="MiscData_LockTimeDesc" xml:space="preserve">
+    <value>Time with screen locked</value>
   </data>
 </root>
