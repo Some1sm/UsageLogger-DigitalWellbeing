@@ -177,6 +177,11 @@ namespace DigitalWellbeingWinUI3.Views
             // Idle Threshold (AFK Detection)
             IdleThresholdTextBox.Value = UserPreferences.IdleThresholdSeconds;
             
+            // Power Tracking
+            TxtAvgWatts.Text = UserPreferences.EstimatedPowerUsageWatts.ToString();
+            TxtKwhPrice.Text = UserPreferences.KwhPrice.ToString("0.##"); // Format properly
+            TxtCurrency.Text = UserPreferences.CurrencySymbol;
+
             // Theme
             string theme = UserPreferences.ThemeMode;
             foreach (ComboBoxItem item in CBTheme.Items)
@@ -460,16 +465,21 @@ namespace DigitalWellbeingWinUI3.Views
             // Gather all values
             UserPreferences.DayAmount = (int)DaysToShowTextBox.Value;
             UserPreferences.DetailedUsageDayCount = (int)DetailedDaysTextBox.Value;
-            UserPreferences.DetailedUsageDayCount = (int)DetailedDaysTextBox.Value;
             UserPreferences.MinumumDuration = TimeSpan.FromSeconds(MinDurationTextBox.Value);
             
             UserPreferences.MinimizeOnExit = ToggleMinimizeOnExit.IsOn;
             UserPreferences.IncognitoMode = ToggleIncognitoMode.IsOn;
             UserPreferences.EnableAutoRefresh = EnableAutoRefresh.IsOn;
             UserPreferences.RefreshIntervalSeconds = (int)RefreshInterval.Value;
+            
             UserPreferences.DataFlushIntervalSeconds = (int)DataFlushIntervalTextBox.Value;
             UserPreferences.UseRamCache = ToggleUseRamCache.IsOn;
             UserPreferences.IdleThresholdSeconds = (int)IdleThresholdTextBox.Value;
+
+            // Power Tracking
+            if (int.TryParse(TxtAvgWatts.Text, out int watts)) UserPreferences.EstimatedPowerUsageWatts = watts;
+            if (double.TryParse(TxtKwhPrice.Text, out double price)) UserPreferences.KwhPrice = price;
+            if (!string.IsNullOrWhiteSpace(TxtCurrency.Text)) UserPreferences.CurrencySymbol = TxtCurrency.Text.Trim();
 
             // Startup
             try
@@ -786,6 +796,20 @@ namespace DigitalWellbeingWinUI3.Views
             {
                 Debug.WriteLine($"Service restart failed: {ex.Message}");
             }
+        }
+        private void TxtAvgWatts_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            MarkDirty();
+        }
+
+        private void TxtKwhPrice_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            MarkDirty();
+        }
+
+        private void TxtCurrency_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            MarkDirty();
         }
     }
 }

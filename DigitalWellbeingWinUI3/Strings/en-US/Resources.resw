@@ -80,7 +80,10 @@
     <value>Apply</value>
   </data>
   <data name="History_TotalScreenTime.Text" xml:space="preserve">
-    <value>Total Screen Time</value>
+    <value>Total Active Screen Time</value>
+  </data>
+  <data name="History_TotalAfkTime.Text" xml:space="preserve">
+    <value>Total AFK Time</value>
   </data>
   <data name="History_DailyTrends.Text" xml:space="preserve">
     <value>Daily Trends</value>
@@ -393,5 +396,38 @@
   </data>
   <data name="Settings_IdleThresholdDesc.Text" xml:space="preserve">
     <value>Time of inactivity before logging as "AFK" (default 300s = 5 min).</value>
+  </data>
+  <data name="Settings_PowerTitle.Text" xml:space="preserve">
+    <value>Power Consumption &amp; Cost</value>
+  </data>
+  <data name="Settings_PowerDesc.Text" xml:space="preserve">
+    <value>Estimate wasted energy cost during AFK periods.</value>
+  </data>
+  <data name="Settings_AvgPower.Text" xml:space="preserve">
+    <value>Avg PC Power (Watts)</value>
+  </data>
+  <data name="Settings_KwhPrice.Text" xml:space="preserve">
+    <value>Price per kWh</value>
+  </data>
+  <data name="Settings_Currency.Text" xml:space="preserve">
+    <value>Currency</value>
+  </data>
+  <data name="MiscData_WastedEnergy" xml:space="preserve">
+    <value>Wasted Energy</value>
+  </data>
+  <data name="MiscData_WastedMoney" xml:space="preserve">
+    <value>Wasted Money</value>
+  </data>
+  <data name="MiscData_WastedEnergyDesc" xml:space="preserve">
+    <value>Est. {0}W usage when AFK</value>
+  </data>
+  <data name="MiscData_WastedMoneyDesc" xml:space="preserve">
+    <value>Est. cost of AFK power</value>
+  </data>
+  <data name="MiscData_AFKTime" xml:space="preserve">
+    <value>AFK Time</value>
+  </data>
+  <data name="MiscData_LockTime" xml:space="preserve">
+    <value>Lock Time</value>
   </data>
 </root>

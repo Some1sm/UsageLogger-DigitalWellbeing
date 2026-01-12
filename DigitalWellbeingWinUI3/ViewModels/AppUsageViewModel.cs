@@ -44,6 +44,9 @@ public class AppUsageViewModel : INotifyPropertyChanged
 
 	public bool IsWeeklyDataLoaded;
 
+	// Store AFK/Lock durations per date for quick access
+	private Dictionary<DateTime, (TimeSpan Afk, TimeSpan Lock)> _weekAfkData = new Dictionary<DateTime, (TimeSpan, TimeSpan)>();
+
 	private UISettings uiSettings;
 
 	private DispatcherQueue dispatcherQueue;
@@ -329,7 +332,15 @@ public class AppUsageViewModel : INotifyPropertyChanged
 			}
 			var list2 = (await Task.WhenAll(list.Select(async delegate(DateTime date)
 			{
-				List<AppUsage> list6 = (await GetData(date)).Where(appUsageFilter).ToList();
+				// Get unfiltered data first for AFK calculation
+				List<AppUsage> unfilteredData = await GetData(date);
+				
+				// Calculate AFK from unfiltered data
+				var afkApp = unfilteredData.FirstOrDefault(a => a.ProcessName.Equals("Away", StringComparison.OrdinalIgnoreCase));
+				var lockApp = unfilteredData.FirstOrDefault(a => a.ProcessName.Equals("LogonUI", StringComparison.OrdinalIgnoreCase));
+				
+				// Now filter for display
+				List<AppUsage> list6 = unfilteredData.Where(appUsageFilter).ToList();
 				list6.Sort(appUsageSorter);
 				TimeSpan timeSpan = TimeSpan.Zero;
 				foreach (AppUsage item in list6)
@@ -341,19 +352,28 @@ public class AppUsageViewModel : INotifyPropertyChanged
 					Date = date,
 					Usage = list6,
 					Hours = timeSpan.TotalHours,
-					Label = date.ToString("ddd")
+					Label = date.ToString("ddd"),
+					AfkDuration = afkApp?.Duration ?? TimeSpan.Zero,
+					LockDuration = lockApp?.Duration ?? TimeSpan.Zero
 				};
 			}).ToList())).OrderBy(r => r.Date).ToList();
 			List<List<AppUsage>> list3 = new List<List<AppUsage>>();
 			ObservableCollection<double> observableCollection = new ObservableCollection<double>();
 			List<string> list4 = new List<string>();
 			List<DateTime> list5 = new List<DateTime>();
+			
+			// Clear and populate AFK data cache
+			_weekAfkData.Clear();
+			
 			foreach (var item2 in list2)
 			{
 				list3.Add(item2.Usage);
 				observableCollection.Add(item2.Hours);
 				list4.Add(item2.Label);
 				list5.Add(item2.Date);
+				
+				// Store AFK data for this date
+				_weekAfkData[item2.Date.Date] = (item2.AfkDuration, item2.LockDuration);
 			}
 			WeekAppUsage.Clear();
 			foreach (List<AppUsage> item3 in list3)
@@ -420,12 +440,17 @@ public class AppUsageViewModel : INotifyPropertyChanged
 					TryRefreshData();
 					UpdatePieChartAndList(WeekAppUsage.ElementAt(index));
 					
-					// Immediately update AFK from pre-loaded data for selected day
-					var dayUsage = WeekAppUsage.ElementAt(index);
-					var afkApp = dayUsage.FirstOrDefault(a => a.ProcessName.Equals("Away", StringComparison.OrdinalIgnoreCase));
-					var lockApp = dayUsage.FirstOrDefault(a => a.ProcessName.Equals("LogonUI", StringComparison.OrdinalIgnoreCase));
-					AfkDuration = afkApp?.Duration ?? TimeSpan.Zero;
-					LockDuration = lockApp?.Duration ?? TimeSpan.Zero;
+					// Use cached AFK data instead of searching filtered list
+					if (_weekAfkData.TryGetValue(dateTime.Date, out var afkData))
+					{
+						AfkDuration = afkData.Afk;
+						LockDuration = afkData.Lock;
+					}
+					else
+					{
+						AfkDuration = TimeSpan.Zero;
+						LockDuration = TimeSpan.Zero;
+					}
 					
 					List<AppUsage> list = (await GetBackgroundAudioData(dateTime)).Where(appUsageFilter).ToList();
 					list.Sort(appUsageSorter);

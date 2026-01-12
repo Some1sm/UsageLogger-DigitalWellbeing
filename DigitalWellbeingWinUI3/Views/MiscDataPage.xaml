@@ -8,9 +8,14 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:l="using:WinUI3Localizer"
+    xmlns:converters="using:DigitalWellbeingWinUI3.Converters"
     mc:Ignorable="d"
     Background="Transparent"
     SizeChanged="RootPage_SizeChanged">
+
+    <Page.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </Page.Resources>
 
     <Grid Padding="24">
         <Grid.RowDefinitions>
@@ -35,22 +40,38 @@
             </StackPanel>
             
             <!-- Date Selector (Dashboard Style) -->
-            <StackPanel x:Name="HeaderDatePanel" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right">
-                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="10,5">
-                    <StackPanel Orientation="Horizontal">
-                        <Button Background="Transparent" VerticalAlignment="Center" BorderThickness="0" Padding="0" Margin="0,0,10,0" ToolTipService.ToolTip="Select Date">
-                            <TextBlock Text="📅" VerticalAlignment="Center"/>
-                            <Button.Flyout>
-                                <Flyout x:Name="CalendarFlyout" Placement="Bottom">
-                                    <CalendarView x:Name="CalendarPicker" SelectionMode="Single" SelectedDatesChanged="CalendarPicker_SelectedDatesChanged" />
-                                </Flyout>
-                            </Button.Flyout>
-                        </Button>
-                        <TextBlock Text="{x:Bind ViewModel.StrLoadedDate, Mode=OneWay}" Style="{ThemeResource SubtitleTextBlockStyle}" FontSize="16" VerticalAlignment="Center" Width="220" TextAlignment="Center"/>
-                        <Button Content="&lt;" Click="BtnPrev_Click" Background="Transparent" BorderThickness="0" Margin="5,0,0,0"/>
-                        <Button Content="&gt;" IsEnabled="{x:Bind ViewModel.CanGoNext, Mode=OneWay}" Click="BtnNext_Click" Background="Transparent" BorderThickness="0"/>
+            <StackPanel x:Name="HeaderDatePanel" Grid.Column="1" Orientation="Horizontal" Spacing="15" VerticalAlignment="Top" HorizontalAlignment="Right">
+                
+                <!-- Time Period Dropdown -->
+                <StackPanel Spacing="4" VerticalAlignment="Center">
+                     <TextBlock l:Uids.Uid="History_TimePeriod" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                     <ComboBox ItemsSource="{x:Bind ViewModel.DateRangeDisplayOptions, Mode=OneWay}" 
+                               SelectedIndex="{x:Bind ViewModel.SelectedDateRangeIndex, Mode=TwoWay}" 
+                               Width="140"/>
+                </StackPanel>
+
+                <!-- Custom Range (Visible if custom) -->
+                <StackPanel Orientation="Horizontal" Spacing="10" Visibility="{Binding IsCustomDateRange, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <!-- Start Date -->
+                    <StackPanel Spacing="4">
+                        <TextBlock l:Uids.Uid="History_StartDate" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                        <CalendarDatePicker Date="{x:Bind ViewModel.StartDate, Mode=TwoWay}" Width="140"/>
                     </StackPanel>
-                </Border>
+                    
+                    <TextBlock Text="-" VerticalAlignment="Center" Margin="0,20,0,0" Opacity="0.5"/>
+                    
+                    <!-- End Date -->
+                    <StackPanel Spacing="4">
+                        <TextBlock l:Uids.Uid="History_EndDate" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                        <CalendarDatePicker Date="{x:Bind ViewModel.EndDate, Mode=TwoWay}" Width="140"/>
+                    </StackPanel>
+                    
+                    <!-- Go Button -->
+                    <Button Content="&#xE721;" FontFamily="Segoe MDL2 Assets" 
+                            Command="{x:Bind ViewModel.RefreshCommand}" 
+                            Style="{StaticResource AccentButtonStyle}" 
+                            VerticalAlignment="Bottom" Height="32" Width="36" Padding="0"/>
+                </StackPanel>
             </StackPanel>
         </Grid>
 

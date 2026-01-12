@@ -130,6 +130,14 @@ namespace DigitalWellbeingWinUI3.ViewModels
             set { if (_totalChangePositive != value) { _totalChangePositive = value; OnPropertyChanged(); } }
         }
         
+        // AFK Time for the date range
+        private string _afkTimeText;
+        public string AfkTimeText
+        {
+            get => _afkTimeText;
+            set { if (_afkTimeText != value) { _afkTimeText = value; OnPropertyChanged(); } }
+        }
+        
         // Previous period average line value (for trend chart)
         private double _previousPeriodAverage;
         public double PreviousPeriodAverage
@@ -500,6 +508,12 @@ namespace DigitalWellbeingWinUI3.ViewModels
             double currentTotal = dailyTotals.Values.Sum();
             TotalHoursText = StringHelper.FormatDurationFull(TimeSpan.FromMinutes(currentTotal));
             
+            // Calculate AFK time (Away + LogonUI)
+            double afkMinutes = currentSessions
+                .Where(s => s.ProcessName.Equals("Away", StringComparison.OrdinalIgnoreCase) || 
+                           s.ProcessName.Equals("LogonUI", StringComparison.OrdinalIgnoreCase))
+                .Sum(s => s.Duration.TotalMinutes);
+            AfkTimeText = afkMinutes > 0 ? StringHelper.FormatDurationCompact(TimeSpan.FromMinutes(afkMinutes)) : "0m";            
             if (prevTotal > 0)
             {
                 double changePercent = ((currentTotal - prevTotal) / prevTotal) * 100;

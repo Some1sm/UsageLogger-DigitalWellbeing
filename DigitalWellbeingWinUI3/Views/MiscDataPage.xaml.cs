@@ -14,32 +14,16 @@ namespace DigitalWellbeingWinUI3.Views
         {
             ViewModel = new MiscDataViewModel();
             this.InitializeComponent();
+            this.DataContext = this;
         }
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            await ViewModel.LoadDataAsync();
+            // Redundant: ViewModel constructor already triggers initial load via SelectedDateRange setter
         }
 
-        private void CalendarPicker_SelectedDatesChanged(CalendarView sender, CalendarViewSelectedDatesChangedEventArgs args)
-        {
-            if (args.AddedDates.Count > 0)
-            {
-                ViewModel.SelectedDate = args.AddedDates[0];
-                CalendarFlyout.Hide();
-            }
-        }
 
-        private void BtnPrev_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
-        {
-            ViewModel.PreviousDay();
-        }
-
-        private void BtnNext_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
-        {
-            ViewModel.NextDay();
-        }
         public static readonly DependencyProperty ResponsiveItemWidthProperty =
             DependencyProperty.Register(nameof(ResponsiveItemWidth), typeof(double), typeof(MiscDataPage), new PropertyMetadata(210.0));
 

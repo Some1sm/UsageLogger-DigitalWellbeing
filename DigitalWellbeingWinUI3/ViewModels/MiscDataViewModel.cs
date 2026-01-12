@@ -2,6 +2,7 @@ using DigitalWellbeing.Core;
 using DigitalWellbeing.Core.Data;
 using DigitalWellbeing.Core.Helpers;
 using DigitalWellbeing.Core.Models;
+using DigitalWellbeingWinUI3.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,198 +15,328 @@ namespace DigitalWellbeingWinUI3.ViewModels
 {
     /// <summary>
     /// ViewModel for the Miscellaneous Data ("Fun Facts") page.
-    /// Computes various statistics from session data.
+    /// Computes various statistics from session data over a selected date range.
     /// </summary>
     public class MiscDataViewModel : INotifyPropertyChanged
     {
         private readonly AppSessionRepository _repository;
 
+        // Date Range Options
+        public enum DateRangeOption
+        {
+            Today,
+            Yesterday,
+            Last7Days,
+            ThisMonth,
+            LastMonth,
+            AllTime,
+            Custom
+        }
+
         public MiscDataViewModel()
         {
             _repository = new AppSessionRepository(ApplicationPath.UsageLogsFolder);
             Stats = new ObservableCollection<StatItem>();
+            DateRangeOptions = Enum.GetValues(typeof(DateRangeOption)).Cast<DateRangeOption>().ToList();
+            
+            // Create user-friendly strings
+            DateRangeDisplayOptions = DateRangeOptions.Select(o => 
+            {
+                switch (o)
+                {
+                    case DateRangeOption.Last7Days: return "Last 7 Days";
+                    case DateRangeOption.ThisMonth: return "This Month";
+                    case DateRangeOption.LastMonth: return "Last Month";
+                    case DateRangeOption.AllTime: return "All Time";
+                    default: return o.ToString();
+                }
+            }).ToList();
+
+            SelectedDateRange = DateRangeOption.Last7Days; // Default
+            
+            RefreshCommand = new RelayCommand(async _ => await LoadDataAsync());
         }
 
-        /// <summary>
-        /// Collection of stat items to display.
-        /// </summary>
         public ObservableCollection<StatItem> Stats { get; }
+        public List<DateRangeOption> DateRangeOptions { get; }
+        public List<string> DateRangeDisplayOptions { get; }
+        public System.Windows.Input.ICommand RefreshCommand { get; }
 
-        private DateTimeOffset? _selectedDate = DateTime.Today;
-        public DateTimeOffset? SelectedDate
+        public int SelectedDateRangeIndex
         {
-            get => _selectedDate;
+            get => DateRangeOptions.IndexOf(SelectedDateRange);
             set
             {
-                if (_selectedDate != value)
+                if (value >= 0 && value < DateRangeOptions.Count)
                 {
-                    _selectedDate = value;
+                    SelectedDateRange = DateRangeOptions[value];
                     OnPropertyChanged();
-                    OnPropertyChanged(nameof(StrLoadedDate));
-                    OnPropertyChanged(nameof(CanGoNext));
+                }
+            }
+        }
+
+        private DateRangeOption _selectedDateRange;
+        public DateRangeOption SelectedDateRange
+        {
+            get => _selectedDateRange;
+            set
+            {
+                if (_selectedDateRange != value)
+                {
+                    _selectedDateRange = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(SelectedDateRangeIndex)); // Sync index
+                    UpdateDateRangeFromOption();
+                    OnPropertyChanged(nameof(IsCustomDateRange));
                     _ = LoadDataAsync();
                 }
             }
         }
 
-        public string StrLoadedDate
+        public bool IsCustomDateRange => SelectedDateRange == DateRangeOption.Custom;
+
+        private DateTimeOffset _startDate = DateTime.Today.AddDays(-30);
+        public DateTimeOffset StartDate
         {
-            get
+            get => _startDate;
+            set
             {
-                var d = (SelectedDate ?? DateTime.Today).Date;
-                if (d == DateTime.Today) return $"Today, {d:M/d}";
-                if (d == DateTime.Today.AddDays(-1)) return $"Yesterday, {d:M/d}";
-                return d.ToString("dddd, MMMM d, yyyy");
+                if (_startDate != value)
+                {
+                    _startDate = value;
+                    OnPropertyChanged();
+                    if (IsCustomDateRange) _ = LoadDataAsync();
+                }
             }
         }
 
-        public bool CanGoNext => (SelectedDate ?? DateTime.Today).Date < DateTime.Today;
-
-        public void NextDay()
+        private DateTimeOffset _endDate = DateTime.Today;
+        public DateTimeOffset EndDate
         {
-            if (CanGoNext) SelectedDate = (SelectedDate ?? DateTime.Today).AddDays(1);
+            get => _endDate;
+            set
+            {
+                if (_endDate != value)
+                {
+                    _endDate = value;
+                    OnPropertyChanged();
+                    if (IsCustomDateRange) _ = LoadDataAsync();
+                }
+            }
         }
 
-        public void PreviousDay()
+        private void UpdateDateRangeFromOption()
         {
-            SelectedDate = (SelectedDate ?? DateTime.Today).AddDays(-1);
+            var today = DateTime.Today;
+            switch (SelectedDateRange)
+            {
+                case DateRangeOption.Today:
+                    StartDate = today;
+                    EndDate = today;
+                    break;
+                case DateRangeOption.Yesterday:
+                    StartDate = today.AddDays(-1);
+                    EndDate = today.AddDays(-1);
+                    break;
+                case DateRangeOption.Last7Days:
+                    StartDate = today.AddDays(-6);
+                    EndDate = today;
+                    break;
+                case DateRangeOption.ThisMonth:
+                    StartDate = new DateTime(today.Year, today.Month, 1);
+                    EndDate = today;
+                    break;
+                case DateRangeOption.LastMonth:
+                    var lastMonth = today.AddMonths(-1);
+                    StartDate = new DateTime(lastMonth.Year, lastMonth.Month, 1);
+                    EndDate = new DateTime(lastMonth.Year, lastMonth.Month, DateTime.DaysInMonth(lastMonth.Year, lastMonth.Month));
+                    break;
+                case DateRangeOption.AllTime:
+                    StartDate = DateTime.MinValue; // Will be clamped by logic or repo
+                    EndDate = today;
+                    break;
+                case DateRangeOption.Custom:
+                    // Keep existing values
+                    break;
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string name = null)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
-        /// <summary>
-        /// Loads and computes all statistics for the selected date.
-        /// </summary>
+        private bool _isBusy = false;
+
         public async Task LoadDataAsync()
         {
-            Stats.Clear();
+            if (_isBusy) return;
+            _isBusy = true;
 
-            var targetDate = SelectedDate?.Date ?? DateTime.Today;
-            var sessions = await _repository.GetSessionsForDateAsync(targetDate);
-            if (sessions == null || sessions.Count == 0)
+            try
             {
-                Stats.Add(new StatItem("\uE8B7", "No Data", "Start using your PC to see stats!", ""));
-                return;
-            }
-
-            // Sort by StartTime for edge detection
-            var sorted = sessions.OrderBy(s => s.StartTime).ToList();
-
-            // 1. Window Switches (non-AFK sessions count)
-            int windowSwitches = sorted.Count(s => !s.IsAfk);
-            Stats.Add(new StatItem("\uE8A5", windowSwitches.ToString("N0"), "Window Switches", "Focus changes today"));
-
-            // 2. Audio Plays (Rising Edge: No Audio -> Audio)
-            int audioPlays = 0;
-            bool prevHadAudio = false;
-            foreach (var s in sorted)
-            {
-                bool currHasAudio = s.AudioSources != null && s.AudioSources.Count > 0;
-                if (currHasAudio && !prevHadAudio)
+                Stats.Clear();
+                
+                DateTime start = StartDate.Date;
+                DateTime end = EndDate.Date;
+                
+                // Just in case
+                if (SelectedDateRange == DateRangeOption.AllTime)
                 {
-                    audioPlays++;
+                    start = DateTime.MinValue; // Repo handles this? Or we just pick a reasonable past?
+                    // Actually repository LoadSessionsForDateRange iterates days. AllTime might vary.
+                    // Let's safe-guard: 2020-01-01
+                    start = new DateTime(2024, 1, 1); 
+                    // Better: Check files? For now, let's use a reasonable "App Start" date or just last year if AllTime
+                    start = new DateTime(2024, 1, 1); 
                 }
-                prevHadAudio = currHasAudio;
+
+                var sessions = await LoadSessionsForDateRange(start, end);
+                
+                if (sessions == null || sessions.Count == 0)
+                {
+                    Stats.Add(new StatItem("\uE8B7", "No Data", LocalizationHelper.GetString("MiscData_NoData") ?? "No Data", LocalizationHelper.GetString("MiscData_NoDataDesc") ?? "No usage logs found."));
+                    return;
+                }
+
+                var sorted = sessions.OrderBy(s => s.StartTime).ToList();
+
+                // 1. Window Switches (non-AFK sessions count)
+                int windowSwitches = sorted.Count(s => !s.IsAfk);
+                Stats.Add(new StatItem("\uE8A5", windowSwitches.ToString("N0"), "Window Switches", "Total focus changes"));
+
+                // 2. Audio Plays (Rising Edge)
+                int audioPlays = 0;
+                bool prevHadAudio = false;
+                foreach (var s in sorted)
+                {
+                    bool currHasAudio = s.AudioSources != null && s.AudioSources.Count > 0;
+                    if (currHasAudio && !prevHadAudio) audioPlays++;
+                    prevHadAudio = currHasAudio;
+                }
+                Stats.Add(new StatItem("\uE995", audioPlays.ToString("N0"), "Audio Events", "Times audio started playing"));
+
+                // Define AFK process names
+                var afkProcesses = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "Away", "LogonUI" };
+                Func<AppSession, bool> isAfkSession = s => s.IsAfk || afkProcesses.Contains(s.ProcessName);
+
+                // 3. AFK Time
+                double afkSeconds = sorted.Where(s => s.ProcessName == "Away").Sum(s => s.Duration.TotalSeconds);
+                var afkTime = TimeSpan.FromSeconds(afkSeconds);
+                Stats.Add(new StatItem("\uE916", StringHelper.FormatDurationCompact(afkTime), LocalizationHelper.GetString("MiscData_AFKTime"), LocalizationHelper.GetString("MiscData_AFKTimeDesc")));
+
+                // 3b. Lock Time
+                double lockSeconds = sorted.Where(s => s.ProcessName == "LogonUI").Sum(s => s.Duration.TotalSeconds);
+                var lockTime = TimeSpan.FromSeconds(lockSeconds);
+                if (lockTime.TotalMinutes > 0)
+                {
+                    Stats.Add(new StatItem("\uE72E", StringHelper.FormatDurationCompact(lockTime), LocalizationHelper.GetString("MiscData_LockTime"), LocalizationHelper.GetString("MiscData_LockTimeDesc")));
+                }
+
+                // --- NEW: Power & Cost ---
+                double totalAfkHours = (afkSeconds + lockSeconds) / 3600.0;
+                if (totalAfkHours > 0)
+                {
+                    // Watts
+                    int watts = UserPreferences.EstimatedPowerUsageWatts;
+                    double kWh = totalAfkHours * watts / 1000.0;
+                    
+                    // Cost
+                    double price = UserPreferences.KwhPrice;
+                    double cost = kWh * price;
+                    string currency = UserPreferences.CurrencySymbol;
+                    
+                    string energyLabel = LocalizationHelper.GetString("MiscData_WastedEnergy");
+                    string energyDesc = string.Format(LocalizationHelper.GetString("MiscData_WastedEnergyDesc") ?? "Est. {0}W usage when AFK", watts);
+                    string moneyLabel = LocalizationHelper.GetString("MiscData_WastedMoney");
+                    string moneyDesc = LocalizationHelper.GetString("MiscData_WastedMoneyDesc");
+
+                    Stats.Add(new StatItem("\uE945", $"{kWh:F2} kWh", energyLabel, energyDesc));
+                    Stats.Add(new StatItem("\uE1CF", $"{currency}{cost:F2}", moneyLabel, moneyDesc));
+                }
+                // -------------------------
+
+                // 4. Active Time
+                var activeTime = TimeSpan.FromSeconds(sorted.Where(s => !isAfkSession(s)).Sum(s => s.Duration.TotalSeconds));
+                Stats.Add(new StatItem("\uE770", StringHelper.FormatDurationCompact(activeTime), "Active Time", "Time actively using PC"));
+
+                // 5. Longest Session
+                var longest = sorted.Where(s => !s.IsAfk).OrderByDescending(s => s.Duration).FirstOrDefault();
+                if (longest != null)
+                {
+                    string appName = string.IsNullOrEmpty(longest.ProgramName) ? longest.ProcessName : longest.ProgramName;
+                    if (appName.Length > 20) appName = appName.Substring(0, 20) + "...";
+                    Stats.Add(new StatItem("\uE768", StringHelper.FormatDurationCompact(longest.Duration), "Longest Session", appName));
+                }
+
+                // 6. Most Used App
+                var topApp = sorted.Where(s => !isAfkSession(s))
+                    .GroupBy(s => s.ProcessName)
+                    .OrderByDescending(g => g.Sum(s => s.Duration.TotalSeconds))
+                    .FirstOrDefault();
+                if (topApp != null)
+                {
+                    var topDuration = TimeSpan.FromSeconds(topApp.Sum(s => s.Duration.TotalSeconds));
+                    Stats.Add(new StatItem("\uE734", StringHelper.FormatDurationCompact(topDuration), "Top App", topApp.Key));
+                }
+
+                // 7. Unique Apps
+                int uniqueApps = sorted.Where(s => !s.IsAfk).Select(s => s.ProcessName).Distinct().Count();
+                Stats.Add(new StatItem("\uE74C", uniqueApps.ToString(), "Unique Apps", "Different applications used"));
+
+                // 9. Top Website
+                var browserProcesses = new HashSet<string>(StringComparer.OrdinalIgnoreCase) 
+                { "chrome", "msedge", "firefox", "opera", "brave", "vivaldi", "arc" };
+                
+                var topSite = sorted
+                    .Where(s => !s.IsAfk && browserProcesses.Contains(s.ProcessName.ToLowerInvariant()))
+                    .Where(s => !string.IsNullOrEmpty(s.ProgramName) && s.ProgramName != s.ProcessName)
+                    .GroupBy(s => s.ProgramName)
+                    .OrderByDescending(g => g.Sum(s => s.Duration.TotalSeconds))
+                    .FirstOrDefault();
+
+                if (topSite != null)
+                {
+                    var siteDuration = TimeSpan.FromSeconds(topSite.Sum(s => s.Duration.TotalSeconds));
+                    string siteName = topSite.Key;
+                    if (siteName.Length > 25) siteName = siteName.Substring(0, 25) + "...";
+                    Stats.Add(new StatItem("\uE774", StringHelper.FormatDurationCompact(siteDuration), "Top Website", siteName));
+                }
             }
-            Stats.Add(new StatItem("\uE995", audioPlays.ToString("N0"), "Audio Events", "Times audio started playing"));
-
-            // Define AFK process names (for new Lock/AFK tracking)
-            var afkProcesses = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "Away", "LogonUI" };
-            
-            // Helper: Check if session is AFK (either by IsAfk flag or by process name)
-            Func<AppSession, bool> isAfkSession = s => s.IsAfk || afkProcesses.Contains(s.ProcessName);
-
-            // 3. AFK Time (includes Away process sessions)
-            var afkTime = TimeSpan.FromSeconds(sorted.Where(s => s.ProcessName == "Away").Sum(s => s.Duration.TotalSeconds));
-            Stats.Add(new StatItem("\uE916", StringHelper.FormatDurationCompact(afkTime), "AFK Time", "Time spent away from keyboard"));
-
-            // 3b. Lock Time (LogonUI process sessions)
-            var lockTime = TimeSpan.FromSeconds(sorted.Where(s => s.ProcessName == "LogonUI").Sum(s => s.Duration.TotalSeconds));
-            if (lockTime.TotalMinutes > 0)
+            finally
             {
-                Stats.Add(new StatItem("\uE72E", StringHelper.FormatDurationCompact(lockTime), "Lock Time", "Time with screen locked"));
+                _isBusy = false;
             }
-
-            // 4. Active Time (non-AFK, excluding Away and LogonUI)
-            var activeTime = TimeSpan.FromSeconds(sorted.Where(s => !isAfkSession(s)).Sum(s => s.Duration.TotalSeconds));
-            Stats.Add(new StatItem("\uE770", StringHelper.FormatDurationCompact(activeTime), "Active Time", "Time actively using PC"));
-
-            // 5. Longest Session
-            var longest = sorted.Where(s => !s.IsAfk).OrderByDescending(s => s.Duration).FirstOrDefault();
-            if (longest != null)
+        }
+        
+        // Helper to load range (Blocking logic moved to Task)
+        private async Task<List<AppSession>> LoadSessionsForDateRange(DateTime start, DateTime end)
+        {
+            return await Task.Run(async () =>
             {
-                string appName = string.IsNullOrEmpty(longest.ProgramName) ? longest.ProcessName : longest.ProgramName;
-                if (appName.Length > 20) appName = appName.Substring(0, 20) + "...";
-                Stats.Add(new StatItem("\uE768", StringHelper.FormatDurationCompact(longest.Duration), "Longest Session", appName));
-            }
+                List<AppSession> total = new List<AppSession>();
+                // Sanity check for AllTime to prevent freeze
+                if ((end - start).TotalDays > 365 * 2) start = end.AddYears(-2);
 
-            // 6. Most Used App
-            var topApp = sorted
-                .Where(s => !s.IsAfk)
-                .GroupBy(s => s.ProcessName)
-                .OrderByDescending(g => g.Sum(s => s.Duration.TotalSeconds))
-                .FirstOrDefault();
-            if (topApp != null)
-            {
-                var topDuration = TimeSpan.FromSeconds(topApp.Sum(s => s.Duration.TotalSeconds));
-                Stats.Add(new StatItem("\uE734", StringHelper.FormatDurationCompact(topDuration), "Top App", topApp.Key));
-            }
-
-            // 7. Unique Apps Used
-            int uniqueApps = sorted.Where(s => !s.IsAfk).Select(s => s.ProcessName).Distinct().Count();
-            Stats.Add(new StatItem("\uE74C", uniqueApps.ToString(), "Unique Apps", "Different applications used"));
-
-            // 8. Peak Hour (Hour with most sessions)
-            var peakHour = sorted
-                .Where(s => !s.IsAfk)
-                .GroupBy(s => s.StartTime.Hour)
-                .OrderByDescending(g => g.Count())
-                .FirstOrDefault();
-            if (peakHour != null)
-            {
-                string hourStr = DateTime.Today.AddHours(peakHour.Key).ToString("h tt");
-                Stats.Add(new StatItem("\uE823", hourStr, "Busiest Hour", $"{peakHour.Count()} sessions"));
-            }
-
-            // 9. Top Website (from browsers)
-            var browserProcesses = new HashSet<string>(StringComparer.OrdinalIgnoreCase) 
-            { 
-                "chrome", "msedge", "firefox", "opera", "brave", "vivaldi", "arc"
-            };
-            var browserSessions = sorted
-                .Where(s => !s.IsAfk && browserProcesses.Contains(s.ProcessName.ToLowerInvariant()))
-                .Where(s => !string.IsNullOrEmpty(s.ProgramName) && s.ProgramName != s.ProcessName)
-                .GroupBy(s => s.ProgramName)
-                .OrderByDescending(g => g.Sum(s => s.Duration.TotalSeconds))
-                .FirstOrDefault();
-            if (browserSessions != null)
-            {
-                var siteDuration = TimeSpan.FromSeconds(browserSessions.Sum(s => s.Duration.TotalSeconds));
-                string siteName = browserSessions.Key;
-                if (siteName.Length > 25) siteName = siteName.Substring(0, 25) + "...";
-                Stats.Add(new StatItem("\uE774", StringHelper.FormatDurationCompact(siteDuration), "Top Website", siteName));
-            }
-
-            // 10. Top Category (by AppTag)
-            var categoryDurations = sorted
-                .Where(s => !s.IsAfk)
-                .GroupBy(s => Helpers.AppTagHelper.GetAppTag(s.ProcessName))
-                .Where(g => g.Key != DigitalWellbeing.Core.Models.AppTag.Untagged)
-                .Select(g => new { Tag = g.Key, Duration = TimeSpan.FromSeconds(g.Sum(s => s.Duration.TotalSeconds)) })
-                .OrderByDescending(x => x.Duration)
-                .FirstOrDefault();
-            if (categoryDurations != null)
-            {
-                Stats.Add(new StatItem("\uE8EC", Helpers.AppTagHelper.GetTagDisplayName(categoryDurations.Tag), "Top Category", StringHelper.FormatDurationCompact(categoryDurations.Duration)));
-            }
+                for (DateTime date = start; date <= end; date = date.AddDays(1))
+                {
+                    var sessions = await _repository.GetSessionsForDateAsync(date);
+                    if (sessions != null) total.AddRange(sessions);
+                }
+                
+                // Retro clean if needed
+                if (UserPreferences.CustomTitleRules.Count > 0)
+                {
+                     foreach (var s in total)
+                    {
+                        s.ProgramName = DigitalWellbeing.Core.Helpers.WindowTitleParser.Parse(
+                            s.ProcessName, s.ProgramName, UserPreferences.CustomTitleRules);
+                    }
+                }
+                return total;
+            });
         }
     }
 
-    /// <summary>
-    /// Represents a single stat card.
-    /// </summary>
     public class StatItem
     {
         public string Icon { get; set; }

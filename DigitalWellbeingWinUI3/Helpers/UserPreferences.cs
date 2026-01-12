@@ -39,6 +39,11 @@ namespace DigitalWellbeingWinUI3.Helpers
         public static bool HideSubAppsRetroactively { get; set; } = false; // When true, also hides matching sub-apps in historical data display
         public static List<CustomTitleRule> CustomTitleRules { get; set; } = new List<CustomTitleRule>();
         public static int IdleThresholdSeconds { get; set; } = 300; // AFK threshold in seconds (5 min default)
+        
+        // Power Tracking Settings
+        public static int EstimatedPowerUsageWatts { get; set; } = 150; // Default estimation
+        public static double KwhPrice { get; set; } = 0.15; // Default price per kWh
+        public static string CurrencySymbol { get; set; } = "$"; // Default currency
 
         static UserPreferences()
         {
@@ -75,7 +80,10 @@ namespace DigitalWellbeingWinUI3.Helpers
                     IgnoredWindowTitles,
                     HideSubAppsRetroactively,
                     CustomTitleRules,
-                    IdleThresholdSeconds
+                    IdleThresholdSeconds,
+                    EstimatedPowerUsageWatts,
+                    KwhPrice,
+                    CurrencySymbol
                 };
 
                 string json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
@@ -121,6 +129,9 @@ namespace DigitalWellbeingWinUI3.Helpers
                     if (data.TryGetProperty(nameof(HideSubAppsRetroactively), out prop)) HideSubAppsRetroactively = prop.GetBoolean();
                     if (data.TryGetProperty(nameof(CustomTitleRules), out prop)) CustomTitleRules = JsonSerializer.Deserialize<List<CustomTitleRule>>(prop.GetRawText()) ?? new List<CustomTitleRule>();
                     if (data.TryGetProperty(nameof(IdleThresholdSeconds), out prop)) IdleThresholdSeconds = prop.GetInt32();
+                    if (data.TryGetProperty(nameof(EstimatedPowerUsageWatts), out prop)) EstimatedPowerUsageWatts = prop.GetInt32();
+                    if (data.TryGetProperty(nameof(KwhPrice), out prop)) KwhPrice = prop.GetDouble();
+                    if (data.TryGetProperty(nameof(CurrencySymbol), out prop)) CurrencySymbol = prop.GetString();
                 }
 
                 // Default Initialization
