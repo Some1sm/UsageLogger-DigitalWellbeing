@@ -23,10 +23,7 @@ public class ActivityLogger
     private static List<CustomTitleRule> _customTitleRules = new List<CustomTitleRule>();
     private static DateTime _lastSettingsRead = DateTime.MinValue;
     private static DateTime _lastFileWriteTime = DateTime.MinValue;
-    private static readonly string _settingsPath = Path.Combine(
-        Environment.GetFolderPath(SpecialFolder.LocalApplicationData),
-        "digital-wellbeing",
-        "user_preferences.json");
+    private static readonly string _settingsPath = ApplicationPath.UserPreferencesFile;
 
     private int GetBufferFlushInterval()
     {
@@ -438,7 +435,9 @@ public class ActivityLogger
             if (now.Date > _lastFlushTime.Date)
             {
                 // Flush accumulated data to the OLD date
-                await _repository.UpdateUsageAsync(_lastFlushTime.Date, _cachedUsage);
+                // Consolidated: We no longer write summary logs here.
+                // Summary is reconstructed from sessions in the repository.
+                // await _repository.UpdateUsageAsync(_lastFlushTime.Date, _cachedUsage);
                 
                 // Clear cache for the new day
                 _cachedUsage.Clear();
@@ -446,7 +445,8 @@ public class ActivityLogger
             else
             {
                 // Same day, update normal log
-                await _repository.UpdateUsageAsync(now, _cachedUsage);
+                // Consolidated: We no longer write summary logs here.
+                // await _repository.UpdateUsageAsync(now, _cachedUsage);
             }
 
             _lastFlushTime = now;

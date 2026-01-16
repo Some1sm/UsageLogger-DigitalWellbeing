@@ -22,70 +22,40 @@ public class AppUsageRepository : IAppUsageRepository
     // Use FileShare.ReadWrite to allow both Service (Write) and App (Read) to access file simultaneously
     public async Task<List<AppUsage>> GetUsageForDateAsync(DateTime date)
     {
-        string filePath = GetFilePath(date);
-        List<AppUsage> usageList = new List<AppUsage>();
+        // Consolidate: Fetch from Session Repository instead of summary log
+        AppSessionRepository sessionRepo = new AppSessionRepository(_logsFolderPath);
+        var sessions = await sessionRepo.GetSessionsForDateAsync(date);
 
-        if (!File.Exists(filePath)) return usageList;
+        // Group by process and program name to reconstruct summary
+        var usageDict = new Dictionary<string, AppUsage>();
 
-        try
+        foreach (var session in sessions)
         {
-            await using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            using var reader = new StreamReader(fs, System.Text.Encoding.UTF8);
-            
-            string? line;
-            while ((line = await reader.ReadLineAsync()) != null)
+            if (!usageDict.ContainsKey(session.ProcessName))
             {
-                if (string.IsNullOrWhiteSpace(line)) continue;
-
-                string[] parts = line.Split('\t');
-                if (parts.Length >= 2)
-                {
-                    string processName = parts[0];
-                    if (int.TryParse(parts[1], out int seconds))
-                    {
-                        string programName = parts.Length > 2 ? parts[2] : "";
-                        usageList.Add(new AppUsage(processName, programName, TimeSpan.FromSeconds(seconds)));
-                    }
-                }
+                usageDict[session.ProcessName] = new AppUsage(session.ProcessName, session.ProgramName, TimeSpan.Zero);
+            }
+            usageDict[session.ProcessName].Duration = usageDict[session.ProcessName].Duration.Add(session.Duration);
+            
+            // Populate sub-app breakdown
+            string subAppKey = string.IsNullOrEmpty(session.ProgramName) ? session.ProcessName : session.ProgramName;
+            if (usageDict[session.ProcessName].ProgramBreakdown.ContainsKey(subAppKey))
+            {
+                usageDict[session.ProcessName].ProgramBreakdown[subAppKey] = usageDict[session.ProcessName].ProgramBreakdown[subAppKey].Add(session.Duration);
+            }
+            else
+            {
+                usageDict[session.ProcessName].ProgramBreakdown[subAppKey] = session.Duration;
             }
         }
-        catch (IOException ex)
-        {
-            Console.WriteLine($"Repository Read Error: {ex.Message}");
-        }
 
-        return usageList;
+        return usageDict.Values.ToList();
     }
 
-    public async Task UpdateUsageAsync(DateTime date, List<AppUsage> entries)
+    public Task UpdateUsageAsync(DateTime date, List<AppUsage> entries)
     {
-        string filePath = GetFilePath(date);
-        
-        Directory.CreateDirectory(_logsFolderPath);
-
-        // Re-construct lines
-        List<string> lines = new List<string>();
-        foreach(var entry in entries)
-        {
-            int seconds = (int)entry.Duration.TotalSeconds;
-            lines.Add($"{entry.ProcessName}\t{seconds}\t{entry.ProgramName}");
-        }
-
-        // Write with FileShare.Read to allow "Apps" to read while we write
-        try 
-        {
-            await using var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.Read);
-            using var writer = new StreamWriter(fs, System.Text.Encoding.UTF8);
-            
-            foreach (var line in lines)
-            {
-                await writer.WriteLineAsync(line);
-            }
-        }
-        catch (IOException ex)
-        {
-            Console.WriteLine($"Repository Write Error: {ex.Message}");
-            throw; 
-        }
+        // NO-OP: We no longer write redundant summary logs.
+        // Data is persisted via AppSessionRepository in ActivityLogger -> SessionManager.
+        return Task.CompletedTask;
     }
 }

@@ -433,7 +433,7 @@ namespace DigitalWellbeingWinUI3.Views
                 // Write to file for debugging
                 try
                 {
-                    string logPath = System.IO.Path.Combine(DigitalWellbeing.Core.ApplicationPath.APP_LOCATION, "debug_titletag.log");
+                    string logPath = DigitalWellbeing.Core.ApplicationPath.TitleTagDebugFile;
                     System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: SubItem menu opened - ParentProcess={subItem.ParentProcessName}, Title={subItem.Title}\n");
                 }
                 catch { }
@@ -670,7 +670,7 @@ namespace DigitalWellbeingWinUI3.Views
                     // Write to file for debugging
                     try
                     {
-                        string logPath = System.IO.Path.Combine(DigitalWellbeing.Core.ApplicationPath.APP_LOCATION, "debug_titletag.log");
+                        string logPath = DigitalWellbeing.Core.ApplicationPath.TitleTagDebugFile;
                         System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {debugMsg.Replace("\n", " | ")}\n");
                     }
                     catch { }

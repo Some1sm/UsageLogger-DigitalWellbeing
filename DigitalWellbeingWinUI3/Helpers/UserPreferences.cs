@@ -10,7 +10,7 @@ namespace DigitalWellbeingWinUI3.Helpers
 {
     public static class UserPreferences
     {
-        private static string SettingsPath => Path.Combine(DigitalWellbeing.Core.ApplicationPath.APP_LOCATION, "user_preferences.json");
+        private static string SettingsPath => DigitalWellbeing.Core.ApplicationPath.UserPreferencesFile;
 
         // properties need to be loaded
         public static int DayAmount { get; set; } = 7;

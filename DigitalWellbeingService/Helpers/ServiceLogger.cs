@@ -12,19 +12,7 @@ public static class ServiceLogger
     private static string? _logPath;
     private static readonly object _lock = new();
 
-    private static string GetLogPath()
-    {
-        if (_logPath is null)
-        {
-            string folder = Path.Combine(GetFolderPath(SpecialFolder.LocalApplicationData), "digital-wellbeing");
-            if (!Directory.Exists(folder))
-            {
-                try { Directory.CreateDirectory(folder); } catch { /* Ignore */ }
-            }
-            _logPath = Path.Combine(folder, "service_debug.log");
-        }
-        return _logPath;
-    }
+    private static string GetLogPath() => DigitalWellbeing.Core.ApplicationPath.ServiceDebugFile;
 
     public static void Log(string message)
     {

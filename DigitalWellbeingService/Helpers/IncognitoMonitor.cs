@@ -17,10 +17,7 @@ public class IncognitoMonitor
 
     public IncognitoMonitor()
     {
-        _settingsPath = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "digital-wellbeing",
-            "user_preferences.json");
+        _settingsPath = DigitalWellbeing.Core.ApplicationPath.UserPreferencesFile;
     }
 
     /// <summary>
