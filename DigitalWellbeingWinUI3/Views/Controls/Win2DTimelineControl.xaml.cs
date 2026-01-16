@@ -20,14 +20,24 @@ namespace DigitalWellbeingWinUI3.Views.Controls
     {
         private DayTimelineViewModel _subscribedViewModel;
 
-
-
         public Win2DTimelineControl()
         {
             this.InitializeComponent();
             this.DataContextChanged += OnDataContextChanged;
             this.Unloaded += OnUnloaded;
             this.Loaded += OnLoaded;
+        }
+
+        /// <summary>
+        /// Public method to force the canvas to invalidate and redraw.
+        /// Called by parent page when outer scroll position changes.
+        /// </summary>
+        public void ForceInvalidate()
+        {
+            if (TimelineCanvas != null)
+            {
+                TimelineCanvas.Invalidate();
+            }
         }
 
         /*
@@ -49,7 +59,7 @@ namespace DigitalWellbeingWinUI3.Views.Controls
                 double h = ctrl.TimelineCanvas.Height;
                 if (w > 0 && h > 0)
                 {
-                    ctrl.TimelineCanvas.Invalidate(new Windows.Foundation.Rect(0, 0, w, h));
+                    ctrl.TimelineCanvas.Invalidate();
                 }
             }
         }
@@ -71,7 +81,12 @@ namespace DigitalWellbeingWinUI3.Views.Controls
                 // Init header
                 HeaderText.Text = vm.DateString;
                 
-                // NOTE: Do NOT invalidate here - wait for Loaded event when layout is complete
+                // CRITICAL FIX: If the control is already loaded but DataContext arrived late,
+                // we must trigger dimension setup NOW (otherwise OnLoaded returned early with null VM)
+                if (this.IsLoaded)
+                {
+                    SetupCanvasDimensions(vm);
+                }
             }
         }
         
@@ -81,19 +96,50 @@ namespace DigitalWellbeingWinUI3.Views.Controls
             var vm = ViewModel;
             if (vm == null) return;
             
-            // Set explicit dimensions before invalidation
+            SetupCanvasDimensions(vm);
+        }
+
+        /// <summary>
+        /// Sets up canvas dimensions and triggers invalidation.
+        /// Can be called from OnLoaded or OnDataContextChanged (whichever happens last).
+        /// </summary>
+        private void SetupCanvasDimensions(DayTimelineViewModel vm)
+        {
+            if (TimelineCanvas == null) return;
+            
+            // ZOOM LOGIC:
+            // 1. The ScrollViewer content (ContentGrid) gets the FULL Height (e.g. 50,000px).
+            //    This forces the ScrollViewer to show the correct scrollbar thumb.
+            // 2. The CanvasControl (TimelineCanvas) gets the VIEWPORT Height (e.g. 1080px).
+            //    This ensures we never exceed GPU texture limits (16384px) even if zoomed in massive amounts.
+            
             double h = vm.CanvasHeight > 0 ? vm.CanvasHeight : 1440;
-            TimelineCanvas.Height = h;
             ContentGrid.Height = h;
             ContentGrid.MinHeight = h;
             
-            double w = vm.TimelineWidth > 0 ? vm.TimelineWidth - 30 : 400;
+            // Set WIDTH explicitly with correct overhead calculation
+            // Overhead: 15px margin (7.5*2) + 2px border (1*2) + 30px padding (15*2) = 47px
+            double w = vm.TimelineWidth > 0 ? vm.TimelineWidth - 47 : 400;
             TimelineCanvas.Width = w;
             ContentGrid.Width = w;
             
-            // CRITICAL: Use Invalidate with explicit bounds to force full region invalidation
-            // Parameterless Invalidate() only works for already-realized regions
-            TimelineCanvas.Invalidate(new Windows.Foundation.Rect(0, 0, w, h));
+            // Disable inner horizontal scrollbar to ensure simple vertical-only layout
+            if (MainScrollViewer != null) 
+            {
+                MainScrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
+                MainScrollViewer.ViewChanged -= MainScrollViewer_ViewChanged;
+                MainScrollViewer.ViewChanged += MainScrollViewer_ViewChanged;
+            }
+
+            // Standard invalidation is sufficient now that Width matches container exactly (-47px overhead)
+            TimelineCanvas.Invalidate();
+        }
+
+        private void MainScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        {
+             // When scrolling vertically, we must invalidate the CanvasControl
+             // so it can redraw the new slice of content.
+             TimelineCanvas.Invalidate();
         }
 
         private void OnUnloaded(object sender, RoutedEventArgs e)
@@ -103,8 +149,11 @@ namespace DigitalWellbeingWinUI3.Views.Controls
                 _subscribedViewModel.PropertyChanged -= ViewModel_PropertyChanged;
                 _subscribedViewModel = null;
             }
-            TimelineCanvas.RemoveFromVisualTree();
-            TimelineCanvas = null;
+            if (TimelineCanvas != null)
+            {
+                TimelineCanvas.RemoveFromVisualTree();
+                TimelineCanvas = null;
+            }
         }
 
         private void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -119,18 +168,19 @@ namespace DigitalWellbeingWinUI3.Views.Controls
                 e.PropertyName == nameof(DayTimelineViewModel.CurrentTimeVisibility) ||
                 e.PropertyName == nameof(DayTimelineViewModel.TimelineWidth))
             {
-                // Always sync both dimensions on any relevant property change
+                // Sync HEIGHT on any relevant property change (for zoom)
                 double h = Math.Max(100, _subscribedViewModel.CanvasHeight);
-                TimelineCanvas.Height = h;
                 ContentGrid.Height = h;
                 ContentGrid.MinHeight = h;
                 
-                double w = _subscribedViewModel.TimelineWidth > 0 ? _subscribedViewModel.TimelineWidth - 30 : 400;
+                // Set WIDTH explicitly with correct overhead calculation
+                // Overhead: 15px margin + 2px border + 30px padding = 47px
+                double w = _subscribedViewModel.TimelineWidth > 0 ? _subscribedViewModel.TimelineWidth - 47 : 400;
                 TimelineCanvas.Width = w;
                 ContentGrid.Width = w;
 
-                // CRITICAL: Use explicit bounds to force full region invalidation
-                TimelineCanvas.Invalidate(new Windows.Foundation.Rect(0, 0, w, h));
+                // Sync Invalidation
+                TimelineCanvas.Invalidate();
             }
             
             // Header
@@ -140,7 +190,7 @@ namespace DigitalWellbeingWinUI3.Views.Controls
             }
         }
 
-        private void TimelineCanvas_RegionsInvalidated(Microsoft.Graphics.Canvas.UI.Xaml.CanvasVirtualControl sender, Microsoft.Graphics.Canvas.UI.Xaml.CanvasRegionsInvalidatedEventArgs args)
+        private void TimelineCanvas_Draw(Microsoft.Graphics.Canvas.UI.Xaml.CanvasControl sender, Microsoft.Graphics.Canvas.UI.Xaml.CanvasDrawEventArgs args)
         {
             var vm = ViewModel;
             if (vm == null) return;
@@ -150,37 +200,36 @@ namespace DigitalWellbeingWinUI3.Views.Controls
             
             if (width <= 0 || height <= 0) return;
 
-            // Fallback width logic handled in resizing, but ensure scale uses it
-            float renderWidth = vm.TimelineWidth > 0 ? (float)(vm.TimelineWidth - 30) : 400f;
+            // Fallback width logic
+            float renderWidth = vm.TimelineWidth > 0 ? (float)(vm.TimelineWidth - 47) : 400f;
             if (width <= 0) width = renderWidth;
-             
-
             
-            // Loop through invalidated regions
-            foreach (var region in args.InvalidatedRegions)
+            // MOVING WINDOW TRANSLATION:
+            // Calculate the vertical scroll offset from the wrapper ScrollViewer
+            float scrollOffset = (float)(MainScrollViewer?.VerticalOffset ?? 0);
+            
+            // Apply translation to "shift" drawing up
+            using (var ds = args.DrawingSession)
             {
-                using (var ds = sender.CreateDrawingSession(region))
-                {
-                    ds.Clear(Colors.Transparent);
-                    
-                    // Optimization: Only draw things inside the region? 
-                    // For now, simpler to just draw everything and let Win2D clip, 
-                    // or implement basic clipping if performance issues arise.
-                    // Given the simple vector graphics, drawing all shouldn't be too expensive 
-                    // unless there are thousands of blocks.
-                    
-                    // However, for strict correctness with transforms (if we had them), passing region helps.
-                    // Here we just draw to the session.
-                    
-                    DrawSessionBlocks(ds, width, vm);
-                    DrawGridLines(ds, width, vm);
-                    
-                    if (vm.CurrentTimeVisibility == Visibility.Visible)
-                    {
-                        float y = (float)vm.CurrentTimeTop;
-                        ds.DrawLine(0, y, width, y, Colors.Red, 2);
-                    }
-                }
+                ds.Transform = System.Numerics.Matrix3x2.CreateTranslation(0, -scrollOffset);
+                
+                // Draw EVERYTHING (The drawing session will clip what's outside bounds automatically)
+                // Note: Win2D clipping is fast.
+                
+                DrawCanvasContent(ds, width, vm);
+            }
+        }
+
+        private void DrawCanvasContent(Microsoft.Graphics.Canvas.CanvasDrawingSession ds, float width, DayTimelineViewModel vm)
+        {
+            ds.Clear(Colors.Transparent);
+            DrawSessionBlocks(ds, width, vm);
+            DrawGridLines(ds, width, vm);
+            
+            if (vm.CurrentTimeVisibility == Visibility.Visible)
+            {
+                float y = (float)vm.CurrentTimeTop;
+                ds.DrawLine(0, y, width, y, Colors.Red, 2);
             }
         }
 
@@ -349,16 +398,27 @@ namespace DigitalWellbeingWinUI3.Views.Controls
             }
         }
 
-        private void TimelineCanvas_PointerMoved(object sender, PointerRoutedEventArgs e)
+        private void TimelineGrid_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
-             var pt = e.GetCurrentPoint(TimelineCanvas).Position;
+             // Event comes from the SCROLLING ContentGrid.
+             // The Y coordinate given is explicitly relative to the ContentGrid's blocked out height.
+             // This means it INCLUDES the scroll offset automatically.
+             // Example: If scrolled 1000px down and mouse is at top of screen, Y = 1010.
+             
+             // Therefore, we do NOT need to add VerticalOffset manually anymore.
+             
+             if (sender is not FrameworkElement fe) return;
+             
+             var pt = e.GetCurrentPoint(fe).Position;
+             double correctedY = pt.Y; // Already "corrected" by being relative to the scrolled container
+             
              var vm = ViewModel;
              if (vm?.SessionBlocks == null) return;
              
              // Find block under mouse
              // Use LastOrDefault to find the "top-most" (drawn last) element in case of overlaps
              var block = vm.SessionBlocks.LastOrDefault(b => 
-                 pt.Y >= b.Top && pt.Y <= b.Top + b.Height);
+                 correctedY >= b.Top && correctedY <= b.Top + b.Height);
                  
              if (block != null)
              {
@@ -366,8 +426,14 @@ namespace DigitalWellbeingWinUI3.Views.Controls
                  TooltipBorder.Visibility = Visibility.Visible;
                  
                  // Position tooltip
+                 // Tooltip is inside a Canvas (Overlay) which is FIXED to the viewport.
+                 // But our mouse Point 'pt' is relative to the HUGE scrolled grid (e.g. Y=5000).
+                 // We need to convert back to Viewport coordinates for the tooltip to appear on screen.
+                 
+                 double viewportY = pt.Y - (MainScrollViewer?.VerticalOffset ?? 0);
+                 
                  Canvas.SetLeft(TooltipBorder, pt.X + 10);
-                 Canvas.SetTop(TooltipBorder, pt.Y + 10);
+                 Canvas.SetTop(TooltipBorder, viewportY + 10);
              }
              else
              {
@@ -375,7 +441,7 @@ namespace DigitalWellbeingWinUI3.Views.Controls
              }
         }
 
-        private void TimelineCanvas_PointerExited(object sender, PointerRoutedEventArgs e)
+        private void TimelineGrid_PointerExited(object sender, PointerRoutedEventArgs e)
         {
             TooltipBorder.Visibility = Visibility.Collapsed;
         }

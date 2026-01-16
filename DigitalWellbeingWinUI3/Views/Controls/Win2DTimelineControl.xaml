@@ -30,24 +30,32 @@
                        Margin="0,12,0,4"/>
 
             <!-- ScrollViewer containing the Win2D canvas -->
-            <ScrollViewer x:Name="MainScrollViewer" Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                <Grid x:Name="ContentGrid" MinHeight="1440">
-                     <canvas:CanvasVirtualControl x:Name="TimelineCanvas" RegionsInvalidated="TimelineCanvas_RegionsInvalidated" PointerMoved="TimelineCanvas_PointerMoved" PointerExited="TimelineCanvas_PointerExited" />
-                     
-                     <!-- Tooltip Overlay Layer -->
-                     <Canvas IsHitTestVisible="False">
-                         <Border x:Name="TooltipBorder" 
-                                 Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}" 
-                                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" 
-                                 BorderThickness="1" 
-                                 CornerRadius="4" 
-                                 Padding="8,4,8,4" 
-                                 Visibility="Collapsed">
-                            <TextBlock x:Name="TooltipText" Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}" FontSize="12"/>
-                         </Border>
-                     </Canvas>
+            <!-- Layer 1: ScrollViewer with Spacer (Drives the scrollbars) -->
+            <ScrollViewer Grid.Row="1" x:Name="MainScrollViewer" VerticalScrollBarVisibility="Auto">
+                <Grid x:Name="ContentGrid" MinHeight="1440" Background="Transparent"
+                      PointerMoved="TimelineGrid_PointerMoved" 
+                      PointerExited="TimelineGrid_PointerExited">
+                     <!-- This spacer forces the ScrollViewer to have the correct scrollable height -->
+                     <Rectangle Fill="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                 </Grid>
             </ScrollViewer>
+            
+            <!-- Layer 2: The Renderer (CanvasControl) -->
+            <!-- HitTestVisible="False" ensures events pass through to simple ScrollViewer below -->
+            <canvas:CanvasControl Grid.Row="1" x:Name="TimelineCanvas" Draw="TimelineCanvas_Draw" IsHitTestVisible="False" />
+
+            <!-- Layer 3: Tooltip Overlay -->
+            <Canvas Grid.Row="1" IsHitTestVisible="False">
+                 <Border x:Name="TooltipBorder" 
+                         Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}" 
+                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" 
+                         BorderThickness="1" 
+                         CornerRadius="4" 
+                         Padding="8,4,8,4" 
+                         Visibility="Collapsed">
+                    <TextBlock x:Name="TooltipText" Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}" FontSize="12"/>
+                 </Border>
+             </Canvas>
         </Grid>
     </Border>
 </UserControl>
