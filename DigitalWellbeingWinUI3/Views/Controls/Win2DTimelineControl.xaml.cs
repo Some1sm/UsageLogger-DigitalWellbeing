@@ -27,6 +27,7 @@ namespace DigitalWellbeingWinUI3.Views.Controls
             this.InitializeComponent();
             this.DataContextChanged += OnDataContextChanged;
             this.Unloaded += OnUnloaded;
+            this.Loaded += OnLoaded;
         }
 
         /*
@@ -42,9 +43,14 @@ namespace DigitalWellbeingWinUI3.Views.Controls
 
         private static void OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is Win2DTimelineControl ctrl)
+            if (d is Win2DTimelineControl ctrl && ctrl.TimelineCanvas != null)
             {
-                ctrl.TimelineCanvas.Invalidate();
+                double w = ctrl.TimelineCanvas.Width;
+                double h = ctrl.TimelineCanvas.Height;
+                if (w > 0 && h > 0)
+                {
+                    ctrl.TimelineCanvas.Invalidate(new Windows.Foundation.Rect(0, 0, w, h));
+                }
             }
         }
 
@@ -65,9 +71,29 @@ namespace DigitalWellbeingWinUI3.Views.Controls
                 // Init header
                 HeaderText.Text = vm.DateString;
                 
-                // Force initial redraw
-                TimelineCanvas.Invalidate();
+                // NOTE: Do NOT invalidate here - wait for Loaded event when layout is complete
             }
+        }
+        
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            // Called AFTER layout is complete - dimensions are now valid
+            var vm = ViewModel;
+            if (vm == null) return;
+            
+            // Set explicit dimensions before invalidation
+            double h = vm.CanvasHeight > 0 ? vm.CanvasHeight : 1440;
+            TimelineCanvas.Height = h;
+            ContentGrid.Height = h;
+            ContentGrid.MinHeight = h;
+            
+            double w = vm.TimelineWidth > 0 ? vm.TimelineWidth - 30 : 400;
+            TimelineCanvas.Width = w;
+            ContentGrid.Width = w;
+            
+            // CRITICAL: Use Invalidate with explicit bounds to force full region invalidation
+            // Parameterless Invalidate() only works for already-realized regions
+            TimelineCanvas.Invalidate(new Windows.Foundation.Rect(0, 0, w, h));
         }
 
         private void OnUnloaded(object sender, RoutedEventArgs e)
@@ -93,22 +119,18 @@ namespace DigitalWellbeingWinUI3.Views.Controls
                 e.PropertyName == nameof(DayTimelineViewModel.CurrentTimeVisibility) ||
                 e.PropertyName == nameof(DayTimelineViewModel.TimelineWidth))
             {
-                if (e.PropertyName == nameof(DayTimelineViewModel.CanvasHeight))
-                {
-                    double h = Math.Max(100, _subscribedViewModel.CanvasHeight);
-                    // CanvasVirtualControl supports huge heights, so we remove the arbitrary 50000 limit.
-                    // However, we MUST set the Height of the control itself.
-                    TimelineCanvas.Height = h;
-                    ContentGrid.Height = h;
-                    ContentGrid.MinHeight = h;
-                }
-                if (e.PropertyName == nameof(DayTimelineViewModel.TimelineWidth))
-                {
-                    double width = _subscribedViewModel.TimelineWidth > 0 ? _subscribedViewModel.TimelineWidth - 30 : 400;
-                    TimelineCanvas.Width = width;
-                    ContentGrid.Width = width;
-                }
-                TimelineCanvas.Invalidate();
+                // Always sync both dimensions on any relevant property change
+                double h = Math.Max(100, _subscribedViewModel.CanvasHeight);
+                TimelineCanvas.Height = h;
+                ContentGrid.Height = h;
+                ContentGrid.MinHeight = h;
+                
+                double w = _subscribedViewModel.TimelineWidth > 0 ? _subscribedViewModel.TimelineWidth - 30 : 400;
+                TimelineCanvas.Width = w;
+                ContentGrid.Width = w;
+
+                // CRITICAL: Use explicit bounds to force full region invalidation
+                TimelineCanvas.Invalidate(new Windows.Foundation.Rect(0, 0, w, h));
             }
             
             // Header
