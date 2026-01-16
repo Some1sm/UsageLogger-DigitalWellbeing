@@ -28,7 +28,15 @@
 
         <!-- Pattern -->
         <TextBox x:Name="TxtPattern" Header="Match Pattern (Title)" PlaceholderText="Text or Regex to match" TextChanged="TxtPattern_TextChanged" Grid.Row="1"/>
-        <CheckBox x:Name="ChkRegex" Content="Use Regular Expression" IsChecked="False" Grid.Row="2"/>
+        
+        <!-- Match Type -->
+        <ComboBox x:Name="ComboMatchType" Header="Match Type" SelectedIndex="0" Grid.Row="2" HorizontalAlignment="Stretch" SelectionChanged="ComboMatchType_SelectionChanged">
+            <ComboBoxItem Content="Contains (Default)" Tag="Contains"/>
+            <ComboBoxItem Content="Starts With" Tag="StartsWith"/>
+            <ComboBoxItem Content="Ends With" Tag="EndsWith"/>
+            <ComboBoxItem Content="Exact Match" Tag="Exact"/>
+            <ComboBoxItem Content="Regular Expression" Tag="Regex"/>
+        </ComboBox>
 
         <!-- Replacement -->
         <TextBox x:Name="TxtReplacement" Header="Replacement" PlaceholderText="New text (supports $1 capture groups)" Grid.Row="3"/>
