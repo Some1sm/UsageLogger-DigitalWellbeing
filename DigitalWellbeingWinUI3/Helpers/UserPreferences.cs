@@ -132,6 +132,9 @@ namespace DigitalWellbeingWinUI3.Helpers
                     if (data.TryGetProperty(nameof(EstimatedPowerUsageWatts), out prop)) EstimatedPowerUsageWatts = prop.GetInt32();
                     if (data.TryGetProperty(nameof(KwhPrice), out prop)) KwhPrice = prop.GetDouble();
                     if (data.TryGetProperty(nameof(CurrencySymbol), out prop)) CurrencySymbol = prop.GetString();
+
+                    // Repair Custom Icon Paths if moved to Icons/CustomIcons
+                    RepairCustomIconPaths();
                 }
 
                 // Default Initialization
@@ -152,6 +155,30 @@ namespace DigitalWellbeingWinUI3.Helpers
                 }
             }
             catch { }
+        }
+
+        private static void RepairCustomIconPaths()
+        {
+            if (CustomIconPaths == null || CustomIconPaths.Count == 0) return;
+
+            string newBase = DigitalWellbeing.Core.ApplicationPath.GetCustomIconsLocation();
+            string oldPattern = Path.Combine(DigitalWellbeing.Core.ApplicationPath.APP_LOCATION, "CustomIcons");
+            string newPatternPart = Path.Combine("Icons", "CustomIcons");
+
+            bool changed = false;
+            var keys = CustomIconPaths.Keys.ToList();
+            foreach (var key in keys)
+            {
+                var path = CustomIconPaths[key];
+                if (path != null && path.Contains(oldPattern) && !path.Contains(newPatternPart))
+                {
+                    string fileName = Path.GetFileName(path);
+                    CustomIconPaths[key] = Path.Combine(newBase, fileName);
+                    changed = true;
+                }
+            }
+
+            if (changed) Save();
         }
 
         public static void UpdateAppTimeLimit(string processName, TimeSpan timeLimit)
