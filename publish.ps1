@@ -17,7 +17,6 @@ Write-Host "Publishing WinUI 3 App..."
 dotnet publish DigitalWellbeingWinUI3/DigitalWellbeingWinUI3.csproj -c Release -r win-x64 --self-contained false -o "$releaseDir/App"
 
 # Service
-# Service
 dotnet publish DigitalWellbeingService/DigitalWellbeingService.csproj -c Release -r win-x64 --self-contained false -o "$releaseDir/Service"
 
 # Organize Files

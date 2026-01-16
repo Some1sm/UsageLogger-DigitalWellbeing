@@ -161,7 +161,7 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0">
-                                    <TextBlock Text="{Binding MatchPattern}" FontWeight="SemiBold"/>
+                                    <TextBlock Text="{Binding FriendlyPattern}" FontWeight="SemiBold"/>
                                     <StackPanel Orientation="Horizontal" Spacing="5">
                                         <TextBlock Text="→" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                                         <TextBlock Text="{Binding Replacement}" FontStyle="Italic"/>
