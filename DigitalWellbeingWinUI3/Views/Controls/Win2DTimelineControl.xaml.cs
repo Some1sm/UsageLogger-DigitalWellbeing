@@ -4,6 +4,7 @@ using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Input;
 using Microsoft.UI.Xaml.Media;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,13 @@ namespace DigitalWellbeingWinUI3.Views.Controls
     public sealed partial class Win2DTimelineControl : UserControl
     {
         private DayTimelineViewModel _subscribedViewModel;
+        
+        // Drag-to-Scroll State
+        private bool _isDragging = false;
+        private double _lastPointerY = 0;
+        private double _initialScrollOffset = 0;
+        private double _dragThreshold = 5; // Minimal movement to start drag
+        private double _startPointerY = 0;
 
         public Win2DTimelineControl()
         {
@@ -398,46 +406,126 @@ namespace DigitalWellbeingWinUI3.Views.Controls
             }
         }
 
-        private void TimelineGrid_PointerMoved(object sender, PointerRoutedEventArgs e)
+        private void TimelineGrid_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
-             // Event comes from the SCROLLING ContentGrid.
-             // The Y coordinate given is explicitly relative to the ContentGrid's blocked out height.
-             // This means it INCLUDES the scroll offset automatically.
-             // Example: If scrolled 1000px down and mouse is at top of screen, Y = 1010.
-             
-             // Therefore, we do NOT need to add VerticalOffset manually anymore.
-             
+            if (sender is not FrameworkElement fe) return;
+            
+            // Initiate Drag tracking
+            // Use Viewport coordinates for drag stability (ignores scroll offset changes)
+            var viewportPt = e.GetCurrentPoint(MainScrollViewer).Position;
+            
+            _lastPointerY = viewportPt.Y;
+            _startPointerY = viewportPt.Y;
+            _initialScrollOffset = MainScrollViewer?.VerticalOffset ?? 0;
+            _isDragging = false; // Wait for threshold
+            
+            fe.CapturePointer(e.Pointer);
+            
+            // Don't change cursor yet, wait for move threshold
+        }
+
+        private void TimelineGrid_PointerReleased(object sender, PointerRoutedEventArgs e)
+        {
              if (sender is not FrameworkElement fe) return;
              
-             var pt = e.GetCurrentPoint(fe).Position;
-             double correctedY = pt.Y; // Already "corrected" by being relative to the scrolled container
+             _isDragging = false;
+             fe.ReleasePointerCapture(e.Pointer);
+             ProtectedCursor = null; // Reset cursor
+        }
+
+        private void TimelineGrid_PointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+             if (sender is not FrameworkElement fe) return;
              
-             var vm = ViewModel;
-             if (vm?.SessionBlocks == null) return;
+             // Tooltip logic needs content coordinates
+             var contentPt = e.GetCurrentPoint(fe).Position;
              
-             // Find block under mouse
-             // Use LastOrDefault to find the "top-most" (drawn last) element in case of overlaps
-             var block = vm.SessionBlocks.LastOrDefault(b => 
-                 correctedY >= b.Top && correctedY <= b.Top + b.Height);
-                 
-             if (block != null)
+             // Drag logic needs SCREEN/VIEWPORT coordinates (stable)
+             // We use MainScrollViewer as the reference because it doesn't move when we scroll its content
+             var viewportPt = e.GetCurrentPoint(MainScrollViewer).Position;
+
+             if (fe.PointerCaptures != null && fe.PointerCaptures.Count > 0)
              {
-                 TooltipText.Text = block.TooltipText;
-                 TooltipBorder.Visibility = Visibility.Visible;
+                 // We are holding down
+                 // Check threshold against screen movement
+                 // We track _startPointerY in VIEWPORT coordinates now for safety
                  
-                 // Position tooltip
-                 // Tooltip is inside a Canvas (Overlay) which is FIXED to the viewport.
-                 // But our mouse Point 'pt' is relative to the HUGE scrolled grid (e.g. Y=5000).
-                 // We need to convert back to Viewport coordinates for the tooltip to appear on screen.
+                 // On first move after press, we might need to reset start if we didn't capture it in viewport coords
+                 // But we can just use the Content delta for threshold, it's fine for small movements
                  
-                 double viewportY = pt.Y - (MainScrollViewer?.VerticalOffset ?? 0);
+                 // Actually, let's just calculate delta from last VIEWPORT Y
                  
-                 Canvas.SetLeft(TooltipBorder, pt.X + 10);
-                 Canvas.SetTop(TooltipBorder, viewportY + 10);
+                 if (_isDragging)
+                 {
+                     double currentY = viewportPt.Y;
+                     double deltaY = currentY - _lastPointerY;
+                     
+                     // SCROLL LOGIC:
+                     // Dragging DOWN (+Y) means we want to see content ABOVE.
+                     // ScrollViewer Offset must DECREASE.
+                     // NewOffset = OldOffset - DeltaY
+                     
+                     if (MainScrollViewer != null && Math.Abs(deltaY) > 0)
+                     {
+                         double newOffset = MainScrollViewer.VerticalOffset - deltaY;
+                         MainScrollViewer.ChangeView(null, newOffset, null, true); // disable animation for 1:1 feel
+                     }
+                     
+                     _lastPointerY = currentY;
+                 }
+                 else
+                 {
+                     // Check threshold
+                     // We need to track start point in viewport coords, but we captured it in content coords.
+                     // Let's just use the current delta from the last known viewport Y.
+                     // Wait, _lastPointerY was set to content Y in PointerPressed. This is bad.
+                     
+                     // FIX: We need to update _lastPointerY to Viewport Y if we haven't started dragging yet?
+                     // No, let's fix PointerPressed to store Viewport Y too.
+                     
+                     // Alternative: Re-initialize _startPointerY here if it's the first move? 
+                     // No, let's fix PointerPressed. See next edit.
+                     
+                     // For now, assuming PointerPressed is fixed:
+                     double totalDelta = Math.Abs(viewportPt.Y - _startPointerY);
+                     if (totalDelta > _dragThreshold)
+                     {
+                         _isDragging = true;
+                         _lastPointerY = viewportPt.Y; // Start tracking from here
+                         ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.Hand);
+                     }
+                 }
+             }
+
+             // Tooltip Logic (Only if NOT dragging)
+             if (!_isDragging)
+             {
+                 double correctedY = contentPt.Y; 
+                 
+                 var vm = ViewModel;
+                 if (vm?.SessionBlocks == null) return;
+                 
+                 var block = vm.SessionBlocks.LastOrDefault(b => 
+                     correctedY >= b.Top && correctedY <= b.Top + b.Height);
+                     
+                 if (block != null)
+                 {
+                     TooltipText.Text = block.TooltipText;
+                     TooltipBorder.Visibility = Visibility.Visible;
+                     
+                     double viewportY = contentPt.Y - (MainScrollViewer?.VerticalOffset ?? 0);
+                     
+                     Canvas.SetLeft(TooltipBorder, contentPt.X + 10);
+                     Canvas.SetTop(TooltipBorder, viewportY + 10);
+                 }
+                 else
+                 {
+                     TooltipBorder.Visibility = Visibility.Collapsed;
+                 }
              }
              else
              {
-                 TooltipBorder.Visibility = Visibility.Collapsed;
+                  TooltipBorder.Visibility = Visibility.Collapsed;
              }
         }
 

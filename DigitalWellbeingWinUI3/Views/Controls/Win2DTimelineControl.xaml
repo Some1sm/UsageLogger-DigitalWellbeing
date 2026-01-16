@@ -34,6 +34,9 @@
             <ScrollViewer Grid.Row="1" x:Name="MainScrollViewer" VerticalScrollBarVisibility="Auto">
                 <Grid x:Name="ContentGrid" MinHeight="1440" Background="Transparent"
                       PointerMoved="TimelineGrid_PointerMoved" 
+                      PointerPressed="TimelineGrid_PointerPressed"
+                      PointerReleased="TimelineGrid_PointerReleased"
+                      PointerCanceled="TimelineGrid_PointerReleased"
                       PointerExited="TimelineGrid_PointerExited">
                      <!-- This spacer forces the ScrollViewer to have the correct scrollable height -->
                      <Rectangle Fill="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
