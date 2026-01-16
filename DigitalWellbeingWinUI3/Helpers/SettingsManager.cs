@@ -305,29 +305,111 @@ namespace DigitalWellbeingWinUI3.Helpers
 
         #region Run on Startup
 
-        public static void SetRunOnStartup(bool enabled)
+        /// <summary>
+        /// Startup mode options for the application.
+        /// </summary>
+        public enum StartupMode
         {
-            RegistryKey key = Registry.CurrentUser.OpenSubKey(ApplicationPath.AUTORUN_REGPATH, true);
-            
-            if (enabled)
+            None = 0,           // Don't run on startup
+            TrackerOnly = 1,    // Run only the background Service/Tracker
+            TrackerAndUI = 2    // Run both the Tracker and the UI interface
+        }
+
+        /// <summary>
+        /// Sets the startup mode in the Windows registry.
+        /// </summary>
+        public static void SetStartupMode(StartupMode mode)
+        {
+            try
             {
-                // Set registry key
-                using (Process process = Process.GetCurrentProcess())
+                RegistryKey key = Registry.CurrentUser.OpenSubKey(ApplicationPath.AUTORUN_REGPATH, true);
+                if (key == null) return;
+
+                switch (mode)
                 {
-                    key.SetValue(ApplicationPath.AUTORUN_REGKEY, process.MainModule.FileName);
+                    case StartupMode.None:
+                        key.DeleteValue(ApplicationPath.AUTORUN_REGKEY, false);
+                        break;
+
+                    case StartupMode.TrackerOnly:
+                        // Set to Service executable
+                        string servicePath = GetServicePath();
+                        if (!string.IsNullOrEmpty(servicePath))
+                        {
+                            key.SetValue(ApplicationPath.AUTORUN_REGKEY, servicePath);
+                        }
+                        break;
+
+                    case StartupMode.TrackerAndUI:
+                        // Set to UI executable (which also starts Service)
+                        using (Process process = Process.GetCurrentProcess())
+                        {
+                            key.SetValue(ApplicationPath.AUTORUN_REGKEY, process.MainModule.FileName);
+                        }
+                        break;
                 }
             }
-            else
+            catch (Exception ex)
             {
-                key.DeleteValue(ApplicationPath.AUTORUN_REGKEY, false);
+                Debug.WriteLine($"[SettingsManager] SetStartupMode error: {ex.Message}");
             }
+        }
+
+        /// <summary>
+        /// Gets the current startup mode from the registry.
+        /// </summary>
+        public static StartupMode GetStartupMode()
+        {
+            try
+            {
+                RegistryKey key = Registry.CurrentUser.OpenSubKey(ApplicationPath.AUTORUN_REGPATH);
+                var value = key?.GetValue(ApplicationPath.AUTORUN_REGKEY) as string;
+
+                if (string.IsNullOrEmpty(value))
+                    return StartupMode.None;
+
+                // Check if the registered path is the Service or the UI
+                if (value.Contains("DigitalWellbeingService", StringComparison.OrdinalIgnoreCase))
+                    return StartupMode.TrackerOnly;
+                
+                if (value.Contains("DigitalWellbeingWinUI3", StringComparison.OrdinalIgnoreCase))
+                    return StartupMode.TrackerAndUI;
+
+                // Legacy or unknown - treat as UI
+                return StartupMode.TrackerAndUI;
+            }
+            catch
+            {
+                return StartupMode.None;
+            }
+        }
+
+        private static string GetServicePath()
+        {
+            string[] possiblePaths = new[]
+            {
+                Path.Combine(AppContext.BaseDirectory, "Service", "DigitalWellbeingService.exe"),
+                Path.Combine(AppContext.BaseDirectory, "DigitalWellbeingService.exe"),
+                Path.Combine(AppContext.BaseDirectory, "..", "Service", "DigitalWellbeingService.exe")
+            };
+
+            foreach (var path in possiblePaths)
+            {
+                if (File.Exists(path))
+                    return Path.GetFullPath(path);
+            }
+            return null;
+        }
+
+        // Legacy methods for backward compatibility
+        public static void SetRunOnStartup(bool enabled)
+        {
+            SetStartupMode(enabled ? StartupMode.TrackerAndUI : StartupMode.None);
         }
 
         public static bool IsRunningOnStartup()
         {
-            RegistryKey key = Registry.CurrentUser.OpenSubKey(ApplicationPath.AUTORUN_REGPATH);
-
-            return key?.GetValue(ApplicationPath.AUTORUN_REGKEY) != null;
+            return GetStartupMode() != StartupMode.None;
         }
 
         #endregion

@@ -137,7 +137,16 @@
     <value>Run on Startup</value>
   </data>
   <data name="Settings_RunOnStartupDesc.Text" xml:space="preserve">
-    <value>Runs this app on startup.</value>
+    <value>Choose what runs when Windows starts.</value>
+  </data>
+  <data name="Settings_StartupModeNone.Content" xml:space="preserve">
+    <value>Disabled</value>
+  </data>
+  <data name="Settings_StartupModeTracker.Content" xml:space="preserve">
+    <value>Tracker Only</value>
+  </data>
+  <data name="Settings_StartupModeBoth.Content" xml:space="preserve">
+    <value>Tracker + Interface</value>
   </data>
   <data name="Settings_MinimizeOnExit.Text" xml:space="preserve">
     <value>Minimize On Exit</value>

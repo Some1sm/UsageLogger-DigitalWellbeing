@@ -146,8 +146,16 @@ namespace DigitalWellbeingWinUI3.Views
         {
             _isLoading = true;
 
-            // Run on Startup
-            EnableRunOnStartup.IsOn = SettingsManager.IsRunningOnStartup();
+            // Run on Startup (ComboBox mode)
+            var currentMode = SettingsManager.GetStartupMode();
+            foreach (ComboBoxItem item in StartupModeComboBox.Items)
+            {
+                if (item.Tag?.ToString() == currentMode.ToString())
+                {
+                    StartupModeComboBox.SelectedItem = item;
+                    break;
+                }
+            }
 
             // Minimize on Exit
             ToggleMinimizeOnExit.IsOn = UserPreferences.MinimizeOnExit;
@@ -407,9 +415,9 @@ namespace DigitalWellbeingWinUI3.Views
 
         // EVENTS
 
-        private void EnableRunOnStartup_Toggled(object sender, RoutedEventArgs e)
+        private void StartupModeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-             MarkDirty();
+             if (!_isLoading) MarkDirty();
         }
 
         private void ToggleMinimizeOnExit_Toggled(object sender, RoutedEventArgs e)
@@ -488,7 +496,14 @@ namespace DigitalWellbeingWinUI3.Views
             // Startup
             try
             {
-                SettingsManager.SetRunOnStartup(EnableRunOnStartup.IsOn);
+                if (StartupModeComboBox.SelectedItem is ComboBoxItem selectedItem)
+                {
+                    string modeTag = selectedItem.Tag?.ToString() ?? "None";
+                    if (Enum.TryParse<SettingsManager.StartupMode>(modeTag, out var mode))
+                    {
+                        SettingsManager.SetStartupMode(mode);
+                    }
+                }
             }
             catch (Exception ex)
             {

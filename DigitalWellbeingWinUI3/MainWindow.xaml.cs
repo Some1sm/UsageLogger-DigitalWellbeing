@@ -243,14 +243,16 @@ namespace DigitalWellbeingWinUI3
         {
             if (Helpers.UserPreferences.MinimizeOnExit)
             {
-                args.Cancel = true;
-                MinimizeToTray();
+                // Service stays running with tray - just exit UI to save RAM
+                Helpers.Notifier.Dispose();
+                Application.Current.Exit();
             }
             else
             {
-                // Clean exit - also stop the service
+                // Full exit - stop everything including the Service/tray
                 StopService();
                 Helpers.Notifier.Dispose();
+                Application.Current.Exit();
             }
         }
 
@@ -271,13 +273,22 @@ namespace DigitalWellbeingWinUI3
         }
         
         // Helper hooks to ensure UI updates if needed
-        private void PreMinimize() { }
+        private void PreMinimize()
+        {
+            // Pause refresh timer and clear data when minimized to conserve RAM
+            if (ContentFrame.Content is DayAppUsagePage page)
+            {
+                page.ViewModel?.StopTimer();
+                page.ViewModel?.ClearData();
+            }
+        }
         private void PostRestore() 
         {
-             // Refresh current page
+             // Reload all data and resume timer
              if (ContentFrame.Content is DayAppUsagePage page)
              {
-                 page.ViewModel?.RefreshDayView();
+                 page.ViewModel?.StartTimer();
+                 page.ViewModel?.LoadWeeklyData();
              }
              // Update incognito watermark in case setting changed
              UpdateIncognitoWatermark();

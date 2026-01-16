@@ -312,6 +312,59 @@ public class AppUsageViewModel : INotifyPropertyChanged
 		}
 	}
 
+	/// <summary>
+	/// Stops the auto-refresh timer. Call when the UI is minimized to conserve resources.
+	/// </summary>
+	public void StopTimer()
+	{
+		refreshTimer?.Stop();
+	}
+
+	/// <summary>
+	/// Starts the auto-refresh timer if enabled. Call when the UI is restored.
+	/// </summary>
+	public void StartTimer()
+	{
+		if (UserPreferences.EnableAutoRefresh && refreshTimer != null)
+		{
+			refreshTimer.Start();
+		}
+	}
+
+	/// <summary>
+	/// Clears all data collections to reduce RAM usage when the UI is minimized.
+	/// Call LoadWeeklyData() to reload after restoring.
+	/// </summary>
+	public void ClearData()
+	{
+		// Clear all observable collections
+		WeekAppUsage?.Clear();
+		WeeklyChartItems?.Clear();
+		PieChartItems?.Clear();
+		DayListItems?.Clear();
+		Column1Items?.Clear();
+		Column2Items?.Clear();
+		Column3Items?.Clear();
+		BackgroundAudioItems?.Clear();
+		BackgroundAudioColumn1?.Clear();
+		BackgroundAudioColumn2?.Clear();
+		BackgroundAudioColumn3?.Clear();
+		TagsChartItems?.Clear();
+		GoalStreaks?.Clear();
+		CategoryDurations?.Clear();
+		_weekAfkData?.Clear();
+
+		// Reset state
+		IsWeeklyDataLoaded = false;
+		TotalDuration = TimeSpan.Zero;
+		AfkDuration = TimeSpan.Zero;
+		LockDuration = TimeSpan.Zero;
+
+		// Force GC to reclaim memory
+		GC.Collect();
+		GC.WaitForPendingFinalizers();
+	}
+
 	public void LoadUserExcludedProcesses()
 	{
 		userExcludedProcesses = UserPreferences.UserExcludedProcesses.ToArray();

@@ -1,15 +1,27 @@
 ﻿using DigitalWellbeing.Core;
 using DigitalWellbeing.Core.Data;
+using DigitalWellbeingService.Helpers;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace DigitalWellbeingService;
 
 class Program
 {
+    private static ActivityLogger _activityLogger;
+
     [STAThread]
-    static async Task Main(string[] args)
+    static void Main(string[] args)
     {
+        // Enable visual styles for tray menu
+        Application.EnableVisualStyles();
+        Application.SetCompatibleTextRenderingDefault(false);
+
+        // Initialize tray icon
+        TrayManager.Init();
+
         // Composition Root
         string logsPath = ApplicationPath.UsageLogsFolder;
         
@@ -17,25 +29,34 @@ class Program
         var usageRepo = new AppUsageRepository(logsPath);
         
         var sessionManager = new SessionManager(sessionsRepo);
-        var activityLogger = new ActivityLogger(usageRepo, sessionManager);
-        
-        // Async initialization
-        await activityLogger.InitializeAsync();
+        _activityLogger = new ActivityLogger(usageRepo, sessionManager);
 
-        Helpers.ServiceLogger.Log("Service", "Service started successfully (Async Mode).");
-
-        // Main Loop
-        while (true)
+        // Start async logger loop on a background thread
+        Thread loggerThread = new Thread(async () =>
         {
-            try
+            // Async initialization
+            await _activityLogger.InitializeAsync();
+            ServiceLogger.Log("Service", "Service started successfully (Async Mode).");
+
+            // Main Loop
+            while (true)
             {
-                await activityLogger.OnTimerAsync();
+                try
+                {
+                    await _activityLogger.OnTimerAsync();
+                }
+                catch (Exception ex)
+                {
+                    ServiceLogger.LogError("OnTimer", ex);
+                }
+                await Task.Delay(ActivityLogger.TIMER_INTERVAL_SEC * 1000);
             }
-            catch (Exception ex)
-            {
-                Helpers.ServiceLogger.LogError("OnTimer", ex);
-            }
-            await Task.Delay(ActivityLogger.TIMER_INTERVAL_SEC * 1000);
-        }
+        });
+        loggerThread.IsBackground = true;
+        loggerThread.Start();
+
+        // Run Windows Forms message pump (keeps tray icon responsive)
+        Application.Run();
     }
 }
+

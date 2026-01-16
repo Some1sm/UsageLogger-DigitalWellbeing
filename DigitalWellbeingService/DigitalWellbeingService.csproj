@@ -12,7 +12,7 @@
     <Version>0.8.1.0</Version>
     <AssemblyVersion>0.8.1.0</AssemblyVersion>
     <FileVersion>0.8.1.0</FileVersion>
-    <UseWindowsForms>false</UseWindowsForms>
+    <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>false</UseWPF>
   </PropertyGroup>
 

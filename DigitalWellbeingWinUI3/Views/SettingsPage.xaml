@@ -53,7 +53,11 @@
                             <TextBlock l:Uids.Uid="Settings_RunOnStartup" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
                             <TextBlock l:Uids.Uid="Settings_RunOnStartupDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
                         </StackPanel>
-                        <ToggleSwitch x:Name="EnableRunOnStartup" Grid.Column="1" Toggled="EnableRunOnStartup_Toggled"/>
+                        <ComboBox x:Name="StartupModeComboBox" Grid.Column="1" MinWidth="180" SelectionChanged="StartupModeComboBox_SelectionChanged">
+                            <ComboBoxItem Tag="None" l:Uids.Uid="Settings_StartupModeNone"/>
+                            <ComboBoxItem Tag="TrackerOnly" l:Uids.Uid="Settings_StartupModeTracker"/>
+                            <ComboBoxItem Tag="TrackerAndUI" l:Uids.Uid="Settings_StartupModeBoth"/>
+                        </ComboBox>
                     </Grid>
     
                     <!-- Minimize on Exit -->
