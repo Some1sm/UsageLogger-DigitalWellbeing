@@ -86,13 +86,13 @@
     <value>Total AFK Time</value>
   </data>
   <data name="History_DailyTrends.Text" xml:space="preserve">
-    <value>Daily Trends</value>
+    <value>Previous period average</value>
   </data>
   <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>📊 Day-by-day usage</value>
+    <value>📊 Day-by-day trends</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
-    <value>Orange line = previous period average</value>
+    <value>Historical average</value>
   </data>
   <data name="History_UsageTrends.Text" xml:space="preserve">
     <value>Usage Trends</value>

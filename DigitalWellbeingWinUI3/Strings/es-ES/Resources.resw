@@ -83,13 +83,13 @@
     <value>Tiempo Total en Pantalla</value>
   </data>
   <data name="History_DailyTrends.Text" xml:space="preserve">
-    <value>Tendencias Diarias</value>
+    <value>Media del periodo anterior</value>
   </data>
   <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>Uso día por día</value>
+    <value>📊 Tendencias día por día</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
-    <value>Línea naranja = media del periodo anterior</value>
+    <value>Media histórica</value>
   </data>
   <data name="History_UsageTrends.Text" xml:space="preserve">
     <value>Tendencias de Uso</value>

@@ -145,6 +145,13 @@ namespace DigitalWellbeingWinUI3.ViewModels
             get => _previousPeriodAverage;
             set { if (_previousPeriodAverage != value) { _previousPeriodAverage = value; OnPropertyChanged(); } }
         }
+
+        private string _prevPeriodAvgText = "0h 0m";
+        public string PrevPeriodAvgText
+        {
+            get => _prevPeriodAvgText;
+            set { if (_prevPeriodAvgText != value) { _prevPeriodAvgText = value; OnPropertyChanged(); } }
+        }
         
         // Navigation event for heatmap cell click
         public event Action<DateTime> NavigateToDate;
@@ -503,6 +510,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
             if (prevDays <= 0) prevDays = 1;
             double prevAvg = prevTotal / prevDays;
             PreviousPeriodAverage = prevAvg / 60.0;
+            PrevPeriodAvgText = StringHelper.FormatDurationCompact(TimeSpan.FromMinutes(prevAvg));
 
             // Calculate KPIs
             double currentTotal = dailyTotals.Values.Sum();
