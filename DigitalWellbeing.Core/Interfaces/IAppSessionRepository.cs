@@ -10,5 +10,6 @@ namespace DigitalWellbeing.Core.Interfaces
         Task<List<AppSession>> GetSessionsForDateAsync(DateTime date);
         Task AppendSessionsAsync(List<AppSession> sessions);
         Task UpdateOrAppendAsync(AppSession session);
+        Task<int> GetTotalDaysCountAsync();
     }
 }

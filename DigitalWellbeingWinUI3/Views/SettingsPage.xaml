@@ -252,8 +252,9 @@
                          <TextBlock l:Uids.Uid="Settings_DaysToShow" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
                           <TextBlock l:Uids.Uid="Settings_DaysToShowDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
                      </StackPanel>
-                      <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="10">
+                       <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="10">
                           <NumberBox x:Name="DaysToShowTextBox" Value="7" SpinButtonPlacementMode="Compact" Width="150" Minimum="1" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp"/>
+                          <TextBlock x:Name="DaysAvailableHint" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" Visibility="Collapsed"/>
                       </StackPanel>
                  </Grid>
 

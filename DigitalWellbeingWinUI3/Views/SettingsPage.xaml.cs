@@ -11,6 +11,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Windows.ApplicationModel;
 using DigitalWellbeingWinUI3.Models;
+using System.Threading.Tasks;
 
 namespace DigitalWellbeingWinUI3.Views
 {
@@ -162,6 +163,9 @@ namespace DigitalWellbeingWinUI3.Views
             // Display
             DaysToShowTextBox.Value = UserPreferences.DayAmount;
             MinDurationTextBox.Value = UserPreferences.MinumumDuration.TotalSeconds;
+
+            // Load History Stats (Async)
+            _ = LoadHistoryStatsAsync();
 
             // Refresh
             EnableAutoRefresh.IsOn = UserPreferences.EnableAutoRefresh;
@@ -797,6 +801,31 @@ namespace DigitalWellbeingWinUI3.Views
                 Debug.WriteLine($"Service restart failed: {ex.Message}");
             }
         }
+        private async Task LoadHistoryStatsAsync()
+        {
+            try
+            {
+                var repo = new DigitalWellbeing.Core.Data.AppSessionRepository(DigitalWellbeing.Core.ApplicationPath.UsageLogsFolder);
+                int totalDays = await repo.GetTotalDaysCountAsync();
+
+                this.DispatcherQueue.TryEnqueue(() =>
+                {
+                    DaysToShowTextBox.Maximum = totalDays;
+                    DaysAvailableHint.Text = $"(Max: {totalDays})";
+                    DaysAvailableHint.Visibility = Visibility.Visible;
+
+                    if (DaysToShowTextBox.Value > totalDays)
+                    {
+                        DaysToShowTextBox.Value = totalDays;
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[Settings] LoadHistoryStats Error: {ex.Message}");
+            }
+        }
+
         private void TxtAvgWatts_TextChanged(object sender, TextChangedEventArgs e)
         {
             MarkDirty();

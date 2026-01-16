@@ -307,4 +307,41 @@ public class AppSessionRepository : IAppSessionRepository
             Console.WriteLine($"Session Repo Update Error: {ex.Message}");
         }
     }
+    public async Task<int> GetTotalDaysCountAsync()
+    {
+        return await Task.Run(() =>
+        {
+            try
+            {
+                if (!Directory.Exists(_logsFolderPath)) return 0;
+
+                var files = Directory.GetFiles(_logsFolderPath, "*.log");
+                var dates = new HashSet<DateTime>();
+
+                foreach (var file in files)
+                {
+                    string name = Path.GetFileNameWithoutExtension(file);
+                    
+                    if (name.StartsWith("sessions_"))
+                    {
+                        name = name.Substring(9);
+                    }
+                    
+                    if (DateTime.TryParseExact(name, "MM-dd-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
+                    {
+                        dates.Add(date.Date);
+                    }
+                }
+                
+                dates.Add(DateTime.Now.Date);
+
+                return dates.Count;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error counting days: {ex.Message}");
+                return 1;
+            }
+        });
+    }
 }
