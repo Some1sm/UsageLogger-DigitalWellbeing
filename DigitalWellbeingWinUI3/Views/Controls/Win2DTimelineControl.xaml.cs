@@ -24,9 +24,13 @@ namespace DigitalWellbeingWinUI3.Views.Controls
         // Drag-to-Scroll State
         private bool _isDragging = false;
         private double _lastPointerY = 0;
+        private double _lastPointerX = 0;
         private double _initialScrollOffset = 0;
         private double _dragThreshold = 5; // Minimal movement to start drag
         private double _startPointerY = 0;
+        private double _startPointerX = 0;
+        
+        private ScrollViewer _parentScrollViewer;
 
         public Win2DTimelineControl()
         {
@@ -138,10 +142,31 @@ namespace DigitalWellbeingWinUI3.Views.Controls
                 MainScrollViewer.ViewChanged -= MainScrollViewer_ViewChanged;
                 MainScrollViewer.ViewChanged += MainScrollViewer_ViewChanged;
             }
+            
+            // Find Parent ScrollViewer for Horizontal Drag
+            if (_parentScrollViewer == null)
+            {
+                 TryFindParentScrollViewer();
+            }
 
             // Standard invalidation is sufficient now that Width matches container exactly (-47px overhead)
             TimelineCanvas.Invalidate();
         }
+
+        private void TryFindParentScrollViewer()
+        {
+             DependencyObject curr = this;
+             while (curr != null)
+             {
+                 if (curr is ScrollViewer sv && sv != MainScrollViewer)
+                 {
+                     _parentScrollViewer = sv;
+                     break;
+                 }
+                 curr = VisualTreeHelper.GetParent(curr);
+             }
+        }
+
 
         private void MainScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
@@ -410,12 +435,20 @@ namespace DigitalWellbeingWinUI3.Views.Controls
         {
             if (sender is not FrameworkElement fe) return;
             
+            // Lazy find parent if missed in loaded
+            if (_parentScrollViewer == null) TryFindParentScrollViewer();
+            
             // Initiate Drag tracking
             // Use Viewport coordinates for drag stability (ignores scroll offset changes)
             var viewportPt = e.GetCurrentPoint(MainScrollViewer).Position;
+            var rootPt = e.GetCurrentPoint(null).Position; // Screen coords (even more stable?) Viewport is fine.
             
             _lastPointerY = viewportPt.Y;
             _startPointerY = viewportPt.Y;
+            
+            _lastPointerX = rootPt.X; // X needs to be global because we are dragging ACROSS controls
+            _startPointerX = rootPt.X;
+            
             _initialScrollOffset = MainScrollViewer?.VerticalOffset ?? 0;
             _isDragging = false; // Wait for threshold
             
@@ -450,17 +483,17 @@ namespace DigitalWellbeingWinUI3.Views.Controls
                  // Check threshold against screen movement
                  // We track _startPointerY in VIEWPORT coordinates now for safety
                  
-                 // On first move after press, we might need to reset start if we didn't capture it in viewport coords
-                 // But we can just use the Content delta for threshold, it's fine for small movements
-                 
-                 // Actually, let's just calculate delta from last VIEWPORT Y
+                 var rootPt = e.GetCurrentPoint(null).Position;
                  
                  if (_isDragging)
                  {
                      double currentY = viewportPt.Y;
                      double deltaY = currentY - _lastPointerY;
                      
-                     // SCROLL LOGIC:
+                     double currentX = rootPt.X;
+                     double deltaX = currentX - _lastPointerX;
+                     
+                     // VERTICAL SCROLL LOGIC: (Internal MainScrollViewer)
                      // Dragging DOWN (+Y) means we want to see content ABOVE.
                      // ScrollViewer Offset must DECREASE.
                      // NewOffset = OldOffset - DeltaY
@@ -471,27 +504,27 @@ namespace DigitalWellbeingWinUI3.Views.Controls
                          MainScrollViewer.ChangeView(null, newOffset, null, true); // disable animation for 1:1 feel
                      }
                      
+                     // HORIZONTAL SCROLL LOGIC: (External Parent ScrollViewer)
+                     if (_parentScrollViewer != null && Math.Abs(deltaX) > 0)
+                     {
+                         double newOffsetH = _parentScrollViewer.HorizontalOffset - deltaX;
+                         _parentScrollViewer.ChangeView(newOffsetH, null, null, true);
+                     }
+                     
                      _lastPointerY = currentY;
+                     _lastPointerX = currentX;
                  }
                  else
                  {
-                     // Check threshold
-                     // We need to track start point in viewport coords, but we captured it in content coords.
-                     // Let's just use the current delta from the last known viewport Y.
-                     // Wait, _lastPointerY was set to content Y in PointerPressed. This is bad.
+                     // Check threshold (Euclidean distance for 2D check)
+                     double deltaY = Math.Abs(viewportPt.Y - _startPointerY);
+                     double deltaX = Math.Abs(rootPt.X - _startPointerX);
                      
-                     // FIX: We need to update _lastPointerY to Viewport Y if we haven't started dragging yet?
-                     // No, let's fix PointerPressed to store Viewport Y too.
-                     
-                     // Alternative: Re-initialize _startPointerY here if it's the first move? 
-                     // No, let's fix PointerPressed. See next edit.
-                     
-                     // For now, assuming PointerPressed is fixed:
-                     double totalDelta = Math.Abs(viewportPt.Y - _startPointerY);
-                     if (totalDelta > _dragThreshold)
+                     if (deltaY > _dragThreshold || deltaX > _dragThreshold)
                      {
                          _isDragging = true;
                          _lastPointerY = viewportPt.Y; // Start tracking from here
+                         _lastPointerX = rootPt.X;
                          ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.Hand);
                      }
                  }
