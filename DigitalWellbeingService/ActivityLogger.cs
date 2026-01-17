@@ -562,6 +562,27 @@ public class ActivityLogger
         catch { }
     }
 
+    private static readonly HashSet<string> _whitelistedProcesses = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+    {
+        "explorer",
+        "taskmgr",
+        "dwm",
+        "csrss",
+        "winlogon",
+        "services",
+        "lsass",
+        "svchost",
+        "ApplicationFrameHost",
+        "ShellExperienceHost",
+        "StartMenuExperienceHost",
+        "SearchHost",
+        "DigitalWellbeingWinUI3",
+        "DigitalWellbeingService",
+        "DigitalWellbeing",
+        "Digital Wellbeing (Startup)",
+        "LockApp"
+    };
+
     public void CheckFocusSchedules(string activeProcessName, string activeWindowTitle)
     {
         LoadFocusSchedule();
@@ -572,8 +593,7 @@ public class ActivityLogger
         {
             if (!session.IsEnabled) continue;
             if (!session.IsActiveNow()) continue;
-            // Mode 0 (Chill) is now handled
-
+            
             // Is current app a match for the focus target?
             bool isMatch = string.Equals(session.ProcessName, activeProcessName, StringComparison.OrdinalIgnoreCase);
 
@@ -585,15 +605,38 @@ public class ActivityLogger
 
             if (!isMatch)
             {
+                // Check whitelist
+                if (_whitelistedProcesses.Contains(activeProcessName))
+                {
+                    continue;
+                }
+
                 // Violation! 
                 // ONLY show popup if the main UI is NOT running.
-                if (System.Diagnostics.Process.GetProcessesByName("DigitalWellbeingWinUI3").Length == 0)
+                bool isUiRunning = System.Diagnostics.Process.GetProcessesByName("DigitalWellbeingWinUI3").Length > 0 
+                                || System.Diagnostics.Process.GetProcessesByName("Digital Wellbeing (Startup)").Length > 0;
+
+                if (!isUiRunning)
                 {
                     if (session.Mode == 0) // Chill Notification
                     {
                         ShowToast($"Focus: {session.Name}", $"You're using '{activeProcessName}' instead of '{session.ProcessName}'");
                     }
-                    else // Blocking Popup
+                    else if (session.Mode == 2) // Focus Mode (Strict Kill)
+                    {
+                        try
+                        {
+                            var procs = System.Diagnostics.Process.GetProcessesByName(activeProcessName);
+                            foreach (var p in procs)
+                            {
+                                try { p.Kill(); } catch { }
+                                p.Dispose();
+                            }
+                            ShowToast($"Focus: {session.Name}", $"Closed '{activeProcessName}'");
+                        }
+                        catch { }
+                    }
+                    else // Blocking Popup (Normal Mode)
                     {
                         ShowFocusEnforcementPopup(session, activeProcessName);
                     }

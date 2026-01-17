@@ -68,7 +68,10 @@ namespace DigitalWellbeingWinUI3.Helpers
             "StartMenuExperienceHost",
             "SearchHost",
             "DigitalWellbeingWinUI3",
-            "DigitalWellbeing"
+            "DigitalWellbeingService",
+            "DigitalWellbeing",
+            "Digital Wellbeing (Startup)",
+            "LockApp"
         };
         #endregion
 
