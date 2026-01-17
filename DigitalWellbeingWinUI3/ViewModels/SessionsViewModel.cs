@@ -57,7 +57,8 @@ namespace DigitalWellbeingWinUI3.ViewModels
         }
 
         // View Mode Toggle (App, SubApp, Category)
-        public List<string> ViewModeOptions { get; } = new List<string> { "App", "SubApp", "Category" };
+        private readonly List<string> _viewModeKeys = new List<string> { "App", "SubApp", "Category" };
+        public ObservableCollection<string> ViewModeDisplayOptions { get; } = new ObservableCollection<string>();
         
         private int _selectedViewModeIndex = 1; // Default to SubApp
         public int SelectedViewModeIndex
@@ -75,7 +76,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
             }
         }
         
-        public string ViewMode => ViewModeOptions[_selectedViewModeIndex];
+        public string ViewMode => _viewModeKeys[_selectedViewModeIndex];
         
         private void RefreshViewMode()
         {
@@ -121,6 +122,12 @@ namespace DigitalWellbeingWinUI3.ViewModels
         public SessionsViewModel()
         {
             _repository = new AppSessionRepository(ApplicationPath.UsageLogsFolder);
+            
+            // Localize View Modes
+            ViewModeDisplayOptions.Add(LocalizationHelper.GetString("Sessions_View_App"));
+            ViewModeDisplayOptions.Add(LocalizationHelper.GetString("Sessions_View_SubApp"));
+            ViewModeDisplayOptions.Add(LocalizationHelper.GetString("Sessions_View_Category"));
+
             NextDayCommand = new RelayCommand(_ => SelectedDate = SelectedDate.AddDays(1));
             PreviousDayCommand = new RelayCommand(_ => SelectedDate = SelectedDate.AddDays(-1));
             TodayCommand = new RelayCommand(_ => SelectedDate = DateTime.Now);

@@ -39,18 +39,23 @@ namespace DigitalWellbeingWinUI3.ViewModels
             Stats = new ObservableCollection<StatItem>();
             DateRangeOptions = Enum.GetValues(typeof(DateRangeOption)).Cast<DateRangeOption>().ToList();
             
-            // Create user-friendly strings
-            DateRangeDisplayOptions = DateRangeOptions.Select(o => 
+            // Create user-friendly strings (Localized)
+            DateRangeDisplayOptions = new ObservableCollection<string>();
+            foreach (var o in DateRangeOptions)
             {
+                string key = "";
                 switch (o)
                 {
-                    case DateRangeOption.Last7Days: return "Last 7 Days";
-                    case DateRangeOption.ThisMonth: return "This Month";
-                    case DateRangeOption.LastMonth: return "Last Month";
-                    case DateRangeOption.AllTime: return "All Time";
-                    default: return o.ToString();
+                    case DateRangeOption.Today: key = "History_Period_Today"; break;
+                    case DateRangeOption.Yesterday: key = "History_Period_Yesterday"; break;
+                    case DateRangeOption.Last7Days: key = "History_Period_Last7Days"; break;
+                    case DateRangeOption.ThisMonth: key = "History_Period_ThisMonth"; break;
+                    case DateRangeOption.LastMonth: key = "History_Period_LastMonth"; break;
+                    case DateRangeOption.AllTime: key = "History_Period_AllTime"; break;
+                    case DateRangeOption.Custom: key = "History_Period_Custom"; break;
                 }
-            }).ToList();
+                DateRangeDisplayOptions.Add(LocalizationHelper.GetString(key) ?? o.ToString());
+            }
 
             SelectedDateRange = DateRangeOption.Last7Days; // Default
             
@@ -59,7 +64,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
 
         public ObservableCollection<StatItem> Stats { get; }
         public List<DateRangeOption> DateRangeOptions { get; }
-        public List<string> DateRangeDisplayOptions { get; }
+        public ObservableCollection<string> DateRangeDisplayOptions { get; }
         public System.Windows.Input.ICommand RefreshCommand { get; }
 
         public int SelectedDateRangeIndex

@@ -111,9 +111,9 @@
                     HorizontalAlignment="Center" VerticalAlignment="Center"
                     Visibility="Collapsed">
             <FontIcon Glyph="&#xE823;" FontSize="64" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-            <TextBlock Text="No Focus Schedules" Style="{StaticResource SubtitleTextBlockStyle}" 
+            <TextBlock l:Uids.Uid="Focus_NoSchedules" Text="No Focus Schedules" Style="{StaticResource SubtitleTextBlockStyle}" 
                        HorizontalAlignment="Center" Margin="0,16,0,8"/>
-            <TextBlock Text="Click '+ Add Schedule' to create your first focus block."
+            <TextBlock l:Uids.Uid="Focus_EmptyStateDesc" Text="Click '+ Add Schedule' to create your first focus block."
                        Style="{StaticResource BodyTextBlockStyle}" 
                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                        HorizontalAlignment="Center"/>

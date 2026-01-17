@@ -559,4 +559,40 @@
   <data name="History_AwayLock.Text" xml:space="preserve">
     <value>Отошел / Блок</value>
   </data>
+  <data name="Sessions_View_App" xml:space="preserve">
+    <value>Приложение</value>
+  </data>
+  <data name="Sessions_View_SubApp" xml:space="preserve">
+    <value>Под-приложение</value>
+  </data>
+  <data name="Sessions_View_Category" xml:space="preserve">
+    <value>Категория</value>
+  </data>
+  <data name="Sessions_ViewLabel.Text" xml:space="preserve">
+    <value>Вид:</value>
+  </data>
+  <data name="History_Period_Today" xml:space="preserve">
+    <value>Сегодня</value>
+  </data>
+  <data name="History_Period_Yesterday" xml:space="preserve">
+    <value>Вчера</value>
+  </data>
+  <data name="History_Period_Tomorrow" xml:space="preserve">
+    <value>Завтра</value>
+  </data>
+  <data name="History_Period_Last7Days" xml:space="preserve">
+    <value>Посл. 7 дней</value>
+  </data>
+  <data name="History_Period_ThisMonth" xml:space="preserve">
+    <value>Этот месяц</value>
+  </data>
+  <data name="History_Period_AllTime" xml:space="preserve">
+    <value>Все время</value>
+  </data>
+  <data name="Focus_NoSchedules.Text" xml:space="preserve">
+    <value>Нет расписания фокуса</value>
+  </data>
+  <data name="Focus_EmptyStateDesc.Text" xml:space="preserve">
+    <value>Нажмите '+ Добавить расписание', чтобы создать первый блок.</value>
+  </data>
 </root>

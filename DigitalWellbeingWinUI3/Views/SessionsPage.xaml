@@ -58,8 +58,8 @@
 
             <!-- View Mode Dropdown -->
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="8">
-                <TextBlock Text="View:" VerticalAlignment="Center" Opacity="0.7"/>
-                <ComboBox ItemsSource="{x:Bind ViewModel.ViewModeOptions}" 
+                <TextBlock l:Uids.Uid="Sessions_ViewLabel" Text="View:" VerticalAlignment="Center" Opacity="0.7"/>
+                <ComboBox ItemsSource="{x:Bind ViewModel.ViewModeDisplayOptions}" 
                           SelectedIndex="{x:Bind ViewModel.SelectedViewModeIndex, Mode=TwoWay}" 
                           Width="110"/>
             </StackPanel>

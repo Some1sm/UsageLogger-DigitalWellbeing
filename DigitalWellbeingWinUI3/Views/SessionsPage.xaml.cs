@@ -63,10 +63,10 @@ namespace DigitalWellbeingWinUI3.Views
         {
             if (value is System.DateTime dt)
             {
-                if (dt.Date == System.DateTime.Now.Date) return "Today";
-                if (dt.Date == System.DateTime.Now.AddDays(-1).Date) return "Yesterday";
-                if (dt.Date == System.DateTime.Now.AddDays(1).Date) return "Tomorrow";
-                return dt.ToString("D"); // Long date pattern
+                if (dt.Date == System.DateTime.Now.Date) return DigitalWellbeingWinUI3.Helpers.LocalizationHelper.GetString("History_Period_Today");
+                if (dt.Date == System.DateTime.Now.AddDays(-1).Date) return DigitalWellbeingWinUI3.Helpers.LocalizationHelper.GetString("History_Period_Yesterday");
+                if (dt.Date == System.DateTime.Now.AddDays(1).Date) return DigitalWellbeingWinUI3.Helpers.LocalizationHelper.GetString("History_Period_Tomorrow");
+                return dt.ToString("D"); // Long date pattern (System localized)
             }
             return value;
         }

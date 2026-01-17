@@ -559,4 +559,40 @@ Ende: {2}</value>
   <data name="History_AwayLock.Text" xml:space="preserve">
     <value>Abwesend / Gesperrt</value>
   </data>
+  <data name="Sessions_View_App" xml:space="preserve">
+    <value>App</value>
+  </data>
+  <data name="Sessions_View_SubApp" xml:space="preserve">
+    <value>Sub-App</value>
+  </data>
+  <data name="Sessions_View_Category" xml:space="preserve">
+    <value>Kategorie</value>
+  </data>
+  <data name="Sessions_ViewLabel.Text" xml:space="preserve">
+    <value>Ansicht:</value>
+  </data>
+  <data name="History_Period_Today" xml:space="preserve">
+    <value>Heute</value>
+  </data>
+  <data name="History_Period_Yesterday" xml:space="preserve">
+    <value>Gestern</value>
+  </data>
+  <data name="History_Period_Tomorrow" xml:space="preserve">
+    <value>Morgen</value>
+  </data>
+  <data name="History_Period_Last7Days" xml:space="preserve">
+    <value>Letzte 7 Tage</value>
+  </data>
+  <data name="History_Period_ThisMonth" xml:space="preserve">
+    <value>Diesen Monat</value>
+  </data>
+  <data name="History_Period_AllTime" xml:space="preserve">
+    <value>Gesamte Zeit</value>
+  </data>
+  <data name="Focus_NoSchedules.Text" xml:space="preserve">
+    <value>Keine Fokuspläne</value>
+  </data>
+  <data name="Focus_EmptyStateDesc.Text" xml:space="preserve">
+    <value>Klicken Sie auf '+ Zeitplan hinzufügen', um Ihren ersten Fokusblock zu erstellen.</value>
+  </data>
 </root>

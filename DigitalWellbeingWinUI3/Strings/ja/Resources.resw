@@ -559,4 +559,40 @@
   <data name="History_AwayLock.Text" xml:space="preserve">
     <value>退席中 / ロック</value>
   </data>
+  <data name="Sessions_View_App" xml:space="preserve">
+    <value>アプリ</value>
+  </data>
+  <data name="Sessions_View_SubApp" xml:space="preserve">
+    <value>サブアプリ</value>
+  </data>
+  <data name="Sessions_View_Category" xml:space="preserve">
+    <value>カテゴリ</value>
+  </data>
+  <data name="Sessions_ViewLabel.Text" xml:space="preserve">
+    <value>表示:</value>
+  </data>
+  <data name="History_Period_Today" xml:space="preserve">
+    <value>今日</value>
+  </data>
+  <data name="History_Period_Yesterday" xml:space="preserve">
+    <value>昨日</value>
+  </data>
+  <data name="History_Period_Tomorrow" xml:space="preserve">
+    <value>明日</value>
+  </data>
+  <data name="History_Period_Last7Days" xml:space="preserve">
+    <value>過去7日間</value>
+  </data>
+  <data name="History_Period_ThisMonth" xml:space="preserve">
+    <value>今月</value>
+  </data>
+  <data name="History_Period_AllTime" xml:space="preserve">
+    <value>全期間</value>
+  </data>
+  <data name="Focus_NoSchedules.Text" xml:space="preserve">
+    <value>フォーカススケジュールなし</value>
+  </data>
+  <data name="Focus_EmptyStateDesc.Text" xml:space="preserve">
+    <value>「+ スケジュールを追加」をクリックして、最初のフォーカスブロックを作成します。</value>
+  </data>
 </root>

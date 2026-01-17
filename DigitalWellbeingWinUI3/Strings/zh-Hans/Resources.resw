@@ -559,4 +559,40 @@
   <data name="History_AwayLock.Text" xml:space="preserve">
     <value>离开 / 锁定</value>
   </data>
+  <data name="Sessions_View_App" xml:space="preserve">
+    <value>应用</value>
+  </data>
+  <data name="Sessions_View_SubApp" xml:space="preserve">
+    <value>子应用</value>
+  </data>
+  <data name="Sessions_View_Category" xml:space="preserve">
+    <value>类别</value>
+  </data>
+  <data name="Sessions_ViewLabel.Text" xml:space="preserve">
+    <value>视图:</value>
+  </data>
+  <data name="History_Period_Today" xml:space="preserve">
+    <value>今天</value>
+  </data>
+  <data name="History_Period_Yesterday" xml:space="preserve">
+    <value>昨天</value>
+  </data>
+  <data name="History_Period_Tomorrow" xml:space="preserve">
+    <value>明天</value>
+  </data>
+  <data name="History_Period_Last7Days" xml:space="preserve">
+    <value>过去7天</value>
+  </data>
+  <data name="History_Period_ThisMonth" xml:space="preserve">
+    <value>本月</value>
+  </data>
+  <data name="History_Period_AllTime" xml:space="preserve">
+    <value>所有时间</value>
+  </data>
+  <data name="Focus_NoSchedules.Text" xml:space="preserve">
+    <value>没有专注计划</value>
+  </data>
+  <data name="Focus_EmptyStateDesc.Text" xml:space="preserve">
+    <value>点击“+ 添加计划”以创建您的第一个专注块。</value>
+  </data>
 </root>
