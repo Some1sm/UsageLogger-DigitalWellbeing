@@ -235,7 +235,7 @@ namespace DigitalWellbeingWinUI3
             m_AppWindow.Closing += M_AppWindow_Closing;
 
             // Init Notifier
-            Helpers.Notifier.Init(this, TrayIcon);
+            Helpers.Notifier.Init(this);
             Helpers.Notifier.InitNotifierTimer();
         }
 
@@ -315,32 +315,6 @@ namespace DigitalWellbeingWinUI3
         }
 
         // ShowAlertUsage removed - replaced by TimeLimitEnforcer logic in AppUsageViewModel
-
-        private void TrayIcon_DoubleTapped(object sender, Microsoft.UI.Xaml.Input.DoubleTappedRoutedEventArgs e)
-        {
-            LogDebug("TrayIcon_DoubleTapped");
-            RestoreWindow();
-        }
-
-        private void Open_Click(object sender, RoutedEventArgs e)
-        {
-            LogDebug("Open_Click");
-            RestoreWindow();
-        }
-
-        private void Settings_Click(object sender, RoutedEventArgs e)
-        {
-            LogDebug("Settings_Click");
-            RestoreWindow();
-            NavigateToSettings();
-        }
-
-        private void Exit_Click(object sender, RoutedEventArgs e)
-        {
-            LogDebug("Exit_Click");
-            ForceClose();
-            Application.Current.Exit();
-        }
 
         private void LogDebug(string message)
         {

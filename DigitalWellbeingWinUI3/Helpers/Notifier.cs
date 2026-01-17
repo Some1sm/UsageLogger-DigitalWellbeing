@@ -3,7 +3,6 @@ using DigitalWellbeing.Core;
 using DigitalWellbeing.Core.Models;
 using DigitalWellbeingWinUI3.ViewModels;
 using DigitalWellbeingWinUI3;
-using H.NotifyIcon;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
@@ -11,6 +10,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Windows.AppNotifications;
+using Microsoft.Windows.AppNotifications.Builder;
 
 // Alias WinUI DispatcherTimer to avoid confusion
 using DispatcherTimer = Microsoft.UI.Xaml.DispatcherTimer;
@@ -19,83 +20,44 @@ namespace DigitalWellbeingWinUI3.Helpers
 {
     public static class Notifier
     {
-        public static TaskbarIcon TrayIcon;
-
-        // private static TimeSpan warningLimit = TimeSpan.FromMinutes(15);
-        // private static int CHECK_INTERVAL = 60; // Check every 60 seconds
-
         private static MainWindow _mainWindow;
 
-        public static void Init(MainWindow mainWindow, TaskbarIcon icon)
+        public static void Init(MainWindow mainWindow)
         {
             _mainWindow = mainWindow;
-            TrayIcon = icon;
             
-            try
+            // Register for notifications (required for unpackaged apps)
+            if (AppNotificationManager.Default.Setting == AppNotificationSetting.Enabled)
             {
-                 // Try to load icon from Assets
-                 string iconPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "icon.ico");
-                 if (System.IO.File.Exists(iconPath))
-                 {
-                     TrayIcon.Icon = new System.Drawing.Icon(iconPath);
-                 }
+                // Unpackaged registration is often automatic with Bootstrapper but explicit call acts as sanity check
+                // For unpackaged, we rely on the OS allowing it via the raw executable identity
             }
-            catch 
-            {
-                // Fallback or ignore
-            }
-            
-            // Context Menu is now defined in XAML
-
-            // Force visibility? 
-            TrayIcon.Visibility = Visibility.Visible;
         }
 
         public static void Dispose()
         {
-            if (TrayIcon != null)
-            {
-                TrayIcon.Dispose();
-            }
+            // Unregister if needed, but typically AppNotificationManager.Default.Unregister() is for cleanup
+            AppNotificationManager.Default.Unregister();
         }
 
-        private static MainWindow GetMainWindow()
+        public static void ShowNotification(string title, string message, EventHandler clickHandler = null, object icon = null)
         {
-            if (_mainWindow != null) return _mainWindow;
-
-            if (App.Current is App myApp && myApp.m_window is MainWindow window)
+            try
             {
-                return window;
+                var builder = new AppNotificationBuilder()
+                    .AddText(title)
+                    .AddText(message);
+
+                var notification = builder.BuildNotification();
+                AppNotificationManager.Default.Show(notification);
             }
-            return null;
-        }
-
-        public static void ShowNotification(string title, string message, EventHandler clickHandler = null, object icon = null) // icon param unused for now or map to H.NotifyIcon
-        {
-            if (TrayIcon == null) return;
-
-             // Map WinForms icon to H.NotifyIcon equivalent?
-             // H.NotifyIcon uses 'NotificationIcon' enum or just title/message
-             
-             // TrayIcon.ShowNotification(title, message, iconType);
-             // We'll just show text for now.
-             
-             TrayIcon.ShowNotification(title, message);
-             
-             // Click handler? 
-             // TrayIcon.TrayBalloonTipClicked += ... 
-             // But H.NotifyIcon might handle it differently.
-             // We'll assume simple notification logic for now.
-             
-             // If we really need click handler:
-             // TrayIcon.TrayBalloonTipClicked += (s,e) => { clickHandler?.Invoke(s,e); };
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Failed to show notification: {ex.Message}");
+            }
         }
 
         #region App Time Limit Checker (DEPRECATED - Moved to TimeLimitEnforcer.cs)
-
-        // Legacy checker removed to avoid duplicate alerts.
-        // Logic handled by TimeLimitEnforcer.CheckTimeLimitsAsync called from AppUsageViewModel.
-
         public static void InitNotifierTimer()
         {
             // No-op
