@@ -766,4 +766,7 @@ Fim: {2}</value>
   <data name="RuleDialog_ResultLabel.Text" xml:space="preserve">
     <value>Resultado:</value>
   </data>
+  <data name="FocusPageHeader.Text" xml:space="preserve">
+    <value>Agenda de Foco</value>
+  </data>
 </root>

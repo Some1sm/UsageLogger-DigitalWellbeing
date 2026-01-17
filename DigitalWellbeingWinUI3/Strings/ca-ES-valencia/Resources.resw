@@ -823,4 +823,7 @@ Acaba: {2}</value>
   <data name="RuleDialog_ResultLabel.Text" xml:space="preserve">
     <value>Resultat:</value>
   </data>
+  <data name="FocusPageHeader.Text" xml:space="preserve">
+    <value>Horari de Focus</value>
+  </data>
 </root>

@@ -766,4 +766,7 @@
   <data name="RuleDialog_ResultLabel.Text" xml:space="preserve">
     <value>결과:</value>
   </data>
+  <data name="FocusPageHeader.Text" xml:space="preserve">
+    <value>집중 일정</value>
+  </data>
 </root>

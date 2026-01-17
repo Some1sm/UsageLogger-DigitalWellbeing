@@ -766,4 +766,7 @@ Fine: {2}</value>
   <data name="RuleDialog_ResultLabel.Text" xml:space="preserve">
     <value>Risultato:</value>
   </data>
+  <data name="FocusPageHeader.Text" xml:space="preserve">
+    <value>Programma Focus</value>
+  </data>
 </root>

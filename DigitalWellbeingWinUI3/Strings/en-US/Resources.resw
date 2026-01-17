@@ -731,4 +731,7 @@
   <data name="RuleDialog_ResultLabel.Text" xml:space="preserve">
     <value>Result:</value>
   </data>
+  <data name="FocusPageHeader.Text" xml:space="preserve">
+    <value>Focus Schedule</value>
+  </data>
 </root>

@@ -24,7 +24,7 @@
 
         <!-- Header -->
         <StackPanel Grid.Row="0" Spacing="8" Margin="0,0,0,24">
-            <TextBlock l:Uids.Uid="Focus_Header" Text="Focus Schedule" Style="{StaticResource TitleTextBlockStyle}"/>
+            <TextBlock l:Uids.Uid="FocusPageHeader" Text="Focus Schedule" Style="{StaticResource TitleTextBlockStyle}"/>
             <TextBlock l:Uids.Uid="Focus_Description" Text="Create scheduled focus blocks to stay on track. The app will enforce your commitment based on the selected mode."
                        Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                        TextWrapping="Wrap"/>
