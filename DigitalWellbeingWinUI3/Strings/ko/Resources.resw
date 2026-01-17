@@ -1,4 +1,4 @@
-﻿<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -59,67 +59,67 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Today" xml:space="preserve">
-    <value>Today</value>
+    <value>오늘</value>
   </data>
   <data name="FromLast" xml:space="preserve">
-    <value>from last</value>
+    <value>지난 번과</value>
   </data>
   <data name="History_TimePeriod.Text" xml:space="preserve">
-    <value>Time Period</value>
+    <value>기간</value>
   </data>
   <data name="History_ViewMode.Text" xml:space="preserve">
-    <value>View Mode</value>
+    <value>보기 모드</value>
   </data>
   <data name="History_StartDate.Text" xml:space="preserve">
-    <value>Start Date</value>
+    <value>시작 날짜</value>
   </data>
   <data name="History_EndDate.Text" xml:space="preserve">
-    <value>End Date</value>
+    <value>종료 날짜</value>
   </data>
   <data name="History_ApplyButton.Content" xml:space="preserve">
-    <value>Apply</value>
+    <value>적용</value>
   </data>
   <data name="History_TotalScreenTime.Text" xml:space="preserve">
-    <value>Total Screen Time</value>
+    <value>총 스크린 타임</value>
   </data>
   <data name="History_DailyTrends.Text" xml:space="preserve">
-    <value>Daily Trends</value>
+    <value>이전 기간 평균</value>
   </data>
   <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>📊 Day-by-day usage</value>
+    <value>📊 일일 트렌드</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
-    <value>Orange line = previous period average</value>
+    <value>과거 평균</value>
   </data>
   <data name="History_UsageTrends.Text" xml:space="preserve">
-    <value>Usage Trends</value>
+    <value>사용 트렌드</value>
   </data>
   <data name="History_DistributionAnalysis.Text" xml:space="preserve">
-    <value>Distribution Analysis</value>
+    <value>분포 분석</value>
   </data>
   <data name="History_ActivityHeatmap.Text" xml:space="preserve">
-    <value>Activity Heatmap</value>
+    <value>활동 히트맵</value>
   </data>
   <data name="History_HeatmapTooltip.Text" xml:space="preserve">
-    <value>Hover for details</value>
+    <value>상세 내용 보기</value>
   </data>
   <data name="History_DailyUsage" xml:space="preserve">
-    <value>Daily Usage</value>
+    <value>일일 사용량</value>
   </data>
   <data name="History_PrevPeriodAvg" xml:space="preserve">
-    <value>Prev Period Avg</value>
+    <value>이전 평균</value>
   </data>
   <data name="History_NoPreviousData" xml:space="preserve">
-    <value>No previous data</value>
+    <value>데이터 없음</value>
   </data>
   <data name="History_VsPreviousDays" xml:space="preserve">
-    <value>vs previous {0} days</value>
+    <value>vs 이전 {0}일</value>
   </data>
   <data name="Settings_UnsavedChanges.Text" xml:space="preserve">
-    <value>You have unsaved changes.</value>
+    <value>저장되지 않은 변경 사항.</value>
   </data>
   <data name="Settings_ApplyChanges.Content" xml:space="preserve">
-    <value>Apply Changes</value>
+    <value>적용</value>
   </data>
   <data name="Settings_Title.Text" xml:space="preserve">
     <value>설정</value>
@@ -128,133 +128,133 @@
     <value>앱 실행</value>
   </data>
   <data name="Settings_RunOnStartup.Text" xml:space="preserve">
-    <value>Run on Startup</value>
+    <value>시작 시 실행</value>
   </data>
   <data name="Settings_RunOnStartupDesc.Text" xml:space="preserve">
-    <value>Runs this app on startup.</value>
+    <value>Windows와 함께 시작.</value>
   </data>
   <data name="Settings_MinimizeOnExit.Text" xml:space="preserve">
-    <value>Minimize On Exit</value>
+    <value>종료 시 최소화</value>
   </data>
   <data name="Settings_MinimizeOnExitDesc.Text" xml:space="preserve">
-    <value>Minimize the app to tray on exit instead of closing.</value>
+    <value>종료 대신 트레이로 최소화.</value>
   </data>
   <data name="Settings_UsageData.Text" xml:space="preserve">
     <value>사용 데이터</value>
   </data>
   <data name="Settings_IncognitoMode.Text" xml:space="preserve">
-    <value>Incognito Mode</value>
+    <value>시크릿 모드</value>
   </data>
   <data name="Settings_IncognitoModeDesc.Text" xml:space="preserve">
-    <value>Do not record window titles (e.g. YouTube video names).</value>
+    <value>창 제목 기록 안 함 (예: YouTube).</value>
   </data>
   <data name="Settings_ExcludedApps.Text" xml:space="preserve">
-    <value>Excluded Apps</value>
+    <value>제외된 앱</value>
   </data>
   <data name="Settings_ExcludedAppsDesc.Text" xml:space="preserve">
-    <value>Double-click to remove an excluded app.</value>
+    <value>더블 클릭하여 제거.</value>
   </data>
   <data name="Settings_TimeLimits.Text" xml:space="preserve">
-    <value>Time Limits per App</value>
+    <value>시간 제한</value>
   </data>
   <data name="Settings_TimeLimitsDesc.Text" xml:space="preserve">
-    <value>Double-click to remove time limit.</value>
+    <value>더블 클릭하여 제거.</value>
   </data>
   <data name="Settings_Display.Text" xml:space="preserve">
-    <value>디스플레이</value>
+    <value>화면</value>
   </data>
   <data name="Settings_DaysToShow.Text" xml:space="preserve">
-    <value>Days to show on graph</value>
+    <value>표시 일수</value>
   </data>
   <data name="Settings_DaysToShowDesc.Text" xml:space="preserve">
-    <value>Number of days shown in the Dashboard weekly bar chart.</value>
+    <value>주간 차트 표시 일수.</value>
   </data>
   <data name="Settings_DetailedDays.Text" xml:space="preserve">
-    <value>Days to show on Detailed usage</value>
+    <value>상세 일수</value>
   </data>
   <data name="Settings_DetailedDaysDesc.Text" xml:space="preserve">
-    <value>Number of timeline columns in the Detailed Usage page (1-7 days).</value>
+    <value>상세 페이지 열 수 (1-7).</value>
   </data>
   <data name="Settings_MinDuration.Text" xml:space="preserve">
-    <value>Minimum App Duration (seconds)</value>
+    <value>최소 시간 (초)</value>
   </data>
   <data name="Settings_MinDurationDesc.Text" xml:space="preserve">
-    <value>Apps with usage less than this will be hidden (default 0s).</value>
+    <value>이보다 짧으면 숨김.</value>
   </data>
   <data name="Settings_AutoRefresh.Text" xml:space="preserve">
-    <value>Auto-Refresh Interval (s)</value>
+    <value>자동 새로고침 (초)</value>
   </data>
   <data name="Settings_AutoRefreshDesc.Text" xml:space="preserve">
-    <value>Minimum 6 seconds.</value>
+    <value>최소 6초.</value>
   </data>
   <data name="Settings_TimelineThreshold.Text" xml:space="preserve">
-    <value>Timeline Detail Level (Merge Threshold s)</value>
+    <value>타임라인 세부 정보</value>
   </data>
   <data name="Settings_TimelineThresholdDesc.Text" xml:space="preserve">
-    <value>Lower values show more items but may reduce performance (Default 30s).</value>
+    <value>병합 임계값 (기본 30초).</value>
   </data>
   <data name="Settings_ThemeMode.Text" xml:space="preserve">
-    <value>Theme Mode</value>
+    <value>테마</value>
   </data>
   <data name="Settings_ThemeSystem.Content" xml:space="preserve">
-    <value>System</value>
+    <value>시스템</value>
   </data>
   <data name="Settings_ThemeLight.Content" xml:space="preserve">
-    <value>Light</value>
+    <value>라이트</value>
   </data>
   <data name="Settings_ThemeDark.Content" xml:space="preserve">
-    <value>Dark</value>
+    <value>다크</value>
   </data>
   <data name="Settings_CombinedAudio.Text" xml:space="preserve">
-    <value>Combined Audio View</value>
+    <value>통합 오디오 뷰</value>
   </data>
   <data name="Settings_CombinedAudioDesc.Text" xml:space="preserve">
-    <value>Show Active Windows and Background Audio on same page instead of tabs.</value>
+    <value>활성 창과 오디오 함께 표시.</value>
   </data>
   <data name="Settings_Data.Text" xml:space="preserve">
     <value>데이터</value>
   </data>
   <data name="Settings_LogStorage.Text" xml:space="preserve">
-    <value>Log Storage Location</value>
+    <value>로그 위치</value>
   </data>
   <data name="Settings_LogStorageDesc.Text" xml:space="preserve">
-    <value>Change where usage logs are stored. Service will restart when changed.</value>
+    <value>로그 폴더 변경.</value>
   </data>
   <data name="Settings_BtnOpen.Content" xml:space="preserve">
-    <value>Open</value>
+    <value>열기</value>
   </data>
   <data name="Settings_BtnBrowse.Content" xml:space="preserve">
-    <value>Browse...</value>
+    <value>찾아보기...</value>
   </data>
   <data name="Settings_BtnReset.Content" xml:space="preserve">
-    <value>Reset</value>
+    <value>초기화</value>
   </data>
   <data name="Settings_DataFlush.Text" xml:space="preserve">
-    <value>Data Flush Interval (seconds)</value>
+    <value>저장 간격 (초)</value>
   </data>
   <data name="Settings_DataFlushDesc.Text" xml:space="preserve">
-    <value>How often usage data in RAM is saved to disk. Lower values = more disk writes but better recovery on crash (Default 300s = 5 min).</value>
+    <value>램 캐시 (빠름) vs 직접 쓰기 (안전).</value>
   </data>
   <data name="Settings_AppTags.Text" xml:space="preserve">
     <value>앱 태그</value>
   </data>
   <data name="Settings_ManageTags.Text" xml:space="preserve">
-    <value>Manage Categories and Colors</value>
+    <value>카테고리 관리</value>
   </data>
   <data name="Settings_AddTag.Content" xml:space="preserve">
-    <value>Add Tag</value>
+    <value>태그 추가</value>
   </data>
   <data name="Settings_About.Text" xml:space="preserve">
     <value>정보</value>
   </data>
   <data name="Settings_CreatedBy.Text" xml:space="preserve">
-    <value>Created by David Cepero</value>
+    <value>제작: David Cepero</value>
   </data>
   <data name="Settings_Copyright.Text" xml:space="preserve">
     <value>Copyright © 2025. All rights reserved.</value>
   </data>
   <data name="Settings_SourceCode.Content" xml:space="preserve">
-    <value>Source Code (GitHub)</value>
+    <value>소스 코드 (GitHub)</value>
   </data>
   <data name="Settings_AppVersion" xml:space="preserve">
     <value>버전 {0}</value>
@@ -263,10 +263,10 @@
     <value>대시보드</value>
   </data>
   <data name="Nav_History.Content" xml:space="preserve">
-    <value>분포 분석</value>
+    <value>분석</value>
   </data>
   <data name="Nav_Sessions.Content" xml:space="preserve">
-    <value>상세 사용량</value>
+    <value>상세 사용</value>
   </data>
   <data name="Tray_Open.Text" xml:space="preserve">
     <value>열기</value>
@@ -278,16 +278,16 @@
     <value>종료</value>
   </data>
   <data name="Dashboard_SetTimeLimit.Text" xml:space="preserve">
-    <value>시간 제한 설정</value>
+    <value>제한 설정</value>
   </data>
   <data name="Dashboard_SetCategory.Text" xml:space="preserve">
     <value>카테고리 설정</value>
   </data>
   <data name="Dashboard_SetDisplayName.Text" xml:space="preserve">
-    <value>표시 이름 설정...</value>
+    <value>이름 변경...</value>
   </data>
   <data name="Dashboard_SetCustomIcon.Text" xml:space="preserve">
-    <value>사용자 지정 아이콘...</value>
+    <value>아이콘 설정...</value>
   </data>
   <data name="Dashboard_ExcludeApp.Text" xml:space="preserve">
     <value>앱 제외</value>
@@ -302,42 +302,237 @@
     <value>사용 요약</value>
   </data>
   <data name="Dashboard_TabActiveWindows.Header" xml:space="preserve">
-    <value>📊 Active Windows</value>
+    <value>📊 활성 창</value>
   </data>
   <data name="Dashboard_TabBackgroundAudio.Header" xml:space="preserve">
-    <value>🔊 Background Audio</value>
+    <value>🔊 배경 오디오</value>
   </data>
   <data name="Dashboard_AudioDesc.Text" xml:space="preserve">
-    <value>Apps playing audio while not in focus</value>
+    <value>배경에서 오디오 재생 중</value>
   </data>
   <data name="Dashboard_NoAudio.Text" xml:space="preserve">
-    <value>No background audio detected</value>
+    <value>감지된 오디오 없음</value>
   </data>
   <data name="Dashboard_ActiveWindows.Text" xml:space="preserve">
     <value>활성 창</value>
   </data>
   <data name="Dashboard_BackgroundAudio.Text" xml:space="preserve">
-    <value>백그라운드 오디오</value>
+    <value>배경 오디오</value>
   </data>
   <data name="Dashboard_NotCounted.Text" xml:space="preserve">
-    <value>(not counted)</value>
+    <value>(집계 제외)</value>
   </data>
   <data name="Sessions_Title.Text" xml:space="preserve">
     <value>타임라인</value>
   </data>
   <data name="Sessions_Subtitle.Text" xml:space="preserve">
-    <value>하루를 시각화합니다.</value>
+    <value>하루를 시각화하세요.</value>
   </data>
   <data name="Sessions_ZoomOut.Content" xml:space="preserve">
-    <value>Zoom Out</value>
+    <value>축소</value>
   </data>
   <data name="Sessions_ZoomIn.Content" xml:space="preserve">
-    <value>Zoom In</value>
+    <value>확대</value>
   </data>
   <data name="History_Activity" xml:space="preserve">
-    <value>Activity</value>
+    <value>활동</value>
   </data>
   <data name="Nav_Focus.Content" xml:space="preserve">
-    <value>Focus Schedule</value>
+    <value>집중</value>
+  </data>
+  <data name="History_TotalAfkTime.Text" xml:space="preserve">
+    <value>총 부재 시간 (AFK)</value>
+  </data>
+  <data name="Focus_Header.Text" xml:space="preserve">
+    <value>집중 일정</value>
+  </data>
+  <data name="Focus_Description.Text" xml:space="preserve">
+    <value>집중 시간을 예약하여 생산성을 높이세요.</value>
+  </data>
+  <data name="Focus_StatusActive" xml:space="preserve">
+    <value>모니터링 활성</value>
+  </data>
+  <data name="Focus_StatusInactive" xml:space="preserve">
+    <value>모니터링 비활성</value>
+  </data>
+  <data name="Focus_AddButton.Content" xml:space="preserve">
+    <value>+ 추가</value>
+  </data>
+  <data name="Focus_Toggle.OnContent" xml:space="preserve">
+    <value>켜짐</value>
+  </data>
+  <data name="Focus_Toggle.OffContent" xml:space="preserve">
+    <value>꺼짐</value>
+  </data>
+  <data name="Focus_EditButton.Content" xml:space="preserve">
+    <value>편집</value>
+  </data>
+  <data name="Focus_Notification_Title" xml:space="preserve">
+    <value>🎯 집중 세션: {0}</value>
+  </data>
+  <data name="Focus_Notification_Chill" xml:space="preserve">
+    <value>'{1}' 대신 '{0}' 사용 중</value>
+  </data>
+  <data name="Focus_Status_ActiveSession" xml:space="preserve">
+    <value>활성: {0}</value>
+  </data>
+  <data name="Focus_Status_NoSession" xml:space="preserve">
+    <value>모니터링 (세션 없음)</value>
+  </data>
+  <data name="Focus_Popup_Title" xml:space="preserve">
+    <value>🎯 집중 세션</value>
+  </data>
+  <data name="Focus_Popup_Content" xml:space="preserve">
+    <value>지금 '{0}'을(를) 사용해야 합니다!
+
+세션: {1}
+종료: {2}</value>
+  </data>
+  <data name="Focus_Popup_Primary" xml:space="preserve">
+    <value>확인</value>
+  </data>
+  <data name="Focus_Popup_Close" xml:space="preserve">
+    <value>세션 중지</value>
+  </data>
+  <data name="Settings_StartupModeNone.Content" xml:space="preserve">
+    <value>사용 안 함</value>
+  </data>
+  <data name="Settings_StartupModeTracker.Content" xml:space="preserve">
+    <value>추적기만</value>
+  </data>
+  <data name="Settings_StartupModeBoth.Content" xml:space="preserve">
+    <value>추적기 + 인터페이스</value>
+  </data>
+  <data name="Settings_HiddenSubApps.Text" xml:space="preserve">
+    <value>숨겨진 서브 앱</value>
+  </data>
+  <data name="Settings_HiddenSubAppsDesc.Text" xml:space="preserve">
+    <value>숨길 키워드.</value>
+  </data>
+  <data name="Settings_BtnAdd.Content" xml:space="preserve">
+    <value>추가</value>
+  </data>
+  <data name="Settings_HideRetroactively.Header" xml:space="preserve">
+    <value>소급 적용</value>
+  </data>
+  <data name="Settings_HideRetroactively.OnContent" xml:space="preserve">
+    <value>과거 기록도 숨김</value>
+  </data>
+  <data name="Settings_HideRetroactively.OffContent" xml:space="preserve">
+    <value>새 활동만</value>
+  </data>
+  <data name="Settings_Language.Text" xml:space="preserve">
+    <value>언어</value>
+  </data>
+  <data name="Settings_LanguageDesc.Text" xml:space="preserve">
+    <value>언어 선택 (재시작 필요)</value>
+  </data>
+  <data name="Nav_MiscData.Content" xml:space="preserve">
+    <value>기타</value>
+  </data>
+  <data name="MiscData_Title.Text" xml:space="preserve">
+    <value>기타 정보</value>
+  </data>
+  <data name="MiscData_Subtitle.Text" xml:space="preserve">
+    <value>오늘의 무작위 통계</value>
+  </data>
+  <data name="Settings_AppRuntimeSummary.Text" xml:space="preserve">
+    <value>시작, 트레이</value>
+  </data>
+  <data name="Settings_UsageDataSummary.Text" xml:space="preserve">
+    <value>시크릿, 제외, 제한</value>
+  </data>
+  <data name="Settings_DisplaySummary.Text" xml:space="preserve">
+    <value>테마, 언어, 차트</value>
+  </data>
+  <data name="Settings_DataSummary.Text" xml:space="preserve">
+    <value>로그, 캐시</value>
+  </data>
+  <data name="Settings_AppTagsSummary.Text" xml:space="preserve">
+    <value>태그 및 색상</value>
+  </data>
+  <data name="Settings_IdleThreshold.Text" xml:space="preserve">
+    <value>유휴 임계값 (초)</value>
+  </data>
+  <data name="Settings_IdleThresholdDesc.Text" xml:space="preserve">
+    <value>부재 설정 시간 (300초).</value>
+  </data>
+  <data name="Settings_PowerTitle.Text" xml:space="preserve">
+    <value>전력 및 비용</value>
+  </data>
+  <data name="Settings_PowerDesc.Text" xml:space="preserve">
+    <value>낭비된 에너지 추정.</value>
+  </data>
+  <data name="Settings_AvgPower.Text" xml:space="preserve">
+    <value>평균 전력 (W)</value>
+  </data>
+  <data name="Settings_KwhPrice.Text" xml:space="preserve">
+    <value>kWh당 가격</value>
+  </data>
+  <data name="Settings_Currency.Text" xml:space="preserve">
+    <value>통화</value>
+  </data>
+  <data name="MiscData_WastedEnergy" xml:space="preserve">
+    <value>낭비된 에너지</value>
+  </data>
+  <data name="MiscData_WastedMoney" xml:space="preserve">
+    <value>낭비된 비용</value>
+  </data>
+  <data name="MiscData_WastedEnergyDesc" xml:space="preserve">
+    <value>부재 시 약 {0}W 사용</value>
+  </data>
+  <data name="MiscData_WastedMoneyDesc" xml:space="preserve">
+    <value>부재 시 예상 비용</value>
+  </data>
+  <data name="MiscData_AFKTime" xml:space="preserve">
+    <value>부재 시간</value>
+  </data>
+  <data name="MiscData_AFKTimeDesc" xml:space="preserve">
+    <value>키보드 미사용 시간</value>
+  </data>
+  <data name="MiscData_LockTime" xml:space="preserve">
+    <value>잠금 시간</value>
+  </data>
+  <data name="MiscData_LockTimeDesc" xml:space="preserve">
+    <value>화면 잠금 시간</value>
+  </data>
+  <data name="MiscData_WindowSwitches" xml:space="preserve">
+    <value>창 전환</value>
+  </data>
+  <data name="MiscData_WindowSwitchesDesc" xml:space="preserve">
+    <value>총 포커스 변경</value>
+  </data>
+  <data name="MiscData_AudioEvents" xml:space="preserve">
+    <value>오디오 이벤트</value>
+  </data>
+  <data name="MiscData_AudioEventsDesc" xml:space="preserve">
+    <value>오디오 재생 횟수</value>
+  </data>
+  <data name="MiscData_ActiveTime" xml:space="preserve">
+    <value>활성 시간</value>
+  </data>
+  <data name="MiscData_ActiveTimeDesc" xml:space="preserve">
+    <value>PC 사용 시간</value>
+  </data>
+  <data name="MiscData_LongestSession" xml:space="preserve">
+    <value>최장 세션</value>
+  </data>
+  <data name="MiscData_TopApp" xml:space="preserve">
+    <value>최다 사용 앱</value>
+  </data>
+  <data name="MiscData_UniqueApps" xml:space="preserve">
+    <value>고유 앱</value>
+  </data>
+  <data name="MiscData_UniqueAppsDesc" xml:space="preserve">
+    <value>사용된 앱 종류</value>
+  </data>
+  <data name="MiscData_TopWebsite" xml:space="preserve">
+    <value>최다 방문 사이트</value>
+  </data>
+  <data name="MiscData_NoData" xml:space="preserve">
+    <value>데이터 없음</value>
+  </data>
+  <data name="MiscData_NoDataDesc" xml:space="preserve">
+    <value>로그가 없습니다.</value>
   </data>
 </root>

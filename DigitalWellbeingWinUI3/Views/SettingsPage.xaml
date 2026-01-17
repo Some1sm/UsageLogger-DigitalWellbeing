@@ -342,8 +342,12 @@
                         <ComboBoxItem Content="Español (Spanish)" Tag="es-ES"/>
                         <ComboBoxItem Content="Français (French)" Tag="fr"/>
                         <ComboBoxItem Content="Deutsch (German)" Tag="de"/>
-                        <ComboBoxItem Content="Русский (Russian)" Tag="ru"/>
+                        <ComboBoxItem Content="Italiano (Italian)" Tag="it"/>
+                        <ComboBoxItem Content="Português (Brasil)" Tag="pt-BR"/>
+                        <ComboBoxItem Content="中文 (Simplified)" Tag="zh-Hans"/>
                         <ComboBoxItem Content="日本語 (Japanese)" Tag="ja"/>
+                        <ComboBoxItem Content="한국어 (Korean)" Tag="ko"/>
+                        <ComboBoxItem Content="Русский (Russian)" Tag="ru"/>
                         <ComboBoxItem Content="Català (Catalan)" Tag="ca-ES"/>
                     </ComboBox>
                 </Grid>

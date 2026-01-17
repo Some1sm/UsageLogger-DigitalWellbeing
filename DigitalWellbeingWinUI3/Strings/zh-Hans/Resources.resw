@@ -1,4 +1,4 @@
-﻿<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -59,67 +59,67 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Today" xml:space="preserve">
-    <value>Today</value>
+    <value>今天</value>
   </data>
   <data name="FromLast" xml:space="preserve">
-    <value>from last</value>
+    <value>较上次</value>
   </data>
   <data name="History_TimePeriod.Text" xml:space="preserve">
-    <value>Time Period</value>
+    <value>时间段</value>
   </data>
   <data name="History_ViewMode.Text" xml:space="preserve">
-    <value>View Mode</value>
+    <value>视图模式</value>
   </data>
   <data name="History_StartDate.Text" xml:space="preserve">
-    <value>Start Date</value>
+    <value>开始日期</value>
   </data>
   <data name="History_EndDate.Text" xml:space="preserve">
-    <value>End Date</value>
+    <value>结束日期</value>
   </data>
   <data name="History_ApplyButton.Content" xml:space="preserve">
-    <value>Apply</value>
+    <value>应用</value>
   </data>
   <data name="History_TotalScreenTime.Text" xml:space="preserve">
-    <value>Total Screen Time</value>
+    <value>总屏幕时间</value>
   </data>
   <data name="History_DailyTrends.Text" xml:space="preserve">
-    <value>Daily Trends</value>
+    <value>上期平均</value>
   </data>
   <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>📊 Day-by-day usage</value>
+    <value>📊 每日趋势</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
-    <value>Orange line = previous period average</value>
+    <value>历史平均</value>
   </data>
   <data name="History_UsageTrends.Text" xml:space="preserve">
-    <value>Usage Trends</value>
+    <value>使用趋势</value>
   </data>
   <data name="History_DistributionAnalysis.Text" xml:space="preserve">
-    <value>Distribution Analysis</value>
+    <value>分布分析</value>
   </data>
   <data name="History_ActivityHeatmap.Text" xml:space="preserve">
-    <value>Activity Heatmap</value>
+    <value>活动热力图</value>
   </data>
   <data name="History_HeatmapTooltip.Text" xml:space="preserve">
-    <value>Hover for details</value>
+    <value>悬停查看详情</value>
   </data>
   <data name="History_DailyUsage" xml:space="preserve">
-    <value>Daily Usage</value>
+    <value>每日使用</value>
   </data>
   <data name="History_PrevPeriodAvg" xml:space="preserve">
-    <value>Prev Period Avg</value>
+    <value>上期平均</value>
   </data>
   <data name="History_NoPreviousData" xml:space="preserve">
-    <value>No previous data</value>
+    <value>无数据</value>
   </data>
   <data name="History_VsPreviousDays" xml:space="preserve">
-    <value>vs previous {0} days</value>
+    <value>对比前 {0} 天</value>
   </data>
   <data name="Settings_UnsavedChanges.Text" xml:space="preserve">
-    <value>You have unsaved changes.</value>
+    <value>更动未保存。</value>
   </data>
   <data name="Settings_ApplyChanges.Content" xml:space="preserve">
-    <value>Apply Changes</value>
+    <value>应用更动</value>
   </data>
   <data name="Settings_Title.Text" xml:space="preserve">
     <value>设置</value>
@@ -128,145 +128,145 @@
     <value>应用运行</value>
   </data>
   <data name="Settings_RunOnStartup.Text" xml:space="preserve">
-    <value>Run on Startup</value>
+    <value>开机启动</value>
   </data>
   <data name="Settings_RunOnStartupDesc.Text" xml:space="preserve">
-    <value>Runs this app on startup.</value>
+    <value>随 Windows 启动。</value>
   </data>
   <data name="Settings_MinimizeOnExit.Text" xml:space="preserve">
-    <value>Minimize On Exit</value>
+    <value>退出时最小化</value>
   </data>
   <data name="Settings_MinimizeOnExitDesc.Text" xml:space="preserve">
-    <value>Minimize the app to tray on exit instead of closing.</value>
+    <value>最小化到托盘而不是关闭。</value>
   </data>
   <data name="Settings_UsageData.Text" xml:space="preserve">
     <value>使用数据</value>
   </data>
   <data name="Settings_IncognitoMode.Text" xml:space="preserve">
-    <value>Incognito Mode</value>
+    <value>隐身模式</value>
   </data>
   <data name="Settings_IncognitoModeDesc.Text" xml:space="preserve">
-    <value>Do not record window titles (e.g. YouTube video names).</value>
+    <value>不记录窗口标题 (如 YouTube 视频名)。</value>
   </data>
   <data name="Settings_ExcludedApps.Text" xml:space="preserve">
-    <value>Excluded Apps</value>
+    <value>排除应用</value>
   </data>
   <data name="Settings_ExcludedAppsDesc.Text" xml:space="preserve">
-    <value>Double-click to remove an excluded app.</value>
+    <value>双击移除。</value>
   </data>
   <data name="Settings_TimeLimits.Text" xml:space="preserve">
-    <value>Time Limits per App</value>
+    <value>时间限制</value>
   </data>
   <data name="Settings_TimeLimitsDesc.Text" xml:space="preserve">
-    <value>Double-click to remove time limit.</value>
+    <value>双击移除限制。</value>
   </data>
   <data name="Settings_Display.Text" xml:space="preserve">
     <value>显示</value>
   </data>
   <data name="Settings_DaysToShow.Text" xml:space="preserve">
-    <value>Days to show on graph</value>
+    <value>显示天数</value>
   </data>
   <data name="Settings_DaysToShowDesc.Text" xml:space="preserve">
-    <value>Number of days shown in the Dashboard weekly bar chart.</value>
+    <value>周图表显示天数。</value>
   </data>
   <data name="Settings_DetailedDays.Text" xml:space="preserve">
-    <value>Days to show on Detailed usage</value>
+    <value>详细天数</value>
   </data>
   <data name="Settings_DetailedDaysDesc.Text" xml:space="preserve">
-    <value>Number of timeline columns in the Detailed Usage page (1-7 days).</value>
+    <value>详细使用页列数 (1-7)。</value>
   </data>
   <data name="Settings_MinDuration.Text" xml:space="preserve">
-    <value>Minimum App Duration (seconds)</value>
+    <value>最短持续 (秒)</value>
   </data>
   <data name="Settings_MinDurationDesc.Text" xml:space="preserve">
-    <value>Apps with usage less than this will be hidden (default 0s).</value>
+    <value>隐藏少于此时间的应用。</value>
   </data>
   <data name="Settings_AutoRefresh.Text" xml:space="preserve">
-    <value>Auto-Refresh Interval (s)</value>
+    <value>自动刷新间隔 (秒)</value>
   </data>
   <data name="Settings_AutoRefreshDesc.Text" xml:space="preserve">
-    <value>Minimum 6 seconds.</value>
+    <value>最少 6 秒。</value>
   </data>
   <data name="Settings_TimelineThreshold.Text" xml:space="preserve">
-    <value>Timeline Detail Level (Merge Threshold s)</value>
+    <value>时间轴细节</value>
   </data>
   <data name="Settings_TimelineThresholdDesc.Text" xml:space="preserve">
-    <value>Lower values show more items but may reduce performance (Default 30s).</value>
+    <value>合并阈值 (默认 30秒)。</value>
   </data>
   <data name="Settings_ThemeMode.Text" xml:space="preserve">
-    <value>Theme Mode</value>
+    <value>主题</value>
   </data>
   <data name="Settings_ThemeSystem.Content" xml:space="preserve">
-    <value>System</value>
+    <value>系统</value>
   </data>
   <data name="Settings_ThemeLight.Content" xml:space="preserve">
-    <value>Light</value>
+    <value>亮色</value>
   </data>
   <data name="Settings_ThemeDark.Content" xml:space="preserve">
-    <value>Dark</value>
+    <value>暗色</value>
   </data>
   <data name="Settings_CombinedAudio.Text" xml:space="preserve">
-    <value>Combined Audio View</value>
+    <value>合并音频视图</value>
   </data>
   <data name="Settings_CombinedAudioDesc.Text" xml:space="preserve">
-    <value>Show Active Windows and Background Audio on same page instead of tabs.</value>
+    <value>同时显示活动窗口和背景音频。</value>
   </data>
   <data name="Settings_Data.Text" xml:space="preserve">
     <value>数据</value>
   </data>
   <data name="Settings_LogStorage.Text" xml:space="preserve">
-    <value>Log Storage Location</value>
+    <value>日志位置</value>
   </data>
   <data name="Settings_LogStorageDesc.Text" xml:space="preserve">
-    <value>Change where usage logs are stored. Service will restart when changed.</value>
+    <value>更改日志文件夹。</value>
   </data>
   <data name="Settings_BtnOpen.Content" xml:space="preserve">
-    <value>Open</value>
+    <value>打开</value>
   </data>
   <data name="Settings_BtnBrowse.Content" xml:space="preserve">
-    <value>Browse...</value>
+    <value>浏览...</value>
   </data>
   <data name="Settings_BtnReset.Content" xml:space="preserve">
-    <value>Reset</value>
+    <value>重置</value>
   </data>
   <data name="Settings_DataFlush.Text" xml:space="preserve">
-    <value>Data Flush Interval (seconds)</value>
+    <value>保存间隔 (秒)</value>
   </data>
   <data name="Settings_DataFlushDesc.Text" xml:space="preserve">
-    <value>How often usage data in RAM is saved to disk. Lower values = more disk writes but better recovery on crash (Default 300s = 5 min).</value>
+    <value>RAM 缓存 (快) 或 直接写入 (安全)。</value>
   </data>
   <data name="Settings_AppTags.Text" xml:space="preserve">
     <value>应用标签</value>
   </data>
   <data name="Settings_ManageTags.Text" xml:space="preserve">
-    <value>Manage Categories and Colors</value>
+    <value>管理分类</value>
   </data>
   <data name="Settings_AddTag.Content" xml:space="preserve">
-    <value>Add Tag</value>
+    <value>添加标签</value>
   </data>
   <data name="Settings_About.Text" xml:space="preserve">
     <value>关于</value>
   </data>
   <data name="Settings_CreatedBy.Text" xml:space="preserve">
-    <value>Created by David Cepero</value>
+    <value>由 David Cepero 创建</value>
   </data>
   <data name="Settings_Copyright.Text" xml:space="preserve">
-    <value>Copyright © 2025. All rights reserved.</value>
+    <value>版权所有 © 2025。</value>
   </data>
   <data name="Settings_SourceCode.Content" xml:space="preserve">
-    <value>Source Code (GitHub)</value>
+    <value>源代码 (GitHub)</value>
   </data>
   <data name="Settings_AppVersion" xml:space="preserve">
     <value>版本 {0}</value>
   </data>
   <data name="Nav_Dashboard.Content" xml:space="preserve">
-    <value>仪表板</value>
+    <value>仪表盘</value>
   </data>
   <data name="Nav_History.Content" xml:space="preserve">
-    <value>分布分析</value>
+    <value>分析</value>
   </data>
   <data name="Nav_Sessions.Content" xml:space="preserve">
-    <value>详细使用情况</value>
+    <value>详细使用</value>
   </data>
   <data name="Tray_Open.Text" xml:space="preserve">
     <value>打开</value>
@@ -278,13 +278,13 @@
     <value>退出</value>
   </data>
   <data name="Dashboard_SetTimeLimit.Text" xml:space="preserve">
-    <value>设置时间限制</value>
+    <value>设置限时</value>
   </data>
   <data name="Dashboard_SetCategory.Text" xml:space="preserve">
-    <value>设置类别</value>
+    <value>设置分类</value>
   </data>
   <data name="Dashboard_SetDisplayName.Text" xml:space="preserve">
-    <value>设置显示名称...</value>
+    <value>重命名...</value>
   </data>
   <data name="Dashboard_SetCustomIcon.Text" xml:space="preserve">
     <value>自定义图标...</value>
@@ -302,42 +302,237 @@
     <value>使用摘要</value>
   </data>
   <data name="Dashboard_TabActiveWindows.Header" xml:space="preserve">
-    <value>📊 Active Windows</value>
+    <value>📊 活动窗口</value>
   </data>
   <data name="Dashboard_TabBackgroundAudio.Header" xml:space="preserve">
-    <value>🔊 Background Audio</value>
+    <value>🔊 背景音频</value>
   </data>
   <data name="Dashboard_AudioDesc.Text" xml:space="preserve">
-    <value>Apps playing audio while not in focus</value>
+    <value>后台播放音频的应用</value>
   </data>
   <data name="Dashboard_NoAudio.Text" xml:space="preserve">
-    <value>No background audio detected</value>
+    <value>未检测到背景音频</value>
   </data>
   <data name="Dashboard_ActiveWindows.Text" xml:space="preserve">
     <value>活动窗口</value>
   </data>
   <data name="Dashboard_BackgroundAudio.Text" xml:space="preserve">
-    <value>后台音频</value>
+    <value>背景音频</value>
   </data>
   <data name="Dashboard_NotCounted.Text" xml:space="preserve">
-    <value>(not counted)</value>
+    <value>(不计入)</value>
   </data>
   <data name="Sessions_Title.Text" xml:space="preserve">
     <value>时间轴</value>
   </data>
   <data name="Sessions_Subtitle.Text" xml:space="preserve">
-    <value>可视化的一天。</value>
+    <value>可视化你的一天。</value>
   </data>
   <data name="Sessions_ZoomOut.Content" xml:space="preserve">
-    <value>Zoom Out</value>
+    <value>缩小</value>
   </data>
   <data name="Sessions_ZoomIn.Content" xml:space="preserve">
-    <value>Zoom In</value>
+    <value>放大</value>
   </data>
   <data name="History_Activity" xml:space="preserve">
-    <value>Activity</value>
+    <value>活动</value>
   </data>
   <data name="Nav_Focus.Content" xml:space="preserve">
-    <value>Focus Schedule</value>
+    <value>专注</value>
+  </data>
+  <data name="History_TotalAfkTime.Text" xml:space="preserve">
+    <value>总离线时间 (AFK)</value>
+  </data>
+  <data name="Focus_Header.Text" xml:space="preserve">
+    <value>专注计划</value>
+  </data>
+  <data name="Focus_Description.Text" xml:space="preserve">
+    <value>创建专注时段以保持高效。</value>
+  </data>
+  <data name="Focus_StatusActive" xml:space="preserve">
+    <value>监控激活</value>
+  </data>
+  <data name="Focus_StatusInactive" xml:space="preserve">
+    <value>监控未激活</value>
+  </data>
+  <data name="Focus_AddButton.Content" xml:space="preserve">
+    <value>+ 添加</value>
+  </data>
+  <data name="Focus_Toggle.OnContent" xml:space="preserve">
+    <value>开启</value>
+  </data>
+  <data name="Focus_Toggle.OffContent" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="Focus_EditButton.Content" xml:space="preserve">
+    <value>编辑</value>
+  </data>
+  <data name="Focus_Notification_Title" xml:space="preserve">
+    <value>🎯 专注会话: {0}</value>
+  </data>
+  <data name="Focus_Notification_Chill" xml:space="preserve">
+    <value>您在使用 '{0}' 而非 '{1}'</value>
+  </data>
+  <data name="Focus_Status_ActiveSession" xml:space="preserve">
+    <value>进行中: {0}</value>
+  </data>
+  <data name="Focus_Status_NoSession" xml:space="preserve">
+    <value>监控中 (无会话)</value>
+  </data>
+  <data name="Focus_Popup_Title" xml:space="preserve">
+    <value>🎯 专注会话</value>
+  </data>
+  <data name="Focus_Popup_Content" xml:space="preserve">
+    <value>您应该正在使用 '{0}'！
+
+会话: {1}
+结束: {2}</value>
+  </data>
+  <data name="Focus_Popup_Primary" xml:space="preserve">
+    <value>好的</value>
+  </data>
+  <data name="Focus_Popup_Close" xml:space="preserve">
+    <value>禁用会话</value>
+  </data>
+  <data name="Settings_StartupModeNone.Content" xml:space="preserve">
+    <value>禁用</value>
+  </data>
+  <data name="Settings_StartupModeTracker.Content" xml:space="preserve">
+    <value>仅追踪器</value>
+  </data>
+  <data name="Settings_StartupModeBoth.Content" xml:space="preserve">
+    <value>追踪器 + 界面</value>
+  </data>
+  <data name="Settings_HiddenSubApps.Text" xml:space="preserve">
+    <value>隐藏子应用</value>
+  </data>
+  <data name="Settings_HiddenSubAppsDesc.Text" xml:space="preserve">
+    <value>隐藏的关键词。</value>
+  </data>
+  <data name="Settings_BtnAdd.Content" xml:space="preserve">
+    <value>添加</value>
+  </data>
+  <data name="Settings_HideRetroactively.Header" xml:space="preserve">
+    <value>追溯应用</value>
+  </data>
+  <data name="Settings_HideRetroactively.OnContent" xml:space="preserve">
+    <value>同时也隐藏历史记录</value>
+  </data>
+  <data name="Settings_HideRetroactively.OffContent" xml:space="preserve">
+    <value>仅限新活动</value>
+  </data>
+  <data name="Settings_Language.Text" xml:space="preserve">
+    <value>语言</value>
+  </data>
+  <data name="Settings_LanguageDesc.Text" xml:space="preserve">
+    <value>选择语言 (需重启)</value>
+  </data>
+  <data name="Nav_MiscData.Content" xml:space="preserve">
+    <value>趣闻</value>
+  </data>
+  <data name="MiscData_Title.Text" xml:space="preserve">
+    <value>趣闻</value>
+  </data>
+  <data name="MiscData_Subtitle.Text" xml:space="preserve">
+    <value>今日随机统计</value>
+  </data>
+  <data name="Settings_AppRuntimeSummary.Text" xml:space="preserve">
+    <value>启动, 托盘</value>
+  </data>
+  <data name="Settings_UsageDataSummary.Text" xml:space="preserve">
+    <value>隐身, 排除, 限制</value>
+  </data>
+  <data name="Settings_DisplaySummary.Text" xml:space="preserve">
+    <value>主题, 语言, 图表</value>
+  </data>
+  <data name="Settings_DataSummary.Text" xml:space="preserve">
+    <value>日志, 缓存</value>
+  </data>
+  <data name="Settings_AppTagsSummary.Text" xml:space="preserve">
+    <value>标签和颜色</value>
+  </data>
+  <data name="Settings_IdleThreshold.Text" xml:space="preserve">
+    <value>闲置阈值 (秒)</value>
+  </data>
+  <data name="Settings_IdleThresholdDesc.Text" xml:space="preserve">
+    <value>标记为离开的时间 (300秒)。</value>
+  </data>
+  <data name="Settings_PowerTitle.Text" xml:space="preserve">
+    <value>功耗与成本</value>
+  </data>
+  <data name="Settings_PowerDesc.Text" xml:space="preserve">
+    <value>预估浪费的能源。</value>
+  </data>
+  <data name="Settings_AvgPower.Text" xml:space="preserve">
+    <value>平均功率 (W)</value>
+  </data>
+  <data name="Settings_KwhPrice.Text" xml:space="preserve">
+    <value>每度电价</value>
+  </data>
+  <data name="Settings_Currency.Text" xml:space="preserve">
+    <value>货币</value>
+  </data>
+  <data name="MiscData_WastedEnergy" xml:space="preserve">
+    <value>浪费能源</value>
+  </data>
+  <data name="MiscData_WastedMoney" xml:space="preserve">
+    <value>浪费金钱</value>
+  </data>
+  <data name="MiscData_WastedEnergyDesc" xml:space="preserve">
+    <value>闲置耗电约 {0}W</value>
+  </data>
+  <data name="MiscData_WastedMoneyDesc" xml:space="preserve">
+    <value>闲置预估成本</value>
+  </data>
+  <data name="MiscData_AFKTime" xml:space="preserve">
+    <value>离开时间</value>
+  </data>
+  <data name="MiscData_AFKTimeDesc" xml:space="preserve">
+    <value>离开键盘的时间</value>
+  </data>
+  <data name="MiscData_LockTime" xml:space="preserve">
+    <value>锁定时间</value>
+  </data>
+  <data name="MiscData_LockTimeDesc" xml:space="preserve">
+    <value>屏幕锁定时间</value>
+  </data>
+  <data name="MiscData_WindowSwitches" xml:space="preserve">
+    <value>窗口切换</value>
+  </data>
+  <data name="MiscData_WindowSwitchesDesc" xml:space="preserve">
+    <value>总焦点更改次数</value>
+  </data>
+  <data name="MiscData_AudioEvents" xml:space="preserve">
+    <value>音频事件</value>
+  </data>
+  <data name="MiscData_AudioEventsDesc" xml:space="preserve">
+    <value>音频播放开始次数</value>
+  </data>
+  <data name="MiscData_ActiveTime" xml:space="preserve">
+    <value>活跃时间</value>
+  </data>
+  <data name="MiscData_ActiveTimeDesc" xml:space="preserve">
+    <value>活跃使用电脑时间</value>
+  </data>
+  <data name="MiscData_LongestSession" xml:space="preserve">
+    <value>最长会话</value>
+  </data>
+  <data name="MiscData_TopApp" xml:space="preserve">
+    <value>主要应用</value>
+  </data>
+  <data name="MiscData_UniqueApps" xml:space="preserve">
+    <value>唯一应用</value>
+  </data>
+  <data name="MiscData_UniqueAppsDesc" xml:space="preserve">
+    <value>使用的不同应用数</value>
+  </data>
+  <data name="MiscData_TopWebsite" xml:space="preserve">
+    <value>主要网站</value>
+  </data>
+  <data name="MiscData_NoData" xml:space="preserve">
+    <value>无数据</value>
+  </data>
+  <data name="MiscData_NoDataDesc" xml:space="preserve">
+    <value>未找到日志。</value>
   </data>
 </root>

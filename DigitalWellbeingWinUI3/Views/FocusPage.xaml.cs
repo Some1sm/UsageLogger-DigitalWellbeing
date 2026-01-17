@@ -1,5 +1,6 @@
 using DigitalWellbeingWinUI3.Helpers;
 using DigitalWellbeingWinUI3.Models;
+using WinUI3Localizer;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -50,16 +51,17 @@ namespace DigitalWellbeingWinUI3.Views
             {
                 if (FocusManager.Instance.ActiveSession != null)
                 {
-                    StatusText.Text = $"Active: {FocusManager.Instance.ActiveSession.Name}";
+                    var fmt = LocalizationHelper.GetString("Focus_Status_ActiveSession");
+                    StatusText.Text = string.Format(fmt, FocusManager.Instance.ActiveSession.Name);
                 }
                 else
                 {
-                    StatusText.Text = "Monitoring (No active session)";
+                    StatusText.Text = LocalizationHelper.GetString("Focus_Status_NoSession");
                 }
             }
             else
             {
-                StatusText.Text = "Monitoring Inactive";
+                StatusText.Text = LocalizationHelper.GetString("Focus_StatusInactive");
             }
         }
 

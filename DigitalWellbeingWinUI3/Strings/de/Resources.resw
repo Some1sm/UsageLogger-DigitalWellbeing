@@ -1,4 +1,4 @@
-﻿<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -59,214 +59,214 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Today" xml:space="preserve">
-    <value>Today</value>
+    <value>Heute</value>
   </data>
   <data name="FromLast" xml:space="preserve">
-    <value>from last</value>
+    <value>vom letzten</value>
   </data>
   <data name="History_TimePeriod.Text" xml:space="preserve">
-    <value>Time Period</value>
+    <value>Zeitraum</value>
   </data>
   <data name="History_ViewMode.Text" xml:space="preserve">
-    <value>View Mode</value>
+    <value>Ansichtsmodus</value>
   </data>
   <data name="History_StartDate.Text" xml:space="preserve">
-    <value>Start Date</value>
+    <value>Startdatum</value>
   </data>
   <data name="History_EndDate.Text" xml:space="preserve">
-    <value>End Date</value>
+    <value>Enddatum</value>
   </data>
   <data name="History_ApplyButton.Content" xml:space="preserve">
-    <value>Apply</value>
+    <value>Anwenden</value>
   </data>
   <data name="History_TotalScreenTime.Text" xml:space="preserve">
-    <value>Total Screen Time</value>
+    <value>Gesamte Bildschirmzeit</value>
   </data>
   <data name="History_DailyTrends.Text" xml:space="preserve">
-    <value>Daily Trends</value>
+    <value>Durchschnitt vorheriger Zeitraum</value>
   </data>
   <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>📊 Day-by-day usage</value>
+    <value>📊 Tägliche Trends</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
-    <value>Orange line = previous period average</value>
+    <value>Historischer Durchschnitt</value>
   </data>
   <data name="History_UsageTrends.Text" xml:space="preserve">
-    <value>Usage Trends</value>
+    <value>Nutzungstrends</value>
   </data>
   <data name="History_DistributionAnalysis.Text" xml:space="preserve">
-    <value>Distribution Analysis</value>
+    <value>Verteilungsanalyse</value>
   </data>
   <data name="History_ActivityHeatmap.Text" xml:space="preserve">
-    <value>Activity Heatmap</value>
+    <value>Aktivitäts-Heatmap</value>
   </data>
   <data name="History_HeatmapTooltip.Text" xml:space="preserve">
-    <value>Hover for details</value>
+    <value>Details beim Hover</value>
   </data>
   <data name="History_DailyUsage" xml:space="preserve">
-    <value>Daily Usage</value>
+    <value>Tägliche Nutzung</value>
   </data>
   <data name="History_PrevPeriodAvg" xml:space="preserve">
-    <value>Prev Period Avg</value>
+    <value>Vorh. Durchschn.</value>
   </data>
   <data name="History_NoPreviousData" xml:space="preserve">
-    <value>No previous data</value>
+    <value>Keine Daten</value>
   </data>
   <data name="History_VsPreviousDays" xml:space="preserve">
-    <value>vs previous {0} days</value>
+    <value>vs {0} Tage vorh.</value>
   </data>
   <data name="Settings_UnsavedChanges.Text" xml:space="preserve">
-    <value>You have unsaved changes.</value>
+    <value>Ungespeicherte Änderungen.</value>
   </data>
   <data name="Settings_ApplyChanges.Content" xml:space="preserve">
-    <value>Apply Changes</value>
+    <value>Anwenden</value>
   </data>
   <data name="Settings_Title.Text" xml:space="preserve">
     <value>Einstellungen</value>
   </data>
   <data name="Settings_AppRuntime.Text" xml:space="preserve">
-    <value>App-Laufzeit</value>
+    <value>Laufzeit</value>
   </data>
   <data name="Settings_RunOnStartup.Text" xml:space="preserve">
-    <value>Run on Startup</value>
+    <value>Autostart</value>
   </data>
   <data name="Settings_RunOnStartupDesc.Text" xml:space="preserve">
-    <value>Runs this app on startup.</value>
+    <value>Starten, wenn Windows startet.</value>
   </data>
   <data name="Settings_MinimizeOnExit.Text" xml:space="preserve">
-    <value>Minimize On Exit</value>
+    <value>Beim Schließen minimieren</value>
   </data>
   <data name="Settings_MinimizeOnExitDesc.Text" xml:space="preserve">
-    <value>Minimize the app to tray on exit instead of closing.</value>
+    <value>In Tray minimieren statt beenden.</value>
   </data>
   <data name="Settings_UsageData.Text" xml:space="preserve">
     <value>Nutzungsdaten</value>
   </data>
   <data name="Settings_IncognitoMode.Text" xml:space="preserve">
-    <value>Incognito Mode</value>
+    <value>Inkognito-Modus</value>
   </data>
   <data name="Settings_IncognitoModeDesc.Text" xml:space="preserve">
-    <value>Do not record window titles (e.g. YouTube video names).</value>
+    <value>Fenstertitel nicht speichern (z.B. YouTube).</value>
   </data>
   <data name="Settings_ExcludedApps.Text" xml:space="preserve">
-    <value>Excluded Apps</value>
+    <value>Ignorierte Apps</value>
   </data>
   <data name="Settings_ExcludedAppsDesc.Text" xml:space="preserve">
-    <value>Double-click to remove an excluded app.</value>
+    <value>Doppelklick zum Entfernen.</value>
   </data>
   <data name="Settings_TimeLimits.Text" xml:space="preserve">
-    <value>Time Limits per App</value>
+    <value>Zeitlimits</value>
   </data>
   <data name="Settings_TimeLimitsDesc.Text" xml:space="preserve">
-    <value>Double-click to remove time limit.</value>
+    <value>Doppelklick zum Entfernen.</value>
   </data>
   <data name="Settings_Display.Text" xml:space="preserve">
     <value>Anzeige</value>
   </data>
   <data name="Settings_DaysToShow.Text" xml:space="preserve">
-    <value>Days to show on graph</value>
+    <value>Tage in Grafik</value>
   </data>
   <data name="Settings_DaysToShowDesc.Text" xml:space="preserve">
-    <value>Number of days shown in the Dashboard weekly bar chart.</value>
+    <value>Tage im wöchentlichen Balkendiagramm.</value>
   </data>
   <data name="Settings_DetailedDays.Text" xml:space="preserve">
-    <value>Days to show on Detailed usage</value>
+    <value>Detaillierte Tage</value>
   </data>
   <data name="Settings_DetailedDaysDesc.Text" xml:space="preserve">
-    <value>Number of timeline columns in the Detailed Usage page (1-7 days).</value>
+    <value>Spalten auf Detailseite (1-7).</value>
   </data>
   <data name="Settings_MinDuration.Text" xml:space="preserve">
-    <value>Minimum App Duration (seconds)</value>
+    <value>Min. Dauer (s)</value>
   </data>
   <data name="Settings_MinDurationDesc.Text" xml:space="preserve">
-    <value>Apps with usage less than this will be hidden (default 0s).</value>
+    <value>Apps &lt; Dauer ausblenden.</value>
   </data>
   <data name="Settings_AutoRefresh.Text" xml:space="preserve">
-    <value>Auto-Refresh Interval (s)</value>
+    <value>Auto-Refresh Intervall (s)</value>
   </data>
   <data name="Settings_AutoRefreshDesc.Text" xml:space="preserve">
-    <value>Minimum 6 seconds.</value>
+    <value>Min 6 Sekunden.</value>
   </data>
   <data name="Settings_TimelineThreshold.Text" xml:space="preserve">
-    <value>Timeline Detail Level (Merge Threshold s)</value>
+    <value>Timeline Detail</value>
   </data>
   <data name="Settings_TimelineThresholdDesc.Text" xml:space="preserve">
-    <value>Lower values show more items but may reduce performance (Default 30s).</value>
+    <value>Fusions-Schwelle (Standard 30s).</value>
   </data>
   <data name="Settings_ThemeMode.Text" xml:space="preserve">
-    <value>Theme Mode</value>
+    <value>Design</value>
   </data>
   <data name="Settings_ThemeSystem.Content" xml:space="preserve">
     <value>System</value>
   </data>
   <data name="Settings_ThemeLight.Content" xml:space="preserve">
-    <value>Light</value>
+    <value>Hell</value>
   </data>
   <data name="Settings_ThemeDark.Content" xml:space="preserve">
-    <value>Dark</value>
+    <value>Dunkel</value>
   </data>
   <data name="Settings_CombinedAudio.Text" xml:space="preserve">
-    <value>Combined Audio View</value>
+    <value>Kombinierte Audio-Ansicht</value>
   </data>
   <data name="Settings_CombinedAudioDesc.Text" xml:space="preserve">
-    <value>Show Active Windows and Background Audio on same page instead of tabs.</value>
+    <value>Aktive Fenster und Audio zusammen anzeigen.</value>
   </data>
   <data name="Settings_Data.Text" xml:space="preserve">
     <value>Daten</value>
   </data>
   <data name="Settings_LogStorage.Text" xml:space="preserve">
-    <value>Log Storage Location</value>
+    <value>Log-Speicherort</value>
   </data>
   <data name="Settings_LogStorageDesc.Text" xml:space="preserve">
-    <value>Change where usage logs are stored. Service will restart when changed.</value>
+    <value>Ordner für Logs ändern.</value>
   </data>
   <data name="Settings_BtnOpen.Content" xml:space="preserve">
-    <value>Open</value>
+    <value>Öffnen</value>
   </data>
   <data name="Settings_BtnBrowse.Content" xml:space="preserve">
-    <value>Browse...</value>
+    <value>Durchsuchen...</value>
   </data>
   <data name="Settings_BtnReset.Content" xml:space="preserve">
-    <value>Reset</value>
+    <value>Zurücksetzen</value>
   </data>
   <data name="Settings_DataFlush.Text" xml:space="preserve">
-    <value>Data Flush Interval (seconds)</value>
+    <value>Speicher-Intervall (s)</value>
   </data>
   <data name="Settings_DataFlushDesc.Text" xml:space="preserve">
-    <value>How often usage data in RAM is saved to disk. Lower values = more disk writes but better recovery on crash (Default 300s = 5 min).</value>
+    <value>RAM Cache (schnell) vs Direkt (sicher).</value>
   </data>
   <data name="Settings_AppTags.Text" xml:space="preserve">
     <value>App-Tags</value>
   </data>
   <data name="Settings_ManageTags.Text" xml:space="preserve">
-    <value>Manage Categories and Colors</value>
+    <value>Kategorien verwalten</value>
   </data>
   <data name="Settings_AddTag.Content" xml:space="preserve">
-    <value>Add Tag</value>
+    <value>Tag hinzufügen</value>
   </data>
   <data name="Settings_About.Text" xml:space="preserve">
     <value>Über</value>
   </data>
   <data name="Settings_CreatedBy.Text" xml:space="preserve">
-    <value>Created by David Cepero</value>
+    <value>Erstellt von David Cepero</value>
   </data>
   <data name="Settings_Copyright.Text" xml:space="preserve">
-    <value>Copyright © 2025. All rights reserved.</value>
+    <value>Copyright © 2025. Alle Rechte vorbehalten.</value>
   </data>
   <data name="Settings_SourceCode.Content" xml:space="preserve">
-    <value>Source Code (GitHub)</value>
+    <value>Quellcode (GitHub)</value>
   </data>
   <data name="Settings_AppVersion" xml:space="preserve">
-    <value>App-Version {0}</value>
+    <value>Version {0}</value>
   </data>
   <data name="Nav_Dashboard.Content" xml:space="preserve">
     <value>Dashboard</value>
   </data>
   <data name="Nav_History.Content" xml:space="preserve">
-    <value>Verteilungsanalyse</value>
+    <value>Analyse</value>
   </data>
   <data name="Nav_Sessions.Content" xml:space="preserve">
-    <value>Detaillierte Nutzung</value>
+    <value>Detailliert</value>
   </data>
   <data name="Tray_Open.Text" xml:space="preserve">
     <value>Öffnen</value>
@@ -278,19 +278,19 @@
     <value>Beenden</value>
   </data>
   <data name="Dashboard_SetTimeLimit.Text" xml:space="preserve">
-    <value>Zeitlimit festlegen</value>
+    <value>Limit setzen</value>
   </data>
   <data name="Dashboard_SetCategory.Text" xml:space="preserve">
-    <value>Kategorie festlegen</value>
+    <value>Kategorie setzen</value>
   </data>
   <data name="Dashboard_SetDisplayName.Text" xml:space="preserve">
-    <value>Anzeigename festlegen...</value>
+    <value>Umbenennen...</value>
   </data>
   <data name="Dashboard_SetCustomIcon.Text" xml:space="preserve">
-    <value>Benutzerdefiniertes Symbol...</value>
+    <value>Eigenes Icon...</value>
   </data>
   <data name="Dashboard_ExcludeApp.Text" xml:space="preserve">
-    <value>App ausschließen</value>
+    <value>App ignorieren</value>
   </data>
   <data name="Dashboard_Total.Text" xml:space="preserve">
     <value>Gesamt:</value>
@@ -299,34 +299,34 @@
     <value>Tägliche Aktivität</value>
   </data>
   <data name="Dashboard_UsageSummary.Text" xml:space="preserve">
-    <value>Nutzungszusammenfassung</value>
+    <value>Nutzungs-Zusammenfassung</value>
   </data>
   <data name="Dashboard_TabActiveWindows.Header" xml:space="preserve">
-    <value>📊 Active Windows</value>
+    <value>📊 Aktive Fenster</value>
   </data>
   <data name="Dashboard_TabBackgroundAudio.Header" xml:space="preserve">
-    <value>🔊 Background Audio</value>
+    <value>🔊 Hintergrund-Audio</value>
   </data>
   <data name="Dashboard_AudioDesc.Text" xml:space="preserve">
-    <value>Apps playing audio while not in focus</value>
+    <value>Apps mit Audio im Hintergrund</value>
   </data>
   <data name="Dashboard_NoAudio.Text" xml:space="preserve">
-    <value>No background audio detected</value>
+    <value>Kein Hintergrund-Audio</value>
   </data>
   <data name="Dashboard_ActiveWindows.Text" xml:space="preserve">
     <value>Aktive Fenster</value>
   </data>
   <data name="Dashboard_BackgroundAudio.Text" xml:space="preserve">
-    <value>Hintergrundaudio</value>
+    <value>Hintergrund-Audio</value>
   </data>
   <data name="Dashboard_NotCounted.Text" xml:space="preserve">
-    <value>(not counted)</value>
+    <value>(nicht gezählt)</value>
   </data>
   <data name="Sessions_Title.Text" xml:space="preserve">
-    <value>Zeitachse</value>
+    <value>Timeline</value>
   </data>
   <data name="Sessions_Subtitle.Text" xml:space="preserve">
-    <value>Visualisieren Sie Ihren Tag.</value>
+    <value>Visualisiere deinen Tag.</value>
   </data>
   <data name="Sessions_ZoomOut.Content" xml:space="preserve">
     <value>Zoom Out</value>
@@ -335,9 +335,204 @@
     <value>Zoom In</value>
   </data>
   <data name="History_Activity" xml:space="preserve">
-    <value>Activity</value>
+    <value>Aktivität</value>
   </data>
   <data name="Nav_Focus.Content" xml:space="preserve">
-    <value>Focus Schedule</value>
+    <value>Fokus</value>
+  </data>
+  <data name="History_TotalAfkTime.Text" xml:space="preserve">
+    <value>Gesamte Abwesenheit (AFK)</value>
+  </data>
+  <data name="Focus_Header.Text" xml:space="preserve">
+    <value>Fokus-Zeitplan</value>
+  </data>
+  <data name="Focus_Description.Text" xml:space="preserve">
+    <value>Erstelle Fokusblöcke, um produktiv zu bleiben. Die App setzt dein Ziel durch.</value>
+  </data>
+  <data name="Focus_StatusActive" xml:space="preserve">
+    <value>Überwachung Aktiv</value>
+  </data>
+  <data name="Focus_StatusInactive" xml:space="preserve">
+    <value>Überwachung Inaktiv</value>
+  </data>
+  <data name="Focus_AddButton.Content" xml:space="preserve">
+    <value>+ Hinzufügen</value>
+  </data>
+  <data name="Focus_Toggle.OnContent" xml:space="preserve">
+    <value>Aktiv</value>
+  </data>
+  <data name="Focus_Toggle.OffContent" xml:space="preserve">
+    <value>Inaktiv</value>
+  </data>
+  <data name="Focus_EditButton.Content" xml:space="preserve">
+    <value>Bearbeiten</value>
+  </data>
+  <data name="Focus_Notification_Title" xml:space="preserve">
+    <value>🎯 Fokus-Sitzung: {0}</value>
+  </data>
+  <data name="Focus_Notification_Chill" xml:space="preserve">
+    <value>Du nutzt '{0}' statt '{1}'</value>
+  </data>
+  <data name="Focus_Status_ActiveSession" xml:space="preserve">
+    <value>Aktiv: {0}</value>
+  </data>
+  <data name="Focus_Status_NoSession" xml:space="preserve">
+    <value>Überwachung (Keine Sitzung)</value>
+  </data>
+  <data name="Focus_Popup_Title" xml:space="preserve">
+    <value>🎯 Fokus-Sitzung</value>
+  </data>
+  <data name="Focus_Popup_Content" xml:space="preserve">
+    <value>Du solltest gerade '{0}' nutzen!
+
+Sitzung: {1}
+Ende: {2}</value>
+  </data>
+  <data name="Focus_Popup_Primary" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Focus_Popup_Close" xml:space="preserve">
+    <value>Sitzung beenden</value>
+  </data>
+  <data name="Settings_StartupModeNone.Content" xml:space="preserve">
+    <value>Deaktiviert</value>
+  </data>
+  <data name="Settings_StartupModeTracker.Content" xml:space="preserve">
+    <value>Nur Tracker</value>
+  </data>
+  <data name="Settings_StartupModeBoth.Content" xml:space="preserve">
+    <value>Tracker + Interface</value>
+  </data>
+  <data name="Settings_HiddenSubApps.Text" xml:space="preserve">
+    <value>Versteckte Sub-Apps</value>
+  </data>
+  <data name="Settings_HiddenSubAppsDesc.Text" xml:space="preserve">
+    <value>Schlüsselwörter zum Ausblenden.</value>
+  </data>
+  <data name="Settings_BtnAdd.Content" xml:space="preserve">
+    <value>Hinzufügen</value>
+  </data>
+  <data name="Settings_HideRetroactively.Header" xml:space="preserve">
+    <value>Rückwirkend anwenden</value>
+  </data>
+  <data name="Settings_HideRetroactively.OnContent" xml:space="preserve">
+    <value>Auch aus Historie ausblenden</value>
+  </data>
+  <data name="Settings_HideRetroactively.OffContent" xml:space="preserve">
+    <value>Nur neue Aktivität</value>
+  </data>
+  <data name="Settings_Language.Text" xml:space="preserve">
+    <value>Sprache</value>
+  </data>
+  <data name="Settings_LanguageDesc.Text" xml:space="preserve">
+    <value>Sprache wählen (Neustart erforderlich)</value>
+  </data>
+  <data name="Nav_MiscData.Content" xml:space="preserve">
+    <value>Fakten</value>
+  </data>
+  <data name="MiscData_Title.Text" xml:space="preserve">
+    <value>Fakten</value>
+  </data>
+  <data name="MiscData_Subtitle.Text" xml:space="preserve">
+    <value>Zufällige Statistiken</value>
+  </data>
+  <data name="Settings_AppRuntimeSummary.Text" xml:space="preserve">
+    <value>Start, Tray</value>
+  </data>
+  <data name="Settings_UsageDataSummary.Text" xml:space="preserve">
+    <value>Inkognito, Ausnahmen, Limits</value>
+  </data>
+  <data name="Settings_DisplaySummary.Text" xml:space="preserve">
+    <value>Design, Sprache, Grafik</value>
+  </data>
+  <data name="Settings_DataSummary.Text" xml:space="preserve">
+    <value>Logs, Cache</value>
+  </data>
+  <data name="Settings_AppTagsSummary.Text" xml:space="preserve">
+    <value>Tags und Farben</value>
+  </data>
+  <data name="Settings_IdleThreshold.Text" xml:space="preserve">
+    <value>Inaktivitäts-Schwelle (s)</value>
+  </data>
+  <data name="Settings_IdleThresholdDesc.Text" xml:space="preserve">
+    <value>Zeit bis 'Abwesend' (300s).</value>
+  </data>
+  <data name="Settings_PowerTitle.Text" xml:space="preserve">
+    <value>Verbrauch &amp; Kosten</value>
+  </data>
+  <data name="Settings_PowerDesc.Text" xml:space="preserve">
+    <value>Geschätzte Verschwendung.</value>
+  </data>
+  <data name="Settings_AvgPower.Text" xml:space="preserve">
+    <value>Ø Leistung (Watt)</value>
+  </data>
+  <data name="Settings_KwhPrice.Text" xml:space="preserve">
+    <value>Preis pro kWh</value>
+  </data>
+  <data name="Settings_Currency.Text" xml:space="preserve">
+    <value>Währung</value>
+  </data>
+  <data name="MiscData_WastedEnergy" xml:space="preserve">
+    <value>Verschwendete Energie</value>
+  </data>
+  <data name="MiscData_WastedMoney" xml:space="preserve">
+    <value>Verschwendetes Geld</value>
+  </data>
+  <data name="MiscData_WastedEnergyDesc" xml:space="preserve">
+    <value>Ca. {0}W bei Abwesenheit</value>
+  </data>
+  <data name="MiscData_WastedMoneyDesc" xml:space="preserve">
+    <value>Ca. Kosten bei Abwesenheit</value>
+  </data>
+  <data name="MiscData_AFKTime" xml:space="preserve">
+    <value>Abwesend (AFK)</value>
+  </data>
+  <data name="MiscData_AFKTimeDesc" xml:space="preserve">
+    <value>Zeit weg von Tastatur</value>
+  </data>
+  <data name="MiscData_LockTime" xml:space="preserve">
+    <value>Gesperrt</value>
+  </data>
+  <data name="MiscData_LockTimeDesc" xml:space="preserve">
+    <value>Zeit mit gesperrtem Screen</value>
+  </data>
+  <data name="MiscData_WindowSwitches" xml:space="preserve">
+    <value>Fensterwechsel</value>
+  </data>
+  <data name="MiscData_WindowSwitchesDesc" xml:space="preserve">
+    <value>Fokusänderungen gesamt</value>
+  </data>
+  <data name="MiscData_AudioEvents" xml:space="preserve">
+    <value>Audio-Events</value>
+  </data>
+  <data name="MiscData_AudioEventsDesc" xml:space="preserve">
+    <value>Audio-Wiedergaben gestartet</value>
+  </data>
+  <data name="MiscData_ActiveTime" xml:space="preserve">
+    <value>Aktive Zeit</value>
+  </data>
+  <data name="MiscData_ActiveTimeDesc" xml:space="preserve">
+    <value>Zeit aktiv am PC</value>
+  </data>
+  <data name="MiscData_LongestSession" xml:space="preserve">
+    <value>Längste Sitzung</value>
+  </data>
+  <data name="MiscData_TopApp" xml:space="preserve">
+    <value>Top App</value>
+  </data>
+  <data name="MiscData_UniqueApps" xml:space="preserve">
+    <value>Einzigartige Apps</value>
+  </data>
+  <data name="MiscData_UniqueAppsDesc" xml:space="preserve">
+    <value>Verschiedene Apps genutzt</value>
+  </data>
+  <data name="MiscData_TopWebsite" xml:space="preserve">
+    <value>Top Website</value>
+  </data>
+  <data name="MiscData_NoData" xml:space="preserve">
+    <value>Keine Daten</value>
+  </data>
+  <data name="MiscData_NoDataDesc" xml:space="preserve">
+    <value>Keine Logs gefunden.</value>
   </data>
 </root>

@@ -6,8 +6,8 @@ namespace DigitalWellbeingWinUI3.Helpers
 {
     public static class LocalizationHelper
     {
-        private static ResourceLoader _resourceLoader;
         private static ResourceManager _resourceManager;
+        private static ResourceContext _resourceContext;
         private static string _currentLanguage = "";
 
         /// <summary>
@@ -17,8 +17,11 @@ namespace DigitalWellbeingWinUI3.Helpers
         {
             try
             {
-                EnsureResourceLoader();
-                return _resourceLoader?.GetString(key) ?? key;
+                EnsureResources();
+                // Use the ResourceManager with the specific context
+                var map = _resourceManager.MainResourceMap.GetSubtree("Resources");
+                var candidate = map.GetValue(key, _resourceContext);
+                return candidate?.ValueAsString ?? key;
             }
             catch (Exception ex)
             {
@@ -28,62 +31,51 @@ namespace DigitalWellbeingWinUI3.Helpers
         }
 
         /// <summary>
-        /// Forces recreation of the ResourceLoader with the current language preference.
+        /// Forces recreation of the ResourceContext with the current language preference.
         /// Call this when the language is changed.
         /// </summary>
         public static void RefreshLanguage()
         {
-            _resourceLoader = null;
             _resourceManager = null;
+            _resourceContext = null;
             _currentLanguage = "";
-            EnsureResourceLoader();
+            EnsureResources();
         }
 
-        private static void EnsureResourceLoader()
+        private static void EnsureResources()
         {
             string targetLanguage = UserPreferences.LanguageCode;
             
-            // If language changed or first load, recreate the loader
-            if (_resourceLoader == null || _currentLanguage != targetLanguage)
+            // If language changed or first load, recreate the context
+            if (_resourceManager == null || _currentLanguage != targetLanguage)
             {
                 try
                 {
                     _currentLanguage = targetLanguage;
                     
-                    // Create ResourceManager and set language context
-                    _resourceManager = new ResourceManager();
+                    if (_resourceManager == null)
+                        _resourceManager = new ResourceManager();
                     
+                    _resourceContext = _resourceManager.CreateResourceContext();
+
                     if (!string.IsNullOrEmpty(targetLanguage))
                     {
-                        // Create a context with the specific language
-                        var context = _resourceManager.CreateResourceContext();
-                        context.QualifierValues["Language"] = targetLanguage;
-                        
-                        // Get resource map and create loader from it
-                        var resourceMap = _resourceManager.MainResourceMap.GetSubtree("Resources");
-                        _resourceLoader = new ResourceLoader("Resources");
-                        
-                        Debug.WriteLine($"[LocalizationHelper] Created ResourceLoader with language: {targetLanguage}");
+                        // Set the language qualifier
+                        _resourceContext.QualifierValues["Language"] = targetLanguage;
+                        Debug.WriteLine($"[LocalizationHelper] Context set to language: {targetLanguage}");
                     }
                     else
                     {
-                        // Default loader
-                        _resourceLoader = new ResourceLoader();
-                        Debug.WriteLine("[LocalizationHelper] Created default ResourceLoader");
+                        // Default system context
+                        Debug.WriteLine("[LocalizationHelper] Context set to default");
                     }
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"[LocalizationHelper] EnsureResourceLoader error: {ex.Message}");
-                    // Fallback to simple loader
-                    try
-                    {
-                        _resourceLoader = new ResourceLoader();
-                    }
-                    catch
-                    {
-                        _resourceLoader = null;
-                    }
+                    Debug.WriteLine($"[LocalizationHelper] EnsureResources error: {ex.Message}");
+                    // Defensive init
+                    if (_resourceManager == null) _resourceManager = new ResourceManager();
+                    if (_resourceContext == null) _resourceContext = _resourceManager.CreateResourceContext();
                 }
             }
         }

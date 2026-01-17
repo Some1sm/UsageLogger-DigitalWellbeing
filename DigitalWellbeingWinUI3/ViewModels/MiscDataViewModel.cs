@@ -201,7 +201,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
 
                 // 1. Window Switches (non-AFK sessions count)
                 int windowSwitches = sorted.Count(s => !s.IsAfk);
-                Stats.Add(new StatItem("\uE8A5", windowSwitches.ToString("N0"), "Window Switches", "Total focus changes"));
+                Stats.Add(new StatItem("\uE8A5", windowSwitches.ToString("N0"), LocalizationHelper.GetString("MiscData_WindowSwitches"), LocalizationHelper.GetString("MiscData_WindowSwitchesDesc")));
 
                 // 2. Audio Plays (Rising Edge)
                 int audioPlays = 0;
@@ -212,7 +212,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
                     if (currHasAudio && !prevHadAudio) audioPlays++;
                     prevHadAudio = currHasAudio;
                 }
-                Stats.Add(new StatItem("\uE995", audioPlays.ToString("N0"), "Audio Events", "Times audio started playing"));
+                Stats.Add(new StatItem("\uE995", audioPlays.ToString("N0"), LocalizationHelper.GetString("MiscData_AudioEvents"), LocalizationHelper.GetString("MiscData_AudioEventsDesc")));
 
                 // Define AFK process names
                 var afkProcesses = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "Away", "LogonUI" };
@@ -256,7 +256,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
 
                 // 4. Active Time
                 var activeTime = TimeSpan.FromSeconds(sorted.Where(s => !isAfkSession(s)).Sum(s => s.Duration.TotalSeconds));
-                Stats.Add(new StatItem("\uE770", StringHelper.FormatDurationCompact(activeTime), "Active Time", "Time actively using PC"));
+                Stats.Add(new StatItem("\uE770", StringHelper.FormatDurationCompact(activeTime), LocalizationHelper.GetString("MiscData_ActiveTime"), LocalizationHelper.GetString("MiscData_ActiveTimeDesc")));
 
                 // 5. Longest Session
                 var longest = sorted.Where(s => !s.IsAfk).OrderByDescending(s => s.Duration).FirstOrDefault();
@@ -264,7 +264,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 {
                     string appName = string.IsNullOrEmpty(longest.ProgramName) ? longest.ProcessName : longest.ProgramName;
                     if (appName.Length > 20) appName = appName.Substring(0, 20) + "...";
-                    Stats.Add(new StatItem("\uE768", StringHelper.FormatDurationCompact(longest.Duration), "Longest Session", appName));
+                    Stats.Add(new StatItem("\uE768", StringHelper.FormatDurationCompact(longest.Duration), LocalizationHelper.GetString("MiscData_LongestSession"), appName));
                 }
 
                 // 6. Most Used App
@@ -275,12 +275,12 @@ namespace DigitalWellbeingWinUI3.ViewModels
                 if (topApp != null)
                 {
                     var topDuration = TimeSpan.FromSeconds(topApp.Sum(s => s.Duration.TotalSeconds));
-                    Stats.Add(new StatItem("\uE734", StringHelper.FormatDurationCompact(topDuration), "Top App", topApp.Key));
+                    Stats.Add(new StatItem("\uE734", StringHelper.FormatDurationCompact(topDuration), LocalizationHelper.GetString("MiscData_TopApp"), topApp.Key));
                 }
 
                 // 7. Unique Apps
                 int uniqueApps = sorted.Where(s => !s.IsAfk).Select(s => s.ProcessName).Distinct().Count();
-                Stats.Add(new StatItem("\uE74C", uniqueApps.ToString(), "Unique Apps", "Different applications used"));
+                Stats.Add(new StatItem("\uE74C", uniqueApps.ToString(), LocalizationHelper.GetString("MiscData_UniqueApps"), LocalizationHelper.GetString("MiscData_UniqueAppsDesc")));
 
                 // 9. Top Website
                 var browserProcesses = new HashSet<string>(StringComparer.OrdinalIgnoreCase) 
@@ -298,7 +298,7 @@ namespace DigitalWellbeingWinUI3.ViewModels
                     var siteDuration = TimeSpan.FromSeconds(topSite.Sum(s => s.Duration.TotalSeconds));
                     string siteName = topSite.Key;
                     if (siteName.Length > 25) siteName = siteName.Substring(0, 25) + "...";
-                    Stats.Add(new StatItem("\uE774", StringHelper.FormatDurationCompact(siteDuration), "Top Website", siteName));
+                    Stats.Add(new StatItem("\uE774", StringHelper.FormatDurationCompact(siteDuration), LocalizationHelper.GetString("MiscData_TopWebsite"), siteName));
                 }
             }
             finally

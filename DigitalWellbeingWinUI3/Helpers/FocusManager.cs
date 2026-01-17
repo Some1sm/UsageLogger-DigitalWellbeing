@@ -1,4 +1,5 @@
 using DigitalWellbeingWinUI3.Models;
+using WinUI3Localizer;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Windows.AppNotifications;
@@ -400,9 +401,12 @@ namespace DigitalWellbeingWinUI3.Helpers
 
             try
             {
+                var fmtTitle = LocalizationHelper.GetString("Focus_Notification_Title");
+                var fmtBody = LocalizationHelper.GetString("Focus_Notification_Chill");
+
                 var builder = new AppNotificationBuilder()
-                    .AddText($"🎯 Focus Session Active: {session.Name}")
-                    .AddText($"You're using '{violatingProcess}' instead of '{session.ProcessName}'");
+                    .AddText(string.Format(fmtTitle, session.Name))
+                    .AddText(string.Format(fmtBody, violatingProcess, session.ProcessName));
 
                 var notification = builder.BuildNotification();
                 AppNotificationManager.Default.Show(notification);
@@ -427,14 +431,17 @@ namespace DigitalWellbeingWinUI3.Helpers
 
             try
             {
+                var title = LocalizationHelper.GetString("Focus_Popup_Title");
+                var fmtContent = LocalizationHelper.GetString("Focus_Popup_Content");
+                var primary = LocalizationHelper.GetString("Focus_Popup_Primary");
+                var close = LocalizationHelper.GetString("Focus_Popup_Close");
+
                 var dialog = new ContentDialog
                 {
-                    Title = "🎯 Focus Session Active",
-                    Content = $"You're supposed to be using '{session.ProcessName}' right now!\n\n" +
-                              $"Session: {session.Name}\n" +
-                              $"Ends at: {session.EndTime:hh\\:mm}",
-                    PrimaryButtonText = "OK",
-                    CloseButtonText = "Disable Session",
+                    Title = title,
+                    Content = string.Format(fmtContent, violatingProcess, session.Name, session.EndTime.ToString(@"hh\:mm")),
+                    PrimaryButtonText = primary,
+                    CloseButtonText = close,
                     DefaultButton = ContentDialogButton.Primary,
                     XamlRoot = XamlRoot
                 };

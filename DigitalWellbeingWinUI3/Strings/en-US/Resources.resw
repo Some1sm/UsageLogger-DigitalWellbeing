@@ -100,6 +100,55 @@
   <data name="History_DistributionAnalysis.Text" xml:space="preserve">
     <value>Distribution Analysis</value>
   </data>
+  <data name="Focus_Header.Text" xml:space="preserve">
+    <value>Focus Schedule</value>
+  </data>
+  <data name="Focus_Description.Text" xml:space="preserve">
+    <value>Create scheduled focus blocks to stay on track. The app will enforce your commitment based on the selected mode.</value>
+  </data>
+  <data name="Focus_StatusActive" xml:space="preserve">
+    <value>Monitoring Active</value>
+  </data>
+  <data name="Focus_StatusInactive" xml:space="preserve">
+    <value>Monitoring Inactive</value>
+  </data>
+  <data name="Focus_AddButton.Content" xml:space="preserve">
+    <value>+ Add Schedule</value>
+  </data>
+  <data name="Focus_Toggle.OnContent" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="Focus_Toggle.OffContent" xml:space="preserve">
+    <value>Inactive</value>
+  </data>
+  <data name="Focus_EditButton.Content" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="Focus_Notification_Title" xml:space="preserve">
+    <value>🎯 Focus Session Active: {0}</value>
+  </data>
+  <data name="Focus_Notification_Chill" xml:space="preserve">
+    <value>You're using '{0}' instead of '{1}'</value>
+  </data>
+
+  <data name="Focus_Status_ActiveSession" xml:space="preserve">
+    <value>Active: {0}</value>
+  </data>
+  <data name="Focus_Status_NoSession" xml:space="preserve">
+    <value>Monitoring (No active session)</value>
+  </data>
+  <data name="Focus_Popup_Title" xml:space="preserve">
+    <value>🎯 Focus Session Active</value>
+  </data>
+  <data name="Focus_Popup_Content" xml:space="preserve">
+    <value>You're supposed to be using '{0}' right now!&#xA;&#xA;Session: {1}&#xA;Ends at: {2}</value>
+  </data>
+  <data name="Focus_Popup_Primary" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Focus_Popup_Close" xml:space="preserve">
+    <value>Disable Session</value>
+  </data>
   <data name="History_ActivityHeatmap.Text" xml:space="preserve">
     <value>Activity Heatmap</value>
   </data>
@@ -444,5 +493,44 @@
   </data>
   <data name="MiscData_LockTimeDesc" xml:space="preserve">
     <value>Time with screen locked</value>
+  </data>
+  <data name="MiscData_WindowSwitches" xml:space="preserve">
+    <value>Window Switches</value>
+  </data>
+  <data name="MiscData_WindowSwitchesDesc" xml:space="preserve">
+    <value>Total focus changes</value>
+  </data>
+  <data name="MiscData_AudioEvents" xml:space="preserve">
+    <value>Audio Events</value>
+  </data>
+  <data name="MiscData_AudioEventsDesc" xml:space="preserve">
+    <value>Times audio started playing</value>
+  </data>
+  <data name="MiscData_ActiveTime" xml:space="preserve">
+    <value>Active Time</value>
+  </data>
+  <data name="MiscData_ActiveTimeDesc" xml:space="preserve">
+    <value>Time actively using PC</value>
+  </data>
+  <data name="MiscData_LongestSession" xml:space="preserve">
+    <value>Longest Session</value>
+  </data>
+  <data name="MiscData_TopApp" xml:space="preserve">
+    <value>Top App</value>
+  </data>
+  <data name="MiscData_UniqueApps" xml:space="preserve">
+    <value>Unique Apps</value>
+  </data>
+  <data name="MiscData_UniqueAppsDesc" xml:space="preserve">
+    <value>Different applications used</value>
+  </data>
+  <data name="MiscData_TopWebsite" xml:space="preserve">
+    <value>Top Website</value>
+  </data>
+  <data name="MiscData_NoData" xml:space="preserve">
+    <value>No Data</value>
+  </data>
+  <data name="MiscData_NoDataDesc" xml:space="preserve">
+    <value>No usage logs found.</value>
   </data>
 </root>
