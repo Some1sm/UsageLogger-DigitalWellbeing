@@ -98,6 +98,10 @@ namespace DigitalWellbeingWinUI3.Helpers
         {
             Load();
             InitializeMonitor();
+            if (UserPreferences.FocusMonitoringEnabled)
+            {
+                StartMonitoring();
+            }
         }
 
         #region Persistence
@@ -175,6 +179,8 @@ namespace DigitalWellbeingWinUI3.Helpers
             {
                 _isRunning = true;
                 _monitorTimer.Start();
+                UserPreferences.FocusMonitoringEnabled = true;
+                UserPreferences.Save();
                 Debug.WriteLine("[FocusManager] Monitoring Started");
             }
         }
@@ -186,7 +192,99 @@ namespace DigitalWellbeingWinUI3.Helpers
                 _isRunning = false;
                 _monitorTimer.Stop();
                 ActiveSession = null;
+                UserPreferences.FocusMonitoringEnabled = false;
+                UserPreferences.Save();
                 Debug.WriteLine("[FocusManager] Monitoring Stopped");
+            }
+        }
+
+        public void ForceCheck()
+        {
+            MonitorTick(null, null);
+        }
+
+        /// <summary>
+        /// Called on app startup to show a reminder if there's an active Focus Session.
+        /// Unlike ForceCheck, this does NOT check the foreground window (since DW itself is foreground on startup).
+        /// </summary>
+        public async void ShowStartupReminder()
+        {
+            try
+            {
+                // Find any active session
+                var activeSession = _sessions.FirstOrDefault(s => s.IsEnabled && s.IsActiveNow());
+                ActiveSession = activeSession;
+
+                if (activeSession == null)
+                {
+                    Debug.WriteLine("[FocusManager] ShowStartupReminder: No active session");
+                    return;
+                }
+
+                // If Focus Session is for DigitalWellbeing itself, no need for reminder
+                if (activeSession.ProcessName.Equals("DigitalWellbeingWinUI3", StringComparison.OrdinalIgnoreCase) ||
+                    activeSession.ProcessName.Equals("DigitalWellbeing", StringComparison.OrdinalIgnoreCase))
+                {
+                    Debug.WriteLine("[FocusManager] ShowStartupReminder: Session targets DW itself, skipping");
+                    return;
+                }
+
+                Debug.WriteLine($"[FocusManager] ShowStartupReminder: Active session for {activeSession.ProcessName}");
+
+                // Show the enforcement dialog (Mode-dependent)
+                switch (activeSession.Mode)
+                {
+                    case FocusMode.Chill:
+                        // For Chill mode, just show a toast, don't block
+                        ShowChillNotification(activeSession, "Digital Wellbeing (Startup)");
+                        break;
+
+                    case FocusMode.Normal:
+                    case FocusMode.Focus:
+                        // For Normal/Focus, show a blocking dialog
+                        await ShowStartupFocusDialog(activeSession);
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[FocusManager] ShowStartupReminder Error: {ex.Message}");
+            }
+        }
+
+        private async Task ShowStartupFocusDialog(FocusSession session)
+        {
+            if (XamlRoot == null)
+            {
+                Debug.WriteLine("[FocusManager] ShowStartupFocusDialog: XamlRoot is null");
+                return;
+            }
+
+            try
+            {
+                var dialog = new ContentDialog
+                {
+                    Title = "🎯 Focus Session Active!",
+                    Content = $"You should be using '{session.ProcessName}' right now.\n\n" +
+                              $"Session: {session.Name}\n" +
+                              $"Time remaining: until {session.EndTime:hh\\:mm}",
+                    PrimaryButtonText = "Got it!",
+                    CloseButtonText = "Disable Session",
+                    DefaultButton = ContentDialogButton.Primary,
+                    XamlRoot = XamlRoot
+                };
+
+                var result = await dialog.ShowAsync();
+
+                if (result == ContentDialogResult.None) // Close button = Disable
+                {
+                    session.IsEnabled = false;
+                    Save();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[FocusManager] ShowStartupFocusDialog Error: {ex.Message}");
             }
         }
 

@@ -266,10 +266,22 @@ namespace DigitalWellbeingWinUI3
 
         public void RestoreWindow()
         {
-             IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
-             NativeMethods.ShowWindow(hWnd, NativeMethods.SW_RESTORE);
-             NativeMethods.SetForegroundWindow(hWnd);
-             this.PostRestore();
+             // Ensure execution on UI thread
+             this.DispatcherQueue.TryEnqueue(() => 
+             {
+                 IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+                 
+                 // 1. Force restore if minimized
+                 NativeMethods.ShowWindow(hWnd, NativeMethods.SW_RESTORE);
+                 
+                 // 2. Try simple SetForegroundWindow
+                 NativeMethods.SetForegroundWindow(hWnd);
+                 
+                 // 3. Try SwitchToThisWindow (often works where SetForeground fails)
+                 NativeMethods.SwitchToThisWindow(hWnd, true);
+                 
+                 this.PostRestore();
+             });
         }
         
         // Helper hooks to ensure UI updates if needed
@@ -284,7 +296,6 @@ namespace DigitalWellbeingWinUI3
         }
         private void PostRestore() 
         {
-             // Reload all data and resume timer
              if (ContentFrame.Content is DayAppUsagePage page)
              {
                  page.ViewModel?.StartTimer();

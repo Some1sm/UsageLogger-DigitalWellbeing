@@ -51,11 +51,37 @@ namespace DigitalWellbeingWinUI3
                 m_window = new MainWindow();
                 MainWindow = (MainWindow)m_window;
                 m_window.Activate();
+                
+                // Start a one-shot timer to show Focus reminder after UI is ready
+                StartupFocusReminderTimer();
             }
             catch (Exception ex)
             {
                 LogCrash(ex);
             }
+        }
+        
+        private void StartupFocusReminderTimer()
+        {
+            var timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(2);
+            timer.Tick += (s, e) => 
+            {
+                timer.Stop(); // One-shot
+                
+                // Set XamlRoot and show reminder
+                if (m_window?.Content is FrameworkElement fe && fe.XamlRoot != null)
+                {
+                    Helpers.FocusManager.Instance.XamlRoot = fe.XamlRoot;
+                    
+                    if (Helpers.FocusManager.Instance.IsMonitoring)
+                    {
+                        Debug.WriteLine("[App] Showing Startup Focus Reminder");
+                        Helpers.FocusManager.Instance.ShowStartupReminder();
+                    }
+                }
+            };
+            timer.Start();
         }
 
         /// <summary>

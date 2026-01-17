@@ -87,6 +87,12 @@ namespace DigitalWellbeingWinUI3.ViewModels
             string key = title != null ? $"{processName}|{title}" : processName;
             bool isTitle = title != null;
 
+            // Ensure app is visible and foregrounded
+            if (App.MainWindow != null)
+            {
+               App.MainWindow.RestoreWindow();
+            }
+
             // Show toast notification first
             ShowToastNotification(displayName, usage, limit);
 

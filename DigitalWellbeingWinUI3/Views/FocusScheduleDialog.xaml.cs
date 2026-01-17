@@ -61,14 +61,7 @@ namespace DigitalWellbeingWinUI3.Views
             }
 
             // Mode
-            foreach (var item in ModeSelector.Items)
-            {
-                if (item is RadioButton rb && rb.Tag?.ToString() == session.Mode.ToString())
-                {
-                    rb.IsChecked = true;
-                    break;
-                }
-            }
+            ModeSelector.SelectedIndex = (int)session.Mode;
         }
 
         private void AppSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
@@ -159,15 +152,11 @@ namespace DigitalWellbeingWinUI3.Views
 
         private FocusMode GetSelectedMode()
         {
-            foreach (var item in ModeSelector.Items)
+            if (ModeSelector.SelectedIndex >= 0 && ModeSelector.SelectedIndex <= 2)
             {
-                if (item is RadioButton rb && rb.IsChecked == true)
-                {
-                    var tag = rb.Tag?.ToString();
-                    if (Enum.TryParse<FocusMode>(tag, out var mode))
-                        return mode;
-                }
+                return (FocusMode)ModeSelector.SelectedIndex;
             }
+            
             return FocusMode.Normal;
         }
     }

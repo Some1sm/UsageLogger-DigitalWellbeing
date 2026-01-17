@@ -25,6 +25,13 @@ public class ActivityLogger
     private static DateTime _lastFileWriteTime = DateTime.MinValue;
     private static readonly string _settingsPath = ApplicationPath.UserPreferencesFile;
 
+    // Focus Schedule Fields
+    private static List<ServiceFocusSession> _focusSessions = new List<ServiceFocusSession>();
+    private static bool _focusMonitoringEnabled = false;
+    private static bool _focusLoaded = false;
+    private static Dictionary<string, DateTime> _focusLastAlert = new Dictionary<string, DateTime>();
+    private const int FOCUS_ALERT_DEBOUNCE_MINUTES = 5;
+
     private int GetBufferFlushInterval()
     {
         // Check file timestamp every loop (cheap) to detect changes instantly
@@ -391,6 +398,9 @@ public class ActivityLogger
             var validAudioApps = _audioTracker.UpdatePersistence(currentAudioApps);
 
             _sessionManager.Update(processName, programName, validAudioApps);
+            
+            // Check Focus Schedule enforcement
+            CheckFocusSchedules(processName, programName);
         }
         finally
         {
@@ -466,4 +476,189 @@ public class ActivityLogger
         await FlushBufferAsync();
         await _sessionManager.SaveOnExitAsync();
     }
+
+    // ========== Focus Schedule Methods ==========
+    
+    private DateTime _lastFocusFileWriteTime = DateTime.MinValue;
+
+    private DateTime _lastSettingsTimeFocus = DateTime.MinValue;
+
+    private void LoadFocusSchedule()
+    {
+        try
+        {
+            // Check if Focus Monitoring is enabled
+            if (File.Exists(_settingsPath))
+            {
+                DateTime settingsTime = File.GetLastWriteTime(_settingsPath);
+                if (settingsTime != _lastSettingsTimeFocus)
+                {
+                    string json = File.ReadAllText(_settingsPath);
+                    int idx = json.IndexOf("\"FocusMonitoringEnabled\":");
+                    if (idx >= 0)
+                    {
+                        int colonIdx = json.IndexOf(':', idx);
+                        int endIdx = json.IndexOf(',', colonIdx);
+                        if (endIdx < 0) endIdx = json.IndexOf('}', colonIdx);
+                        string valToken = json.Substring(colonIdx + 1, endIdx - colonIdx - 1).Trim().ToLowerInvariant();
+                        _focusMonitoringEnabled = valToken == "true";
+                    }
+                    else
+                    {
+                        // Default to false if missing
+                       _focusMonitoringEnabled = false;
+                    }
+                    _lastSettingsTimeFocus = settingsTime;
+                }
+            }
+
+            // Load Focus Schedule
+            string focusPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "digital-wellbeing",
+                "focus_schedule.json");
+
+            if (File.Exists(focusPath))
+            {
+                // Check timestamp to avoid redundant reads
+                DateTime currentWriteTime = File.GetLastWriteTime(focusPath);
+                if (currentWriteTime != _lastFocusFileWriteTime || !_focusLoaded)
+                {
+                    string json = File.ReadAllText(focusPath);
+                    _focusSessions = System.Text.Json.JsonSerializer.Deserialize<List<ServiceFocusSession>>(json) 
+                                     ?? new List<ServiceFocusSession>();
+                    
+                    _lastFocusFileWriteTime = currentWriteTime;
+                    _focusLoaded = true;
+                    // Debug.WriteLine($"Reloaded Focus Schedule. Count: {_focusSessions.Count}");
+                }
+            }
+            else
+            {
+                _focusSessions.Clear();
+                _focusLoaded = true;
+            }
+        }
+        catch { }
+    }
+
+    private void SaveFocusSchedule()
+    {
+        try
+        {
+            string focusPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "digital-wellbeing",
+                "focus_schedule.json");
+                
+            string dir = Path.GetDirectoryName(focusPath);
+            if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+            
+            string json = System.Text.Json.JsonSerializer.Serialize(_focusSessions, 
+                new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(focusPath, json);
+        }
+        catch { }
+    }
+
+    public void CheckFocusSchedules(string activeProcessName, string activeWindowTitle)
+    {
+        LoadFocusSchedule();
+        if (!_focusMonitoringEnabled) return;
+        if (_focusSessions.Count == 0) return;
+
+        foreach (var session in _focusSessions)
+        {
+            if (!session.IsEnabled) continue;
+            if (!session.IsActiveNow()) continue;
+            if (session.Mode == 0) continue; // Chill mode - no enforcement
+
+            // Is current app a match for the focus target?
+            bool isMatch = string.Equals(session.ProcessName, activeProcessName, StringComparison.OrdinalIgnoreCase);
+
+            // Sub-app check
+            if (isMatch && !string.IsNullOrEmpty(session.ProgramName))
+            {
+                isMatch = activeWindowTitle.IndexOf(session.ProgramName, StringComparison.OrdinalIgnoreCase) >= 0;
+            }
+
+            if (!isMatch)
+            {
+                // Violation! 
+                // ONLY show popup if the main UI is NOT running.
+                // If UI is running, it will handle the enforcement.
+                if (System.Diagnostics.Process.GetProcessesByName("DigitalWellbeingWinUI3").Length == 0)
+                {
+                    ShowFocusEnforcementPopup(session, activeProcessName);
+                }
+            }
+        }
+    }
+
+    private void ShowFocusEnforcementPopup(ServiceFocusSession session, string violatingProcess)
+    {
+        // Debounce check
+        string key = $"Focus_{session.Id}_{violatingProcess}";
+        if (_focusLastAlert.TryGetValue(key, out DateTime lastAlert))
+        {
+            if ((DateTime.Now - lastAlert).TotalMinutes < FOCUS_ALERT_DEBOUNCE_MINUTES)
+            {
+                return; // Too soon
+            }
+        }
+        
+        _focusLastAlert[key] = DateTime.Now;
+        
+        // Show popup in background thread
+        System.Threading.Tasks.Task.Run(() =>
+        {
+            try
+            {
+                TimeSpan endTimeSpan = session.StartTime + session.Duration;
+                string endTime = endTimeSpan.ToString(@"hh\:mm");
+                bool disableClicked = UI.EnforcementPopup.ShowPopup(
+                    session.Name ?? "Focus Session",
+                    session.ProcessName ?? "Unknown App",
+                    endTime
+                );
+                
+                if (disableClicked)
+                {
+                    session.IsEnabled = false;
+                    SaveFocusSchedule();
+                }
+            }
+            catch { }
+        });
+    }
 }
+
+// ServiceFocusSession - mirrors the UI's FocusSession for JSON compatibility
+public class ServiceFocusSession
+{
+    public string Id { get; set; }
+    public string Name { get; set; }
+    public TimeSpan StartTime { get; set; }
+    public TimeSpan Duration { get; set; }
+    public List<DayOfWeek> Days { get; set; }
+    public string ProcessName { get; set; }
+    public string ProgramName { get; set; }
+    public int Mode { get; set; } // 0=Chill, 1=Normal, 2=Focus
+    public bool IsEnabled { get; set; }
+
+    public bool IsActiveNow()
+    {
+        DateTime now = DateTime.Now;
+        if (Days != null && Days.Count > 0 && !Days.Contains(now.DayOfWeek)) return false;
+
+        TimeSpan currentTime = now.TimeOfDay;
+        TimeSpan endTime = StartTime + Duration;
+
+        if (endTime > TimeSpan.FromHours(24))
+        {
+            return currentTime >= StartTime || currentTime < (endTime - TimeSpan.FromHours(24));
+        }
+        return currentTime >= StartTime && currentTime < endTime;
+    }
+}
+

@@ -25,6 +25,7 @@ namespace DigitalWellbeingWinUI3.Helpers
         public static Dictionary<string, int> AppTimeLimits { get; set; } = new Dictionary<string, int>();
         public static List<CustomAppTag> CustomTags { get; set; } = new List<CustomAppTag>();
         public static bool IncognitoMode { get; set; } = false;
+        public static bool FocusMonitoringEnabled { get; set; } = false;
         public static bool ShowCombinedAudioView { get; set; } = false;
         public static Dictionary<string, string> ProcessDisplayNames { get; set; } = new Dictionary<string, string>();
         public static Dictionary<string, string> CustomIconPaths { get; set; } = new Dictionary<string, string>();
@@ -69,6 +70,7 @@ namespace DigitalWellbeingWinUI3.Helpers
                     AppTimeLimits,
                     CustomTags,
                     IncognitoMode,
+                    FocusMonitoringEnabled,
                     ShowCombinedAudioView,
                     ProcessDisplayNames,
                     CustomIconPaths,
@@ -117,6 +119,7 @@ namespace DigitalWellbeingWinUI3.Helpers
                     if (data.TryGetProperty(nameof(AppTimeLimits), out prop)) AppTimeLimits = JsonSerializer.Deserialize<Dictionary<string, int>>(prop.GetRawText()) ?? new Dictionary<string, int>();
                     if (data.TryGetProperty(nameof(CustomTags), out prop)) CustomTags = JsonSerializer.Deserialize<List<CustomAppTag>>(prop.GetRawText()) ?? new List<CustomAppTag>();
                     if (data.TryGetProperty(nameof(IncognitoMode), out prop)) IncognitoMode = prop.GetBoolean();
+                    if (data.TryGetProperty(nameof(FocusMonitoringEnabled), out prop)) FocusMonitoringEnabled = prop.GetBoolean();
                     if (data.TryGetProperty(nameof(ShowCombinedAudioView), out prop)) ShowCombinedAudioView = prop.GetBoolean();
                     if (data.TryGetProperty(nameof(ProcessDisplayNames), out prop)) ProcessDisplayNames = JsonSerializer.Deserialize<Dictionary<string, string>>(prop.GetRawText()) ?? new Dictionary<string, string>();
                     if (data.TryGetProperty(nameof(CustomIconPaths), out prop)) CustomIconPaths = JsonSerializer.Deserialize<Dictionary<string, string>>(prop.GetRawText()) ?? new Dictionary<string, string>();

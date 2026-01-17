@@ -20,6 +20,9 @@ namespace DigitalWellbeingWinUI3.Helpers
         [DllImport(USER32)]
         public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
         
+        [DllImport(USER32, SetLastError = true)]
+        public static extern void SwitchToThisWindow(IntPtr hWnd, bool fAltTab);
+
         /// <summary>
         /// Brings the specified window to the foreground.
         /// </summary>
