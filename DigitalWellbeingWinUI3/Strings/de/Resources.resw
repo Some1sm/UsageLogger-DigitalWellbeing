@@ -769,4 +769,25 @@ Ende: {2}</value>
   <data name="FocusPageHeader.Text" xml:space="preserve">
     <value>Fokus-Zeitplan</value>
   </data>
+  <data name="FocusPageDescription.Text" xml:space="preserve">
+    <value>Erstellen Sie geplante Fokusblöcke, um auf Kurs zu bleiben. Die App setzt Ihr Engagement basierend auf dem ausgewählten Modus durch.</value>
+  </data>
+  <data name="FocusPageToggle.OnContent" xml:space="preserve">
+    <value>Aktiv</value>
+  </data>
+  <data name="FocusPageToggle.OffContent" xml:space="preserve">
+    <value>Inaktiv</value>
+  </data>
+  <data name="FocusPageAddButton.Content" xml:space="preserve">
+    <value>+ Zeitplan hinzufügen</value>
+  </data>
+  <data name="FocusPageStatusInactive" xml:space="preserve">
+    <value>Überwachung inaktiv</value>
+  </data>
+  <data name="FocusPageStatusActiveSession" xml:space="preserve">
+    <value>Aktiv: {0}</value>
+  </data>
+  <data name="FocusPageStatusNoSession" xml:space="preserve">
+    <value>Überwachung aktiv (Keine Sitzung)</value>
+  </data>
 </root>

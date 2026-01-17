@@ -826,4 +826,25 @@ Acaba: {2}</value>
   <data name="FocusPageHeader.Text" xml:space="preserve">
     <value>Horari de Focus</value>
   </data>
+  <data name="FocusPageDescription.Text" xml:space="preserve">
+    <value>Crea blocs de focus programats per mantenir-te concentrat. L'aplicació farà complir el teu compromís segons el mode seleccionat.</value>
+  </data>
+  <data name="FocusPageToggle.OnContent" xml:space="preserve">
+    <value>Actiu</value>
+  </data>
+  <data name="FocusPageToggle.OffContent" xml:space="preserve">
+    <value>Inactiu</value>
+  </data>
+  <data name="FocusPageAddButton.Content" xml:space="preserve">
+    <value>+ Afegeix Horari</value>
+  </data>
+  <data name="FocusPageStatusInactive" xml:space="preserve">
+    <value>Monitoratge Inactiu</value>
+  </data>
+  <data name="FocusPageStatusActiveSession" xml:space="preserve">
+    <value>Actiu: {0}</value>
+  </data>
+  <data name="FocusPageStatusNoSession" xml:space="preserve">
+    <value>Monitoratge Actiu (Sense Sessió)</value>
+  </data>
 </root>

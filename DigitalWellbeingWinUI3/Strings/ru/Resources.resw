@@ -769,4 +769,25 @@
   <data name="FocusPageHeader.Text" xml:space="preserve">
     <value>Расписание фокусировки</value>
   </data>
+  <data name="FocusPageDescription.Text" xml:space="preserve">
+    <value>Создавайте запланированные блоки фокусировки. Приложение будет обеспечивать выполнение ваших обязательств в зависимости от выбранного режима.</value>
+  </data>
+  <data name="FocusPageToggle.OnContent" xml:space="preserve">
+    <value>Активно</value>
+  </data>
+  <data name="FocusPageToggle.OffContent" xml:space="preserve">
+    <value>Неактивно</value>
+  </data>
+  <data name="FocusPageAddButton.Content" xml:space="preserve">
+    <value>+ Добавить расписание</value>
+  </data>
+  <data name="FocusPageStatusInactive" xml:space="preserve">
+    <value>Мониторинг неактивен</value>
+  </data>
+  <data name="FocusPageStatusActiveSession" xml:space="preserve">
+    <value>Активно: {0}</value>
+  </data>
+  <data name="FocusPageStatusNoSession" xml:space="preserve">
+    <value>Мониторинг активен (Нет сессии)</value>
+  </data>
 </root>

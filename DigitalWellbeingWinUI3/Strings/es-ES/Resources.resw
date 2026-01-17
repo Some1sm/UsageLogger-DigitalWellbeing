@@ -826,4 +826,25 @@ Termina: {2}</value>
   <data name="FocusPageHeader.Text" xml:space="preserve">
     <value>Horario de Enfoque</value>
   </data>
+  <data name="FocusPageDescription.Text" xml:space="preserve">
+    <value>Crea bloques de enfoque programados para mantenerte concentrado. La aplicación hará cumplir tu compromiso según el modo seleccionado.</value>
+  </data>
+  <data name="FocusPageToggle.OnContent" xml:space="preserve">
+    <value>Activo</value>
+  </data>
+  <data name="FocusPageToggle.OffContent" xml:space="preserve">
+    <value>Inactivo</value>
+  </data>
+  <data name="FocusPageAddButton.Content" xml:space="preserve">
+    <value>+ Añadir Horario</value>
+  </data>
+  <data name="FocusPageStatusInactive" xml:space="preserve">
+    <value>Monitoreo Inactivo</value>
+  </data>
+  <data name="FocusPageStatusActiveSession" xml:space="preserve">
+    <value>Activo: {0}</value>
+  </data>
+  <data name="FocusPageStatusNoSession" xml:space="preserve">
+    <value>Monitoreo Activo (Sin Sesión)</value>
+  </data>
 </root>

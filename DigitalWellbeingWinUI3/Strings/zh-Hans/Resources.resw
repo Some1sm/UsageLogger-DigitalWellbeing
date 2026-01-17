@@ -769,4 +769,25 @@
   <data name="FocusPageHeader.Text" xml:space="preserve">
     <value>专注计划</value>
   </data>
+  <data name="FocusPageDescription.Text" xml:space="preserve">
+    <value>创建定时的专注块以保持状态。应用将根据所选模式强制执行您的承诺。</value>
+  </data>
+  <data name="FocusPageToggle.OnContent" xml:space="preserve">
+    <value>活跃</value>
+  </data>
+  <data name="FocusPageToggle.OffContent" xml:space="preserve">
+    <value>非活跃</value>
+  </data>
+  <data name="FocusPageAddButton.Content" xml:space="preserve">
+    <value>+ 添加计划</value>
+  </data>
+  <data name="FocusPageStatusInactive" xml:space="preserve">
+    <value>监控未激活</value>
+  </data>
+  <data name="FocusPageStatusActiveSession" xml:space="preserve">
+    <value>活跃: {0}</value>
+  </data>
+  <data name="FocusPageStatusNoSession" xml:space="preserve">
+    <value>监控活跃 (无会话)</value>
+  </data>
 </root>

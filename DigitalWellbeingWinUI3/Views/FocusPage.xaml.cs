@@ -51,17 +51,17 @@ namespace DigitalWellbeingWinUI3.Views
             {
                 if (FocusManager.Instance.ActiveSession != null)
                 {
-                    var fmt = LocalizationHelper.GetString("Focus_Status_ActiveSession");
+                    var fmt = LocalizationHelper.GetString("FocusPageStatusActiveSession");
                     StatusText.Text = string.Format(fmt, FocusManager.Instance.ActiveSession.Name);
                 }
                 else
                 {
-                    StatusText.Text = LocalizationHelper.GetString("Focus_Status_NoSession");
+                    StatusText.Text = LocalizationHelper.GetString("FocusPageStatusNoSession");
                 }
             }
             else
             {
-                StatusText.Text = LocalizationHelper.GetString("Focus_StatusInactive");
+                StatusText.Text = LocalizationHelper.GetString("FocusPageStatusInactive");
             }
         }
 

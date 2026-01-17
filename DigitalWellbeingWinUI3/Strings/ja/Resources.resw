@@ -769,4 +769,25 @@
   <data name="FocusPageHeader.Text" xml:space="preserve">
     <value>フォーカススケジュール</value>
   </data>
+  <data name="FocusPageDescription.Text" xml:space="preserve">
+    <value>集中ブロックをスケジュールして、作業を継続します。アプリは選択されたモードに基づいてコミットメントを強制します。</value>
+  </data>
+  <data name="FocusPageToggle.OnContent" xml:space="preserve">
+    <value>アクティブ</value>
+  </data>
+  <data name="FocusPageToggle.OffContent" xml:space="preserve">
+    <value>非アクティブ</value>
+  </data>
+  <data name="FocusPageAddButton.Content" xml:space="preserve">
+    <value>+ スケジュールを追加</value>
+  </data>
+  <data name="FocusPageStatusInactive" xml:space="preserve">
+    <value>監視停止中</value>
+  </data>
+  <data name="FocusPageStatusActiveSession" xml:space="preserve">
+    <value>アクティブ: {0}</value>
+  </data>
+  <data name="FocusPageStatusNoSession" xml:space="preserve">
+    <value>監視中 (セッションなし)</value>
+  </data>
 </root>

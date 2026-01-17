@@ -769,4 +769,25 @@
   <data name="FocusPageHeader.Text" xml:space="preserve">
     <value>집중 일정</value>
   </data>
+  <data name="FocusPageDescription.Text" xml:space="preserve">
+    <value>집중 블록을 예약하여 흐름을 유지하세요. 선택한 모드에 따라 앱이 약속을 강제로 이행합니다.</value>
+  </data>
+  <data name="FocusPageToggle.OnContent" xml:space="preserve">
+    <value>활성</value>
+  </data>
+  <data name="FocusPageToggle.OffContent" xml:space="preserve">
+    <value>비활성</value>
+  </data>
+  <data name="FocusPageAddButton.Content" xml:space="preserve">
+    <value>+ 일정 추가</value>
+  </data>
+  <data name="FocusPageStatusInactive" xml:space="preserve">
+    <value>모니터링 비활성</value>
+  </data>
+  <data name="FocusPageStatusActiveSession" xml:space="preserve">
+    <value>활성: {0}</value>
+  </data>
+  <data name="FocusPageStatusNoSession" xml:space="preserve">
+    <value>모니터링 활성 (세션 없음)</value>
+  </data>
 </root>

@@ -769,4 +769,25 @@ Fin : {2}</value>
   <data name="FocusPageHeader.Text" xml:space="preserve">
     <value>Programme de Concentration</value>
   </data>
+  <data name="FocusPageDescription.Text" xml:space="preserve">
+    <value>Créez des blocs de concentration programmés pour rester sur la bonne voie. L'application appliquera votre engagement en fonction du mode sélectionné.</value>
+  </data>
+  <data name="FocusPageToggle.OnContent" xml:space="preserve">
+    <value>Actif</value>
+  </data>
+  <data name="FocusPageToggle.OffContent" xml:space="preserve">
+    <value>Inactif</value>
+  </data>
+  <data name="FocusPageAddButton.Content" xml:space="preserve">
+    <value>+ Ajouter un Horaire</value>
+  </data>
+  <data name="FocusPageStatusInactive" xml:space="preserve">
+    <value>Surveillance Inactive</value>
+  </data>
+  <data name="FocusPageStatusActiveSession" xml:space="preserve">
+    <value>Actif : {0}</value>
+  </data>
+  <data name="FocusPageStatusNoSession" xml:space="preserve">
+    <value>Surveillance Active (Aucune Session)</value>
+  </data>
 </root>

@@ -734,4 +734,25 @@
   <data name="FocusPageHeader.Text" xml:space="preserve">
     <value>Focus Schedule</value>
   </data>
+  <data name="FocusPageDescription.Text" xml:space="preserve">
+    <value>Create scheduled focus blocks to stay on track. The app will enforce your commitment based on the selected mode.</value>
+  </data>
+  <data name="FocusPageToggle.OnContent" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="FocusPageToggle.OffContent" xml:space="preserve">
+    <value>Inactive</value>
+  </data>
+  <data name="FocusPageAddButton.Content" xml:space="preserve">
+    <value>+ Add Schedule</value>
+  </data>
+  <data name="FocusPageStatusInactive" xml:space="preserve">
+    <value>Monitoring Inactive</value>
+  </data>
+  <data name="FocusPageStatusActiveSession" xml:space="preserve">
+    <value>Active: {0}</value>
+  </data>
+  <data name="FocusPageStatusNoSession" xml:space="preserve">
+    <value>Monitoring Active (No Session)</value>
+  </data>
 </root>

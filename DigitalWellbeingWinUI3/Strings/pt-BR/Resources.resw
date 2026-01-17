@@ -769,4 +769,25 @@ Fim: {2}</value>
   <data name="FocusPageHeader.Text" xml:space="preserve">
     <value>Agenda de Foco</value>
   </data>
+  <data name="FocusPageDescription.Text" xml:space="preserve">
+    <value>Crie blocos de foco programados para manter o ritmo. O aplicativo aplicará seu compromisso com base no modo selecionado.</value>
+  </data>
+  <data name="FocusPageToggle.OnContent" xml:space="preserve">
+    <value>Ativo</value>
+  </data>
+  <data name="FocusPageToggle.OffContent" xml:space="preserve">
+    <value>Inativo</value>
+  </data>
+  <data name="FocusPageAddButton.Content" xml:space="preserve">
+    <value>+ Adicionar Agenda</value>
+  </data>
+  <data name="FocusPageStatusInactive" xml:space="preserve">
+    <value>Monitoramento Inativo</value>
+  </data>
+  <data name="FocusPageStatusActiveSession" xml:space="preserve">
+    <value>Ativo: {0}</value>
+  </data>
+  <data name="FocusPageStatusNoSession" xml:space="preserve">
+    <value>Monitoramento Active (Sem Sessão)</value>
+  </data>
 </root>

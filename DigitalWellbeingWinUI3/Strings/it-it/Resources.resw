@@ -769,4 +769,25 @@ Fine: {2}</value>
   <data name="FocusPageHeader.Text" xml:space="preserve">
     <value>Programma Focus</value>
   </data>
+  <data name="FocusPageDescription.Text" xml:space="preserve">
+    <value>Crea blocchi di focus programmati per rimanere concentrato. L'app farà rispettare il tuo impegno in base alla modalità selezionata.</value>
+  </data>
+  <data name="FocusPageToggle.OnContent" xml:space="preserve">
+    <value>Attivo</value>
+  </data>
+  <data name="FocusPageToggle.OffContent" xml:space="preserve">
+    <value>Inattivo</value>
+  </data>
+  <data name="FocusPageAddButton.Content" xml:space="preserve">
+    <value>+ Aggiungi Programma</value>
+  </data>
+  <data name="FocusPageStatusInactive" xml:space="preserve">
+    <value>Monitoraggio Inattivo</value>
+  </data>
+  <data name="FocusPageStatusActiveSession" xml:space="preserve">
+    <value>Attivo: {0}</value>
+  </data>
+  <data name="FocusPageStatusNoSession" xml:space="preserve">
+    <value>Monitoraggio Attivo (Nessuna Sessione)</value>
+  </data>
 </root>
