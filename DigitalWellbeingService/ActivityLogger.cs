@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using static System.Environment;
 
 namespace DigitalWellbeingService;
@@ -571,7 +572,7 @@ public class ActivityLogger
         {
             if (!session.IsEnabled) continue;
             if (!session.IsActiveNow()) continue;
-            if (session.Mode == 0) continue; // Chill mode - no enforcement
+            // Mode 0 (Chill) is now handled
 
             // Is current app a match for the focus target?
             bool isMatch = string.Equals(session.ProcessName, activeProcessName, StringComparison.OrdinalIgnoreCase);
@@ -586,12 +587,38 @@ public class ActivityLogger
             {
                 // Violation! 
                 // ONLY show popup if the main UI is NOT running.
-                // If UI is running, it will handle the enforcement.
                 if (System.Diagnostics.Process.GetProcessesByName("DigitalWellbeingWinUI3").Length == 0)
                 {
-                    ShowFocusEnforcementPopup(session, activeProcessName);
+                    if (session.Mode == 0) // Chill Notification
+                    {
+                        ShowToast($"Focus: {session.Name}", $"You're using '{activeProcessName}' instead of '{session.ProcessName}'");
+                    }
+                    else // Blocking Popup
+                    {
+                        ShowFocusEnforcementPopup(session, activeProcessName);
+                    }
                 }
             }
+        }
+    }
+
+    private void ShowToast(string title, string message)
+    {
+        // Debounce Toast
+        string key = $"Toast_{title}_{message}";
+        if (_focusLastAlert.TryGetValue(key, out DateTime lastAlert))
+        {
+            if ((DateTime.Now - lastAlert).TotalMinutes < 1) return; // 1 min debounce
+        }
+        _focusLastAlert[key] = DateTime.Now;
+
+        try
+        {
+            TrayManager.ShowNotification(title, message);
+        }
+        catch (Exception ex)
+        {
+            ServiceLogger.Log("Toast", ex.Message);
         }
     }
 

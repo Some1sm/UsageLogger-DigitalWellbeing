@@ -42,6 +42,16 @@ namespace DigitalWellbeingWinUI3
         {
             try
             {
+                // Register for Toast Notifications (Required for Unpackaged)
+                try
+                {
+                    Microsoft.Windows.AppNotifications.AppNotificationManager.Default.Register();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[App] Failed to register notifications: {ex.Message}");
+                }
+
                 // Load user preferences first
                 Helpers.UserPreferences.Load();
 

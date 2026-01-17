@@ -143,5 +143,13 @@ namespace DigitalWellbeingService.Helpers
             }
             _contextMenu?.Dispose();
         }
+
+        public static void ShowNotification(string title, string message)
+        {
+            if (_notifyIcon != null)
+            {
+                _notifyIcon.ShowBalloonTip(5000, title, message, ToolTipIcon.Info);
+            }
+        }
     }
 }
