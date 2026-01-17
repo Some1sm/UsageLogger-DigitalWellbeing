@@ -1,0 +1,102 @@
+{
+    "ca": {
+        "History_View_Categories": "Categories",
+        "History_View_Apps": "Aplicacions",
+        "History_View_SubApps": "Sub-Aplicacions",
+        "History_Period_LastWeek": "Última Setmana",
+        "History_Period_LastMonth": "Últim Mes",
+        "History_Period_LastYear": "Últim Any",
+        "History_Period_Custom": "Personalitzat",
+        "History_AwayLock.Text": "Absent / Bloqueig"
+    },
+    "es": {
+        "History_View_Categories": "Categorías",
+        "History_View_Apps": "Aplicaciones",
+        "History_View_SubApps": "Sub-Aplicaciones",
+        "History_Period_LastWeek": "Última Semana",
+        "History_Period_LastMonth": "Último Mes",
+        "History_Period_LastYear": "Último Año",
+        "History_Period_Custom": "Personalizado",
+        "History_AwayLock.Text": "Ausente / Bloqueo"
+    },
+    "fr": {
+        "History_View_Categories": "Catégories",
+        "History_View_Apps": "Applications",
+        "History_View_SubApps": "Sous-Apps",
+        "History_Period_LastWeek": "Semaine Dernière",
+        "History_Period_LastMonth": "Mois Dernier",
+        "History_Period_LastYear": "Année Dernière",
+        "History_Period_Custom": "Personnalisé",
+        "History_AwayLock.Text": "Absent / Verrouillé"
+    },
+    "de": {
+        "History_View_Categories": "Kategorien",
+        "History_View_Apps": "Anwendungen",
+        "History_View_SubApps": "Unter-Apps",
+        "History_Period_LastWeek": "Letzte Woche",
+        "History_Period_LastMonth": "Letzten Monat",
+        "History_Period_LastYear": "Letztes Jahr",
+        "History_Period_Custom": "Benutzerdefiniert",
+        "History_AwayLock.Text": "Abwesend / Gesperrt"
+    },
+    "it": {
+        "History_View_Categories": "Categorie",
+        "History_View_Apps": "Applicazioni",
+        "History_View_SubApps": "Sotto-App",
+        "History_Period_LastWeek": "Ultima Settimana",
+        "History_Period_LastMonth": "Ultimo Mese",
+        "History_Period_LastYear": "Ultimo Anno",
+        "History_Period_Custom": "Personalizzato",
+        "History_AwayLock.Text": "Assente / Blocco"
+    },
+    "pt-BR": {
+        "History_View_Categories": "Categorias",
+        "History_View_Apps": "Aplicativos",
+        "History_View_SubApps": "Sub-Apps",
+        "History_Period_LastWeek": "Última Semana",
+        "History_Period_LastMonth": "Último Mês",
+        "History_Period_LastYear": "Último Ano",
+        "History_Period_Custom": "Personalizado",
+        "History_AwayLock.Text": "Ausente / Bloqueio"
+    },
+    "zh-Hans": {
+        "History_View_Categories": "类别",
+        "History_View_Apps": "应用",
+        "History_View_SubApps": "子应用",
+        "History_Period_LastWeek": "上周",
+        "History_Period_LastMonth": "上月",
+        "History_Period_LastYear": "去年",
+        "History_Period_Custom": "自定义",
+        "History_AwayLock.Text": "离开 / 锁定"
+    },
+    "ja": {
+        "History_View_Categories": "カテゴリ",
+        "History_View_Apps": "アプリ",
+        "History_View_SubApps": "サブアプリ",
+        "History_Period_LastWeek": "先週",
+        "History_Period_LastMonth": "先月",
+        "History_Period_LastYear": "昨年",
+        "History_Period_Custom": "カスタム",
+        "History_AwayLock.Text": "退席中 / ロック"
+    },
+    "ko": {
+        "History_View_Categories": "카테고리",
+        "History_View_Apps": "앱",
+        "History_View_SubApps": "서브 앱",
+        "History_Period_LastWeek": "지난 주",
+        "History_Period_LastMonth": "지난 달",
+        "History_Period_LastYear": "작년",
+        "History_Period_Custom": "사용자 지정",
+        "History_AwayLock.Text": "자리 비움 / 잠금"
+    },
+    "ru": {
+        "History_View_Categories": "Категории",
+        "History_View_Apps": "Приложения",
+        "History_View_SubApps": "Под-приложения",
+        "History_Period_LastWeek": "Прошлая неделя",
+        "History_Period_LastMonth": "Прошлый месяц",
+        "History_Period_LastYear": "Прошлый год",
+        "History_Period_Custom": "Пользовательский",
+        "History_AwayLock.Text": "Отошел / Блок"
+    }
+}

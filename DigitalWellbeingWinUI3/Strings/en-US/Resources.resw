@@ -533,4 +533,28 @@
   <data name="MiscData_NoDataDesc" xml:space="preserve">
     <value>No usage logs found.</value>
   </data>
+  <data name="History_View_Categories" xml:space="preserve">
+    <value>Categories</value>
+  </data>
+  <data name="History_View_Apps" xml:space="preserve">
+    <value>Apps</value>
+  </data>
+  <data name="History_View_SubApps" xml:space="preserve">
+    <value>Sub-Apps</value>
+  </data>
+  <data name="History_Period_LastWeek" xml:space="preserve">
+    <value>Last Week</value>
+  </data>
+  <data name="History_Period_LastMonth" xml:space="preserve">
+    <value>Last Month</value>
+  </data>
+  <data name="History_Period_LastYear" xml:space="preserve">
+    <value>Last Year</value>
+  </data>
+  <data name="History_Period_Custom" xml:space="preserve">
+    <value>Custom</value>
+  </data>
+  <data name="History_AwayLock.Text" xml:space="preserve">
+    <value>Away / Lock</value>
+  </data>
 </root>

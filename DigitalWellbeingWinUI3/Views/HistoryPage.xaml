@@ -97,7 +97,7 @@
                                 <TextBlock Text="{Binding AfkTimeText, FallbackValue='0m'}" FontSize="28" FontWeight="Bold" Margin="0,5,0,0" TextTrimming="CharacterEllipsis"/>
                                 <StackPanel Orientation="Horizontal" Margin="0,5,0,0" Spacing="6" Opacity="0.6">
                                      <FontIcon Glyph="&#xE916;" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center"/>
-                                     <TextBlock Text="Away / Lock" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="14" VerticalAlignment="Center"/>
+                                     <TextBlock l:Uids.Uid="History_AwayLock" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="14" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </StackPanel>
                         </Grid>

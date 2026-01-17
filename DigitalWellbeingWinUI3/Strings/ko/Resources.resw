@@ -535,4 +535,28 @@
   <data name="MiscData_NoDataDesc" xml:space="preserve">
     <value>로그가 없습니다.</value>
   </data>
+  <data name="History_View_Categories" xml:space="preserve">
+    <value>카테고리</value>
+  </data>
+  <data name="History_View_Apps" xml:space="preserve">
+    <value>앱</value>
+  </data>
+  <data name="History_View_SubApps" xml:space="preserve">
+    <value>서브 앱</value>
+  </data>
+  <data name="History_Period_LastWeek" xml:space="preserve">
+    <value>지난 주</value>
+  </data>
+  <data name="History_Period_LastMonth" xml:space="preserve">
+    <value>지난 달</value>
+  </data>
+  <data name="History_Period_LastYear" xml:space="preserve">
+    <value>작년</value>
+  </data>
+  <data name="History_Period_Custom" xml:space="preserve">
+    <value>사용자 지정</value>
+  </data>
+  <data name="History_AwayLock.Text" xml:space="preserve">
+    <value>자리 비움 / 잠금</value>
+  </data>
 </root>

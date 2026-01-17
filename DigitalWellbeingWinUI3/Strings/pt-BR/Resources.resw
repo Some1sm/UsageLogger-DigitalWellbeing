@@ -535,4 +535,28 @@ Fim: {2}</value>
   <data name="MiscData_NoDataDesc" xml:space="preserve">
     <value>Nenhum log encontrado.</value>
   </data>
+  <data name="History_View_Categories" xml:space="preserve">
+    <value>Categorias</value>
+  </data>
+  <data name="History_View_Apps" xml:space="preserve">
+    <value>Aplicativos</value>
+  </data>
+  <data name="History_View_SubApps" xml:space="preserve">
+    <value>Sub-Apps</value>
+  </data>
+  <data name="History_Period_LastWeek" xml:space="preserve">
+    <value>Última Semana</value>
+  </data>
+  <data name="History_Period_LastMonth" xml:space="preserve">
+    <value>Último Mês</value>
+  </data>
+  <data name="History_Period_LastYear" xml:space="preserve">
+    <value>Último Ano</value>
+  </data>
+  <data name="History_Period_Custom" xml:space="preserve">
+    <value>Personalizado</value>
+  </data>
+  <data name="History_AwayLock.Text" xml:space="preserve">
+    <value>Ausente / Bloqueio</value>
+  </data>
 </root>

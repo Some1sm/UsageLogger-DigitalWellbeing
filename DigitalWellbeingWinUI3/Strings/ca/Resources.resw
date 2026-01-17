@@ -535,4 +535,28 @@ Acaba: {2}</value>
   <data name="MiscData_NoDataDesc" xml:space="preserve">
     <value>No hi ha registres.</value>
   </data>
+  <data name="History_View_Categories" xml:space="preserve">
+    <value>Categories</value>
+  </data>
+  <data name="History_View_Apps" xml:space="preserve">
+    <value>Aplicacions</value>
+  </data>
+  <data name="History_View_SubApps" xml:space="preserve">
+    <value>Sub-Aplicacions</value>
+  </data>
+  <data name="History_Period_LastWeek" xml:space="preserve">
+    <value>Última Setmana</value>
+  </data>
+  <data name="History_Period_LastMonth" xml:space="preserve">
+    <value>Últim Mes</value>
+  </data>
+  <data name="History_Period_LastYear" xml:space="preserve">
+    <value>Últim Any</value>
+  </data>
+  <data name="History_Period_Custom" xml:space="preserve">
+    <value>Personalitzat</value>
+  </data>
+  <data name="History_AwayLock.Text" xml:space="preserve">
+    <value>Absent / Bloqueig</value>
+  </data>
 </root>

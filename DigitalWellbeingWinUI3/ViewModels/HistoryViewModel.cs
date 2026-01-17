@@ -33,10 +33,10 @@ namespace DigitalWellbeingWinUI3.ViewModels
     public class HistoryViewModel : INotifyPropertyChanged
     {
         // View mode options for ComboBox binding
-        public List<string> ViewModeOptions { get; } = new List<string> { "Categories", "Apps", "Sub-Apps" };
+        public ObservableCollection<string> ViewModeOptions { get; } = new ObservableCollection<string>();
         
         // Date range preset options for ComboBox binding
-        public List<string> DateRangeOptions { get; } = new List<string> { "Last Week", "Last Month", "Last Year", "Custom" };
+        public ObservableCollection<string> DateRangeOptions { get; } = new ObservableCollection<string>();
         
         private int _selectedDateRangeIndex = 0; // Default to Last Week
         public int SelectedDateRangeIndex
@@ -167,11 +167,21 @@ namespace DigitalWellbeingWinUI3.ViewModels
 
         public HistoryViewModel()
         {
-            // ChartSeries = new ObservableCollection<ISeries>(); // Removed
+            GenerateChartCommand = new RelayCommand(_ => GenerateChart());
             TrendData = new ObservableCollection<BarChartItem>();
             HeatMapData = new ObservableCollection<HeatmapDataPoint>();
-            GenerateChartCommand = new RelayCommand(_ => GenerateChart());
             
+            // Localize View Modes
+            ViewModeOptions.Add(LocalizationHelper.GetString("History_View_Categories"));
+            ViewModeOptions.Add(LocalizationHelper.GetString("History_View_Apps"));
+            ViewModeOptions.Add(LocalizationHelper.GetString("History_View_SubApps"));
+
+            // Localize Date Ranges
+            DateRangeOptions.Add(LocalizationHelper.GetString("History_Period_LastWeek"));
+            DateRangeOptions.Add(LocalizationHelper.GetString("History_Period_LastMonth"));
+            DateRangeOptions.Add(LocalizationHelper.GetString("History_Period_LastYear"));
+            DateRangeOptions.Add(LocalizationHelper.GetString("History_Period_Custom"));
+
             // Apply initial date range (Last Week) without triggering chart generation yet
             ApplyDateRangeWithoutGenerate();
         }
