@@ -595,4 +595,7 @@
   <data name="Focus_EmptyStateDesc.Text" xml:space="preserve">
     <value>「+ スケジュールを追加」をクリックして、最初のフォーカスブロックを作成します。</value>
   </data>
+  <data name="Nav_Settings.Content" xml:space="preserve">
+    <value>設定</value>
+  </data>
 </root>

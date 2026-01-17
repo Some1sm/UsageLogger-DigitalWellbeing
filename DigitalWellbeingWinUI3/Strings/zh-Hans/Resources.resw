@@ -595,4 +595,7 @@
   <data name="Focus_EmptyStateDesc.Text" xml:space="preserve">
     <value>点击“+ 添加计划”以创建您的第一个专注块。</value>
   </data>
+  <data name="Nav_Settings.Content" xml:space="preserve">
+    <value>设置</value>
+  </data>
 </root>

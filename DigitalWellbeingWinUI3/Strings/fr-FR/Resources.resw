@@ -595,4 +595,7 @@ Fin : {2}</value>
   <data name="Focus_EmptyStateDesc.Text" xml:space="preserve">
     <value>Cliquez sur '+ Ajouter un horaire' pour créer votre premier bloc.</value>
   </data>
+  <data name="Nav_Settings.Content" xml:space="preserve">
+    <value>Paramètres</value>
+  </data>
 </root>

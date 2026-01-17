@@ -595,4 +595,7 @@ Ende: {2}</value>
   <data name="Focus_EmptyStateDesc.Text" xml:space="preserve">
     <value>Klicken Sie auf '+ Zeitplan hinzufügen', um Ihren ersten Fokusblock zu erstellen.</value>
   </data>
+  <data name="Nav_Settings.Content" xml:space="preserve">
+    <value>Einstellungen</value>
+  </data>
 </root>

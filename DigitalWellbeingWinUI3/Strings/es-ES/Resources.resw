@@ -595,4 +595,7 @@ Termina: {2}</value>
   <data name="Focus_EmptyStateDesc.Text" xml:space="preserve">
     <value>Haz clic en '+ Añadir horario' para crear tu primer bloque de enfoque.</value>
   </data>
+  <data name="Nav_Settings.Content" xml:space="preserve">
+    <value>Configuración</value>
+  </data>
 </root>

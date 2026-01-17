@@ -28,7 +28,7 @@
         </Grid>
 
 
-        <NavigationView x:Name="NavView" Grid.Row="1" IsBackButtonVisible="Collapsed" Loaded="NavView_Loaded" ItemInvoked="NavView_ItemInvoked">
+        <NavigationView x:Name="NavView" Grid.Row="1" IsBackButtonVisible="Collapsed" IsSettingsVisible="False" Loaded="NavView_Loaded" ItemInvoked="NavView_ItemInvoked">
             <NavigationView.MenuItems>
                 <NavigationViewItem l:Uids.Uid="Nav_Dashboard" Tag="Dashboard">
                     <NavigationViewItem.Icon>
@@ -56,7 +56,15 @@
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
             </NavigationView.MenuItems>
-
+            
+            <NavigationView.FooterMenuItems>
+                 <NavigationViewItem l:Uids.Uid="Nav_Settings" Tag="Settings">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE713;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+            </NavigationView.FooterMenuItems>
+            
             <Grid>
                 <Frame x:Name="ContentFrame" />
                 

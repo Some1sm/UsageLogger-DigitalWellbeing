@@ -593,4 +593,7 @@
   <data name="Focus_EmptyStateDesc.Text" xml:space="preserve">
     <value>Click '+ Add Schedule' to create your first focus block.</value>
   </data>
+  <data name="Nav_Settings.Content" xml:space="preserve">
+    <value>Settings</value>
+  </data>
 </root>

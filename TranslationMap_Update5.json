@@ -1,0 +1,32 @@
+{
+    "ca": {
+        "Nav_Settings.Content": "Configuració"
+    },
+    "es": {
+        "Nav_Settings.Content": "Configuración"
+    },
+    "fr": {
+        "Nav_Settings.Content": "Paramètres"
+    },
+    "de": {
+        "Nav_Settings.Content": "Einstellungen"
+    },
+    "it": {
+        "Nav_Settings.Content": "Impostazioni"
+    },
+    "pt-BR": {
+        "Nav_Settings.Content": "Configurações"
+    },
+    "zh-Hans": {
+        "Nav_Settings.Content": "设置"
+    },
+    "ja": {
+        "Nav_Settings.Content": "設定"
+    },
+    "ko": {
+        "Nav_Settings.Content": "설정"
+    },
+    "ru": {
+        "Nav_Settings.Content": "Настройки"
+    }
+}

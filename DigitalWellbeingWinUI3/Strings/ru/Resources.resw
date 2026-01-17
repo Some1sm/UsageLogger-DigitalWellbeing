@@ -595,4 +595,7 @@
   <data name="Focus_EmptyStateDesc.Text" xml:space="preserve">
     <value>Нажмите '+ Добавить расписание', чтобы создать первый блок.</value>
   </data>
+  <data name="Nav_Settings.Content" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
 </root>

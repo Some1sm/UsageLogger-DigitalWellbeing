@@ -595,4 +595,7 @@
   <data name="Focus_EmptyStateDesc.Text" xml:space="preserve">
     <value>첫 번째 집중 블록을 만들려면 '+ 일정 추가'를 클릭하세요.</value>
   </data>
+  <data name="Nav_Settings.Content" xml:space="preserve">
+    <value>설정</value>
+  </data>
 </root>

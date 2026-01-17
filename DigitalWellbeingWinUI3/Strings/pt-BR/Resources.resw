@@ -595,4 +595,7 @@ Fim: {2}</value>
   <data name="Focus_EmptyStateDesc.Text" xml:space="preserve">
     <value>Clique em '+ Adicionar Cronograma' para criar seu primeiro bloco de foco.</value>
   </data>
+  <data name="Nav_Settings.Content" xml:space="preserve">
+    <value>Configurações</value>
+  </data>
 </root>
