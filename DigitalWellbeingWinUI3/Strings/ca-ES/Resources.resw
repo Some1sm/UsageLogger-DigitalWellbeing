@@ -82,6 +82,9 @@
   <data name="History_TotalScreenTime.Text" xml:space="preserve">
     <value>Temps Total de Pantalla</value>
   </data>
+  <data name="History_TotalAfkTime.Text" xml:space="preserve">
+    <value>Temps Total Absent (AFK)</value>
+  </data>
   <data name="History_DailyTrends.Text" xml:space="preserve">
     <value>Mitjana del període anterior</value>
   </data>
@@ -97,8 +100,62 @@
   <data name="History_DistributionAnalysis.Text" xml:space="preserve">
     <value>Anàlisi de Distribució</value>
   </data>
+  <data name="Focus_Header.Text" xml:space="preserve">
+    <value>Horari d'Enfocament</value>
+  </data>
+  <data name="Focus_Description.Text" xml:space="preserve">
+    <value>Crea blocs d'enfocament per mantenir el rumb. L'aplicació farà complir el teu compromís.</value>
+  </data>
+  <data name="Focus_StatusActive" xml:space="preserve">
+    <value>Monitoratge Actiu</value>
+  </data>
+  <data name="Focus_StatusInactive" xml:space="preserve">
+    <value>Monitoratge Inactiu</value>
+  </data>
+  <data name="Focus_AddButton.Content" xml:space="preserve">
+    <value>+ Afegir Horari</value>
+  </data>
+  <data name="Focus_Toggle.OnContent" xml:space="preserve">
+    <value>Actiu</value>
+  </data>
+  <data name="Focus_Toggle.OffContent" xml:space="preserve">
+    <value>Inactiu</value>
+  </data>
+  <data name="Focus_EditButton.Content" xml:space="preserve">
+    <value>Editar</value>
+  </data>
+  <data name="Focus_Notification_Title" xml:space="preserve">
+    <value>🎯 Sessió d'Enfocament: {0}</value>
+  </data>
+  <data name="Focus_Notification_Chill" xml:space="preserve">
+    <value>Estàs usant '{0}' en lloc de '{1}'</value>
+  </data>
+  <data name="Focus_Status_ActiveSession" xml:space="preserve">
+    <value>Actiu: {0}</value>
+  </data>
+  <data name="Focus_Status_NoSession" xml:space="preserve">
+    <value>Monitorant (Sense sessió activa)</value>
+  </data>
+  <data name="Focus_Popup_Title" xml:space="preserve">
+    <value>🎯 Sessió d'Enfocament</value>
+  </data>
+  <data name="Focus_Popup_Content" xml:space="preserve">
+    <value>Hauries d'estar usant '{0}' ara!
+
+Sessió: {1}
+Acaba: {2}</value>
+  </data>
+  <data name="Focus_Popup_Primary" xml:space="preserve">
+    <value>Entès</value>
+  </data>
+  <data name="Focus_Popup_Close" xml:space="preserve">
+    <value>Desactivar Sessió</value>
+  </data>
   <data name="History_ActivityHeatmap.Text" xml:space="preserve">
     <value>Mapa de Calor</value>
+  </data>
+  <data name="History_Activity" xml:space="preserve">
+    <value>Activitat</value>
   </data>
   <data name="History_HeatmapTooltip.Text" xml:space="preserve">
     <value>Detalls al passar el ratolí</value>
@@ -133,6 +190,15 @@
   <data name="Settings_RunOnStartupDesc.Text" xml:space="preserve">
     <value>Tria què s'executa en iniciar Windows.</value>
   </data>
+  <data name="Settings_StartupModeNone.Content" xml:space="preserve">
+    <value>Desactivat</value>
+  </data>
+  <data name="Settings_StartupModeTracker.Content" xml:space="preserve">
+    <value>Només Rastreador</value>
+  </data>
+  <data name="Settings_StartupModeBoth.Content" xml:space="preserve">
+    <value>Rastreador + Interfície</value>
+  </data>
   <data name="Settings_MinimizeOnExit.Text" xml:space="preserve">
     <value>Minimitzar al Sortir</value>
   </data>
@@ -153,6 +219,24 @@
   </data>
   <data name="Settings_ExcludedAppsDesc.Text" xml:space="preserve">
     <value>Doble clic per eliminar una app exclosa.</value>
+  </data>
+  <data name="Settings_HiddenSubApps.Text" xml:space="preserve">
+    <value>Sub-Apps Ocultes</value>
+  </data>
+  <data name="Settings_HiddenSubAppsDesc.Text" xml:space="preserve">
+    <value>Paraules clau per ocultar. Títols coincidents s'uneixen a l'app pare.</value>
+  </data>
+  <data name="Settings_BtnAdd.Content" xml:space="preserve">
+    <value>Afegir</value>
+  </data>
+  <data name="Settings_HideRetroactively.Header" xml:space="preserve">
+    <value>Aplicar retroactivament</value>
+  </data>
+  <data name="Settings_HideRetroactively.OnContent" xml:space="preserve">
+    <value>Ocultar també a l'historial</value>
+  </data>
+  <data name="Settings_HideRetroactively.OffContent" xml:space="preserve">
+    <value>Només nova activitat</value>
   </data>
   <data name="Settings_TimeLimits.Text" xml:space="preserve">
     <value>Límits de Temps</value>
@@ -204,6 +288,12 @@
   </data>
   <data name="Settings_ThemeDark.Content" xml:space="preserve">
     <value>Fosc</value>
+  </data>
+  <data name="Settings_Language.Text" xml:space="preserve">
+    <value>Idioma</value>
+  </data>
+  <data name="Settings_LanguageDesc.Text" xml:space="preserve">
+    <value>Selecciona idioma (requereix reiniciar)</value>
   </data>
   <data name="Settings_CombinedAudio.Text" xml:space="preserve">
     <value>Vista d'Àudio Combinada</value>
@@ -267,6 +357,9 @@
   </data>
   <data name="Nav_Sessions.Content" xml:space="preserve">
     <value>Ús Detallat</value>
+  </data>
+  <data name="Nav_Focus.Content" xml:space="preserve">
+    <value>Enfocament</value>
   </data>
   <data name="Tray_Open.Text" xml:space="preserve">
     <value>Obrir</value>
@@ -333,99 +426,6 @@
   </data>
   <data name="Sessions_ZoomIn.Content" xml:space="preserve">
     <value>Apropar</value>
-  </data>
-  <data name="History_Activity" xml:space="preserve">
-    <value>Activitat</value>
-  </data>
-  <data name="Nav_Focus.Content" xml:space="preserve">
-    <value>Enfocament</value>
-  </data>
-  <data name="History_TotalAfkTime.Text" xml:space="preserve">
-    <value>Temps Total Absent (AFK)</value>
-  </data>
-  <data name="Focus_Header.Text" xml:space="preserve">
-    <value>Horari d'Enfocament</value>
-  </data>
-  <data name="Focus_Description.Text" xml:space="preserve">
-    <value>Crea blocs d'enfocament per mantenir el rumb. L'aplicació farà complir el teu compromís.</value>
-  </data>
-  <data name="Focus_StatusActive" xml:space="preserve">
-    <value>Monitoratge Actiu</value>
-  </data>
-  <data name="Focus_StatusInactive" xml:space="preserve">
-    <value>Monitoratge Inactiu</value>
-  </data>
-  <data name="Focus_AddButton.Content" xml:space="preserve">
-    <value>+ Afegir Horari</value>
-  </data>
-  <data name="Focus_Toggle.OnContent" xml:space="preserve">
-    <value>Actiu</value>
-  </data>
-  <data name="Focus_Toggle.OffContent" xml:space="preserve">
-    <value>Inactiu</value>
-  </data>
-  <data name="Focus_EditButton.Content" xml:space="preserve">
-    <value>Editar</value>
-  </data>
-  <data name="Focus_Notification_Title" xml:space="preserve">
-    <value>🎯 Sessió d'Enfocament: {0}</value>
-  </data>
-  <data name="Focus_Notification_Chill" xml:space="preserve">
-    <value>Estàs usant '{0}' en lloc de '{1}'</value>
-  </data>
-  <data name="Focus_Status_ActiveSession" xml:space="preserve">
-    <value>Actiu: {0}</value>
-  </data>
-  <data name="Focus_Status_NoSession" xml:space="preserve">
-    <value>Monitorant (Sense sessió activa)</value>
-  </data>
-  <data name="Focus_Popup_Title" xml:space="preserve">
-    <value>🎯 Sessió d'Enfocament</value>
-  </data>
-  <data name="Focus_Popup_Content" xml:space="preserve">
-    <value>Hauries d'estar usant '{0}' ara!
-
-Sessió: {1}
-Acaba: {2}</value>
-  </data>
-  <data name="Focus_Popup_Primary" xml:space="preserve">
-    <value>Entès</value>
-  </data>
-  <data name="Focus_Popup_Close" xml:space="preserve">
-    <value>Desactivar Sessió</value>
-  </data>
-  <data name="Settings_StartupModeNone.Content" xml:space="preserve">
-    <value>Desactivat</value>
-  </data>
-  <data name="Settings_StartupModeTracker.Content" xml:space="preserve">
-    <value>Només Rastreador</value>
-  </data>
-  <data name="Settings_StartupModeBoth.Content" xml:space="preserve">
-    <value>Rastreador + Interfície</value>
-  </data>
-  <data name="Settings_HiddenSubApps.Text" xml:space="preserve">
-    <value>Sub-Apps Ocultes</value>
-  </data>
-  <data name="Settings_HiddenSubAppsDesc.Text" xml:space="preserve">
-    <value>Paraules clau per ocultar. Títols coincidents s'uneixen a l'app pare.</value>
-  </data>
-  <data name="Settings_BtnAdd.Content" xml:space="preserve">
-    <value>Afegir</value>
-  </data>
-  <data name="Settings_HideRetroactively.Header" xml:space="preserve">
-    <value>Aplicar retroactivament</value>
-  </data>
-  <data name="Settings_HideRetroactively.OnContent" xml:space="preserve">
-    <value>Ocultar també a l'historial</value>
-  </data>
-  <data name="Settings_HideRetroactively.OffContent" xml:space="preserve">
-    <value>Només nova activitat</value>
-  </data>
-  <data name="Settings_Language.Text" xml:space="preserve">
-    <value>Idioma</value>
-  </data>
-  <data name="Settings_LanguageDesc.Text" xml:space="preserve">
-    <value>Selecciona idioma (requereix reiniciar)</value>
   </data>
   <data name="Nav_MiscData.Content" xml:space="preserve">
     <value>Dades Curioses</value>

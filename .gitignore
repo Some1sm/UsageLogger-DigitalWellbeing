@@ -362,12 +362,10 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-# Advanced Installer caches and default build output
+# default build output
 *-cache/
 *-SetupFiles/
 Prerequisites/
-Setup/Setup.back.aip
-Setup/Setup.back*.aip
 Release_Build/
 DigitalWellbeing_Installer.exe
 DigitalWellbeing_Portable.zip
