@@ -598,4 +598,172 @@
   <data name="Nav_Settings.Content" xml:space="preserve">
     <value>設定</value>
   </data>
+  <data name="Focus_Dialog_Title.Title" xml:space="preserve">
+    <value>フォーカスセッション</value>
+  </data>
+  <data name="Focus_Dialog_Save" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="Focus_Dialog_Cancel" xml:space="preserve">
+    <value>キャンセル</value>
+  </data>
+  <data name="Focus_Dialog_NameHeader.Header" xml:space="preserve">
+    <value>セッション名</value>
+  </data>
+  <data name="Focus_Dialog_NamePlaceholder" xml:space="preserve">
+    <value>例: 朝のコーディング</value>
+  </data>
+  <data name="Focus_Dialog_AppHeader.Text" xml:space="preserve">
+    <value>対象アプリ</value>
+  </data>
+  <data name="Focus_Dialog_AppPlaceholder" xml:space="preserve">
+    <value>検索するには入力...</value>
+  </data>
+  <data name="Focus_Dialog_AppAssist.Text" xml:space="preserve">
+    <value>履歴からアプリを選択</value>
+  </data>
+  <data name="Focus_Dialog_SubAppHeader.Header" xml:space="preserve">
+    <value>サブアプリ / キーワード (任意)</value>
+  </data>
+  <data name="Focus_Dialog_SubAppPlaceholder" xml:space="preserve">
+    <value>例: GitHub, YouTube</value>
+  </data>
+  <data name="Focus_Dialog_StartTime.Header" xml:space="preserve">
+    <value>開始時間</value>
+  </data>
+  <data name="Focus_Dialog_Duration.Header" xml:space="preserve">
+    <value>期間 (分)</value>
+  </data>
+  <data name="Focus_Dialog_DaysHeader.Text" xml:space="preserve">
+    <value>繰り返し</value>
+  </data>
+  <data name="Focus_Dialog_OneTimeHint.Text" xml:space="preserve">
+    <value>1回限りの場合はすべてオフ</value>
+  </data>
+  <data name="Focus_Dialog_ModeHeader.Text" xml:space="preserve">
+    <value>実行モード</value>
+  </data>
+  <data name="Focus_Dialog_Mode_Chill.Content" xml:space="preserve">
+    <value>🟢 チル - 通知のみ</value>
+  </data>
+  <data name="Focus_Dialog_Mode_Normal.Content" xml:space="preserve">
+    <value>🟠 通常 - ポップアップ</value>
+  </data>
+  <data name="Focus_Dialog_Mode_Focus.Content" xml:space="preserve">
+    <value>🔴 フォーカス - アプリを閉じる</value>
+  </data>
+  <data name="Focus_Session_DefaultName" xml:space="preserve">
+    <value>フォーカスセッション</value>
+  </data>
+  <data name="FocusDialog.Title" xml:space="preserve">
+    <value>フォーカスセッション</value>
+  </data>
+  <data name="FocusDialog.PrimaryButtonText" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="FocusDialog.CloseButtonText" xml:space="preserve">
+    <value>キャンセル</value>
+  </data>
+  <data name="FocusDialog_NameBox.Header" xml:space="preserve">
+    <value>セッション名</value>
+  </data>
+  <data name="FocusDialog_NameBox.PlaceholderText" xml:space="preserve">
+    <value>例: 朝のコーディング</value>
+  </data>
+  <data name="FocusDialog_AppHeader.Text" xml:space="preserve">
+    <value>対象アプリ</value>
+  </data>
+  <data name="FocusDialog_AppSuggest.PlaceholderText" xml:space="preserve">
+    <value>検索するには入力...</value>
+  </data>
+  <data name="FocusDialog_AppAssist.Text" xml:space="preserve">
+    <value>履歴からアプリを選択</value>
+  </data>
+  <data name="FocusDialog_SubAppBox.Header" xml:space="preserve">
+    <value>サブアプリ / キーワード (任意)</value>
+  </data>
+  <data name="FocusDialog_SubAppBox.PlaceholderText" xml:space="preserve">
+    <value>例: GitHub, YouTube</value>
+  </data>
+  <data name="FocusDialog_StartTime.Header" xml:space="preserve">
+    <value>開始時間</value>
+  </data>
+  <data name="FocusDialog_Duration.Header" xml:space="preserve">
+    <value>期間 (分)</value>
+  </data>
+  <data name="FocusDialog_DaysHeader.Text" xml:space="preserve">
+    <value>繰り返し</value>
+  </data>
+  <data name="FocusDialog_OneTimeHint.Text" xml:space="preserve">
+    <value>1回限りの場合はすべてオフ</value>
+  </data>
+  <data name="FocusDialog_ModeHeader.Text" xml:space="preserve">
+    <value>実行モード</value>
+  </data>
+  <data name="FocusDialog_Mode_Chill.Content" xml:space="preserve">
+    <value>🟢 チル - 通知のみ</value>
+  </data>
+  <data name="FocusDialog_Mode_Normal.Content" xml:space="preserve">
+    <value>🟠 通常 - ポップアップ</value>
+  </data>
+  <data name="FocusDialog_Mode_Focus.Content" xml:space="preserve">
+    <value>🔴 フォーカス - アプリを閉じる</value>
+  </data>
+  <data name="RuleDialog.Title" xml:space="preserve">
+    <value>ルールを編集</value>
+  </data>
+  <data name="RuleDialog.PrimaryButtonText" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="RuleDialog.SecondaryButtonText" xml:space="preserve">
+    <value>キャンセル</value>
+  </data>
+  <data name="RuleDialog_ProcessBox.Header" xml:space="preserve">
+    <value>プロセス名 (任意)</value>
+  </data>
+  <data name="RuleDialog_ProcessBox.PlaceholderText" xml:space="preserve">
+    <value>例: chrome (空で全て)</value>
+  </data>
+  <data name="RuleDialog_PatternBox.Header" xml:space="preserve">
+    <value>マッチパターン (タイトル)</value>
+  </data>
+  <data name="RuleDialog_PatternBox.PlaceholderText" xml:space="preserve">
+    <value>テキストまたは正規表現</value>
+  </data>
+  <data name="RuleDialog_TypeBox.Header" xml:space="preserve">
+    <value>マッチタイプ</value>
+  </data>
+  <data name="RuleDialog_Type_Contains.Content" xml:space="preserve">
+    <value>含む (デフォルト)</value>
+  </data>
+  <data name="RuleDialog_Type_StartsWith.Content" xml:space="preserve">
+    <value>で始まる</value>
+  </data>
+  <data name="RuleDialog_Type_EndsWith.Content" xml:space="preserve">
+    <value>で終わる</value>
+  </data>
+  <data name="RuleDialog_Type_Exact.Content" xml:space="preserve">
+    <value>完全一致</value>
+  </data>
+  <data name="RuleDialog_Type_Regex.Content" xml:space="preserve">
+    <value>正規表現</value>
+  </data>
+  <data name="RuleDialog_ReplacementBox.Header" xml:space="preserve">
+    <value>置換後</value>
+  </data>
+  <data name="RuleDialog_ReplacementBox.PlaceholderText" xml:space="preserve">
+    <value>新しいテキスト ($1 グループ対応)</value>
+  </data>
+  <data name="RuleDialog_TestExpander.Header" xml:space="preserve">
+    <value>ルールをテスト</value>
+  </data>
+  <data name="RuleDialog_TestInput.Header" xml:space="preserve">
+    <value>テスト入力</value>
+  </data>
+  <data name="RuleDialog_TestInput.PlaceholderText" xml:space="preserve">
+    <value>ここにウィンドウタイトルを貼り付け</value>
+  </data>
+  <data name="RuleDialog_ResultLabel.Text" xml:space="preserve">
+    <value>結果:</value>
+  </data>
 </root>

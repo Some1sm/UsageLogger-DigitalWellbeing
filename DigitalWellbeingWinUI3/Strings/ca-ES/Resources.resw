@@ -598,4 +598,229 @@ Acaba: {2}</value>
   <data name="Nav_Settings.Content" xml:space="preserve">
     <value>Configuració</value>
   </data>
+  <data name="Focus_Dialog_Title.Title" xml:space="preserve">
+    <value>Sessió de Focus</value>
+  </data>
+  <data name="Focus_Dialog_Save" xml:space="preserve">
+    <value>Desa</value>
+  </data>
+  <data name="Focus_Dialog_Cancel" xml:space="preserve">
+    <value>Cancel·la</value>
+  </data>
+  <data name="Focus_Dialog_NameHeader.Header" xml:space="preserve">
+    <value>Nom de la sessió</value>
+  </data>
+  <data name="Focus_Dialog_NamePlaceholder" xml:space="preserve">
+    <value>p. ex., Programació matinera</value>
+  </data>
+  <data name="Focus_Dialog_AppHeader.Text" xml:space="preserve">
+    <value>Aplicació objectiu</value>
+  </data>
+  <data name="Focus_Dialog_AppPlaceholder" xml:space="preserve">
+    <value>Escriu per cercar aplicacions...</value>
+  </data>
+  <data name="Focus_Dialog_AppAssist.Text" xml:space="preserve">
+    <value>Selecciona una aplicació del teu historial d'ús</value>
+  </data>
+  <data name="Focus_Dialog_SubAppHeader.Header" xml:space="preserve">
+    <value>Sub-App / Paraula clau (Opcional)</value>
+  </data>
+  <data name="Focus_Dialog_SubAppPlaceholder" xml:space="preserve">
+    <value>p. ex., GitHub, YouTube</value>
+  </data>
+  <data name="Focus_Dialog_StartTime.Header" xml:space="preserve">
+    <value>Hora d'inici</value>
+  </data>
+  <data name="Focus_Dialog_Duration.Header" xml:space="preserve">
+    <value>Durada (minuts)</value>
+  </data>
+  <data name="Focus_Dialog_DaysHeader.Text" xml:space="preserve">
+    <value>Repeteix els dies</value>
+  </data>
+  <data name="Focus_Dialog_OneTimeHint.Text" xml:space="preserve">
+    <value>Deixa-ho tot desactivat per a una sessió única</value>
+  </data>
+  <data name="Focus_Dialog_ModeHeader.Text" xml:space="preserve">
+    <value>Mode d'execució</value>
+  </data>
+  <data name="Focus_Dialog_Mode_Chill.Content" xml:space="preserve">
+    <value>🟢 Relax - Només notificacions</value>
+  </data>
+  <data name="Focus_Dialog_Mode_Normal.Content" xml:space="preserve">
+    <value>🟠 Normal - Diàleg emergent</value>
+  </data>
+  <data name="Focus_Dialog_Mode_Focus.Content" xml:space="preserve">
+    <value>🔴 Focus - Tanca aplicacions no autoritzades</value>
+  </data>
+  <data name="Focus_Session_DefaultName" xml:space="preserve">
+    <value>Sessió de Focus</value>
+  </data>
+  <data name="Rule_Dialog_Title.Title" xml:space="preserve">
+    <value>Edita la Regla</value>
+  </data>
+  <data name="Rule_Dialog_Save" xml:space="preserve">
+    <value>Desa</value>
+  </data>
+  <data name="Rule_Dialog_Cancel" xml:space="preserve">
+    <value>Cancel·la</value>
+  </data>
+  <data name="Rule_Dialog_ProcessHeader.Header" xml:space="preserve">
+    <value>Nom del procés (Opcional)</value>
+  </data>
+  <data name="Rule_Dialog_ProcessPlaceholder" xml:space="preserve">
+    <value>p. ex. chrome (buit per a tots)</value>
+  </data>
+  <data name="Rule_Dialog_PatternHeader.Header" xml:space="preserve">
+    <value>Patró de coincidència (Títol)</value>
+  </data>
+  <data name="Rule_Dialog_PatternPlaceholder" xml:space="preserve">
+    <value>Text o Regex per coincidir</value>
+  </data>
+  <data name="Rule_Dialog_TypeHeader.Header" xml:space="preserve">
+    <value>Tipus de coincidència</value>
+  </data>
+  <data name="Rule_Dialog_Type_Contains.Content" xml:space="preserve">
+    <value>Conté (Predeterminat)</value>
+  </data>
+  <data name="Rule_Dialog_Type_StartsWith.Content" xml:space="preserve">
+    <value>Comença amb</value>
+  </data>
+  <data name="Rule_Dialog_Type_EndsWith.Content" xml:space="preserve">
+    <value>Acaba amb</value>
+  </data>
+  <data name="Rule_Dialog_Type_Exact.Content" xml:space="preserve">
+    <value>Coincidència exacta</value>
+  </data>
+  <data name="Rule_Dialog_Type_Regex.Content" xml:space="preserve">
+    <value>Expressió Regular</value>
+  </data>
+  <data name="Rule_Dialog_ReplacementHeader.Header" xml:space="preserve">
+    <value>Reemplaçament</value>
+  </data>
+  <data name="Rule_Dialog_ReplacementPlaceholder" xml:space="preserve">
+    <value>Nou text (suporta $1 grups de captura)</value>
+  </data>
+  <data name="Rule_Dialog_TestHeader.Header" xml:space="preserve">
+    <value>Prova la Regla</value>
+  </data>
+  <data name="Rule_Dialog_TestInput.Header" xml:space="preserve">
+    <value>Entrada de prova</value>
+  </data>
+  <data name="Rule_Dialog_TestPlaceholder" xml:space="preserve">
+    <value>Enganxa un títol de finestra aquí</value>
+  </data>
+  <data name="Rule_Dialog_Result.Text" xml:space="preserve">
+    <value>Resultat:</value>
+  </data>
+  <data name="FocusDialog.Title" xml:space="preserve">
+    <value>Sessió de Focus</value>
+  </data>
+  <data name="FocusDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Desa</value>
+  </data>
+  <data name="FocusDialog.CloseButtonText" xml:space="preserve">
+    <value>Cancel·la</value>
+  </data>
+  <data name="FocusDialog_NameBox.Header" xml:space="preserve">
+    <value>Nom de la sessió</value>
+  </data>
+  <data name="FocusDialog_NameBox.PlaceholderText" xml:space="preserve">
+    <value>p. ex., Programació matinera</value>
+  </data>
+  <data name="FocusDialog_AppHeader.Text" xml:space="preserve">
+    <value>Aplicació objectiu</value>
+  </data>
+  <data name="FocusDialog_AppSuggest.PlaceholderText" xml:space="preserve">
+    <value>Escriu per cercar aplicacions...</value>
+  </data>
+  <data name="FocusDialog_AppAssist.Text" xml:space="preserve">
+    <value>Selecciona una aplicació del teu historial d'ús</value>
+  </data>
+  <data name="FocusDialog_SubAppBox.Header" xml:space="preserve">
+    <value>Sub-App / Paraula clau (Opcional)</value>
+  </data>
+  <data name="FocusDialog_SubAppBox.PlaceholderText" xml:space="preserve">
+    <value>p. ex., GitHub, YouTube</value>
+  </data>
+  <data name="FocusDialog_StartTime.Header" xml:space="preserve">
+    <value>Hora d'inici</value>
+  </data>
+  <data name="FocusDialog_Duration.Header" xml:space="preserve">
+    <value>Durada (minuts)</value>
+  </data>
+  <data name="FocusDialog_DaysHeader.Text" xml:space="preserve">
+    <value>Repeteix els dies</value>
+  </data>
+  <data name="FocusDialog_OneTimeHint.Text" xml:space="preserve">
+    <value>Deixa-ho tot desactivat per a una sessió única</value>
+  </data>
+  <data name="FocusDialog_ModeHeader.Text" xml:space="preserve">
+    <value>Mode d'execució</value>
+  </data>
+  <data name="FocusDialog_Mode_Chill.Content" xml:space="preserve">
+    <value>🟢 Relax - Només notificacions</value>
+  </data>
+  <data name="FocusDialog_Mode_Normal.Content" xml:space="preserve">
+    <value>🟠 Normal - Diàleg emergent</value>
+  </data>
+  <data name="FocusDialog_Mode_Focus.Content" xml:space="preserve">
+    <value>🔴 Focus - Tanca aplicacions no autoritzades</value>
+  </data>
+  <data name="RuleDialog.Title" xml:space="preserve">
+    <value>Edita la Regla</value>
+  </data>
+  <data name="RuleDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Desa</value>
+  </data>
+  <data name="RuleDialog.SecondaryButtonText" xml:space="preserve">
+    <value>Cancel·la</value>
+  </data>
+  <data name="RuleDialog_ProcessBox.Header" xml:space="preserve">
+    <value>Nom del procés (Opcional)</value>
+  </data>
+  <data name="RuleDialog_ProcessBox.PlaceholderText" xml:space="preserve">
+    <value>p. ex. chrome (buit per a tots)</value>
+  </data>
+  <data name="RuleDialog_PatternBox.Header" xml:space="preserve">
+    <value>Patró de coincidència (Títol)</value>
+  </data>
+  <data name="RuleDialog_PatternBox.PlaceholderText" xml:space="preserve">
+    <value>Text o Regex per coincidir</value>
+  </data>
+  <data name="RuleDialog_TypeBox.Header" xml:space="preserve">
+    <value>Tipus de coincidència</value>
+  </data>
+  <data name="RuleDialog_Type_Contains.Content" xml:space="preserve">
+    <value>Conté (Predeterminat)</value>
+  </data>
+  <data name="RuleDialog_Type_StartsWith.Content" xml:space="preserve">
+    <value>Comença amb</value>
+  </data>
+  <data name="RuleDialog_Type_EndsWith.Content" xml:space="preserve">
+    <value>Acaba amb</value>
+  </data>
+  <data name="RuleDialog_Type_Exact.Content" xml:space="preserve">
+    <value>Coincidència exacta</value>
+  </data>
+  <data name="RuleDialog_Type_Regex.Content" xml:space="preserve">
+    <value>Expressió Regular</value>
+  </data>
+  <data name="RuleDialog_ReplacementBox.Header" xml:space="preserve">
+    <value>Reemplaçament</value>
+  </data>
+  <data name="RuleDialog_ReplacementBox.PlaceholderText" xml:space="preserve">
+    <value>Nou text (suporta $1 grups de captura)</value>
+  </data>
+  <data name="RuleDialog_TestExpander.Header" xml:space="preserve">
+    <value>Prova la Regla</value>
+  </data>
+  <data name="RuleDialog_TestInput.Header" xml:space="preserve">
+    <value>Entrada de prova</value>
+  </data>
+  <data name="RuleDialog_TestInput.PlaceholderText" xml:space="preserve">
+    <value>Enganxa un títol de finestra aquí</value>
+  </data>
+  <data name="RuleDialog_ResultLabel.Text" xml:space="preserve">
+    <value>Resultat:</value>
+  </data>
 </root>

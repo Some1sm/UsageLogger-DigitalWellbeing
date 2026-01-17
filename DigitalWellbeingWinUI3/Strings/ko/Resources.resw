@@ -598,4 +598,172 @@
   <data name="Nav_Settings.Content" xml:space="preserve">
     <value>설정</value>
   </data>
+  <data name="Focus_Dialog_Title.Title" xml:space="preserve">
+    <value>집중 세션</value>
+  </data>
+  <data name="Focus_Dialog_Save" xml:space="preserve">
+    <value>저장</value>
+  </data>
+  <data name="Focus_Dialog_Cancel" xml:space="preserve">
+    <value>취소</value>
+  </data>
+  <data name="Focus_Dialog_NameHeader.Header" xml:space="preserve">
+    <value>세션 이름</value>
+  </data>
+  <data name="Focus_Dialog_NamePlaceholder" xml:space="preserve">
+    <value>예: 아침 코딩</value>
+  </data>
+  <data name="Focus_Dialog_AppHeader.Text" xml:space="preserve">
+    <value>대상 앱</value>
+  </data>
+  <data name="Focus_Dialog_AppPlaceholder" xml:space="preserve">
+    <value>검색하려면 입력...</value>
+  </data>
+  <data name="Focus_Dialog_AppAssist.Text" xml:space="preserve">
+    <value>기록에서 앱 선택</value>
+  </data>
+  <data name="Focus_Dialog_SubAppHeader.Header" xml:space="preserve">
+    <value>서브 앱 / 키워드 (선택)</value>
+  </data>
+  <data name="Focus_Dialog_SubAppPlaceholder" xml:space="preserve">
+    <value>예: GitHub, YouTube</value>
+  </data>
+  <data name="Focus_Dialog_StartTime.Header" xml:space="preserve">
+    <value>시작 시간</value>
+  </data>
+  <data name="Focus_Dialog_Duration.Header" xml:space="preserve">
+    <value>지속 시간 (분)</value>
+  </data>
+  <data name="Focus_Dialog_DaysHeader.Text" xml:space="preserve">
+    <value>반복 요일</value>
+  </data>
+  <data name="Focus_Dialog_OneTimeHint.Text" xml:space="preserve">
+    <value>일회성 세션은 모두 끄기</value>
+  </data>
+  <data name="Focus_Dialog_ModeHeader.Text" xml:space="preserve">
+    <value>실행 모드</value>
+  </data>
+  <data name="Focus_Dialog_Mode_Chill.Content" xml:space="preserve">
+    <value>🟢 휴식 - 알림만</value>
+  </data>
+  <data name="Focus_Dialog_Mode_Normal.Content" xml:space="preserve">
+    <value>🟠 보통 - 팝업 대화상자</value>
+  </data>
+  <data name="Focus_Dialog_Mode_Focus.Content" xml:space="preserve">
+    <value>🔴 집중 - 앱 종료</value>
+  </data>
+  <data name="Focus_Session_DefaultName" xml:space="preserve">
+    <value>집중 세션</value>
+  </data>
+  <data name="FocusDialog.Title" xml:space="preserve">
+    <value>집중 세션</value>
+  </data>
+  <data name="FocusDialog.PrimaryButtonText" xml:space="preserve">
+    <value>저장</value>
+  </data>
+  <data name="FocusDialog.CloseButtonText" xml:space="preserve">
+    <value>취소</value>
+  </data>
+  <data name="FocusDialog_NameBox.Header" xml:space="preserve">
+    <value>세션 이름</value>
+  </data>
+  <data name="FocusDialog_NameBox.PlaceholderText" xml:space="preserve">
+    <value>예: 아침 코딩</value>
+  </data>
+  <data name="FocusDialog_AppHeader.Text" xml:space="preserve">
+    <value>대상 앱</value>
+  </data>
+  <data name="FocusDialog_AppSuggest.PlaceholderText" xml:space="preserve">
+    <value>검색하려면 입력...</value>
+  </data>
+  <data name="FocusDialog_AppAssist.Text" xml:space="preserve">
+    <value>기록에서 앱 선택</value>
+  </data>
+  <data name="FocusDialog_SubAppBox.Header" xml:space="preserve">
+    <value>서브 앱 / 키워드 (선택)</value>
+  </data>
+  <data name="FocusDialog_SubAppBox.PlaceholderText" xml:space="preserve">
+    <value>예: GitHub, YouTube</value>
+  </data>
+  <data name="FocusDialog_StartTime.Header" xml:space="preserve">
+    <value>시작 시간</value>
+  </data>
+  <data name="FocusDialog_Duration.Header" xml:space="preserve">
+    <value>지속 시간 (분)</value>
+  </data>
+  <data name="FocusDialog_DaysHeader.Text" xml:space="preserve">
+    <value>반복 요일</value>
+  </data>
+  <data name="FocusDialog_OneTimeHint.Text" xml:space="preserve">
+    <value>일회성 세션은 모두 끄기</value>
+  </data>
+  <data name="FocusDialog_ModeHeader.Text" xml:space="preserve">
+    <value>실행 모드</value>
+  </data>
+  <data name="FocusDialog_Mode_Chill.Content" xml:space="preserve">
+    <value>🟢 휴식 - 알림만</value>
+  </data>
+  <data name="FocusDialog_Mode_Normal.Content" xml:space="preserve">
+    <value>🟠 보통 - 팝업 대화상자</value>
+  </data>
+  <data name="FocusDialog_Mode_Focus.Content" xml:space="preserve">
+    <value>🔴 집중 - 앱 종료</value>
+  </data>
+  <data name="RuleDialog.Title" xml:space="preserve">
+    <value>규칙 편집</value>
+  </data>
+  <data name="RuleDialog.PrimaryButtonText" xml:space="preserve">
+    <value>저장</value>
+  </data>
+  <data name="RuleDialog.SecondaryButtonText" xml:space="preserve">
+    <value>취소</value>
+  </data>
+  <data name="RuleDialog_ProcessBox.Header" xml:space="preserve">
+    <value>프로세스 이름 (선택)</value>
+  </data>
+  <data name="RuleDialog_ProcessBox.PlaceholderText" xml:space="preserve">
+    <value>예: chrome (비워두면 모두)</value>
+  </data>
+  <data name="RuleDialog_PatternBox.Header" xml:space="preserve">
+    <value>일치 패턴 (제목)</value>
+  </data>
+  <data name="RuleDialog_PatternBox.PlaceholderText" xml:space="preserve">
+    <value>텍스트 또는 정규식</value>
+  </data>
+  <data name="RuleDialog_TypeBox.Header" xml:space="preserve">
+    <value>일치 유형</value>
+  </data>
+  <data name="RuleDialog_Type_Contains.Content" xml:space="preserve">
+    <value>포함 (기본값)</value>
+  </data>
+  <data name="RuleDialog_Type_StartsWith.Content" xml:space="preserve">
+    <value>로 시작</value>
+  </data>
+  <data name="RuleDialog_Type_EndsWith.Content" xml:space="preserve">
+    <value>로 끝남</value>
+  </data>
+  <data name="RuleDialog_Type_Exact.Content" xml:space="preserve">
+    <value>정확히 일치</value>
+  </data>
+  <data name="RuleDialog_Type_Regex.Content" xml:space="preserve">
+    <value>정규 표현식</value>
+  </data>
+  <data name="RuleDialog_ReplacementBox.Header" xml:space="preserve">
+    <value>교체</value>
+  </data>
+  <data name="RuleDialog_ReplacementBox.PlaceholderText" xml:space="preserve">
+    <value>새 텍스트 ($1 그룹 지원)</value>
+  </data>
+  <data name="RuleDialog_TestExpander.Header" xml:space="preserve">
+    <value>규칙 테스트</value>
+  </data>
+  <data name="RuleDialog_TestInput.Header" xml:space="preserve">
+    <value>테스트 입력</value>
+  </data>
+  <data name="RuleDialog_TestInput.PlaceholderText" xml:space="preserve">
+    <value>여기 창 제목 붙여넣기</value>
+  </data>
+  <data name="RuleDialog_ResultLabel.Text" xml:space="preserve">
+    <value>결과:</value>
+  </data>
 </root>

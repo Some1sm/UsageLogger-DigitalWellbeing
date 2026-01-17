@@ -598,4 +598,172 @@
   <data name="Nav_Settings.Content" xml:space="preserve">
     <value>设置</value>
   </data>
+  <data name="Focus_Dialog_Title.Title" xml:space="preserve">
+    <value>专注会话</value>
+  </data>
+  <data name="Focus_Dialog_Save" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="Focus_Dialog_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Focus_Dialog_NameHeader.Header" xml:space="preserve">
+    <value>会话名称</value>
+  </data>
+  <data name="Focus_Dialog_NamePlaceholder" xml:space="preserve">
+    <value>例如：早晨编程</value>
+  </data>
+  <data name="Focus_Dialog_AppHeader.Text" xml:space="preserve">
+    <value>目标应用</value>
+  </data>
+  <data name="Focus_Dialog_AppPlaceholder" xml:space="preserve">
+    <value>输入以搜索...</value>
+  </data>
+  <data name="Focus_Dialog_AppAssist.Text" xml:space="preserve">
+    <value>从历史记录中选择</value>
+  </data>
+  <data name="Focus_Dialog_SubAppHeader.Header" xml:space="preserve">
+    <value>子应用 / 关键词 (可选)</value>
+  </data>
+  <data name="Focus_Dialog_SubAppPlaceholder" xml:space="preserve">
+    <value>例如：GitHub, YouTube</value>
+  </data>
+  <data name="Focus_Dialog_StartTime.Header" xml:space="preserve">
+    <value>开始时间</value>
+  </data>
+  <data name="Focus_Dialog_Duration.Header" xml:space="preserve">
+    <value>持续时间 (分钟)</value>
+  </data>
+  <data name="Focus_Dialog_DaysHeader.Text" xml:space="preserve">
+    <value>重复日期</value>
+  </data>
+  <data name="Focus_Dialog_OneTimeHint.Text" xml:space="preserve">
+    <value>全部关闭即为单次会话</value>
+  </data>
+  <data name="Focus_Dialog_ModeHeader.Text" xml:space="preserve">
+    <value>执行模式</value>
+  </data>
+  <data name="Focus_Dialog_Mode_Chill.Content" xml:space="preserve">
+    <value>🟢 放松 - 仅通知</value>
+  </data>
+  <data name="Focus_Dialog_Mode_Normal.Content" xml:space="preserve">
+    <value>🟠 正常 - 弹窗提示</value>
+  </data>
+  <data name="Focus_Dialog_Mode_Focus.Content" xml:space="preserve">
+    <value>🔴 专注 - 关闭未授权应用</value>
+  </data>
+  <data name="Focus_Session_DefaultName" xml:space="preserve">
+    <value>专注会话</value>
+  </data>
+  <data name="FocusDialog.Title" xml:space="preserve">
+    <value>专注会话</value>
+  </data>
+  <data name="FocusDialog.PrimaryButtonText" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="FocusDialog.CloseButtonText" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="FocusDialog_NameBox.Header" xml:space="preserve">
+    <value>会话名称</value>
+  </data>
+  <data name="FocusDialog_NameBox.PlaceholderText" xml:space="preserve">
+    <value>例如：早晨编程</value>
+  </data>
+  <data name="FocusDialog_AppHeader.Text" xml:space="preserve">
+    <value>目标应用</value>
+  </data>
+  <data name="FocusDialog_AppSuggest.PlaceholderText" xml:space="preserve">
+    <value>输入以搜索...</value>
+  </data>
+  <data name="FocusDialog_AppAssist.Text" xml:space="preserve">
+    <value>从历史记录中选择</value>
+  </data>
+  <data name="FocusDialog_SubAppBox.Header" xml:space="preserve">
+    <value>子应用 / 关键词 (可选)</value>
+  </data>
+  <data name="FocusDialog_SubAppBox.PlaceholderText" xml:space="preserve">
+    <value>例如：GitHub, YouTube</value>
+  </data>
+  <data name="FocusDialog_StartTime.Header" xml:space="preserve">
+    <value>开始时间</value>
+  </data>
+  <data name="FocusDialog_Duration.Header" xml:space="preserve">
+    <value>持续时间 (分钟)</value>
+  </data>
+  <data name="FocusDialog_DaysHeader.Text" xml:space="preserve">
+    <value>重复日期</value>
+  </data>
+  <data name="FocusDialog_OneTimeHint.Text" xml:space="preserve">
+    <value>全部关闭即为单次会话</value>
+  </data>
+  <data name="FocusDialog_ModeHeader.Text" xml:space="preserve">
+    <value>执行模式</value>
+  </data>
+  <data name="FocusDialog_Mode_Chill.Content" xml:space="preserve">
+    <value>🟢 放松 - 仅通知</value>
+  </data>
+  <data name="FocusDialog_Mode_Normal.Content" xml:space="preserve">
+    <value>🟠 正常 - 弹窗提示</value>
+  </data>
+  <data name="FocusDialog_Mode_Focus.Content" xml:space="preserve">
+    <value>🔴 专注 - 关闭未授权应用</value>
+  </data>
+  <data name="RuleDialog.Title" xml:space="preserve">
+    <value>编辑规则</value>
+  </data>
+  <data name="RuleDialog.PrimaryButtonText" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="RuleDialog.SecondaryButtonText" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="RuleDialog_ProcessBox.Header" xml:space="preserve">
+    <value>进程名称 (可选)</value>
+  </data>
+  <data name="RuleDialog_ProcessBox.PlaceholderText" xml:space="preserve">
+    <value>如 chrome (留空适配所有)</value>
+  </data>
+  <data name="RuleDialog_PatternBox.Header" xml:space="preserve">
+    <value>匹配模式 (标题)</value>
+  </data>
+  <data name="RuleDialog_PatternBox.PlaceholderText" xml:space="preserve">
+    <value>文本或正则</value>
+  </data>
+  <data name="RuleDialog_TypeBox.Header" xml:space="preserve">
+    <value>匹配类型</value>
+  </data>
+  <data name="RuleDialog_Type_Contains.Content" xml:space="preserve">
+    <value>包含 (默认)</value>
+  </data>
+  <data name="RuleDialog_Type_StartsWith.Content" xml:space="preserve">
+    <value>开头是</value>
+  </data>
+  <data name="RuleDialog_Type_EndsWith.Content" xml:space="preserve">
+    <value>结尾是</value>
+  </data>
+  <data name="RuleDialog_Type_Exact.Content" xml:space="preserve">
+    <value>精确匹配</value>
+  </data>
+  <data name="RuleDialog_Type_Regex.Content" xml:space="preserve">
+    <value>正则表达式</value>
+  </data>
+  <data name="RuleDialog_ReplacementBox.Header" xml:space="preserve">
+    <value>替换为</value>
+  </data>
+  <data name="RuleDialog_ReplacementBox.PlaceholderText" xml:space="preserve">
+    <value>新文本 (支持 $1 分组)</value>
+  </data>
+  <data name="RuleDialog_TestExpander.Header" xml:space="preserve">
+    <value>测试规则</value>
+  </data>
+  <data name="RuleDialog_TestInput.Header" xml:space="preserve">
+    <value>测试输入</value>
+  </data>
+  <data name="RuleDialog_TestInput.PlaceholderText" xml:space="preserve">
+    <value>在此粘贴窗口标题</value>
+  </data>
+  <data name="RuleDialog_ResultLabel.Text" xml:space="preserve">
+    <value>结果:</value>
+  </data>
 </root>

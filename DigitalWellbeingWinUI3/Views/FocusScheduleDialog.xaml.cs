@@ -112,7 +112,8 @@ namespace DigitalWellbeingWinUI3.Views
             if (_isEditMode && Session != null)
             {
                 // Update existing
-                Session.Name = string.IsNullOrWhiteSpace(NameBox.Text) ? "Focus Session" : NameBox.Text;
+                string defaultName = LocalizationHelper.GetString("Focus_Session_DefaultName");
+                Session.Name = string.IsNullOrWhiteSpace(NameBox.Text) ? defaultName : NameBox.Text;
                 Session.ProcessName = processName;
                 Session.ProgramName = string.IsNullOrWhiteSpace(SubAppBox.Text) ? null : SubAppBox.Text.Trim();
                 Session.StartTime = StartTimePicker.Time;
@@ -123,9 +124,10 @@ namespace DigitalWellbeingWinUI3.Views
             else
             {
                 // Create new
+                string defaultName = LocalizationHelper.GetString("Focus_Session_DefaultName");
                 Session = new FocusSession
                 {
-                    Name = string.IsNullOrWhiteSpace(NameBox.Text) ? "Focus Session" : NameBox.Text,
+                    Name = string.IsNullOrWhiteSpace(NameBox.Text) ? defaultName : NameBox.Text,
                     ProcessName = processName,
                     ProgramName = string.IsNullOrWhiteSpace(SubAppBox.Text) ? null : SubAppBox.Text.Trim(),
                     StartTime = StartTimePicker.Time,

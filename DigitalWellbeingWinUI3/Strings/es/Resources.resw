@@ -598,4 +598,229 @@ Termina: {2}</value>
   <data name="Nav_Settings.Content" xml:space="preserve">
     <value>Configuración</value>
   </data>
+  <data name="Focus_Dialog_Title.Title" xml:space="preserve">
+    <value>Sesión de Enfoque</value>
+  </data>
+  <data name="Focus_Dialog_Save" xml:space="preserve">
+    <value>Guardar</value>
+  </data>
+  <data name="Focus_Dialog_Cancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="Focus_Dialog_NameHeader.Header" xml:space="preserve">
+    <value>Nombre de la sesión</value>
+  </data>
+  <data name="Focus_Dialog_NamePlaceholder" xml:space="preserve">
+    <value>p. ej., Programación matutina</value>
+  </data>
+  <data name="Focus_Dialog_AppHeader.Text" xml:space="preserve">
+    <value>Aplicación objetivo</value>
+  </data>
+  <data name="Focus_Dialog_AppPlaceholder" xml:space="preserve">
+    <value>Escribe para buscar aplicaciones...</value>
+  </data>
+  <data name="Focus_Dialog_AppAssist.Text" xml:space="preserve">
+    <value>Selecciona una aplicación de tu historial</value>
+  </data>
+  <data name="Focus_Dialog_SubAppHeader.Header" xml:space="preserve">
+    <value>Sub-App / Palabra clave (Opcional)</value>
+  </data>
+  <data name="Focus_Dialog_SubAppPlaceholder" xml:space="preserve">
+    <value>p. ej., GitHub, YouTube</value>
+  </data>
+  <data name="Focus_Dialog_StartTime.Header" xml:space="preserve">
+    <value>Hora de inicio</value>
+  </data>
+  <data name="Focus_Dialog_Duration.Header" xml:space="preserve">
+    <value>Duración (minutos)</value>
+  </data>
+  <data name="Focus_Dialog_DaysHeader.Text" xml:space="preserve">
+    <value>Repetir los días</value>
+  </data>
+  <data name="Focus_Dialog_OneTimeHint.Text" xml:space="preserve">
+    <value>Dejar todo desactivado para sesión única</value>
+  </data>
+  <data name="Focus_Dialog_ModeHeader.Text" xml:space="preserve">
+    <value>Modo de ejecución</value>
+  </data>
+  <data name="Focus_Dialog_Mode_Chill.Content" xml:space="preserve">
+    <value>🟢 Relax - Solo notificaciones</value>
+  </data>
+  <data name="Focus_Dialog_Mode_Normal.Content" xml:space="preserve">
+    <value>🟠 Normal - Diálogo emergente</value>
+  </data>
+  <data name="Focus_Dialog_Mode_Focus.Content" xml:space="preserve">
+    <value>🔴 Foco - Cerrar apps no autorizadas</value>
+  </data>
+  <data name="Focus_Session_DefaultName" xml:space="preserve">
+    <value>Sesión de Enfoque</value>
+  </data>
+  <data name="Rule_Dialog_Title.Title" xml:space="preserve">
+    <value>Editar Regla</value>
+  </data>
+  <data name="Rule_Dialog_Save" xml:space="preserve">
+    <value>Guardar</value>
+  </data>
+  <data name="Rule_Dialog_Cancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="Rule_Dialog_ProcessHeader.Header" xml:space="preserve">
+    <value>Nombre del proceso (Opcional)</value>
+  </data>
+  <data name="Rule_Dialog_ProcessPlaceholder" xml:space="preserve">
+    <value>p. ej. chrome (vacío para todos)</value>
+  </data>
+  <data name="Rule_Dialog_PatternHeader.Header" xml:space="preserve">
+    <value>Patrón de coincidencia (Título)</value>
+  </data>
+  <data name="Rule_Dialog_PatternPlaceholder" xml:space="preserve">
+    <value>Texto o Regex para coincidir</value>
+  </data>
+  <data name="Rule_Dialog_TypeHeader.Header" xml:space="preserve">
+    <value>Tipo de coincidencia</value>
+  </data>
+  <data name="Rule_Dialog_Type_Contains.Content" xml:space="preserve">
+    <value>Contiene (Predeterminado)</value>
+  </data>
+  <data name="Rule_Dialog_Type_StartsWith.Content" xml:space="preserve">
+    <value>Empieza con</value>
+  </data>
+  <data name="Rule_Dialog_Type_EndsWith.Content" xml:space="preserve">
+    <value>Termina con</value>
+  </data>
+  <data name="Rule_Dialog_Type_Exact.Content" xml:space="preserve">
+    <value>Coincidencia exacta</value>
+  </data>
+  <data name="Rule_Dialog_Type_Regex.Content" xml:space="preserve">
+    <value>Expresión Regular</value>
+  </data>
+  <data name="Rule_Dialog_ReplacementHeader.Header" xml:space="preserve">
+    <value>Reemplazo</value>
+  </data>
+  <data name="Rule_Dialog_ReplacementPlaceholder" xml:space="preserve">
+    <value>Nuevo texto (soporta grupos $1)</value>
+  </data>
+  <data name="Rule_Dialog_TestHeader.Header" xml:space="preserve">
+    <value>Probar Regla</value>
+  </data>
+  <data name="Rule_Dialog_TestInput.Header" xml:space="preserve">
+    <value>Entrada de prueba</value>
+  </data>
+  <data name="Rule_Dialog_TestPlaceholder" xml:space="preserve">
+    <value>Pega un título de ventana aquí</value>
+  </data>
+  <data name="Rule_Dialog_Result.Text" xml:space="preserve">
+    <value>Resultado:</value>
+  </data>
+  <data name="FocusDialog.Title" xml:space="preserve">
+    <value>Sesión de Enfoque</value>
+  </data>
+  <data name="FocusDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Guardar</value>
+  </data>
+  <data name="FocusDialog.CloseButtonText" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="FocusDialog_NameBox.Header" xml:space="preserve">
+    <value>Nombre de la sesión</value>
+  </data>
+  <data name="FocusDialog_NameBox.PlaceholderText" xml:space="preserve">
+    <value>p. ej., Programación matutina</value>
+  </data>
+  <data name="FocusDialog_AppHeader.Text" xml:space="preserve">
+    <value>Aplicación objetivo</value>
+  </data>
+  <data name="FocusDialog_AppSuggest.PlaceholderText" xml:space="preserve">
+    <value>Escribe para buscar aplicaciones...</value>
+  </data>
+  <data name="FocusDialog_AppAssist.Text" xml:space="preserve">
+    <value>Selecciona una aplicación de tu historial</value>
+  </data>
+  <data name="FocusDialog_SubAppBox.Header" xml:space="preserve">
+    <value>Sub-App / Palabra clave (Opcional)</value>
+  </data>
+  <data name="FocusDialog_SubAppBox.PlaceholderText" xml:space="preserve">
+    <value>p. ej., GitHub, YouTube</value>
+  </data>
+  <data name="FocusDialog_StartTime.Header" xml:space="preserve">
+    <value>Hora de inicio</value>
+  </data>
+  <data name="FocusDialog_Duration.Header" xml:space="preserve">
+    <value>Duración (minutos)</value>
+  </data>
+  <data name="FocusDialog_DaysHeader.Text" xml:space="preserve">
+    <value>Repetir los días</value>
+  </data>
+  <data name="FocusDialog_OneTimeHint.Text" xml:space="preserve">
+    <value>Dejar todo desactivado para sesión única</value>
+  </data>
+  <data name="FocusDialog_ModeHeader.Text" xml:space="preserve">
+    <value>Modo de ejecución</value>
+  </data>
+  <data name="FocusDialog_Mode_Chill.Content" xml:space="preserve">
+    <value>🟢 Relax - Solo notificaciones</value>
+  </data>
+  <data name="FocusDialog_Mode_Normal.Content" xml:space="preserve">
+    <value>🟠 Normal - Diálogo emergente</value>
+  </data>
+  <data name="FocusDialog_Mode_Focus.Content" xml:space="preserve">
+    <value>🔴 Foco - Cerrar apps no autorizadas</value>
+  </data>
+  <data name="RuleDialog.Title" xml:space="preserve">
+    <value>Editar Regla</value>
+  </data>
+  <data name="RuleDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Guardar</value>
+  </data>
+  <data name="RuleDialog.SecondaryButtonText" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="RuleDialog_ProcessBox.Header" xml:space="preserve">
+    <value>Nombre del proceso (Opcional)</value>
+  </data>
+  <data name="RuleDialog_ProcessBox.PlaceholderText" xml:space="preserve">
+    <value>p. ej. chrome (vacío para todos)</value>
+  </data>
+  <data name="RuleDialog_PatternBox.Header" xml:space="preserve">
+    <value>Patrón de coincidencia (Título)</value>
+  </data>
+  <data name="RuleDialog_PatternBox.PlaceholderText" xml:space="preserve">
+    <value>Texto o Regex para coincidir</value>
+  </data>
+  <data name="RuleDialog_TypeBox.Header" xml:space="preserve">
+    <value>Tipo de coincidencia</value>
+  </data>
+  <data name="RuleDialog_Type_Contains.Content" xml:space="preserve">
+    <value>Contiene (Predeterminado)</value>
+  </data>
+  <data name="RuleDialog_Type_StartsWith.Content" xml:space="preserve">
+    <value>Empieza con</value>
+  </data>
+  <data name="RuleDialog_Type_EndsWith.Content" xml:space="preserve">
+    <value>Termina con</value>
+  </data>
+  <data name="RuleDialog_Type_Exact.Content" xml:space="preserve">
+    <value>Coincidencia exacta</value>
+  </data>
+  <data name="RuleDialog_Type_Regex.Content" xml:space="preserve">
+    <value>Expresión Regular</value>
+  </data>
+  <data name="RuleDialog_ReplacementBox.Header" xml:space="preserve">
+    <value>Reemplazo</value>
+  </data>
+  <data name="RuleDialog_ReplacementBox.PlaceholderText" xml:space="preserve">
+    <value>Nuevo texto (soporta grupos $1)</value>
+  </data>
+  <data name="RuleDialog_TestExpander.Header" xml:space="preserve">
+    <value>Probar Regla</value>
+  </data>
+  <data name="RuleDialog_TestInput.Header" xml:space="preserve">
+    <value>Entrada de prueba</value>
+  </data>
+  <data name="RuleDialog_TestInput.PlaceholderText" xml:space="preserve">
+    <value>Pega un título de ventana aquí</value>
+  </data>
+  <data name="RuleDialog_ResultLabel.Text" xml:space="preserve">
+    <value>Resultado:</value>
+  </data>
 </root>
