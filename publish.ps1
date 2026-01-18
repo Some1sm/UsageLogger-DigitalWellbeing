@@ -40,18 +40,7 @@ Get-ChildItem -Path $finalDir -Directory | ForEach-Object {
 
 
 # Create Manifest / Readme
-$readme = @"
-DigitalWellbeing Portable
-=========================
 
-Usage:
-1. Run 'DigitalWellbeingWinUI3.exe' to start the application.
-2. The background service 'DigitalWellbeingService.exe' should start automatically or be managed by the app.
-
-Requirements:
-- .NET Framework 4.7.2
-"@
-Set-Content "$finalDir/README.txt" $readme
 
 # Zip it
 Write-Host "Zipping..."
