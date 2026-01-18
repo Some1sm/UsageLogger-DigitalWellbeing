@@ -28,6 +28,16 @@ New-Item -ItemType Directory -Force -Path $finalDir | Out-Null
 Copy-Item -Recurse "$releaseDir/App/*" "$finalDir" -Exclude "*.pdb", "*.xml"
 Copy-Item -Recurse "$releaseDir/Service/*" "$finalDir" -Exclude "*.pdb", "*.xml"
 
+# Clean up unwanted framework language folders
+Write-Host "Cleaning up language folders..."
+$keepLangs = @("en-US", "es-ES", "ca-ES", "fr", "fr-FR", "de", "de-DE", "it", "it-IT", "pt-BR", "ru", "ru-RU", "ja", "ja-JP", "ko", "ko-KR", "zh-Hans", "zh-CN", "Strings", "Assets", "runtimes", "Microsoft.UI.Xaml")
+Get-ChildItem -Path $finalDir -Directory | ForEach-Object {
+    if ($keepLangs -notcontains $_.Name) {
+        Write-Host "Removing unused language: $($_.Name)"
+        Remove-Item -Recurse -Force $_.FullName
+    }
+}
+
 
 # Create Manifest / Readme
 $readme = @"
