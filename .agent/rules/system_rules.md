@@ -91,3 +91,47 @@ The application supports two modes for saving usage data, controlled by `UserPre
 *   **Implementation Details**:
     *   `ActivityLogger` reads `user_preferences.json` every 30s.
     *   If `UseRamCache` is false, it forces `_bufferFlushIntervalSec = 1`.
+
+## 9. 🌍 Localization Maintenance (Best Practices)
+**Root Cause of Translation Failures**: WinUI3Localizer **cannot** override hardcoded fallback values in XAML attributes. If you set `Text="Hello"` alongside `l:Uids.Uid="MyKey"`, the hardcoded `"Hello"` will always display.
+
+### ✅ DO (Correct Patterns)
+*   **XAML Elements**: Only set `l:Uids.Uid`, never add fallback `Text=`, `Content=`, `Header=`, `PlaceholderText=`, `Title=`, `OnContent=`, `OffContent=`, `PrimaryButtonText=`, `CloseButtonText=`, etc.
+    ```xml
+    <!-- CORRECT -->
+    <TextBlock l:Uids.Uid="MyLabel"/>
+    <Button l:Uids.Uid="MyBtn"/>
+    <ContentDialog l:Uids.Uid="MyDialog"/>
+    <ToggleSwitch l:Uids.Uid="MyToggle"/>
+    ```
+*   **Resource Keys**: Use `.Text`, `.Content`, `.Header`, `.PlaceholderText`, `.Title`, `.OnContent`, `.OffContent`, `.PrimaryButtonText`, `.CloseButtonText` suffixes.
+    ```xml
+    <!-- In Resources.resw -->
+    <data name="MyLabel.Text"><value>My Label</value></data>
+    <data name="MyToggle.OnContent"><value>On</value></data>
+    <data name="MyDialog.Title"><value>My Dialog</value></data>
+    ```
+*   **Code-Behind Dialogs**: Use `LocalizationHelper.GetString("Key")` for strings in `ContentDialog` created in C#.
+    ```csharp
+    var dialog = new ContentDialog
+    {
+        Title = string.Format(LocalizationHelper.GetString("Dialog_Title"), appName),
+        PrimaryButtonText = LocalizationHelper.GetString("Dialog_Save"),
+        SecondaryButtonText = LocalizationHelper.GetString("Dialog_Cancel")
+    };
+    ```
+*   **New Translations**: Always add keys to `Strings/en-US/Resources.resw` (base) AND all other language folders (e.g., `ca-ES`, `es-ES`).
+
+### ❌ DON'T (Anti-Patterns)
+*   **Never** add hardcoded fallback text alongside `l:Uids.Uid`:
+    ```xml
+    <!-- WRONG - "Settings" will always show, ignoring localizer -->
+    <TextBlock l:Uids.Uid="Settings_Title" Text="Settings"/>
+    ```
+*   **Never** forget to remove fallback values when adding localization to existing elements.
+*   **Never** create dialogs in code-behind with hardcoded strings like `Title = "Edit Rule"`.
+
+### 🔧 Debugging Translations
+1.  If a UI element shows English despite the app being in another language, check the XAML for hardcoded fallback values.
+2.  Verify the key exists in the target language's `Resources.resw` with the correct suffix (e.g., `.Text`, `.Content`).
+3.  Compare with a working localized page (e.g., `SettingsPage.xaml`) to identify pattern differences.
