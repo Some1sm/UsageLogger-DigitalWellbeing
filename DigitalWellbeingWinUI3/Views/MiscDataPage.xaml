@@ -34,8 +34,8 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <StackPanel x:Name="HeaderTitlePanel" Grid.Column="0">
-                <TextBlock l:Uids.Uid="MiscData_Title" Text="Fun Facts" Style="{ThemeResource TitleTextBlockStyle}"/>
-                <TextBlock l:Uids.Uid="MiscData_Subtitle" Text="Daily Snapshot &amp; Insights" 
+                <TextBlock l:Uids.Uid="MiscData_Title" Style="{ThemeResource TitleTextBlockStyle}"/>
+                <TextBlock l:Uids.Uid="MiscData_Subtitle"
                        Style="{ThemeResource SubtitleTextBlockStyle}" Opacity="0.7"/>
             </StackPanel>
             

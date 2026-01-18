@@ -148,7 +148,7 @@ namespace DigitalWellbeingWinUI3.Views
             // Simple Content Dialog for Time Limit
             var inputTextBox = new TextBox 
             { 
-                PlaceholderText = "Minutes (e.g., 60)", 
+                PlaceholderText = LocalizationHelper.GetString("Dialog_SetTimeLimit_Placeholder"), 
                 InputScope = new Microsoft.UI.Xaml.Input.InputScope { Names = { new Microsoft.UI.Xaml.Input.InputScopeName(Microsoft.UI.Xaml.Input.InputScopeNameValue.Number) } } 
             };
             
@@ -160,10 +160,10 @@ namespace DigitalWellbeingWinUI3.Views
 
             var dialog = new ContentDialog
             {
-                Title = $"Set Time Limit for {processName}",
+                Title = string.Format(LocalizationHelper.GetString("Dialog_SetTimeLimit_Title"), processName),
                 Content = inputTextBox,
-                PrimaryButtonText = "Save",
-                SecondaryButtonText = "Cancel",
+                PrimaryButtonText = LocalizationHelper.GetString("Dialog_Save"),
+                SecondaryButtonText = LocalizationHelper.GetString("Dialog_Cancel"),
                 XamlRoot = this.XamlRoot
             };
 
@@ -270,29 +270,29 @@ namespace DigitalWellbeingWinUI3.Views
 
             var inputTextBox = new TextBox 
             { 
-                PlaceholderText = $"Enter display name for {processName}", 
+                PlaceholderText = string.Format(LocalizationHelper.GetString("Dialog_SetDisplayName_Placeholder"), processName), 
                 Text = hasCustomName ? currentDisplayName : ""
             };
             
             var dialog = new ContentDialog
             {
-                Title = $"Set Display Name for {processName}",
+                Title = string.Format(LocalizationHelper.GetString("Dialog_SetDisplayName_Title"), processName),
                 Content = new StackPanel
                 {
                     Children =
                     {
                         new TextBlock 
                         { 
-                            Text = "Set a custom display name for this process. The original process name will still be used for tracking.",
+                            Text = LocalizationHelper.GetString("Dialog_SetDisplayName_Desc"),
                             TextWrapping = Microsoft.UI.Xaml.TextWrapping.Wrap,
                             Margin = new Microsoft.UI.Xaml.Thickness(0, 0, 0, 12)
                         },
                         inputTextBox
                     }
                 },
-                PrimaryButtonText = "Save",
-                SecondaryButtonText = hasCustomName ? "Remove" : "Cancel",
-                CloseButtonText = "Cancel",
+                PrimaryButtonText = LocalizationHelper.GetString("Dialog_Save"),
+                SecondaryButtonText = hasCustomName ? LocalizationHelper.GetString("Dialog_Remove") : LocalizationHelper.GetString("Dialog_Cancel"),
+                CloseButtonText = LocalizationHelper.GetString("Dialog_Cancel"),
                 XamlRoot = this.XamlRoot
             };
 

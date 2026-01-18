@@ -59,10 +59,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Today" xml:space="preserve">
-    <value>Today</value>
+    <value>Avui</value>
   </data>
   <data name="FromLast" xml:space="preserve">
-    <value>from last</value>
+    <value>de l'últim</value>
   </data>
   <data name="History_TimePeriod.Text" xml:space="preserve">
     <value>Període de Temps</value>
@@ -766,6 +766,27 @@ Acaba: {2}</value>
   <data name="FocusDialog_Mode_Focus.Content" xml:space="preserve">
     <value>🔴 Focus - Tanca aplicacions no autoritzades</value>
   </data>
+  <data name="FocusDialog_Day_Sun.Content" xml:space="preserve">
+    <value>D</value>
+  </data>
+  <data name="FocusDialog_Day_Mon.Content" xml:space="preserve">
+    <value>Dl</value>
+  </data>
+  <data name="FocusDialog_Day_Tue.Content" xml:space="preserve">
+    <value>Dm</value>
+  </data>
+  <data name="FocusDialog_Day_Wed.Content" xml:space="preserve">
+    <value>Dc</value>
+  </data>
+  <data name="FocusDialog_Day_Thu.Content" xml:space="preserve">
+    <value>Dj</value>
+  </data>
+  <data name="FocusDialog_Day_Fri.Content" xml:space="preserve">
+    <value>Dv</value>
+  </data>
+  <data name="FocusDialog_Day_Sat.Content" xml:space="preserve">
+    <value>Ds</value>
+  </data>
   <data name="RuleDialog.Title" xml:space="preserve">
     <value>Edita la Regla</value>
   </data>
@@ -846,5 +867,53 @@ Acaba: {2}</value>
   </data>
   <data name="FocusPageStatusNoSession" xml:space="preserve">
     <value>Monitoratge Actiu (Sense Sessió)</value>
+  </data>
+  <data name="Settings_CustomTitleRules.Text" xml:space="preserve">
+    <value>Regles de Títol Personalitzades</value>
+  </data>
+  <data name="Settings_CustomTitleRulesDesc.Text" xml:space="preserve">
+    <value>Defineix regles personalitzades per analitzar títols de finestra (p. ex. canviar 'X Match' a 'X Pattern')</value>
+  </data>
+  <data name="Settings_AddNewRule.Content" xml:space="preserve">
+    <value>Afegeix Nova Regla</value>
+  </data>
+  <data name="Dashboard_TabAfkTime.Header" xml:space="preserve">
+    <value>🕐 Temps AFK</value>
+  </data>
+  <data name="Dashboard_AwayFromKeyboard.Text" xml:space="preserve">
+    <value>Fora del teclat</value>
+  </data>
+  <data name="Dashboard_ScreenLocked.Text" xml:space="preserve">
+    <value>Pantalla bloquejada</value>
+  </data>
+  <data name="Dashboard_NoData.Text" xml:space="preserve">
+    <value>No hi ha dades per mostrar</value>
+  </data>
+  <data name="Dashboard_AfkTimeTitle.Text" xml:space="preserve">
+    <value>🕐 Temps AFK</value>
+  </data>
+  <data name="Dialog_SetDisplayName_Title" xml:space="preserve">
+    <value>Canvia el nom per a {0}</value>
+  </data>
+  <data name="Dialog_SetDisplayName_Desc" xml:space="preserve">
+    <value>Defineix un nom personalitzat per aquest procés. El nom original del procés encara s'utilitzarà per al seguiment.</value>
+  </data>
+  <data name="Dialog_SetDisplayName_Placeholder" xml:space="preserve">
+    <value>Introdueix el nom per a {0}</value>
+  </data>
+  <data name="Dialog_Save" xml:space="preserve">
+    <value>Desa</value>
+  </data>
+  <data name="Dialog_Cancel" xml:space="preserve">
+    <value>Cancel·la</value>
+  </data>
+  <data name="Dialog_Remove" xml:space="preserve">
+    <value>Elimina</value>
+  </data>
+  <data name="Dialog_SetTimeLimit_Title" xml:space="preserve">
+    <value>Estableix límit de temps per a {0}</value>
+  </data>
+  <data name="Dialog_SetTimeLimit_Placeholder" xml:space="preserve">
+    <value>Minuts (p. ex., 60)</value>
   </data>
 </root>

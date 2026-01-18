@@ -147,9 +147,9 @@
                 <StackPanel Grid.Row="0" Spacing="2" Margin="0,0,0,10">
                     <StackPanel Orientation="Horizontal" Spacing="8">
                         <FontIcon Glyph="&#xE8B7;" FontFamily="Segoe MDL2 Assets" FontSize="16"/>
-                        <TextBlock Text="Custom Title Rules" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                        <TextBlock l:Uids.Uid="Settings_CustomTitleRules" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
                     </StackPanel>
-                    <TextBlock Text="Define custom rules to parse window titles (e.g. rename 'X Match' to 'X Pattern')" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
+                    <TextBlock l:Uids.Uid="Settings_CustomTitleRulesDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
                 </StackPanel>
                 
                 <ListView Grid.Row="1" x:Name="CustomRulesList" MaxHeight="120" BorderThickness="1" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" CornerRadius="4" Margin="0,0,0,10">
@@ -176,7 +176,7 @@
                     </ListView.ItemTemplate>
                 </ListView>
                 
-                <Button Grid.Row="2" Content="Add New Rule" Click="BtnAddRule_Click" HorizontalAlignment="Right"/>
+                <Button Grid.Row="2" l:Uids.Uid="Settings_AddNewRule" Click="BtnAddRule_Click" HorizontalAlignment="Right"/>
             </Grid>
             
             <!-- Power Tracking Settings -->

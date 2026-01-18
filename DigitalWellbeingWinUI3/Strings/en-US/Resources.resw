@@ -755,4 +755,52 @@
   <data name="FocusPageStatusNoSession" xml:space="preserve">
     <value>Monitoring Active (No Session)</value>
   </data>
+  <data name="Settings_CustomTitleRules.Text" xml:space="preserve">
+    <value>Custom Title Rules</value>
+  </data>
+  <data name="Settings_CustomTitleRulesDesc.Text" xml:space="preserve">
+    <value>Define custom rules to parse window titles (e.g. rename 'X Match' to 'X Pattern')</value>
+  </data>
+  <data name="Settings_AddNewRule.Content" xml:space="preserve">
+    <value>Add New Rule</value>
+  </data>
+  <data name="Dashboard_TabAfkTime.Header" xml:space="preserve">
+    <value>🕐 AFK Time</value>
+  </data>
+  <data name="Dashboard_AwayFromKeyboard.Text" xml:space="preserve">
+    <value>Away from Keyboard</value>
+  </data>
+  <data name="Dashboard_ScreenLocked.Text" xml:space="preserve">
+    <value>Screen Locked</value>
+  </data>
+  <data name="Dashboard_NoData.Text" xml:space="preserve">
+    <value>No data to display</value>
+  </data>
+  <data name="Dashboard_AfkTimeTitle.Text" xml:space="preserve">
+    <value>🕐 AFK Time</value>
+  </data>
+  <data name="Dialog_SetDisplayName_Title" xml:space="preserve">
+    <value>Set Display Name for {0}</value>
+  </data>
+  <data name="Dialog_SetDisplayName_Desc" xml:space="preserve">
+    <value>Set a custom display name for this process. The original process name will still be used for tracking.</value>
+  </data>
+  <data name="Dialog_SetDisplayName_Placeholder" xml:space="preserve">
+    <value>Enter display name for {0}</value>
+  </data>
+  <data name="Dialog_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Dialog_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Dialog_Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="Dialog_SetTimeLimit_Title" xml:space="preserve">
+    <value>Set Time Limit for {0}</value>
+  </data>
+  <data name="Dialog_SetTimeLimit_Placeholder" xml:space="preserve">
+    <value>Minutes (e.g., 60)</value>
+  </data>
 </root>

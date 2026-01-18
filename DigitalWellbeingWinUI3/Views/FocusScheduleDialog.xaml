@@ -5,9 +5,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:l="using:WinUI3Localizer"
     l:Uids.Uid="FocusDialog"
-    Title="Focus Session"
-    PrimaryButtonText="Save"
-    CloseButtonText="Cancel"
     DefaultButton="Primary"
     CornerRadius="8"
     PrimaryButtonClick="PrimaryButton_Click">
@@ -15,26 +12,23 @@
     <StackPanel Spacing="16" MinWidth="400">
         
         <!-- Name -->
-        <TextBox x:Name="NameBox" l:Uids.Uid="FocusDialog_NameBox" Header="Session Name" 
-                 PlaceholderText="e.g., Morning Coding"/>
+        <TextBox x:Name="NameBox" l:Uids.Uid="FocusDialog_NameBox"/>
 
         <!-- Target App -->
         <StackPanel Spacing="4">
-            <TextBlock l:Uids.Uid="FocusDialog_AppHeader" Text="Target Application" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+            <TextBlock l:Uids.Uid="FocusDialog_AppHeader" Style="{StaticResource BodyStrongTextBlockStyle}"/>
             <AutoSuggestBox x:Name="AppSuggestBox" 
                             l:Uids.Uid="FocusDialog_AppSuggest"
-                            PlaceholderText="Type to search your apps..."
                             TextChanged="AppSuggestBox_TextChanged"
                             SuggestionChosen="AppSuggestBox_SuggestionChosen"
                             QueryIcon="Find"/>
-            <TextBlock l:Uids.Uid="FocusDialog_AppAssist" Text="Select an app from your usage history" 
+            <TextBlock l:Uids.Uid="FocusDialog_AppAssist"
                        Style="{StaticResource CaptionTextBlockStyle}"
                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
         </StackPanel>
 
         <!-- Sub-App (Optional) -->
-        <TextBox x:Name="SubAppBox" l:Uids.Uid="FocusDialog_SubAppBox" Header="Sub-App / Keyword (Optional)" 
-                 PlaceholderText="e.g., GitHub, YouTube"/>
+        <TextBox x:Name="SubAppBox" l:Uids.Uid="FocusDialog_SubAppBox"/>
 
         <!-- Time Settings -->
         <Grid>
@@ -44,8 +38,8 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             
-            <TimePicker x:Name="StartTimePicker" l:Uids.Uid="FocusDialog_StartTime" Header="Start Time" Grid.Column="0"/>
-            <NumberBox x:Name="DurationBox" l:Uids.Uid="FocusDialog_Duration" Header="Duration (minutes)" 
+            <TimePicker x:Name="StartTimePicker" l:Uids.Uid="FocusDialog_StartTime" Grid.Column="0"/>
+            <NumberBox x:Name="DurationBox" l:Uids.Uid="FocusDialog_Duration"
                        Grid.Column="2" 
                        Value="60" Minimum="1" Maximum="480"
                        SpinButtonPlacementMode="Inline"
@@ -54,28 +48,28 @@
 
         <!-- Days -->
         <StackPanel Spacing="4">
-            <TextBlock l:Uids.Uid="FocusDialog_DaysHeader" Text="Repeat on Days" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+            <TextBlock l:Uids.Uid="FocusDialog_DaysHeader" Style="{StaticResource BodyStrongTextBlockStyle}"/>
             <StackPanel Orientation="Horizontal" Spacing="8">
-                <ToggleButton x:Name="SunToggle" l:Uids.Uid="FocusDialog_Day_Sun" Content="S" Width="36"/>
-                <ToggleButton x:Name="MonToggle" l:Uids.Uid="FocusDialog_Day_Mon" Content="M" Width="36"/>
-                <ToggleButton x:Name="TueToggle" l:Uids.Uid="FocusDialog_Day_Tue" Content="T" Width="36"/>
-                <ToggleButton x:Name="WedToggle" l:Uids.Uid="FocusDialog_Day_Wed" Content="W" Width="36"/>
-                <ToggleButton x:Name="ThuToggle" l:Uids.Uid="FocusDialog_Day_Thu" Content="T" Width="36"/>
-                <ToggleButton x:Name="FriToggle" l:Uids.Uid="FocusDialog_Day_Fri" Content="F" Width="36"/>
-                <ToggleButton x:Name="SatToggle" l:Uids.Uid="FocusDialog_Day_Sat" Content="S" Width="36"/>
+                <ToggleButton x:Name="SunToggle" l:Uids.Uid="FocusDialog_Day_Sun" Width="36"/>
+                <ToggleButton x:Name="MonToggle" l:Uids.Uid="FocusDialog_Day_Mon" Width="36"/>
+                <ToggleButton x:Name="TueToggle" l:Uids.Uid="FocusDialog_Day_Tue" Width="36"/>
+                <ToggleButton x:Name="WedToggle" l:Uids.Uid="FocusDialog_Day_Wed" Width="36"/>
+                <ToggleButton x:Name="ThuToggle" l:Uids.Uid="FocusDialog_Day_Thu" Width="36"/>
+                <ToggleButton x:Name="FriToggle" l:Uids.Uid="FocusDialog_Day_Fri" Width="36"/>
+                <ToggleButton x:Name="SatToggle" l:Uids.Uid="FocusDialog_Day_Sat" Width="36"/>
             </StackPanel>
-            <TextBlock l:Uids.Uid="FocusDialog_OneTimeHint" Text="Leave all off for one-time session" 
+            <TextBlock l:Uids.Uid="FocusDialog_OneTimeHint"
                        Style="{StaticResource CaptionTextBlockStyle}"
                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
         </StackPanel>
 
         <!-- Mode -->
         <StackPanel Spacing="4">
-            <TextBlock l:Uids.Uid="FocusDialog_ModeHeader" Text="Enforcement Mode" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+            <TextBlock l:Uids.Uid="FocusDialog_ModeHeader" Style="{StaticResource BodyStrongTextBlockStyle}"/>
             <RadioButtons x:Name="ModeSelector">
-                <RadioButton l:Uids.Uid="FocusDialog_Mode_Chill" Content="🟢 Chill - Toast notification only" Tag="Chill"/>
-                <RadioButton l:Uids.Uid="FocusDialog_Mode_Normal" Content="🟠 Normal - Popup dialog (like time limits)" Tag="Normal" IsChecked="True"/>
-                <RadioButton l:Uids.Uid="FocusDialog_Mode_Focus" Content="🔴 Focus - Close unauthorized apps" Tag="Focus"/>
+                <RadioButton l:Uids.Uid="FocusDialog_Mode_Chill" Tag="Chill"/>
+                <RadioButton l:Uids.Uid="FocusDialog_Mode_Normal" Tag="Normal" IsChecked="True"/>
+                <RadioButton l:Uids.Uid="FocusDialog_Mode_Focus" Tag="Focus"/>
             </RadioButtons>
         </StackPanel>
 

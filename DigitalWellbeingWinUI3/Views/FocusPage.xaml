@@ -24,8 +24,8 @@
 
         <!-- Header -->
         <StackPanel Grid.Row="0" Spacing="8" Margin="0,0,0,24">
-            <TextBlock l:Uids.Uid="FocusPageHeader" Text="Focus Schedule" Style="{StaticResource TitleTextBlockStyle}"/>
-            <TextBlock l:Uids.Uid="FocusPageDescription" Text="Create scheduled focus blocks to stay on track. The app will enforce your commitment based on the selected mode."
+            <TextBlock l:Uids.Uid="FocusPageHeader" Style="{StaticResource TitleTextBlockStyle}"/>
+            <TextBlock l:Uids.Uid="FocusPageDescription"
                        Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                        TextWrapping="Wrap"/>
             
@@ -47,9 +47,8 @@
                 <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="12">
                     <ToggleSwitch x:Name="MonitorToggle" 
                                   l:Uids.Uid="FocusPageToggle"
-                                  OnContent="Active" OffContent="Inactive"
                                   Toggled="MonitorToggle_Toggled"/>
-                    <Button l:Uids.Uid="FocusPageAddButton" Content="+ Add Schedule" Style="{StaticResource AccentButtonStyle}"
+                    <Button l:Uids.Uid="FocusPageAddButton" Style="{StaticResource AccentButtonStyle}"
                             Click="AddSchedule_Click"/>
                 </StackPanel>
             </Grid>
@@ -111,9 +110,9 @@
                     HorizontalAlignment="Center" VerticalAlignment="Center"
                     Visibility="Collapsed">
             <FontIcon Glyph="&#xE823;" FontSize="64" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-            <TextBlock l:Uids.Uid="Focus_NoSchedules" Text="No Focus Schedules" Style="{StaticResource SubtitleTextBlockStyle}" 
+            <TextBlock l:Uids.Uid="Focus_NoSchedules" Style="{StaticResource SubtitleTextBlockStyle}" 
                        HorizontalAlignment="Center" Margin="0,16,0,8"/>
-            <TextBlock l:Uids.Uid="Focus_EmptyStateDesc" Text="Click '+ Add Schedule' to create your first focus block."
+            <TextBlock l:Uids.Uid="Focus_EmptyStateDesc"
                        Style="{StaticResource BodyTextBlockStyle}" 
                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                        HorizontalAlignment="Center"/>

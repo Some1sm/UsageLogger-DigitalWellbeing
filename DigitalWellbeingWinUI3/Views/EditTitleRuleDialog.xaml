@@ -9,9 +9,6 @@
     xmlns:l="using:WinUI3Localizer"
     mc:Ignorable="d"
     l:Uids.Uid="RuleDialog"
-    Title="Edit Rule"
-    PrimaryButtonText="Save"
-    SecondaryButtonText="Cancel"
     IsPrimaryButtonEnabled="False"
     DefaultButton="Primary">
 
@@ -25,28 +22,28 @@
         </Grid.RowDefinitions>
 
         <!-- Process Filter -->
-        <TextBox x:Name="TxtProcess" l:Uids.Uid="RuleDialog_ProcessBox" Header="Process Name (Optional)" PlaceholderText="e.g. chrome (leave empty for all)" Grid.Row="0"/>
+        <TextBox x:Name="TxtProcess" l:Uids.Uid="RuleDialog_ProcessBox" Grid.Row="0"/>
 
         <!-- Pattern -->
-        <TextBox x:Name="TxtPattern" l:Uids.Uid="RuleDialog_PatternBox" Header="Match Pattern (Title)" PlaceholderText="Text or Regex to match" TextChanged="TxtPattern_TextChanged" Grid.Row="1"/>
+        <TextBox x:Name="TxtPattern" l:Uids.Uid="RuleDialog_PatternBox" TextChanged="TxtPattern_TextChanged" Grid.Row="1"/>
         
         <!-- Match Type -->
-        <ComboBox x:Name="ComboMatchType" l:Uids.Uid="RuleDialog_TypeBox" Header="Match Type" SelectedIndex="0" Grid.Row="2" HorizontalAlignment="Stretch" SelectionChanged="ComboMatchType_SelectionChanged">
-            <ComboBoxItem l:Uids.Uid="RuleDialog_Type_Contains" Content="Contains (Default)" Tag="Contains"/>
-            <ComboBoxItem l:Uids.Uid="RuleDialog_Type_StartsWith" Content="Starts With" Tag="StartsWith"/>
-            <ComboBoxItem l:Uids.Uid="RuleDialog_Type_EndsWith" Content="Ends With" Tag="EndsWith"/>
-            <ComboBoxItem l:Uids.Uid="RuleDialog_Type_Exact" Content="Exact Match" Tag="Exact"/>
-            <ComboBoxItem l:Uids.Uid="RuleDialog_Type_Regex" Content="Regular Expression" Tag="Regex"/>
+        <ComboBox x:Name="ComboMatchType" l:Uids.Uid="RuleDialog_TypeBox" SelectedIndex="0" Grid.Row="2" HorizontalAlignment="Stretch" SelectionChanged="ComboMatchType_SelectionChanged">
+            <ComboBoxItem l:Uids.Uid="RuleDialog_Type_Contains" Tag="Contains"/>
+            <ComboBoxItem l:Uids.Uid="RuleDialog_Type_StartsWith" Tag="StartsWith"/>
+            <ComboBoxItem l:Uids.Uid="RuleDialog_Type_EndsWith" Tag="EndsWith"/>
+            <ComboBoxItem l:Uids.Uid="RuleDialog_Type_Exact" Tag="Exact"/>
+            <ComboBoxItem l:Uids.Uid="RuleDialog_Type_Regex" Tag="Regex"/>
         </ComboBox>
 
         <!-- Replacement -->
-        <TextBox x:Name="TxtReplacement" l:Uids.Uid="RuleDialog_ReplacementBox" Header="Replacement" PlaceholderText="New text (supports $1 capture groups)" Grid.Row="3"/>
+        <TextBox x:Name="TxtReplacement" l:Uids.Uid="RuleDialog_ReplacementBox" Grid.Row="3"/>
 
         <!-- Test Playground -->
-        <Expander l:Uids.Uid="RuleDialog_TestExpander" Header="Test Rule" Grid.Row="4" ExpandDirection="Down" HorizontalAlignment="Stretch">
+        <Expander l:Uids.Uid="RuleDialog_TestExpander" Grid.Row="4" ExpandDirection="Down" HorizontalAlignment="Stretch">
             <StackPanel Spacing="8">
-                <TextBox x:Name="TxtTestInput" l:Uids.Uid="RuleDialog_TestInput" Header="Test Input" PlaceholderText="Paste a sample window title here" TextChanged="TxtTestInput_TextChanged"/>
-                <TextBlock l:Uids.Uid="RuleDialog_ResultLabel" Text="Result:" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                <TextBox x:Name="TxtTestInput" l:Uids.Uid="RuleDialog_TestInput" TextChanged="TxtTestInput_TextChanged"/>
+                <TextBlock l:Uids.Uid="RuleDialog_ResultLabel" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                 <TextBlock x:Name="TxtTestResult" Text="-" Style="{ThemeResource BodyStrongTextBlockStyle}" TextWrapping="Wrap"/>
             </StackPanel>
         </Expander>
