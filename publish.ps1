@@ -25,8 +25,9 @@ Write-Host "Organizing Files..."
 $finalDir = "$releaseDir/DigitalWellbeing"
 New-Item -ItemType Directory -Force -Path $finalDir | Out-Null
 
-Copy-Item -Recurse "$releaseDir/App/*" "$finalDir" -Exclude "*.pdb", "*.xml"
-Copy-Item -Recurse "$releaseDir/Service/*" "$finalDir" -Exclude "*.pdb", "*.xml"
+$excludeList = @("*.pdb", "*.xml", "WindowsAppRuntime.png", "Microsoft.Web.WebView2.*", "WebView2Loader.*", "DigitalWellbeingService.dll.config")
+Copy-Item -Recurse "$releaseDir/App/*" "$finalDir" -Exclude $excludeList
+Copy-Item -Recurse "$releaseDir/Service/*" "$finalDir" -Exclude $excludeList
 
 # Clean up unwanted framework language folders
 Write-Host "Cleaning up language folders..."
