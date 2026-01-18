@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.IO;
 using static System.Environment;
 
@@ -9,7 +10,7 @@ namespace DigitalWellbeing.Core;
 /// </summary>
 public static class ApplicationPath
 {
-    private static readonly SpecialFolder ApplicationPathFolder = SpecialFolder.LocalApplicationData;
+    private const SpecialFolder ApplicationPathFolder = SpecialFolder.LocalApplicationData;
     private const string ApplicationFolderName = "digital-wellbeing";
     private const string SettingsFolderName = "settings";
     private const string IconsFolderName = "Icons";

@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -12,8 +13,8 @@ namespace DigitalWellbeingService.Helpers
     /// </summary>
     public static class TrayManager
     {
-        private static NotifyIcon _notifyIcon;
-        private static ContextMenuStrip _contextMenu;
+        private static NotifyIcon? _notifyIcon;
+        private static ContextMenuStrip? _contextMenu;
 
         /// <summary>
         /// Initializes the tray icon. Call from Main before starting the loop.
@@ -72,7 +73,7 @@ namespace DigitalWellbeingService.Helpers
                     Path.Combine(AppContext.BaseDirectory, "..", "DigitalWellbeing", "DigitalWellbeingWinUI3.exe")
                 };
 
-                string uiPath = null;
+                string? uiPath = null;
                 foreach (var path in possiblePaths)
                 {
                     if (File.Exists(path))
@@ -84,14 +85,8 @@ namespace DigitalWellbeingService.Helpers
 
                 if (uiPath != null)
                 {
-                    // Check if already running
-                    var existing = Process.GetProcessesByName("DigitalWellbeingWinUI3");
-                    if (existing.Length > 0)
-                    {
-                        // Bring existing to front (we can't directly, but launching again might)
-                        ServiceLogger.Log("TrayManager", "UI already running.");
-                        return;
-                    }
+                    // Check if already running - Single Instance handled by UI App itself (mutex)
+                    // var existing = Process.GetProcessesByName("DigitalWellbeingWinUI3"); ...
 
                     Process.Start(new ProcessStartInfo(uiPath)
                     {

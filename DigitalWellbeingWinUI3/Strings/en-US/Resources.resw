@@ -803,4 +803,117 @@
   <data name="Dialog_SetTimeLimit_Placeholder" xml:space="preserve">
     <value>Minutes (e.g., 60)</value>
   </data>
+  <!-- Focus Dialog (underscore naming for consistency) -->
+  <data name="Focus_Dialog_Title.Title" xml:space="preserve">
+    <value>Focus Session</value>
+  </data>
+  <data name="Focus_Dialog_NameHeader.Header" xml:space="preserve">
+    <value>Session Name</value>
+  </data>
+  <data name="Focus_Dialog_NamePlaceholder" xml:space="preserve">
+    <value>e.g., Morning Coding</value>
+  </data>
+  <data name="Focus_Dialog_AppHeader.Text" xml:space="preserve">
+    <value>Target Application</value>
+  </data>
+  <data name="Focus_Dialog_AppPlaceholder" xml:space="preserve">
+    <value>Type to search your apps...</value>
+  </data>
+  <data name="Focus_Dialog_AppAssist.Text" xml:space="preserve">
+    <value>Select an app from your usage history</value>
+  </data>
+  <data name="Focus_Dialog_SubAppHeader.Header" xml:space="preserve">
+    <value>Sub-App / Keyword (Optional)</value>
+  </data>
+  <data name="Focus_Dialog_SubAppPlaceholder" xml:space="preserve">
+    <value>e.g., GitHub, YouTube</value>
+  </data>
+  <data name="Focus_Dialog_StartTime.Header" xml:space="preserve">
+    <value>Start Time</value>
+  </data>
+  <data name="Focus_Dialog_Duration.Header" xml:space="preserve">
+    <value>Duration (minutes)</value>
+  </data>
+  <data name="Focus_Dialog_DaysHeader.Text" xml:space="preserve">
+    <value>Repeat on Days</value>
+  </data>
+  <data name="Focus_Dialog_OneTimeHint.Text" xml:space="preserve">
+    <value>Leave all off for one-time session</value>
+  </data>
+  <data name="Focus_Dialog_ModeHeader.Text" xml:space="preserve">
+    <value>Enforcement Mode</value>
+  </data>
+  <data name="Focus_Dialog_Mode_Chill.Content" xml:space="preserve">
+    <value>🟢 Chill - Toast notification only</value>
+  </data>
+  <data name="Focus_Dialog_Mode_Normal.Content" xml:space="preserve">
+    <value>🟠 Normal - Popup dialog (like time limits)</value>
+  </data>
+  <data name="Focus_Dialog_Mode_Focus.Content" xml:space="preserve">
+    <value>🔴 Focus - Close unauthorized apps</value>
+  </data>
+  <data name="Focus_Dialog_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Focus_Dialog_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <!-- Rule Dialog (underscore naming for consistency) -->
+  <data name="Rule_Dialog_Title.Title" xml:space="preserve">
+    <value>Edit Rule</value>
+  </data>
+  <data name="Rule_Dialog_ProcessHeader.Header" xml:space="preserve">
+    <value>Process Name (Optional)</value>
+  </data>
+  <data name="Rule_Dialog_ProcessPlaceholder" xml:space="preserve">
+    <value>e.g. chrome (leave empty for all)</value>
+  </data>
+  <data name="Rule_Dialog_PatternHeader.Header" xml:space="preserve">
+    <value>Match Pattern (Title)</value>
+  </data>
+  <data name="Rule_Dialog_PatternPlaceholder" xml:space="preserve">
+    <value>Text or Regex to match</value>
+  </data>
+  <data name="Rule_Dialog_TypeHeader.Header" xml:space="preserve">
+    <value>Match Type</value>
+  </data>
+  <data name="Rule_Dialog_Type_Contains.Content" xml:space="preserve">
+    <value>Contains (Default)</value>
+  </data>
+  <data name="Rule_Dialog_Type_StartsWith.Content" xml:space="preserve">
+    <value>Starts With</value>
+  </data>
+  <data name="Rule_Dialog_Type_EndsWith.Content" xml:space="preserve">
+    <value>Ends With</value>
+  </data>
+  <data name="Rule_Dialog_Type_Exact.Content" xml:space="preserve">
+    <value>Exact Match</value>
+  </data>
+  <data name="Rule_Dialog_Type_Regex.Content" xml:space="preserve">
+    <value>Regular Expression</value>
+  </data>
+  <data name="Rule_Dialog_ReplacementHeader.Header" xml:space="preserve">
+    <value>Replacement</value>
+  </data>
+  <data name="Rule_Dialog_ReplacementPlaceholder" xml:space="preserve">
+    <value>New text (supports $1 capture groups)</value>
+  </data>
+  <data name="Rule_Dialog_TestHeader.Header" xml:space="preserve">
+    <value>Test Rule</value>
+  </data>
+  <data name="Rule_Dialog_TestInput.Header" xml:space="preserve">
+    <value>Test Input</value>
+  </data>
+  <data name="Rule_Dialog_TestPlaceholder" xml:space="preserve">
+    <value>Paste a sample window title here</value>
+  </data>
+  <data name="Rule_Dialog_Result.Text" xml:space="preserve">
+    <value>Result:</value>
+  </data>
+  <data name="Rule_Dialog_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Rule_Dialog_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
 </root>

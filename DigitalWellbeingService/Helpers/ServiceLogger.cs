@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.IO;
 using static System.Environment;
@@ -9,7 +10,7 @@ namespace DigitalWellbeingService.Helpers;
 /// </summary>
 public static class ServiceLogger
 {
-    private static string? _logPath;
+
     private static readonly object _lock = new();
 
     private static string GetLogPath() => DigitalWellbeing.Core.ApplicationPath.ServiceDebugFile;

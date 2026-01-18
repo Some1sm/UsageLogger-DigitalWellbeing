@@ -1,3 +1,4 @@
+#nullable enable
 
 using System;
 using System.Linq;
@@ -7,7 +8,7 @@ namespace DigitalWellbeing.Core.Helpers
 {
     public static class WindowTitleParser
     {
-        public static string Parse(string processName, string rawTitle, System.Collections.Generic.List<Models.CustomTitleRule> rules = null)
+        public static string Parse(string processName, string rawTitle, System.Collections.Generic.List<Models.CustomTitleRule>? rules = null)
         {
             if (string.IsNullOrWhiteSpace(rawTitle)) return rawTitle;
 

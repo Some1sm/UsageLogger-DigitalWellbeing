@@ -1,3 +1,4 @@
+#nullable enable
 using System.Text.Json.Serialization;
 using System.Collections.Generic;
 using DigitalWellbeing.Core.Models;

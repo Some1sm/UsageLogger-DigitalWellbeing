@@ -42,6 +42,20 @@ namespace DigitalWellbeingWinUI3
         {
             try
             {
+                // Single Instance Logic
+                var mainInstance = Microsoft.Windows.AppLifecycle.AppInstance.FindOrRegisterForKey("main");
+                if (!mainInstance.IsCurrent)
+                {
+                    // Redirect activation to the main instance
+                    var activatedArgs = Microsoft.Windows.AppLifecycle.AppInstance.GetCurrent().GetActivatedEventArgs();
+                    await mainInstance.RedirectActivationToAsync(activatedArgs);
+                    System.Diagnostics.Debug.WriteLine("[App] Redirected activation to main instance. Exiting.");
+                    Environment.Exit(0);
+                    return;
+                }
+
+                // Register for redirection activation
+                Microsoft.Windows.AppLifecycle.AppInstance.GetCurrent().Activated += App_Activated;
                 // Register for Toast Notifications (Required for Unpackaged)
                 try
                 {
@@ -71,6 +85,19 @@ namespace DigitalWellbeingWinUI3
             }
         }
         
+        
+        private void App_Activated(object sender, Microsoft.Windows.AppLifecycle.AppActivationArguments e)
+        {
+            // Handle redirection on the UI thread
+            m_window?.DispatcherQueue.TryEnqueue(() =>
+            {
+                if (m_window is MainWindow mw)
+                {
+                    mw.RestoreWindow();
+                }
+            });
+        }
+
         private void StartupFocusReminderTimer()
         {
             var timer = new DispatcherTimer();

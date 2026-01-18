@@ -18,8 +18,6 @@ namespace DigitalWellbeingWinUI3.Controls
 {
     public sealed partial class Win2DBarChart : UserControl
     {
-        private float _rotationOffset = 0f; // Unused but kept for structure if needed
-        
         // Per-Bar Animation State
         // Key: Date String (or Label) -> Start Time
         private Dictionary<string, DateTime> _animatingBars = new Dictionary<string, DateTime>();

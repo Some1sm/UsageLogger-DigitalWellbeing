@@ -1,4 +1,5 @@
-﻿using DigitalWellbeing.Core;
+﻿#nullable enable
+using DigitalWellbeing.Core;
 using DigitalWellbeing.Core.Data;
 using DigitalWellbeingService.Helpers;
 using System;
@@ -10,15 +11,11 @@ namespace DigitalWellbeingService;
 
 class Program
 {
-    private static ActivityLogger _activityLogger;
+    private static ActivityLogger? _activityLogger;
 
     [STAThread]
     static void Main(string[] args)
     {
-        // Enable visual styles for tray menu
-        Application.EnableVisualStyles();
-        Application.SetCompatibleTextRenderingDefault(false);
-
         // Initialize tray icon
         TrayManager.Init();
 

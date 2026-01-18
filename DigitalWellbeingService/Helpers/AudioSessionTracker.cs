@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -41,8 +42,8 @@ namespace DigitalWellbeingService.Helpers
         private static List<string> GetActiveAudioSessionsInternal()
         {
             var activeApps = new List<string>();
-            MMDeviceEnumerator enumerator = null;
-            MMDeviceCollection devices = null;
+            MMDeviceEnumerator? enumerator = null;
+            MMDeviceCollection? devices = null;
 
             try
             {
@@ -145,7 +146,7 @@ namespace DigitalWellbeingService.Helpers
 
         private static bool IsGlobalAudioPlayingInternal()
         {
-            MMDeviceEnumerator enumerator = null;
+            MMDeviceEnumerator? enumerator = null;
             try
             {
                 enumerator = new MMDeviceEnumerator();

@@ -1,4 +1,5 @@
-﻿using DigitalWellbeing.Core;
+﻿#nullable enable
+using DigitalWellbeing.Core;
 using DigitalWellbeing.Core.Data;
 using DigitalWellbeing.Core.Interfaces;
 using DigitalWellbeing.Core.Models;
@@ -152,7 +153,7 @@ public class ActivityLogger
     /// <summary>
     /// Checks if a window title should be hidden (merged into parent process).
     /// </summary>
-    private bool ShouldHideSubApp(string windowTitle)
+    private bool ShouldHideSubApp(string? windowTitle)
     {
         if (string.IsNullOrEmpty(windowTitle) || _ignoredWindowTitles.Count == 0)
             return false;
@@ -165,11 +166,11 @@ public class ActivityLogger
         return false;
     }
 
-    private string folderPath;
-    private string autoRunFilePath;
+    private string folderPath = string.Empty;
+    private string autoRunFilePath = string.Empty;
 
     private readonly IAppUsageRepository _repository;
-    private List<AppUsage> _cachedUsage;
+    private List<AppUsage> _cachedUsage = [];
     private DateTime _lastFlushTime;
     private readonly SessionManager _sessionManager;
     private bool _isLocked = false; // Track workstation lock/unlock state
@@ -357,7 +358,7 @@ public class ActivityLogger
             {
                 try 
                 { 
-                    string rawTitle = ForegroundWindowManager.GetWindowTitle(handle);
+                    string? rawTitle = ForegroundWindowManager.GetWindowTitle(handle);
                     
                     // Check Hidden SubApps filter FIRST (on raw title)
                     // If keyword matches, skip parsing and use process name
@@ -368,11 +369,11 @@ public class ActivityLogger
                     // Fallback to Product Name if Title is empty
                     else if (string.IsNullOrWhiteSpace(rawTitle))
                     {
-                        programName = ForegroundWindowManager.GetActiveProgramName(proc);
+                        programName = ForegroundWindowManager.GetActiveProgramName(proc) ?? processName;
                     }
                     else
                     {
-                        programName = DigitalWellbeing.Core.Helpers.WindowTitleParser.Parse(processName, rawTitle, _customTitleRules);
+                        programName = DigitalWellbeing.Core.Helpers.WindowTitleParser.Parse(processName, rawTitle ?? "", _customTitleRules);
                     }
                 } 
                 catch {}
@@ -552,8 +553,8 @@ public class ActivityLogger
                 "digital-wellbeing",
                 "focus_schedule.json");
                 
-            string dir = Path.GetDirectoryName(focusPath);
-            if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+            string? dir = Path.GetDirectoryName(focusPath);
+            if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir)) Directory.CreateDirectory(dir);
             
             string json = System.Text.Json.JsonSerializer.Serialize(_focusSessions, 
                 new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
@@ -706,13 +707,13 @@ public class ActivityLogger
 // ServiceFocusSession - mirrors the UI's FocusSession for JSON compatibility
 public class ServiceFocusSession
 {
-    public string Id { get; set; }
-    public string Name { get; set; }
+    public string Id { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
     public TimeSpan StartTime { get; set; }
     public TimeSpan Duration { get; set; }
-    public List<DayOfWeek> Days { get; set; }
-    public string ProcessName { get; set; }
-    public string ProgramName { get; set; }
+    public List<DayOfWeek> Days { get; set; } = [];
+    public string ProcessName { get; set; } = string.Empty;
+    public string ProgramName { get; set; } = string.Empty;
     public int Mode { get; set; } // 0=Chill, 1=Normal, 2=Focus
     public bool IsEnabled { get; set; }
 

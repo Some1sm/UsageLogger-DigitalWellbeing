@@ -1,3 +1,4 @@
+#nullable enable
 using DigitalWellbeing.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace DigitalWellbeing.Core.Helpers
         private const string MUTEX_NAME = "DigitalWellbeing_LiveSessionMutex_v3";
         
         // Keep MMF alive as static field - DO NOT DISPOSE until app exits
-        private static MemoryMappedFile _mmf;
+        private static MemoryMappedFile? _mmf;
         private static readonly object _lock = new object();
         
         private static MemoryMappedFile GetOrCreateMMF()
@@ -43,7 +44,7 @@ namespace DigitalWellbeing.Core.Helpers
         {
             if (allSessions == null) return;
             
-            Mutex mutex = null;
+            Mutex? mutex = null;
             bool hasMutex = false;
             
             try
@@ -88,7 +89,7 @@ namespace DigitalWellbeing.Core.Helpers
         /// </summary>
         public static List<AppSession> ReadAll()
         {
-            Mutex mutex = null;
+            Mutex? mutex = null;
             bool hasMutex = false;
             
             try
@@ -98,7 +99,7 @@ namespace DigitalWellbeing.Core.Helpers
                 
                 if (hasMutex)
                 {
-                    MemoryMappedFile mmf = null;
+                    MemoryMappedFile? mmf = null;
                     try
                     {
                         mmf = MemoryMappedFile.OpenExisting(MAP_NAME);
@@ -151,7 +152,7 @@ namespace DigitalWellbeing.Core.Helpers
             WriteAll(new List<AppSession> { session });
         }
 
-        public static AppSession Read()
+        public static AppSession? Read()
         {
             var sessions = ReadAll();
             return sessions.Count > 0 ? sessions[sessions.Count - 1] : null;

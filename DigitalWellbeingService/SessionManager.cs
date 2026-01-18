@@ -1,3 +1,4 @@
+#nullable enable
 using DigitalWellbeing.Core.Data;
 using DigitalWellbeing.Core.Interfaces;
 using DigitalWellbeing.Core.Models;
