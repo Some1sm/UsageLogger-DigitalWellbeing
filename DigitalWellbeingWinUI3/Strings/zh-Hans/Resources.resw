@@ -790,4 +790,52 @@
   <data name="FocusPageStatusNoSession" xml:space="preserve">
     <value>监控活跃 (无会话)</value>
   </data>
+  <data name="Settings_CustomTitleRules.Text" xml:space="preserve">
+    <value>自定义标题规则</value>
+  </data>
+  <data name="Settings_CustomTitleRulesDesc.Text" xml:space="preserve">
+    <value>定义自定义规则以解析窗口标题（例如将 'X Match' 重命名为 'X Pattern'）</value>
+  </data>
+  <data name="Settings_AddNewRule.Content" xml:space="preserve">
+    <value>添加新规则</value>
+  </data>
+  <data name="Dashboard_TabAfkTime.Header" xml:space="preserve">
+    <value>🕐 挂机时间 (AFK)</value>
+  </data>
+  <data name="Dashboard_AwayFromKeyboard.Text" xml:space="preserve">
+    <value>离开键盘</value>
+  </data>
+  <data name="Dashboard_ScreenLocked.Text" xml:space="preserve">
+    <value>屏幕锁定</value>
+  </data>
+  <data name="Dashboard_NoData.Text" xml:space="preserve">
+    <value>暂无数据</value>
+  </data>
+  <data name="Dashboard_AfkTimeTitle.Text" xml:space="preserve">
+    <value>🕐 挂机时间 (AFK)</value>
+  </data>
+  <data name="Dialog_SetDisplayName_Title" xml:space="preserve">
+    <value>设置 {0} 的显示名称</value>
+  </data>
+  <data name="Dialog_SetDisplayName_Desc" xml:space="preserve">
+    <value>设置此进程的自定义显示名称。原始进程名称仍将用于跟踪。</value>
+  </data>
+  <data name="Dialog_SetDisplayName_Placeholder" xml:space="preserve">
+    <value>输入 {0} 的显示名称</value>
+  </data>
+  <data name="Dialog_Save" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="Dialog_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Dialog_Remove" xml:space="preserve">
+    <value>移除</value>
+  </data>
+  <data name="Dialog_SetTimeLimit_Title" xml:space="preserve">
+    <value>设置 {0} 的时间限制</value>
+  </data>
+  <data name="Dialog_SetTimeLimit_Placeholder" xml:space="preserve">
+    <value>分钟 (例如 60)</value>
+  </data>
 </root>

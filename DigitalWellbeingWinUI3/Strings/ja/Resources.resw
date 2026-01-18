@@ -790,4 +790,52 @@
   <data name="FocusPageStatusNoSession" xml:space="preserve">
     <value>監視中 (セッションなし)</value>
   </data>
+  <data name="Settings_CustomTitleRules.Text" xml:space="preserve">
+    <value>カスタムタイトルルール</value>
+  </data>
+  <data name="Settings_CustomTitleRulesDesc.Text" xml:space="preserve">
+    <value>ウィンドウタイトルを解析するカスタムルールを定義します (例: 'X Match' を 'X Pattern' に変更)</value>
+  </data>
+  <data name="Settings_AddNewRule.Content" xml:space="preserve">
+    <value>新しいルールを追加</value>
+  </data>
+  <data name="Dashboard_TabAfkTime.Header" xml:space="preserve">
+    <value>🕐 離席時間 (AFK)</value>
+  </data>
+  <data name="Dashboard_AwayFromKeyboard.Text" xml:space="preserve">
+    <value>離席中</value>
+  </data>
+  <data name="Dashboard_ScreenLocked.Text" xml:space="preserve">
+    <value>画面ロック</value>
+  </data>
+  <data name="Dashboard_NoData.Text" xml:space="preserve">
+    <value>表示するデータがありません</value>
+  </data>
+  <data name="Dashboard_AfkTimeTitle.Text" xml:space="preserve">
+    <value>🕐 離席時間 (AFK)</value>
+  </data>
+  <data name="Dialog_SetDisplayName_Title" xml:space="preserve">
+    <value>{0} の表示名を設定</value>
+  </data>
+  <data name="Dialog_SetDisplayName_Desc" xml:space="preserve">
+    <value>このプロセスのカスタム表示名を設定します。元のプロセス名は追跡に引き続き使用されます。</value>
+  </data>
+  <data name="Dialog_SetDisplayName_Placeholder" xml:space="preserve">
+    <value>{0} の表示名を入力</value>
+  </data>
+  <data name="Dialog_Save" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="Dialog_Cancel" xml:space="preserve">
+    <value>キャンセル</value>
+  </data>
+  <data name="Dialog_Remove" xml:space="preserve">
+    <value>削除</value>
+  </data>
+  <data name="Dialog_SetTimeLimit_Title" xml:space="preserve">
+    <value>{0} の時間制限を設定</value>
+  </data>
+  <data name="Dialog_SetTimeLimit_Placeholder" xml:space="preserve">
+    <value>分 (例: 60)</value>
+  </data>
 </root>

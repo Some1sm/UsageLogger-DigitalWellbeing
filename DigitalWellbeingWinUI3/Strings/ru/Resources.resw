@@ -790,4 +790,52 @@
   <data name="FocusPageStatusNoSession" xml:space="preserve">
     <value>Мониторинг активен (Нет сессии)</value>
   </data>
+  <data name="Settings_CustomTitleRules.Text" xml:space="preserve">
+    <value>Пользовательские правила заголовков</value>
+  </data>
+  <data name="Settings_CustomTitleRulesDesc.Text" xml:space="preserve">
+    <value>Определите пользовательские правила для разбора заголовков окон (например, переименовать 'X Match' в 'X Pattern')</value>
+  </data>
+  <data name="Settings_AddNewRule.Content" xml:space="preserve">
+    <value>Добавить правило</value>
+  </data>
+  <data name="Dashboard_TabAfkTime.Header" xml:space="preserve">
+    <value>🕐 Время отсутствия (AFK)</value>
+  </data>
+  <data name="Dashboard_AwayFromKeyboard.Text" xml:space="preserve">
+    <value>Отошел от клавиатуры</value>
+  </data>
+  <data name="Dashboard_ScreenLocked.Text" xml:space="preserve">
+    <value>Экран заблокирован</value>
+  </data>
+  <data name="Dashboard_NoData.Text" xml:space="preserve">
+    <value>Нет данных для отображения</value>
+  </data>
+  <data name="Dashboard_AfkTimeTitle.Text" xml:space="preserve">
+    <value>🕐 Время отсутствия (AFK)</value>
+  </data>
+  <data name="Dialog_SetDisplayName_Title" xml:space="preserve">
+    <value>Установить имя для {0}</value>
+  </data>
+  <data name="Dialog_SetDisplayName_Desc" xml:space="preserve">
+    <value>Установите пользовательское имя для этого процесса. Оригинальное имя будет использоваться для отслеживания.</value>
+  </data>
+  <data name="Dialog_SetDisplayName_Placeholder" xml:space="preserve">
+    <value>Введите имя для {0}</value>
+  </data>
+  <data name="Dialog_Save" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="Dialog_Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="Dialog_Remove" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="Dialog_SetTimeLimit_Title" xml:space="preserve">
+    <value>Установить лимит времени для {0}</value>
+  </data>
+  <data name="Dialog_SetTimeLimit_Placeholder" xml:space="preserve">
+    <value>Минуты (например, 60)</value>
+  </data>
 </root>

@@ -790,4 +790,52 @@ Fin : {2}</value>
   <data name="FocusPageStatusNoSession" xml:space="preserve">
     <value>Surveillance Active (Aucune Session)</value>
   </data>
+  <data name="Settings_CustomTitleRules.Text" xml:space="preserve">
+    <value>Règles de Titre Personnalisées</value>
+  </data>
+  <data name="Settings_CustomTitleRulesDesc.Text" xml:space="preserve">
+    <value>Définissez des règles personnalisées pour analyser les titres de fenêtres (ex: renommer 'X Match' en 'X Pattern')</value>
+  </data>
+  <data name="Settings_AddNewRule.Content" xml:space="preserve">
+    <value>Ajouter une Nouvelle Règle</value>
+  </data>
+  <data name="Dashboard_TabAfkTime.Header" xml:space="preserve">
+    <value>🕐 Temps d'Absence (AFK)</value>
+  </data>
+  <data name="Dashboard_AwayFromKeyboard.Text" xml:space="preserve">
+    <value>Absent du Clavier</value>
+  </data>
+  <data name="Dashboard_ScreenLocked.Text" xml:space="preserve">
+    <value>Écran Verrouillé</value>
+  </data>
+  <data name="Dashboard_NoData.Text" xml:space="preserve">
+    <value>Aucune donnée à afficher</value>
+  </data>
+  <data name="Dashboard_AfkTimeTitle.Text" xml:space="preserve">
+    <value>🕐 Temps d'Absence (AFK)</value>
+  </data>
+  <data name="Dialog_SetDisplayName_Title" xml:space="preserve">
+    <value>Définir le Nom d'Affichage pour {0}</value>
+  </data>
+  <data name="Dialog_SetDisplayName_Desc" xml:space="preserve">
+    <value>Définissez un nom d'affichage personnalisé pour ce processus. Le nom d'origine sera toujours utilisé pour le suivi.</value>
+  </data>
+  <data name="Dialog_SetDisplayName_Placeholder" xml:space="preserve">
+    <value>Entrez le nom pour {0}</value>
+  </data>
+  <data name="Dialog_Save" xml:space="preserve">
+    <value>Enregistrer</value>
+  </data>
+  <data name="Dialog_Cancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="Dialog_Remove" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="Dialog_SetTimeLimit_Title" xml:space="preserve">
+    <value>Définir la Limite de Temps pour {0}</value>
+  </data>
+  <data name="Dialog_SetTimeLimit_Placeholder" xml:space="preserve">
+    <value>Minutes (ex: 60)</value>
+  </data>
 </root>

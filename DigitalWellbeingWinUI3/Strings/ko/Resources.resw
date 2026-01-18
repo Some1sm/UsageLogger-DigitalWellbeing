@@ -790,4 +790,52 @@
   <data name="FocusPageStatusNoSession" xml:space="preserve">
     <value>모니터링 활성 (세션 없음)</value>
   </data>
+  <data name="Settings_CustomTitleRules.Text" xml:space="preserve">
+    <value>사용자 지정 제목 규칙</value>
+  </data>
+  <data name="Settings_CustomTitleRulesDesc.Text" xml:space="preserve">
+    <value>창 제목을 분석할 사용자 지정 규칙 정의 (예: 'X Match'를 'X Pattern'으로 이름 변경)</value>
+  </data>
+  <data name="Settings_AddNewRule.Content" xml:space="preserve">
+    <value>새 규칙 추가</value>
+  </data>
+  <data name="Dashboard_TabAfkTime.Header" xml:space="preserve">
+    <value>🕐 자리 비움 시간 (AFK)</value>
+  </data>
+  <data name="Dashboard_AwayFromKeyboard.Text" xml:space="preserve">
+    <value>키보드 미사용</value>
+  </data>
+  <data name="Dashboard_ScreenLocked.Text" xml:space="preserve">
+    <value>화면 잠김</value>
+  </data>
+  <data name="Dashboard_NoData.Text" xml:space="preserve">
+    <value>표시할 데이터 없음</value>
+  </data>
+  <data name="Dashboard_AfkTimeTitle.Text" xml:space="preserve">
+    <value>🕐 자리 비움 시간 (AFK)</value>
+  </data>
+  <data name="Dialog_SetDisplayName_Title" xml:space="preserve">
+    <value>{0}의 표시 이름 설정</value>
+  </data>
+  <data name="Dialog_SetDisplayName_Desc" xml:space="preserve">
+    <value>이 프로세스의 사용자 지정 표시 이름을 설정합니다. 원래 프로세스 이름은 추적에 계속 사용됩니다.</value>
+  </data>
+  <data name="Dialog_SetDisplayName_Placeholder" xml:space="preserve">
+    <value>{0}의 이름 입력</value>
+  </data>
+  <data name="Dialog_Save" xml:space="preserve">
+    <value>저장</value>
+  </data>
+  <data name="Dialog_Cancel" xml:space="preserve">
+    <value>취소</value>
+  </data>
+  <data name="Dialog_Remove" xml:space="preserve">
+    <value>제거</value>
+  </data>
+  <data name="Dialog_SetTimeLimit_Title" xml:space="preserve">
+    <value>{0}의 시간 제한 설정</value>
+  </data>
+  <data name="Dialog_SetTimeLimit_Placeholder" xml:space="preserve">
+    <value>분 (예: 60)</value>
+  </data>
 </root>
