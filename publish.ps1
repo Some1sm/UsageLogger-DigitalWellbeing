@@ -69,9 +69,28 @@ $setupDir = "DigitalWellbeing.Setup"
 $zipSource = "$zipName"
 $zipDest = "$setupDir/DigitalWellbeing_Portable.zip"
 
+# 1. Build LIGHTWEIGHT Uninstall.exe (No Payload)
+Write-Host "Building Uninstaller (No Payload)..."
+dotnet build -c Release -p:EmbedPayload=false -o "$releaseDir/Uninstaller" $setupDir/DigitalWellbeing.Setup.csproj
+$uninstallExeSrc = "$releaseDir/Uninstaller/DigitalWellbeing.Setup.exe"
+$uninstallExeDest = "$finalDir/Uninstall.exe"
+Copy-Item -Force $uninstallExeSrc $uninstallExeDest
+
+# 2. Re-Zip the package (Now including Uninstall.exe)
+Write-Host "Re-Zipping package with Uninstall.exe..."
+if (Test-Path $zipName) { Remove-Item -Force $zipName }
+try {
+    Compress-Archive -Path "$finalDir\*" -DestinationPath $zipName -Force
+}
+catch {
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    [System.IO.Compression.ZipFile]::CreateFromDirectory((Resolve-Path $finalDir), (Resolve-Path .).Path + "\$zipName")
+}
+
 Copy-Item -Force $zipSource $zipDest
 
-# Build Setup
+# 3. Build FULL Installer (With Payload)
+# Note: DigitalWellbeing_Portable.zip is now updated with Uninstall.exe inside it
 dotnet build -c Release -o "$releaseDir/Setup" $setupDir/DigitalWellbeing.Setup.csproj
 
 # Copy Output

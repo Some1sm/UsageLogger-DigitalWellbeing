@@ -164,7 +164,19 @@ namespace DigitalWellbeing.Setup
                 }
                 else
                 {
+                    // Check if payload is present
+                    var assembly = Assembly.GetExecutingAssembly();
+                    string resourceName = assembly.GetManifestResourceNames().FirstOrDefault(n => n.EndsWith("DigitalWellbeing_Portable.zip"));
+                    bool hasPayload = !string.IsNullOrEmpty(resourceName);
+
                     CheckInstallationState();
+
+                    if (!hasPayload)
+                    {
+                        btnInstall.Enabled = false;
+                        btnRepair.Enabled = false;
+                        statusLabel.Text += " (Installer payload missing)";
+                    }
                 }
             }
             catch (Exception ex)
@@ -375,7 +387,12 @@ namespace DigitalWellbeing.Setup
                 string currentExe = Process.GetCurrentProcess().MainModule.FileName;
                 if (!string.Equals(currentExe, uninstallExePath, StringComparison.OrdinalIgnoreCase))
                 {
-                     try { File.Copy(currentExe, uninstallExePath, true); } catch { }
+                    // Only copy myself if Uninstall.exe doesn't already exist or I am the full installer
+                    // This prevents overwriting a specialized small uninstaller (if we shipped one) with a large installer
+                    if (!File.Exists(uninstallExePath))
+                    {
+                        try { File.Copy(currentExe, uninstallExePath, true); } catch { }
+                    }
                 }
             });
 
