@@ -826,8 +826,10 @@ namespace DigitalWellbeingWinUI3.Views
                 this.DispatcherQueue.TryEnqueue(() =>
                 {
                     DaysToShowTextBox.Maximum = totalDays;
-                    DaysAvailableHint.Text = $"(Max: {totalDays})";
-                    DaysAvailableHint.Visibility = Visibility.Visible;
+                    
+                    // Append max to description instead of separate hint
+                    string baseDesc = LocalizationHelper.GetString("Settings_DaysToShowDesc/Text");
+                    TxtDaysToShowDesc.Text = $"{baseDesc} (Max: {totalDays})";
 
                     if (DaysToShowTextBox.Value > totalDays)
                     {

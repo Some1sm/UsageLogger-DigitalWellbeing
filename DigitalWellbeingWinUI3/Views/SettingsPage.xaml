@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="DigitalWellbeingWinUI3.Views.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -163,7 +163,7 @@
                                 <StackPanel Grid.Column="0">
                                     <TextBlock Text="{Binding FriendlyPattern}" FontWeight="SemiBold"/>
                                     <StackPanel Orientation="Horizontal" Spacing="5">
-                                        <TextBlock Text="→" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                        <TextBlock Text="?" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                                         <TextBlock Text="{Binding Replacement}" FontStyle="Italic"/>
                                     </StackPanel>
                                 </StackPanel>
@@ -254,7 +254,7 @@
                      </Grid.ColumnDefinitions>
                      <StackPanel Grid.Column="0" Spacing="2">
                          <TextBlock l:Uids.Uid="Settings_DaysToShow" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                          <TextBlock l:Uids.Uid="Settings_DaysToShowDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
+                          <TextBlock x:Name="TxtDaysToShowDesc" l:Uids.Uid="Settings_DaysToShowDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
                      </StackPanel>
                        <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="10">
                           <NumberBox x:Name="DaysToShowTextBox" Value="7" SpinButtonPlacementMode="Compact" Width="150" Minimum="1" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp"/>
@@ -339,16 +339,16 @@
                     <ComboBox x:Name="CBLanguage" Grid.Column="1" Width="200" SelectionChanged="CBLanguage_SelectionChanged">
                         <ComboBoxItem Content="System Default" Tag=""/>
                         <ComboBoxItem Content="English" Tag="en-US"/>
-                        <ComboBoxItem Content="Español (Spanish)" Tag="es-ES"/>
-                        <ComboBoxItem Content="Français (French)" Tag="fr"/>
+                        <ComboBoxItem Content="Espa�ol (Spanish)" Tag="es-ES"/>
+                        <ComboBoxItem Content="Fran�ais (French)" Tag="fr"/>
                         <ComboBoxItem Content="Deutsch (German)" Tag="de"/>
                         <ComboBoxItem Content="Italiano (Italian)" Tag="it"/>
-                        <ComboBoxItem Content="Português (Brasil)" Tag="pt-BR"/>
-                        <ComboBoxItem Content="中文 (Simplified)" Tag="zh-Hans"/>
-                        <ComboBoxItem Content="日本語 (Japanese)" Tag="ja"/>
-                        <ComboBoxItem Content="한국어 (Korean)" Tag="ko"/>
-                        <ComboBoxItem Content="Русский (Russian)" Tag="ru"/>
-                        <ComboBoxItem Content="Català (Catalan)" Tag="ca-ES"/>
+                        <ComboBoxItem Content="Portugu�s (Brasil)" Tag="pt-BR"/>
+                        <ComboBoxItem Content="?? (Simplified)" Tag="zh-Hans"/>
+                        <ComboBoxItem Content="??? (Japanese)" Tag="ja"/>
+                        <ComboBoxItem Content="??? (Korean)" Tag="ko"/>
+                        <ComboBoxItem Content="??????? (Russian)" Tag="ru"/>
+                        <ComboBoxItem Content="Catal� (Catalan)" Tag="ca-ES"/>
                     </ComboBox>
                 </Grid>
                 
