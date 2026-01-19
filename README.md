@@ -1,6 +1,6 @@
-# Windows Digital Wellbeing
+﻿# Windows UsageLogger
 
-A modern App Usage tracker (time tracker) for Windows 11 inspired by Digital Wellbeing in Android. 
+A modern App Usage tracker (time tracker) for Windows 11 inspired by UsageLogger in Android. 
 Built with **WinUI 3 / Windows App SDK** for a beautiful, native Windows 11 look and feel.
 
 ## Features
@@ -31,10 +31,10 @@ If the app crashes upon opening, try:
 ## For Developers
 
 ### Solution Projects
-- `DigitalWellbeing.Core` - Static shared class library.
-- `DigitalWellbeingService` - Background service (Core tracking logic, .NET Framework 4.7.2).
-- `DigitalWellbeingWinUI3` - Modern Frontend (.NET 8, WinUI 3).
-- `DigitalWellbeing.Setup` - Installer generation logic.
+- `UsageLogger.Core` - Static shared class library.
+- `UsageLoggerService` - Background service (Core tracking logic, .NET Framework 4.7.2).
+- `UsageLogger` - Modern Frontend (.NET 8, WinUI 3).
+- `UsageLogger.Setup` - Installer generation logic.
 
 ### How to Build
 To build the installer, run the valid PowerShell script in the root directory:
@@ -45,4 +45,5 @@ This script will:
 1.  Build all projects in `Release` configuration.
 2.  Package the application into a zip.
 3.  Embed the zip into the Installer.
-4.  Generate `DigitalWellbeing_Installer.exe` in the root directory.
+4.  Generate `UsageLogger_Installer.exe` in the root directory.
+

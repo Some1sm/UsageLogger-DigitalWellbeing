@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -13,8 +13,8 @@
     <Authors>David Cepero</Authors>
     <Company>David Cepero</Company>
     <Product>UsageLogger Installer</Product>
-    <Description>Installer for Digital Wellbeing</Description>
-    <Copyright>� 2025 David Cepero</Copyright>
+    <Description>Installer for UsageLogger</Description>
+    <Copyright>© 2025 David Cepero</Copyright>
     <AssemblyTitle>UsageLogger Installer</AssemblyTitle>
   </PropertyGroup>
 
