@@ -24,6 +24,8 @@ namespace UsageLogger.Helpers
         public static string ThemeMode { get; set; } = "System"; // System, Light, Dark
         public static bool MinimizeOnExit { get; set; } = true;
         public static Dictionary<string, int> AppTimeLimits { get; set; } = new Dictionary<string, int>();
+        public static Dictionary<string, AppTag> AppTags { get; set; } = new Dictionary<string, AppTag>();
+        public static Dictionary<string, int> TitleTags { get; set; } = new Dictionary<string, int>();
         public static List<CustomAppTag> CustomTags { get; set; } = new List<CustomAppTag>();
         public static bool IncognitoMode { get; set; } = false;
         public static bool FocusMonitoringEnabled { get; set; } = false;
@@ -69,6 +71,8 @@ namespace UsageLogger.Helpers
                     ThemeMode,
                     MinimizeOnExit,
                     AppTimeLimits,
+                    AppTags,
+                    TitleTags,
                     CustomTags,
                     IncognitoMode,
                     FocusMonitoringEnabled,
@@ -137,8 +141,23 @@ namespace UsageLogger.Helpers
                     if (data.TryGetProperty(nameof(KwhPrice), out prop)) KwhPrice = prop.GetDouble();
                     if (data.TryGetProperty(nameof(CurrencySymbol), out prop)) CurrencySymbol = prop.GetString();
 
+                    // Load AppTags and TitleTags
+                    if (data.TryGetProperty(nameof(AppTags), out prop)) 
+                        AppTags = JsonSerializer.Deserialize<Dictionary<string, AppTag>>(prop.GetRawText()) ?? new Dictionary<string, AppTag>();
+                    else
+                        MigrateLegacyTextFiles(); // JSON exists but missing tags -> try migrate
+
+                    if (data.TryGetProperty(nameof(TitleTags), out prop))
+                        TitleTags = JsonSerializer.Deserialize<Dictionary<string, int>>(prop.GetRawText()) ?? new Dictionary<string, int>();
+
                     // Repair Custom Icon Paths if moved to Icons/CustomIcons
                     RepairCustomIconPaths();
+                }
+                else
+                {
+                     // New install or first run after migration?
+                     // Try migrate legacy text files if they exist
+                     MigrateLegacyTextFiles();
                 }
 
                 // Default Initialization
@@ -186,6 +205,99 @@ namespace UsageLogger.Helpers
             }
 
             if (changed) Save();
+        }
+
+        private static void MigrateLegacyTextFiles()
+        {
+            try
+            {
+                string folder = UsageLogger.Core.ApplicationPath.SettingsFolder;
+                bool changed = false;
+
+                // 1. App Tags
+                string appTagsFile = Path.Combine(folder, "app-tags.txt");
+                if (File.Exists(appTagsFile))
+                {
+                    try 
+                    {
+                        var lines = File.ReadAllLines(appTagsFile);
+                        foreach (var line in lines)
+                        {
+                            var parts = line.Split('\t');
+                            if (parts.Length >= 2)
+                            {
+                                string name = parts[0];
+                                if (int.TryParse(parts[1], out int tagId))
+                                {
+                                    AppTags.TryAdd(name, (AppTag)tagId);
+                                }
+                            }
+                        }
+                        File.Move(appTagsFile, appTagsFile + ".bak", true); // Rename on success
+                        changed = true;
+                        System.Diagnostics.Debug.WriteLine($"[UserPreferences] Migrated {lines.Length} app tags.");
+                    }
+                    catch { }
+                }
+
+                // 2. Title Tags
+                string titleTagsFile = Path.Combine(folder, "title-tags.txt");
+                if (File.Exists(titleTagsFile))
+                {
+                    try
+                    {
+                        var lines = File.ReadAllLines(titleTagsFile);
+                        foreach (var line in lines)
+                        {
+                            var parts = line.Split('\t');
+                            if (parts.Length >= 3)
+                            {
+                                string name = parts[0] + "|" + parts[1];
+                                if (int.TryParse(parts[2], out int tagId))
+                                {
+                                    TitleTags.TryAdd(name, tagId);
+                                }
+                            }
+                        }
+                        File.Move(titleTagsFile, titleTagsFile + ".bak", true);
+                        changed = true;
+                        System.Diagnostics.Debug.WriteLine($"[UserPreferences] Migrated {lines.Length} title tags.");
+                    }
+                    catch { }
+                }
+
+                // 3. App Time Limits
+                string limitsFile = Path.Combine(folder, "app-time-limits.txt");
+                if (File.Exists(limitsFile))
+                {
+                     try
+                    {
+                        var lines = File.ReadAllLines(limitsFile);
+                        foreach (var line in lines)
+                        {
+                            var parts = line.Split('\t');
+                            if (parts.Length >= 2)
+                            {
+                                string name = parts[0];
+                                if (int.TryParse(parts[1], out int limit))
+                                {
+                                    AppTimeLimits.TryAdd(name, limit);
+                                }
+                            }
+                        }
+                        File.Move(limitsFile, limitsFile + ".bak", true);
+                        changed = true;
+                        System.Diagnostics.Debug.WriteLine($"[UserPreferences] Migrated {lines.Length} time limits.");
+                    }
+                    catch { }
+                }
+
+                if (changed) Save();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[UserPreferences] Legacy migration failed: {ex.Message}");
+            }
         }
 
         public static void UpdateAppTimeLimit(string processName, TimeSpan timeLimit)

@@ -14,244 +14,63 @@ namespace UsageLogger.Helpers
 {
     public static class SettingsManager
     {
-        static string folderPath = ApplicationPath.SettingsFolder;
-
-        public static Task WaitForInit { get; private set; }
+        public static Task WaitForInit { get; private set; } = Task.CompletedTask; // No async load needed anymore
 
         static SettingsManager()
         {
-            WaitForInit = Task.WhenAll(LoadAppTimeLimits(), LoadAppTags());
+            // Data is loaded by UserPreferences static constructor synchronously
         }
 
         #region App Time Limits
-        public static Dictionary<string, int> appTimeLimits = new Dictionary<string, int>();
-        static string appTimeLimitsFilePath = folderPath + "app-time-limits.txt";
+
+        // Delegate to UserPreferences
+        public static Dictionary<string, int> appTimeLimits => UserPreferences.AppTimeLimits;
+        
+        // Deprecated/Unused but kept for compatibility if needed
+        private static void SaveAppTimeLimits() => UserPreferences.Save();
 
         public static Dictionary<string, AppTag> GetAllAppTags()
         {
-            return new Dictionary<string, AppTag>(appTags);
+            return new Dictionary<string, AppTag>(UserPreferences.AppTags);
         }
 
-        private static async Task LoadAppTimeLimits()
-        {
-            appTimeLimits.Clear();
-
-            try
-            {
-                string text = await Task.Run(() => File.ReadAllText(appTimeLimitsFilePath));
-
-                string[] rows = text.Split('\n');
-
-                foreach (string row in rows)
-                {
-                    try
-                    {
-                        string[] cells = row.Split('\t');
-
-                        string processName = cells[0];
-                        int timeLimitInMins = int.Parse(cells[1]);
-
-                        appTimeLimits.Add(processName, timeLimitInMins);
-                    }
-                    catch (IndexOutOfRangeException)
-                    {
-                        // No indicated cells, possibly last line in txt
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex);
-                        throw;
-                    }
-                }
-            }
-            catch (FileNotFoundException)
-            {
-                // AppLogger.WriteLine($"CANNOT FIND: {appTimeLimitsFilePath}");
-
-                // Saves an empty one
-                SaveAppTimeLimits();
-            }
-            catch (DirectoryNotFoundException)
-            {
-                Directory.CreateDirectory(folderPath);
-            }
-            catch (IOException)
-            {
-                Console.WriteLine("Can't read, file is still being used");
-            }
-            catch (Exception ex)
-            {
-                // AppLogger.WriteLine(ex.Message);
-                Debug.WriteLine(ex.Message);
-            }
-        }
-
-        private static void SaveAppTimeLimits()
-        {
-            List<string> lines = new List<string>();
-
-            foreach (KeyValuePair<string, int> timeLimit in appTimeLimits)
-            {
-                lines.Add($"{timeLimit.Key}\t{timeLimit.Value}");
-            }
-
-            File.WriteAllLines(appTimeLimitsFilePath, lines);
-        }
+        // Deprecated: No-op or just ensure loaded
+        private static Task LoadAppTimeLimits() => Task.CompletedTask;
 
         public static void UpdateAppTimeLimit(string processName, TimeSpan timeLimit)
         {
-            int totalMins = (int)timeLimit.TotalMinutes;
-            appTimeLimits.UpsertOrRemove(processName, totalMins, v => v <= 0);
-            SaveAppTimeLimits();
+            // UserPreferences has the logic now
+            UserPreferences.UpdateAppTimeLimit(processName, timeLimit);
         }
 
         #endregion
 
         #region App Tags
 
-        public static Dictionary<string, AppTag> appTags = new Dictionary<string, AppTag>();
-        static string appTagsPath = folderPath + "app-tags.txt";
+        // Delegate to UserPreferences
+        public static Dictionary<string, AppTag> appTags => UserPreferences.AppTags;
+        public static Dictionary<string, int> titleTags => UserPreferences.TitleTags;
 
-        // Title/Keyword Tags: ProcessName|Keyword -> TagId
-        // Dictionary key format: "ProcessName|Keyword" (separator |)
-        public static Dictionary<string, int> titleTags = new Dictionary<string, int>();
-        static string titleTagsPath = folderPath + "title-tags.txt";
+        // Deprecated
+        private static Task LoadAppTags() => Task.CompletedTask;
+        private static Task LoadTitleTags() => Task.CompletedTask;
+        private static void SaveAppTags() => UserPreferences.Save();
+        private static void SaveTitleTags() => UserPreferences.Save();
 
-        private static async Task LoadAppTags()
-        {
-            await LoadTitleTags(); // Load titles too
 
-            appTags.Clear();
-
-            try
-            {
-                string text = await Task.Run(() => File.ReadAllText(appTagsPath));
-                // ... existing AppTag loading ...
-                string[] rows = text.Split('\n');
-                foreach (string row in rows)
-                {
-                    try
-                    {
-                        string[] cells = row.Split('\t');
-                        if (cells.Length >= 2)
-                        {
-                            string processName = cells[0];
-                            AppTag appTag = (AppTag)int.Parse(cells[1]);
-                            if (!appTags.ContainsKey(processName)) appTags.Add(processName, appTag);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine($"[SettingsManager] Error parsing app tag row: {ex.Message}");
-                    }
-                }
-            }
-            catch (FileNotFoundException) { SaveAppTags(); }
-            catch (DirectoryNotFoundException) { Directory.CreateDirectory(folderPath); }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"[SettingsManager] LoadAppTags error: {ex.Message}");
-            }
-        }
-
-        private static async Task LoadTitleTags()
-        {
-            titleTags.Clear();
-            try
-            {
-                if (File.Exists(titleTagsPath))
-                {
-                    string text = await Task.Run(() => File.ReadAllText(titleTagsPath));
-                    string[] rows = text.Split('\n');
-                    foreach (string row in rows)
-                    {
-                        try
-                        {
-                            // Format: ProcessName \t Keyword \t TagId
-                            string[] cells = row.Split('\t');
-                            if (cells.Length >= 3)
-                            {
-                                string key = cells[0] + "|" + cells[1];
-                                int tagId = int.Parse(cells[2]);
-                                if (!titleTags.ContainsKey(key)) titleTags.Add(key, tagId);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Debug.WriteLine($"[SettingsManager] Error parsing title tag row: {ex.Message}");
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"[SettingsManager] LoadTitleTags error: {ex.Message}");
-            }
-        }
-
-        private static void SaveAppTags()
-        {
-            List<string> lines = new List<string>();
-            foreach (KeyValuePair<string, AppTag> appTag in appTags)
-            {
-                lines.Add($"{appTag.Key}\t{(int)appTag.Value}");
-            }
-            File.WriteAllLines(appTagsPath, lines);
-        }
-
-        private static void SaveTitleTags()
-        {
-            List<string> lines = new List<string>();
-            foreach (var kvp in titleTags)
-            {
-                // Key is "Process|Keyword"
-                var parts = kvp.Key.Split('|');
-                if (parts.Length == 2)
-                {
-                    lines.Add($"{parts[0]}\t{parts[1]}\t{kvp.Value}");
-                }
-            }
-            try 
-            { 
-                Directory.CreateDirectory(Path.GetDirectoryName(titleTagsPath));
-                File.WriteAllLines(titleTagsPath, lines);
-                Debug.WriteLine($"[SettingsManager] Saved {lines.Count} title tags to {titleTagsPath}");
-            } 
-            catch (Exception ex) 
-            { 
-                Debug.WriteLine($"[SettingsManager] SaveTitleTags ERROR: {ex.Message}");
-            }
-        }
 
         public static void UpdateAppTag(string processName, AppTag appTag)
         {
-            if (appTag == AppTag.Untagged)
-            {
-                if (appTags.ContainsKey(processName)) appTags.Remove(processName);
-            }
-            else
-            {
-                if (appTags.ContainsKey(processName)) appTags[processName] = appTag;
-                else appTags.Add(processName, appTag);
-            }
+            if (appTag == AppTag.Untagged) appTags.Remove(processName);
+            else appTags[processName] = appTag;
             SaveAppTags();
         }
 
         public static void UpdateTitleTag(string processName, string keyword, int tagId)
         {
             string key = processName + "|" + keyword;
-            Debug.WriteLine($"[SettingsManager] UpdateTitleTag: key={key}, tagId={tagId}");
-            
-            if (tagId == 0) // Untagged/Remove
-            {
-                if (titleTags.ContainsKey(key)) titleTags.Remove(key);
-            }
-            else
-            {
-                if (titleTags.ContainsKey(key)) titleTags[key] = tagId;
-                else titleTags.Add(key, tagId);
-            }
-            Debug.WriteLine($"[SettingsManager] titleTags count after update: {titleTags.Count}");
+            if (tagId == 0) titleTags.Remove(key);
+            else titleTags[key] = tagId;
             SaveTitleTags();
         }
 
