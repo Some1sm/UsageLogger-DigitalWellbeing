@@ -367,14 +367,14 @@ FodyWeavers.xsd
 *-SetupFiles/
 Prerequisites/
 Release_Build/
-DigitalWellbeing_Installer.exe
-DigitalWellbeing_Portable.zip
+UsageLogger_Installer.exe
+UsageLogger_Portable.zip
 res_*.txt
 log_*.txt
 restore_log.txt
 
 # Setup and Portables
-DigitalWellbeing.Setup/*.zip
- DigitalWellbeing.Setup/*.exe
+UsageLogger.Setup/*.zip
+UsageLogger.Setup/*.exe
 *.zip
 

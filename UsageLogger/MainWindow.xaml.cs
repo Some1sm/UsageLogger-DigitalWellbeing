@@ -28,7 +28,7 @@ namespace UsageLogger
         public MainWindow()
         {
             this.InitializeComponent();
-            Title = "UsageLogger - Digital Wellbeing";
+            Title = "UsageLogger";
             
             InitializeCommands();
 

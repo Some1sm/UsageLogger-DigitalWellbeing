@@ -28,7 +28,7 @@ namespace UsageLoggerService.Helpers
 
             _notifyIcon = new NotifyIcon
             {
-                Text = "UsageLogger - Digital Wellbeing",
+                Text = "UsageLogger Service",
                 ContextMenuStrip = _contextMenu,
                 Visible = true
             };

@@ -838,4 +838,82 @@
   <data name="Dialog_SetTimeLimit_Placeholder" xml:space="preserve">
     <value>Минуты (например, 60)</value>
   </data>
+  <data name="FocusDialog_Day_Sun.Content" xml:space="preserve">
+    <value>S</value>
+  </data>
+  <data name="FocusDialog_Day_Mon.Content" xml:space="preserve">
+    <value>M</value>
+  </data>
+  <data name="FocusDialog_Day_Tue.Content" xml:space="preserve">
+    <value>T</value>
+  </data>
+  <data name="FocusDialog_Day_Wed.Content" xml:space="preserve">
+    <value>W</value>
+  </data>
+  <data name="FocusDialog_Day_Thu.Content" xml:space="preserve">
+    <value>T</value>
+  </data>
+  <data name="FocusDialog_Day_Fri.Content" xml:space="preserve">
+    <value>F</value>
+  </data>
+  <data name="FocusDialog_Day_Sat.Content" xml:space="preserve">
+    <value>S</value>
+  </data>
+  <data name="Rule_Dialog_Title.Title" xml:space="preserve">
+    <value>Edit Rule</value>
+  </data>
+  <data name="Rule_Dialog_ProcessHeader.Header" xml:space="preserve">
+    <value>Process Name (Optional)</value>
+  </data>
+  <data name="Rule_Dialog_ProcessPlaceholder" xml:space="preserve">
+    <value>e.g. chrome (leave empty for all)</value>
+  </data>
+  <data name="Rule_Dialog_PatternHeader.Header" xml:space="preserve">
+    <value>Match Pattern (Title)</value>
+  </data>
+  <data name="Rule_Dialog_PatternPlaceholder" xml:space="preserve">
+    <value>Text or Regex to match</value>
+  </data>
+  <data name="Rule_Dialog_TypeHeader.Header" xml:space="preserve">
+    <value>Match Type</value>
+  </data>
+  <data name="Rule_Dialog_Type_Contains.Content" xml:space="preserve">
+    <value>Contains (Default)</value>
+  </data>
+  <data name="Rule_Dialog_Type_StartsWith.Content" xml:space="preserve">
+    <value>Starts With</value>
+  </data>
+  <data name="Rule_Dialog_Type_EndsWith.Content" xml:space="preserve">
+    <value>Ends With</value>
+  </data>
+  <data name="Rule_Dialog_Type_Exact.Content" xml:space="preserve">
+    <value>Exact Match</value>
+  </data>
+  <data name="Rule_Dialog_Type_Regex.Content" xml:space="preserve">
+    <value>Regular Expression</value>
+  </data>
+  <data name="Rule_Dialog_ReplacementHeader.Header" xml:space="preserve">
+    <value>Replacement</value>
+  </data>
+  <data name="Rule_Dialog_ReplacementPlaceholder" xml:space="preserve">
+    <value>New text (supports $1 capture groups)</value>
+  </data>
+  <data name="Rule_Dialog_TestHeader.Header" xml:space="preserve">
+    <value>Test Rule</value>
+  </data>
+  <data name="Rule_Dialog_TestInput.Header" xml:space="preserve">
+    <value>Test Input</value>
+  </data>
+  <data name="Rule_Dialog_TestPlaceholder" xml:space="preserve">
+    <value>Paste a sample window title here</value>
+  </data>
+  <data name="Rule_Dialog_Result.Text" xml:space="preserve">
+    <value>Result:</value>
+  </data>
+  <data name="Rule_Dialog_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Rule_Dialog_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
 </root>

@@ -895,4 +895,25 @@ Termina: {2}</value>
   <data name="Dialog_SetTimeLimit_Placeholder" xml:space="preserve">
     <value>Minutos (ej., 60)</value>
   </data>
+  <data name="FocusDialog_Day_Sun.Content" xml:space="preserve">
+    <value>S</value>
+  </data>
+  <data name="FocusDialog_Day_Mon.Content" xml:space="preserve">
+    <value>M</value>
+  </data>
+  <data name="FocusDialog_Day_Tue.Content" xml:space="preserve">
+    <value>T</value>
+  </data>
+  <data name="FocusDialog_Day_Wed.Content" xml:space="preserve">
+    <value>W</value>
+  </data>
+  <data name="FocusDialog_Day_Thu.Content" xml:space="preserve">
+    <value>T</value>
+  </data>
+  <data name="FocusDialog_Day_Fri.Content" xml:space="preserve">
+    <value>F</value>
+  </data>
+  <data name="FocusDialog_Day_Sat.Content" xml:space="preserve">
+    <value>S</value>
+  </data>
 </root>

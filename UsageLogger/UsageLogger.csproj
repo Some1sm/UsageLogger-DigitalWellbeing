@@ -14,8 +14,10 @@
     <EnableMsixTooling>true</EnableMsixTooling>
     <Authors>David Cepero López</Authors>
     <Company>Some1sm</Company>
-    <Product>Digital Wellbeing For Windows</Product>
-    <Version>0.8.1.0</Version>
+    <Product>UsageLogger</Product>
+    <AssemblyTitle>UsageLogger</AssemblyTitle>
+    <AssemblyName>UsageLogger</AssemblyName>
+    <Version>0.8.2.0</Version>
     <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
     <!-- Localization Support -->
     <DefaultLanguage>en-US</DefaultLanguage>

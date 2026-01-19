@@ -416,7 +416,37 @@ namespace UsageLogger.Setup
             {
                 if (Directory.Exists(installPath))
                 {
-                    try { Directory.Delete(installPath, true); } catch { }
+                    // SAFE CLEANUP: Preserve user data in target folder (in case of reinstall over data)
+                    var preserveFolders = new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase) 
+                    { 
+                        "dailylogs", "settings", "Icons", "Debug", "CustomIcons", "processicons", "UsageLoggerData" 
+                    };
+                    var preserveFiles = new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase) 
+                    { 
+                        "user_preferences.json", "custom_log_path.txt", "known_apps.json" 
+                    };
+
+                    try
+                    {
+                        foreach (var file in Directory.GetFiles(installPath))
+                        {
+                            string name = Path.GetFileName(file);
+                            if (!preserveFiles.Contains(name))
+                            {
+                                try { File.Delete(file); } catch { }
+                            }
+                        }
+
+                        foreach (var dir in Directory.GetDirectories(installPath))
+                        {
+                            string name = Path.GetFileName(dir);
+                            if (!preserveFolders.Contains(name))
+                            {
+                                try { Directory.Delete(dir, true); } catch { }
+                            }
+                        }
+                    }
+                    catch { }
                 }
                 Directory.CreateDirectory(installPath);
 
@@ -594,11 +624,53 @@ namespace UsageLogger.Setup
             UpdateStatus("Unregistering...");
             RemoveUninstallerRegistry(isDeviceInstall);
 
-            UpdateStatus("Removing files...");
+            UpdateStatus("Cleaning up files...");
+            
+            // Safe Cleanup: Delete known app files/folders, but PRESERVE user data
+            if (Directory.Exists(installPath))
+            {
+                var preserveFolders = new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase) 
+                { 
+                    "dailylogs", "settings", "Icons", "Debug", "CustomIcons", "processicons" 
+                };
+                var preserveFiles = new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase) 
+                { 
+                    "user_preferences.json", "custom_log_path.txt", "known_apps.json" 
+                };
+
+                try
+                {
+                    // 1. Files
+                    foreach (var file in Directory.GetFiles(installPath))
+                    {
+                        string name = Path.GetFileName(file);
+                        // Don't delete self yet
+                        if (file.Equals(Application.ExecutablePath, StringComparison.OrdinalIgnoreCase)) continue;
+                        
+                        if (!preserveFiles.Contains(name))
+                        {
+                            try { File.Delete(file); } catch { }
+                        }
+                    }
+
+                    // 2. Directories (Recursive delete for non-preserved ones)
+                    foreach (var dir in Directory.GetDirectories(installPath))
+                    {
+                        string name = Path.GetFileName(dir);
+                        if (!preserveFolders.Contains(name))
+                        {
+                            try { Directory.Delete(dir, true); } catch { }
+                        }
+                    }
+                }
+                catch { }
+            }
 
             ProcessStartInfo info = new ProcessStartInfo();
             info.FileName = "cmd.exe";
-            info.Arguments = $"/C ping 1.1.1.1 -n 1 -w 3000 > Nul & rmdir /S /Q \"{installPath}\"";
+            // Self-delete execution and try to remove folder safely (will fail if data exists)
+            // rmdir (without /S) only removes Empty directories.
+            info.Arguments = $"/C ping 1.1.1.1 -n 1 -w 3000 > Nul & del /F /Q \"{Application.ExecutablePath}\" & rmdir \"{installPath}\"";
             info.WindowStyle = ProcessWindowStyle.Hidden;
             info.CreateNoWindow = true;
             Process.Start(info);
