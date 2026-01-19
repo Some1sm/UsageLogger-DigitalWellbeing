@@ -1,5 +1,5 @@
 param (
-    [string]$StringsDir = "DigitalWellbeingWinUI3\Strings"
+    [string]$StringsDir = "UsageLogger\Strings"
 )
 
 $ErrorActionPreference = "Stop"

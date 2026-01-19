@@ -1,0 +1,33 @@
+<UserControl
+    x:Class="UsageLogger.Controls.CustomTreemap"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    HorizontalAlignment="Stretch"
+    VerticalAlignment="Stretch">
+
+    <Canvas x:Name="RootCanvas">
+        <!-- Treemap items go here -->
+        <Canvas x:Name="TreemapCanvas" Background="Transparent"
+                PointerMoved="TreemapCanvas_PointerMoved" 
+                PointerExited="TreemapCanvas_PointerExited"/>
+        
+        <!-- Floating Tooltip - positioned via Canvas.Left/Top -->
+        <Border x:Name="TooltipBorder" 
+                Visibility="Collapsed"
+                IsHitTestVisible="False"
+                Background="#FF2B2B2B"
+                BorderBrush="#FF444444"
+                BorderThickness="1"
+                CornerRadius="6"
+                Padding="10,8">
+            <TextBlock x:Name="TooltipText" 
+                       Foreground="White" 
+                       FontSize="12"
+                       TextWrapping="Wrap"
+                       MaxWidth="200"/>
+        </Border>
+    </Canvas>
+</UserControl>

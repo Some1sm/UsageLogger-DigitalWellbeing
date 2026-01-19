@@ -1,7 +1,7 @@
 # publish.ps1
 
 $releaseDir = "Release_Build"
-$zipName = "DigitalWellbeing_Portable.zip"
+$zipName = "UsageLogger_Portable.zip"
 
 Write-Host "Cleaning functionality..."
 if (Test-Path $releaseDir) { Remove-Item -Recurse -Force $releaseDir }
@@ -14,18 +14,18 @@ Write-Host "Building Release Configuration..."
 
 # WinUI 3
 Write-Host "Publishing WinUI 3 App..."
-dotnet publish DigitalWellbeingWinUI3/DigitalWellbeingWinUI3.csproj -c Release -r win-x64 --self-contained false -o "$releaseDir/App"
+dotnet publish UsageLogger/UsageLogger.csproj -c Release -r win-x64 --self-contained false -o "$releaseDir/App"
 
 # Service
-dotnet publish DigitalWellbeingService/DigitalWellbeingService.csproj -c Release -r win-x64 --self-contained false -o "$releaseDir/Service"
+dotnet publish UsageLoggerService/UsageLoggerService.csproj -c Release -r win-x64 --self-contained false -o "$releaseDir/Service"
 
 # Organize Files
 Write-Host "Organizing Files..."
 
-$finalDir = "$releaseDir/DigitalWellbeing"
+$finalDir = "$releaseDir/UsageLogger"
 New-Item -ItemType Directory -Force -Path $finalDir | Out-Null
 
-$excludeList = @("*.pdb", "*.xml", "WindowsAppRuntime.png", "Microsoft.Web.WebView2.*", "WebView2Loader.*", "DigitalWellbeingService.dll.config")
+$excludeList = @("*.pdb", "*.xml", "WindowsAppRuntime.png", "Microsoft.Web.WebView2.*", "WebView2Loader.*", "UsageLoggerService.dll.config")
 Copy-Item -Recurse "$releaseDir/App/*" "$finalDir" -Exclude $excludeList
 Copy-Item -Recurse "$releaseDir/Service/*" "$finalDir" -Exclude $excludeList
 
@@ -65,14 +65,14 @@ catch {
 
 # --- Installer Build ---
 Write-Host "Building Installer..."
-$setupDir = "DigitalWellbeing.Setup"
+$setupDir = "UsageLogger.Setup"
 $zipSource = "$zipName"
-$zipDest = "$setupDir/DigitalWellbeing_Portable.zip"
+$zipDest = "$setupDir/UsageLogger_Portable.zip"
 
 # 1. Build LIGHTWEIGHT Uninstall.exe (No Payload)
 Write-Host "Building Uninstaller (No Payload)..."
-dotnet build -c Release -p:EmbedPayload=false -o "$releaseDir/Uninstaller" $setupDir/DigitalWellbeing.Setup.csproj
-$uninstallExeSrc = "$releaseDir/Uninstaller/DigitalWellbeing.Setup.exe"
+dotnet build -c Release -p:EmbedPayload=false -o "$releaseDir/Uninstaller" $setupDir/UsageLogger.Setup.csproj
+$uninstallExeSrc = "$releaseDir/Uninstaller/UsageLogger.Setup.exe"
 $uninstallExeDest = "$finalDir/Uninstall.exe"
 Copy-Item -Force $uninstallExeSrc $uninstallExeDest
 
@@ -90,12 +90,12 @@ catch {
 Copy-Item -Force $zipSource $zipDest
 
 # 3. Build FULL Installer (With Payload)
-# Note: DigitalWellbeing_Portable.zip is now updated with Uninstall.exe inside it
-dotnet build -c Release -o "$releaseDir/Setup" $setupDir/DigitalWellbeing.Setup.csproj
+# Note: UsageLogger_Portable.zip is now updated with Uninstall.exe inside it
+dotnet build -c Release -o "$releaseDir/Setup" $setupDir/UsageLogger.Setup.csproj
 
 # Copy Output
-$installerName = "DigitalWellbeing_Installer.exe"
-Copy-Item -Force "$releaseDir/Setup/DigitalWellbeing.Setup.exe" $installerName
+$installerName = "UsageLogger_Installer.exe"
+Copy-Item -Force "$releaseDir/Setup/UsageLogger.Setup.exe" $installerName
 
 # Cleanup Intermediate Portable Artifacts
 Write-Host "Cleaning up intermediate files..."

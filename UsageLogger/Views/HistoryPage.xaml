@@ -1,0 +1,153 @@
+<Page
+    x:Class="UsageLogger.Views.HistoryPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UsageLogger.Views"
+    xmlns:vm="using:UsageLogger.ViewModels"
+
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:l="using:WinUI3Localizer"
+    xmlns:controls="using:UsageLogger.Controls"
+    mc:Ignorable="d">
+
+    <Grid Padding="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Controls Header -->
+        <Border Grid.Row="0" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="15" Margin="0,0,0,20">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="20">
+                
+                <!-- Time Period Dropdown -->
+                <StackPanel Spacing="4">
+                    <TextBlock l:Uids.Uid="History_TimePeriod" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                    <ComboBox ItemsSource="{Binding DateRangeOptions}" SelectedIndex="{Binding SelectedDateRangeIndex, Mode=TwoWay}" Width="130"/>
+                </StackPanel>
+                
+                <!-- View Mode Dropdown -->
+                <StackPanel Spacing="4">
+                    <TextBlock l:Uids.Uid="History_ViewMode" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                    <ComboBox ItemsSource="{Binding ViewModeOptions}" SelectedIndex="{Binding SelectedViewModeIndex, Mode=TwoWay}" Width="120"/>
+                </StackPanel>
+                
+                <!-- Custom Date Range Controls (visible only when Custom is selected) -->
+                <StackPanel Orientation="Horizontal" Spacing="15" Visibility="{Binding IsCustomDateRange}">
+                    
+                    <!-- Separator -->
+                    <Border Width="1" Background="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="5,0"/>
+                    
+                    <!-- Start Date -->
+                    <StackPanel Spacing="4">
+                        <TextBlock l:Uids.Uid="History_StartDate" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                        <CalendarDatePicker Date="{Binding StartDate, Mode=TwoWay}" Width="140"/>
+                    </StackPanel>
+                    
+                    <!-- End Date -->
+                    <StackPanel Spacing="4">
+                        <TextBlock l:Uids.Uid="History_EndDate" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                        <CalendarDatePicker Date="{Binding EndDate, Mode=TwoWay}" Width="140"/>
+                    </StackPanel>
+                    
+                    <!-- Generate Button -->
+                    <Button l:Uids.Uid="History_ApplyButton" Command="{x:Bind ViewModel.GenerateChartCommand}" Style="{StaticResource AccentButtonStyle}" VerticalAlignment="Bottom" Padding="20,6"/>
+                </StackPanel>
+                
+            </StackPanel>
+        </Border>
+
+        <!-- Scrollable Content Area -->
+        <ScrollViewer Grid.Row="1">
+            <StackPanel Spacing="20">
+                
+                <!-- Error Message Banner -->
+                <InfoBar IsOpen="{Binding HasError, Mode=OneWay}" Severity="Error" Title="Error" Message="{Binding ErrorMessage, Mode=OneWay}" IsClosable="False" Margin="0,0,0,10" />
+
+                <!-- KPI Summary Cards -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <!-- Total Time Card -->
+                    <Border Grid.Column="0" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="20" Margin="0,0,10,0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <!-- Active Time -->
+                            <StackPanel Grid.Column="0">
+                                <TextBlock l:Uids.Uid="History_TotalScreenTime" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" TextTrimming="CharacterEllipsis"/>
+                                <TextBlock Text="{Binding TotalHoursText, FallbackValue='00:00:00'}" FontSize="28" FontWeight="Bold" Margin="0,5,0,0" TextTrimming="CharacterEllipsis"/>
+                                <TextBlock Text="{Binding TotalChangeText, FallbackValue='Generating...'}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="14" Margin="0,5,0,0" TextTrimming="CharacterEllipsis"/>
+                            </StackPanel>
+                            
+                            <!-- Divider -->
+                            <Border Grid.Column="1" Width="1" Background="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="15,4"/>
+
+                            <!-- AFK Time -->
+                            <StackPanel Grid.Column="2">
+                                <TextBlock l:Uids.Uid="History_TotalAfkTime" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" TextTrimming="CharacterEllipsis"/>
+                                <TextBlock Text="{Binding AfkTimeText, FallbackValue='0m'}" FontSize="28" FontWeight="Bold" Margin="0,5,0,0" TextTrimming="CharacterEllipsis"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,5,0,0" Spacing="6" Opacity="0.6">
+                                     <FontIcon Glyph="&#xE916;" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center"/>
+                                     <TextBlock l:Uids.Uid="History_AwayLock" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="14" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                    
+                    <!-- Trend Info Card -->
+                    <Border Grid.Column="1" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="20" Margin="10,0,0,0">
+                        <StackPanel>
+                            <TextBlock l:Uids.Uid="History_DailyTrends" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" TextTrimming="CharacterEllipsis"/>
+                            <TextBlock Text="{Binding PrevPeriodAvgText, FallbackValue='0h 0m'}" FontSize="28" FontWeight="Bold" Margin="0,5,0,0" TextTrimming="CharacterEllipsis"/>
+                            <TextBlock l:Uids.Uid="History_DailyTrendsSubtitle" FontSize="14" FontWeight="SemiBold" Margin="0,5,0,0" Opacity="0.8" TextTrimming="CharacterEllipsis"/>
+                            
+                            <!-- Legend with visual line -->
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0" Spacing="8" Opacity="0.6">
+                                <Rectangle Width="20" Height="2" Fill="Orange" VerticalAlignment="Center"/>
+                                <TextBlock l:Uids.Uid="History_DailyTrendsLegend" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="14" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+                
+                <!-- Trend Chart -->
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="20">
+                    <StackPanel>
+                        <TextBlock l:Uids.Uid="History_UsageTrends" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                        <controls:Win2DBarChart x:Name="TrendChartContainer" ItemsSource="{x:Bind ViewModel.TrendData, Mode=OneWay}" TargetLineValue="{x:Bind ViewModel.PreviousPeriodAverage, Mode=OneWay}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Height="250"/>
+                    </StackPanel>
+                </Border>
+                
+                <!-- Distribution Analysis -->
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="20">
+                    <StackPanel>
+                        <TextBlock l:Uids.Uid="History_DistributionAnalysis" FontSize="18" FontWeight="SemiBold"/>
+                        <ContentControl x:Name="HistoryChartContainer" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Height="350" Margin="0,10,0,0"/>
+                    </StackPanel>
+                </Border>
+                
+                <!-- Activity Heatmap -->
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="20">
+                    <StackPanel>
+                        <TextBlock l:Uids.Uid="History_ActivityHeatmap" FontSize="18" FontWeight="SemiBold"/>
+                        <TextBlock l:Uids.Uid="History_HeatmapTooltip" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" Margin="0,2,0,10"/>
+                        <controls:Win2DHeatmap x:Name="HeatMapContainer" ItemsSource="{x:Bind ViewModel.HeatMapData, Mode=OneWay}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Height="250"/>
+                    </StackPanel>
+                </Border>
+                
+                <!-- Loading Indicator -->
+                <ProgressRing IsActive="{Binding IsLoading}" Width="60" Height="60" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

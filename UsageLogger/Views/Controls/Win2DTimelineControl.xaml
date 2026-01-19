@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="UsageLogger.Views.Controls.Win2DTimelineControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
+    mc:Ignorable="d"
+    d:DesignHeight="1440"
+    d:DesignWidth="400">
+
+    <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
+            CornerRadius="12" 
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" 
+            BorderThickness="1" 
+            Margin="7.5,15,7.5,15" 
+            Padding="15">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/> <!-- Date Header -->
+                <RowDefinition Height="*"/>    <!-- Timeline Canvas -->
+            </Grid.RowDefinitions>
+
+            <!-- Date Header -->
+            <TextBlock x:Name="HeaderText" 
+                       Grid.Row="0" 
+                       Style="{ThemeResource BodyStrongTextBlockStyle}" 
+                       HorizontalAlignment="Center" 
+                       Margin="0,12,0,4"/>
+
+            <!-- ScrollViewer containing the Win2D canvas -->
+            <!-- Layer 1: ScrollViewer with Spacer (Drives the scrollbars) -->
+            <ScrollViewer Grid.Row="1" x:Name="MainScrollViewer" VerticalScrollBarVisibility="Auto">
+                <Grid x:Name="ContentGrid" MinHeight="1440" Background="Transparent"
+                      PointerMoved="TimelineGrid_PointerMoved" 
+                      PointerPressed="TimelineGrid_PointerPressed"
+                      PointerReleased="TimelineGrid_PointerReleased"
+                      PointerCanceled="TimelineGrid_PointerReleased"
+                      PointerExited="TimelineGrid_PointerExited">
+                     <!-- This spacer forces the ScrollViewer to have the correct scrollable height -->
+                     <Rectangle Fill="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                </Grid>
+            </ScrollViewer>
+            
+            <!-- Layer 2: The Renderer (CanvasControl) -->
+            <!-- HitTestVisible="False" ensures events pass through to simple ScrollViewer below -->
+            <canvas:CanvasControl Grid.Row="1" x:Name="TimelineCanvas" Draw="TimelineCanvas_Draw" IsHitTestVisible="False" />
+
+            <!-- Layer 3: Tooltip Overlay -->
+            <Canvas Grid.Row="1" IsHitTestVisible="False">
+                 <Border x:Name="TooltipBorder" 
+                         Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}" 
+                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" 
+                         BorderThickness="1" 
+                         CornerRadius="4" 
+                         Padding="8,4,8,4" 
+                         Visibility="Collapsed">
+                    <TextBlock x:Name="TooltipText" Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}" FontSize="12"/>
+                 </Border>
+             </Canvas>
+        </Grid>
+    </Border>
+</UserControl>

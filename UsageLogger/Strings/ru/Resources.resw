@@ -1,0 +1,841 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:schema id="root">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xs:element name="root" ns1:IsDataSet="true">
+      <xs:complexType>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element name="metadata">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="assembly">
+            <xs:complexType>
+              <xs:attribute name="alias" type="xsd:string" />
+              <xs:attribute name="name" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="data">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" ns1:Ordinal="1" />
+              <xs:attribute name="type" type="xsd:string" ns1:Ordinal="3" />
+              <xs:attribute name="mimetype" type="xsd:string" ns1:Ordinal="4" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="resheader">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" />
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Today" xml:space="preserve">
+    <value>Сегодня</value>
+  </data>
+  <data name="FromLast" xml:space="preserve">
+    <value>от прошлого</value>
+  </data>
+  <data name="History_TimePeriod.Text" xml:space="preserve">
+    <value>Период</value>
+  </data>
+  <data name="History_ViewMode.Text" xml:space="preserve">
+    <value>Режим просмотра</value>
+  </data>
+  <data name="History_StartDate.Text" xml:space="preserve">
+    <value>Дата начала</value>
+  </data>
+  <data name="History_EndDate.Text" xml:space="preserve">
+    <value>Дата конца</value>
+  </data>
+  <data name="History_ApplyButton.Content" xml:space="preserve">
+    <value>Применить</value>
+  </data>
+  <data name="History_TotalScreenTime.Text" xml:space="preserve">
+    <value>Общее экранное время</value>
+  </data>
+  <data name="History_DailyTrends.Text" xml:space="preserve">
+    <value>Среднее за пред. период</value>
+  </data>
+  <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
+    <value>📊 Дневные тренды</value>
+  </data>
+  <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
+    <value>Историческое среднее</value>
+  </data>
+  <data name="History_UsageTrends.Text" xml:space="preserve">
+    <value>Тренды использования</value>
+  </data>
+  <data name="History_DistributionAnalysis.Text" xml:space="preserve">
+    <value>Анализ распределения</value>
+  </data>
+  <data name="History_ActivityHeatmap.Text" xml:space="preserve">
+    <value>Тепловая карта</value>
+  </data>
+  <data name="History_HeatmapTooltip.Text" xml:space="preserve">
+    <value>Подробнее при наведении</value>
+  </data>
+  <data name="History_DailyUsage" xml:space="preserve">
+    <value>Ежедневное исп.</value>
+  </data>
+  <data name="History_PrevPeriodAvg" xml:space="preserve">
+    <value>Средн. пред.</value>
+  </data>
+  <data name="History_NoPreviousData" xml:space="preserve">
+    <value>Нет данных</value>
+  </data>
+  <data name="History_VsPreviousDays" xml:space="preserve">
+    <value>vs пред. {0} дн.</value>
+  </data>
+  <data name="Settings_UnsavedChanges.Text" xml:space="preserve">
+    <value>Несохраненные изменения.</value>
+  </data>
+  <data name="Settings_ApplyChanges.Content" xml:space="preserve">
+    <value>Применить</value>
+  </data>
+  <data name="Settings_Title.Text" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
+  <data name="Settings_AppRuntime.Text" xml:space="preserve">
+    <value>Запуск</value>
+  </data>
+  <data name="Settings_RunOnStartup.Text" xml:space="preserve">
+    <value>Автозапуск</value>
+  </data>
+  <data name="Settings_RunOnStartupDesc.Text" xml:space="preserve">
+    <value>Запускать вместе с Windows.</value>
+  </data>
+  <data name="Settings_MinimizeOnExit.Text" xml:space="preserve">
+    <value>Сворачивать при выходе</value>
+  </data>
+  <data name="Settings_MinimizeOnExitDesc.Text" xml:space="preserve">
+    <value>В трей вместо закрытия.</value>
+  </data>
+  <data name="Settings_UsageData.Text" xml:space="preserve">
+    <value>Данные использования</value>
+  </data>
+  <data name="Settings_IncognitoMode.Text" xml:space="preserve">
+    <value>Инкогнито</value>
+  </data>
+  <data name="Settings_IncognitoModeDesc.Text" xml:space="preserve">
+    <value>Не сохранять заголовки (напр. YouTube).</value>
+  </data>
+  <data name="Settings_ExcludedApps.Text" xml:space="preserve">
+    <value>Исключения</value>
+  </data>
+  <data name="Settings_ExcludedAppsDesc.Text" xml:space="preserve">
+    <value>Двойной клик для удаления.</value>
+  </data>
+  <data name="Settings_TimeLimits.Text" xml:space="preserve">
+    <value>Лимиты времени</value>
+  </data>
+  <data name="Settings_TimeLimitsDesc.Text" xml:space="preserve">
+    <value>Двойной клик для удаления.</value>
+  </data>
+  <data name="Settings_Display.Text" xml:space="preserve">
+    <value>Отображение</value>
+  </data>
+  <data name="Settings_DaysToShow.Text" xml:space="preserve">
+    <value>Дней в графике</value>
+  </data>
+  <data name="Settings_DaysToShowDesc.Text" xml:space="preserve">
+    <value>Дней в недельном графике.</value>
+  </data>
+  <data name="Settings_DetailedDays.Text" xml:space="preserve">
+    <value>Дней детально</value>
+  </data>
+  <data name="Settings_DetailedDaysDesc.Text" xml:space="preserve">
+    <value>Колонки детального вида (1-7).</value>
+  </data>
+  <data name="Settings_MinDuration.Text" xml:space="preserve">
+    <value>Мин. длительность (с)</value>
+  </data>
+  <data name="Settings_MinDurationDesc.Text" xml:space="preserve">
+    <value>Скрывать приложения короче этого.</value>
+  </data>
+  <data name="Settings_AutoRefresh.Text" xml:space="preserve">
+    <value>Авто-обновление (с)</value>
+  </data>
+  <data name="Settings_AutoRefreshDesc.Text" xml:space="preserve">
+    <value>Мин 6 секунд.</value>
+  </data>
+  <data name="Settings_TimelineThreshold.Text" xml:space="preserve">
+    <value>Детализация таймлайна</value>
+  </data>
+  <data name="Settings_TimelineThresholdDesc.Text" xml:space="preserve">
+    <value>Порог слияния (По ум. 30с).</value>
+  </data>
+  <data name="Settings_ThemeMode.Text" xml:space="preserve">
+    <value>Тема</value>
+  </data>
+  <data name="Settings_ThemeSystem.Content" xml:space="preserve">
+    <value>Системная</value>
+  </data>
+  <data name="Settings_ThemeLight.Content" xml:space="preserve">
+    <value>Светлая</value>
+  </data>
+  <data name="Settings_ThemeDark.Content" xml:space="preserve">
+    <value>Темная</value>
+  </data>
+  <data name="Settings_CombinedAudio.Text" xml:space="preserve">
+    <value>Комбинированный вид</value>
+  </data>
+  <data name="Settings_CombinedAudioDesc.Text" xml:space="preserve">
+    <value>Активные окна и звук вместе.</value>
+  </data>
+  <data name="Settings_Data.Text" xml:space="preserve">
+    <value>Данные</value>
+  </data>
+  <data name="Settings_LogStorage.Text" xml:space="preserve">
+    <value>Папка логов</value>
+  </data>
+  <data name="Settings_LogStorageDesc.Text" xml:space="preserve">
+    <value>Изменить папку.</value>
+  </data>
+  <data name="Settings_BtnOpen.Content" xml:space="preserve">
+    <value>Открыть</value>
+  </data>
+  <data name="Settings_BtnBrowse.Content" xml:space="preserve">
+    <value>Обзор...</value>
+  </data>
+  <data name="Settings_BtnReset.Content" xml:space="preserve">
+    <value>Сброс</value>
+  </data>
+  <data name="Settings_DataFlush.Text" xml:space="preserve">
+    <value>Интервал сохр. (с)</value>
+  </data>
+  <data name="Settings_DataFlushDesc.Text" xml:space="preserve">
+    <value>RAM (быстро) или Диск (надежно).</value>
+  </data>
+  <data name="Settings_AppTags.Text" xml:space="preserve">
+    <value>Теги приложений</value>
+  </data>
+  <data name="Settings_ManageTags.Text" xml:space="preserve">
+    <value>Управление категориями</value>
+  </data>
+  <data name="Settings_AddTag.Content" xml:space="preserve">
+    <value>Добавить тег</value>
+  </data>
+  <data name="Settings_About.Text" xml:space="preserve">
+    <value>О программе</value>
+  </data>
+  <data name="Settings_CreatedBy.Text" xml:space="preserve">
+    <value>Создано David Cepero</value>
+  </data>
+  <data name="Settings_Copyright.Text" xml:space="preserve">
+    <value>Copyright © 2025. Все права защищены.</value>
+  </data>
+  <data name="Settings_SourceCode.Content" xml:space="preserve">
+    <value>Исходный код (GitHub)</value>
+  </data>
+  <data name="Settings_AppVersion" xml:space="preserve">
+    <value>Версия {0}</value>
+  </data>
+  <data name="Nav_Dashboard.Content" xml:space="preserve">
+    <value>Дашборд</value>
+  </data>
+  <data name="Nav_History.Content" xml:space="preserve">
+    <value>Анализ</value>
+  </data>
+  <data name="Nav_Sessions.Content" xml:space="preserve">
+    <value>Детально</value>
+  </data>
+  <data name="Tray_Open.Text" xml:space="preserve">
+    <value>Открыть</value>
+  </data>
+  <data name="Tray_Settings.Text" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
+  <data name="Tray_Exit.Text" xml:space="preserve">
+    <value>Выход</value>
+  </data>
+  <data name="Dashboard_SetTimeLimit.Text" xml:space="preserve">
+    <value>Задать лимит</value>
+  </data>
+  <data name="Dashboard_SetCategory.Text" xml:space="preserve">
+    <value>Задать категорию</value>
+  </data>
+  <data name="Dashboard_SetDisplayName.Text" xml:space="preserve">
+    <value>Переименовать...</value>
+  </data>
+  <data name="Dashboard_SetCustomIcon.Text" xml:space="preserve">
+    <value>Иконка...</value>
+  </data>
+  <data name="Dashboard_ExcludeApp.Text" xml:space="preserve">
+    <value>Исключить</value>
+  </data>
+  <data name="Dashboard_Total.Text" xml:space="preserve">
+    <value>Всего:</value>
+  </data>
+  <data name="Dashboard_DailyActivity.Text" xml:space="preserve">
+    <value>Активность за день</value>
+  </data>
+  <data name="Dashboard_UsageSummary.Text" xml:space="preserve">
+    <value>Сводка</value>
+  </data>
+  <data name="Dashboard_TabActiveWindows.Header" xml:space="preserve">
+    <value>📊 Активные окна</value>
+  </data>
+  <data name="Dashboard_TabBackgroundAudio.Header" xml:space="preserve">
+    <value>🔊 Звук фона</value>
+  </data>
+  <data name="Dashboard_AudioDesc.Text" xml:space="preserve">
+    <value>Приложения со звуком в фоне</value>
+  </data>
+  <data name="Dashboard_NoAudio.Text" xml:space="preserve">
+    <value>Звук не обнаружен</value>
+  </data>
+  <data name="Dashboard_ActiveWindows.Text" xml:space="preserve">
+    <value>Активные окна</value>
+  </data>
+  <data name="Dashboard_BackgroundAudio.Text" xml:space="preserve">
+    <value>Звук фона</value>
+  </data>
+  <data name="Dashboard_NotCounted.Text" xml:space="preserve">
+    <value>(не в счет)</value>
+  </data>
+  <data name="Sessions_Title.Text" xml:space="preserve">
+    <value>Таймлайн</value>
+  </data>
+  <data name="Sessions_Subtitle.Text" xml:space="preserve">
+    <value>Визуализация дня.</value>
+  </data>
+  <data name="Sessions_ZoomOut.Content" xml:space="preserve">
+    <value>Уменьшить</value>
+  </data>
+  <data name="Sessions_ZoomIn.Content" xml:space="preserve">
+    <value>Увеличить</value>
+  </data>
+  <data name="History_Activity" xml:space="preserve">
+    <value>Активность</value>
+  </data>
+  <data name="Nav_Focus.Content" xml:space="preserve">
+    <value>Фокус</value>
+  </data>
+  <data name="History_TotalAfkTime.Text" xml:space="preserve">
+    <value>Время отсутствия (AFK)</value>
+  </data>
+  <data name="Focus_Header.Text" xml:space="preserve">
+    <value>Режим Фокусировки</value>
+  </data>
+  <data name="Focus_Description.Text" xml:space="preserve">
+    <value>Создавайте блоки для фокусировки.</value>
+  </data>
+  <data name="Focus_StatusActive" xml:space="preserve">
+    <value>Мониторинг Активен</value>
+  </data>
+  <data name="Focus_StatusInactive" xml:space="preserve">
+    <value>Мониторинг Неактивен</value>
+  </data>
+  <data name="Focus_AddButton.Content" xml:space="preserve">
+    <value>+ Добавить</value>
+  </data>
+  <data name="Focus_Toggle.OnContent" xml:space="preserve">
+    <value>Вкл</value>
+  </data>
+  <data name="Focus_Toggle.OffContent" xml:space="preserve">
+    <value>Выкл</value>
+  </data>
+  <data name="Focus_EditButton.Content" xml:space="preserve">
+    <value>Изменить</value>
+  </data>
+  <data name="Focus_Notification_Title" xml:space="preserve">
+    <value>🎯 Фокус-сессия: {0}</value>
+  </data>
+  <data name="Focus_Notification_Chill" xml:space="preserve">
+    <value>Вы используете '{0}' вместо '{1}'</value>
+  </data>
+  <data name="Focus_Status_ActiveSession" xml:space="preserve">
+    <value>Активно: {0}</value>
+  </data>
+  <data name="Focus_Status_NoSession" xml:space="preserve">
+    <value>Мониторинг (Нет сессии)</value>
+  </data>
+  <data name="Focus_Popup_Title" xml:space="preserve">
+    <value>🎯 Фокус-сессия</value>
+  </data>
+  <data name="Focus_Popup_Content" xml:space="preserve">
+    <value>Вы должны использовать '{0}'!
+
+Сессия: {1}
+Конец: {2}</value>
+  </data>
+  <data name="Focus_Popup_Primary" xml:space="preserve">
+    <value>ОК</value>
+  </data>
+  <data name="Focus_Popup_Close" xml:space="preserve">
+    <value>Отключить</value>
+  </data>
+  <data name="Settings_StartupModeNone.Content" xml:space="preserve">
+    <value>Отключено</value>
+  </data>
+  <data name="Settings_StartupModeTracker.Content" xml:space="preserve">
+    <value>Только трекер</value>
+  </data>
+  <data name="Settings_StartupModeBoth.Content" xml:space="preserve">
+    <value>Трекер + Интерфейс</value>
+  </data>
+  <data name="Settings_HiddenSubApps.Text" xml:space="preserve">
+    <value>Скрытые под-приложения</value>
+  </data>
+  <data name="Settings_HiddenSubAppsDesc.Text" xml:space="preserve">
+    <value>Ключевые слова для скрытия.</value>
+  </data>
+  <data name="Settings_BtnAdd.Content" xml:space="preserve">
+    <value>Добавить</value>
+  </data>
+  <data name="Settings_HideRetroactively.Header" xml:space="preserve">
+    <value>Применить ретроактивно</value>
+  </data>
+  <data name="Settings_HideRetroactively.OnContent" xml:space="preserve">
+    <value>Скрыть и в истории</value>
+  </data>
+  <data name="Settings_HideRetroactively.OffContent" xml:space="preserve">
+    <value>Только новые</value>
+  </data>
+  <data name="Settings_Language.Text" xml:space="preserve">
+    <value>Язык</value>
+  </data>
+  <data name="Settings_LanguageDesc.Text" xml:space="preserve">
+    <value>Выбрать язык (нужен перезапуск)</value>
+  </data>
+  <data name="Nav_MiscData.Content" xml:space="preserve">
+    <value>Инфо</value>
+  </data>
+  <data name="MiscData_Title.Text" xml:space="preserve">
+    <value>Инфо</value>
+  </data>
+  <data name="MiscData_Subtitle.Text" xml:space="preserve">
+    <value>Случайная статистика</value>
+  </data>
+  <data name="Settings_AppRuntimeSummary.Text" xml:space="preserve">
+    <value>Запуск, Трей</value>
+  </data>
+  <data name="Settings_UsageDataSummary.Text" xml:space="preserve">
+    <value>Инкогнито, Исключения</value>
+  </data>
+  <data name="Settings_DisplaySummary.Text" xml:space="preserve">
+    <value>Тема, Язык, Графики</value>
+  </data>
+  <data name="Settings_DataSummary.Text" xml:space="preserve">
+    <value>Логи, Кэш</value>
+  </data>
+  <data name="Settings_AppTagsSummary.Text" xml:space="preserve">
+    <value>Теги и цвета</value>
+  </data>
+  <data name="Settings_IdleThreshold.Text" xml:space="preserve">
+    <value>Порог ожидания (с)</value>
+  </data>
+  <data name="Settings_IdleThresholdDesc.Text" xml:space="preserve">
+    <value>Время до статса 'AFK' (300с).</value>
+  </data>
+  <data name="Settings_PowerTitle.Text" xml:space="preserve">
+    <value>Энергия и Стоимость</value>
+  </data>
+  <data name="Settings_PowerDesc.Text" xml:space="preserve">
+    <value>Оценка потерь.</value>
+  </data>
+  <data name="Settings_AvgPower.Text" xml:space="preserve">
+    <value>Средняя мощность (Вт)</value>
+  </data>
+  <data name="Settings_KwhPrice.Text" xml:space="preserve">
+    <value>Цена за кВт*ч</value>
+  </data>
+  <data name="Settings_Currency.Text" xml:space="preserve">
+    <value>Валюта</value>
+  </data>
+  <data name="MiscData_WastedEnergy" xml:space="preserve">
+    <value>Потери энергии</value>
+  </data>
+  <data name="MiscData_WastedMoney" xml:space="preserve">
+    <value>Потери денег</value>
+  </data>
+  <data name="MiscData_WastedEnergyDesc" xml:space="preserve">
+    <value>Ок. {0}Вт впустую</value>
+  </data>
+  <data name="MiscData_WastedMoneyDesc" xml:space="preserve">
+    <value>Ок. стоимость простоя</value>
+  </data>
+  <data name="MiscData_AFKTime" xml:space="preserve">
+    <value>Время AFK</value>
+  </data>
+  <data name="MiscData_AFKTimeDesc" xml:space="preserve">
+    <value>Время не у ПК</value>
+  </data>
+  <data name="MiscData_LockTime" xml:space="preserve">
+    <value>Время блокировки</value>
+  </data>
+  <data name="MiscData_LockTimeDesc" xml:space="preserve">
+    <value>На экране блокировки</value>
+  </data>
+  <data name="MiscData_WindowSwitches" xml:space="preserve">
+    <value>Переключений окон</value>
+  </data>
+  <data name="MiscData_WindowSwitchesDesc" xml:space="preserve">
+    <value>Смен фокуса</value>
+  </data>
+  <data name="MiscData_AudioEvents" xml:space="preserve">
+    <value>Аудио события</value>
+  </data>
+  <data name="MiscData_AudioEventsDesc" xml:space="preserve">
+    <value>Запусков аудио</value>
+  </data>
+  <data name="MiscData_ActiveTime" xml:space="preserve">
+    <value>Активное время</value>
+  </data>
+  <data name="MiscData_ActiveTimeDesc" xml:space="preserve">
+    <value>Время за ПК</value>
+  </data>
+  <data name="MiscData_LongestSession" xml:space="preserve">
+    <value>Длинная сессия</value>
+  </data>
+  <data name="MiscData_TopApp" xml:space="preserve">
+    <value>Топ приложение</value>
+  </data>
+  <data name="MiscData_UniqueApps" xml:space="preserve">
+    <value>Уникальных приложений</value>
+  </data>
+  <data name="MiscData_UniqueAppsDesc" xml:space="preserve">
+    <value>Разных приложений использовано</value>
+  </data>
+  <data name="MiscData_TopWebsite" xml:space="preserve">
+    <value>Топ сайт</value>
+  </data>
+  <data name="MiscData_NoData" xml:space="preserve">
+    <value>Нет данных</value>
+  </data>
+  <data name="MiscData_NoDataDesc" xml:space="preserve">
+    <value>Логи не найдены.</value>
+  </data>
+  <data name="History_View_Categories" xml:space="preserve">
+    <value>Категории</value>
+  </data>
+  <data name="History_View_Apps" xml:space="preserve">
+    <value>Приложения</value>
+  </data>
+  <data name="History_View_SubApps" xml:space="preserve">
+    <value>Под-приложения</value>
+  </data>
+  <data name="History_Period_LastWeek" xml:space="preserve">
+    <value>Прошлая неделя</value>
+  </data>
+  <data name="History_Period_LastMonth" xml:space="preserve">
+    <value>Прошлый месяц</value>
+  </data>
+  <data name="History_Period_LastYear" xml:space="preserve">
+    <value>Прошлый год</value>
+  </data>
+  <data name="History_Period_Custom" xml:space="preserve">
+    <value>Пользовательский</value>
+  </data>
+  <data name="History_AwayLock.Text" xml:space="preserve">
+    <value>Отошел / Блок</value>
+  </data>
+  <data name="Sessions_View_App" xml:space="preserve">
+    <value>Приложение</value>
+  </data>
+  <data name="Sessions_View_SubApp" xml:space="preserve">
+    <value>Под-приложение</value>
+  </data>
+  <data name="Sessions_View_Category" xml:space="preserve">
+    <value>Категория</value>
+  </data>
+  <data name="Sessions_ViewLabel.Text" xml:space="preserve">
+    <value>Вид:</value>
+  </data>
+  <data name="History_Period_Today" xml:space="preserve">
+    <value>Сегодня</value>
+  </data>
+  <data name="History_Period_Yesterday" xml:space="preserve">
+    <value>Вчера</value>
+  </data>
+  <data name="History_Period_Tomorrow" xml:space="preserve">
+    <value>Завтра</value>
+  </data>
+  <data name="History_Period_Last7Days" xml:space="preserve">
+    <value>Посл. 7 дней</value>
+  </data>
+  <data name="History_Period_ThisMonth" xml:space="preserve">
+    <value>Этот месяц</value>
+  </data>
+  <data name="History_Period_AllTime" xml:space="preserve">
+    <value>Все время</value>
+  </data>
+  <data name="Focus_NoSchedules.Text" xml:space="preserve">
+    <value>Нет расписания фокуса</value>
+  </data>
+  <data name="Focus_EmptyStateDesc.Text" xml:space="preserve">
+    <value>Нажмите '+ Добавить расписание', чтобы создать первый блок.</value>
+  </data>
+  <data name="Nav_Settings.Content" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
+  <data name="Focus_Dialog_Title.Title" xml:space="preserve">
+    <value>Сессия фокусировки</value>
+  </data>
+  <data name="Focus_Dialog_Save" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="Focus_Dialog_Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="Focus_Dialog_NameHeader.Header" xml:space="preserve">
+    <value>Имя сессии</value>
+  </data>
+  <data name="Focus_Dialog_NamePlaceholder" xml:space="preserve">
+    <value>напр., Утренний код</value>
+  </data>
+  <data name="Focus_Dialog_AppHeader.Text" xml:space="preserve">
+    <value>Целевое приложение</value>
+  </data>
+  <data name="Focus_Dialog_AppPlaceholder" xml:space="preserve">
+    <value>Введите для поиска...</value>
+  </data>
+  <data name="Focus_Dialog_AppAssist.Text" xml:space="preserve">
+    <value>Выберите приложение из истории</value>
+  </data>
+  <data name="Focus_Dialog_SubAppHeader.Header" xml:space="preserve">
+    <value>Под-приложение (Опционально)</value>
+  </data>
+  <data name="Focus_Dialog_SubAppPlaceholder" xml:space="preserve">
+    <value>напр., GitHub, YouTube</value>
+  </data>
+  <data name="Focus_Dialog_StartTime.Header" xml:space="preserve">
+    <value>Время начала</value>
+  </data>
+  <data name="Focus_Dialog_Duration.Header" xml:space="preserve">
+    <value>Длительность (мин)</value>
+  </data>
+  <data name="Focus_Dialog_DaysHeader.Text" xml:space="preserve">
+    <value>Повторять по дням</value>
+  </data>
+  <data name="Focus_Dialog_OneTimeHint.Text" xml:space="preserve">
+    <value>Оставьте все выключенным для разовой сессии</value>
+  </data>
+  <data name="Focus_Dialog_ModeHeader.Text" xml:space="preserve">
+    <value>Режим выполнения</value>
+  </data>
+  <data name="Focus_Dialog_Mode_Chill.Content" xml:space="preserve">
+    <value>🟢 Чилл - Только уведомление</value>
+  </data>
+  <data name="Focus_Dialog_Mode_Normal.Content" xml:space="preserve">
+    <value>🟠 Нормальный - Всплывающее окно</value>
+  </data>
+  <data name="Focus_Dialog_Mode_Focus.Content" xml:space="preserve">
+    <value>🔴 Фокус - Закрывать приложения</value>
+  </data>
+  <data name="Focus_Session_DefaultName" xml:space="preserve">
+    <value>Сессия фокусировки</value>
+  </data>
+  <data name="FocusDialog.Title" xml:space="preserve">
+    <value>Сессия фокусировки</value>
+  </data>
+  <data name="FocusDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="FocusDialog.CloseButtonText" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="FocusDialog_NameBox.Header" xml:space="preserve">
+    <value>Имя сессии</value>
+  </data>
+  <data name="FocusDialog_NameBox.PlaceholderText" xml:space="preserve">
+    <value>напр., Утренний код</value>
+  </data>
+  <data name="FocusDialog_AppHeader.Text" xml:space="preserve">
+    <value>Целевое приложение</value>
+  </data>
+  <data name="FocusDialog_AppSuggest.PlaceholderText" xml:space="preserve">
+    <value>Введите для поиска...</value>
+  </data>
+  <data name="FocusDialog_AppAssist.Text" xml:space="preserve">
+    <value>Выберите приложение из истории</value>
+  </data>
+  <data name="FocusDialog_SubAppBox.Header" xml:space="preserve">
+    <value>Под-приложение (Опционально)</value>
+  </data>
+  <data name="FocusDialog_SubAppBox.PlaceholderText" xml:space="preserve">
+    <value>напр., GitHub, YouTube</value>
+  </data>
+  <data name="FocusDialog_StartTime.Header" xml:space="preserve">
+    <value>Время начала</value>
+  </data>
+  <data name="FocusDialog_Duration.Header" xml:space="preserve">
+    <value>Длительность (мин)</value>
+  </data>
+  <data name="FocusDialog_DaysHeader.Text" xml:space="preserve">
+    <value>Повторять по дням</value>
+  </data>
+  <data name="FocusDialog_OneTimeHint.Text" xml:space="preserve">
+    <value>Оставьте все выключенным для разовой сессии</value>
+  </data>
+  <data name="FocusDialog_ModeHeader.Text" xml:space="preserve">
+    <value>Режим выполнения</value>
+  </data>
+  <data name="FocusDialog_Mode_Chill.Content" xml:space="preserve">
+    <value>🟢 Чилл - Только уведомление</value>
+  </data>
+  <data name="FocusDialog_Mode_Normal.Content" xml:space="preserve">
+    <value>🟠 Нормальный - Всплывающее окно</value>
+  </data>
+  <data name="FocusDialog_Mode_Focus.Content" xml:space="preserve">
+    <value>🔴 Фокус - Закрывать приложения</value>
+  </data>
+  <data name="RuleDialog.Title" xml:space="preserve">
+    <value>Редактировать правило</value>
+  </data>
+  <data name="RuleDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="RuleDialog.SecondaryButtonText" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="RuleDialog_ProcessBox.Header" xml:space="preserve">
+    <value>Имя процесса (Опционально)</value>
+  </data>
+  <data name="RuleDialog_ProcessBox.PlaceholderText" xml:space="preserve">
+    <value>напр. chrome (пусто для всех)</value>
+  </data>
+  <data name="RuleDialog_PatternBox.Header" xml:space="preserve">
+    <value>Шаблон (Заголовок)</value>
+  </data>
+  <data name="RuleDialog_PatternBox.PlaceholderText" xml:space="preserve">
+    <value>Текст или Regex</value>
+  </data>
+  <data name="RuleDialog_TypeBox.Header" xml:space="preserve">
+    <value>Тип совпадения</value>
+  </data>
+  <data name="RuleDialog_Type_Contains.Content" xml:space="preserve">
+    <value>Содержит (По умолчанию)</value>
+  </data>
+  <data name="RuleDialog_Type_StartsWith.Content" xml:space="preserve">
+    <value>Начинается с</value>
+  </data>
+  <data name="RuleDialog_Type_EndsWith.Content" xml:space="preserve">
+    <value>Заканчивается на</value>
+  </data>
+  <data name="RuleDialog_Type_Exact.Content" xml:space="preserve">
+    <value>Точное совпадение</value>
+  </data>
+  <data name="RuleDialog_Type_Regex.Content" xml:space="preserve">
+    <value>Регулярное выражение</value>
+  </data>
+  <data name="RuleDialog_ReplacementBox.Header" xml:space="preserve">
+    <value>Замена</value>
+  </data>
+  <data name="RuleDialog_ReplacementBox.PlaceholderText" xml:space="preserve">
+    <value>Новый текст (поддерживает $1 группы)</value>
+  </data>
+  <data name="RuleDialog_TestExpander.Header" xml:space="preserve">
+    <value>Тест правила</value>
+  </data>
+  <data name="RuleDialog_TestInput.Header" xml:space="preserve">
+    <value>Тестовый ввод</value>
+  </data>
+  <data name="RuleDialog_TestInput.PlaceholderText" xml:space="preserve">
+    <value>Вставьте заголовок окна</value>
+  </data>
+  <data name="RuleDialog_ResultLabel.Text" xml:space="preserve">
+    <value>Результат:</value>
+  </data>
+  <data name="FocusPageHeader.Text" xml:space="preserve">
+    <value>Расписание фокусировки</value>
+  </data>
+  <data name="FocusPageDescription.Text" xml:space="preserve">
+    <value>Создавайте запланированные блоки фокусировки. Приложение будет обеспечивать выполнение ваших обязательств в зависимости от выбранного режима.</value>
+  </data>
+  <data name="FocusPageToggle.OnContent" xml:space="preserve">
+    <value>Активно</value>
+  </data>
+  <data name="FocusPageToggle.OffContent" xml:space="preserve">
+    <value>Неактивно</value>
+  </data>
+  <data name="FocusPageAddButton.Content" xml:space="preserve">
+    <value>+ Добавить расписание</value>
+  </data>
+  <data name="FocusPageStatusInactive" xml:space="preserve">
+    <value>Мониторинг неактивен</value>
+  </data>
+  <data name="FocusPageStatusActiveSession" xml:space="preserve">
+    <value>Активно: {0}</value>
+  </data>
+  <data name="FocusPageStatusNoSession" xml:space="preserve">
+    <value>Мониторинг активен (Нет сессии)</value>
+  </data>
+  <data name="Settings_CustomTitleRules.Text" xml:space="preserve">
+    <value>Пользовательские правила заголовков</value>
+  </data>
+  <data name="Settings_CustomTitleRulesDesc.Text" xml:space="preserve">
+    <value>Определите пользовательские правила для разбора заголовков окон (например, переименовать 'X Match' в 'X Pattern')</value>
+  </data>
+  <data name="Settings_AddNewRule.Content" xml:space="preserve">
+    <value>Добавить правило</value>
+  </data>
+  <data name="Dashboard_TabAfkTime.Header" xml:space="preserve">
+    <value>🕐 Время отсутствия (AFK)</value>
+  </data>
+  <data name="Dashboard_AwayFromKeyboard.Text" xml:space="preserve">
+    <value>Отошел от клавиатуры</value>
+  </data>
+  <data name="Dashboard_ScreenLocked.Text" xml:space="preserve">
+    <value>Экран заблокирован</value>
+  </data>
+  <data name="Dashboard_NoData.Text" xml:space="preserve">
+    <value>Нет данных для отображения</value>
+  </data>
+  <data name="Dashboard_AfkTimeTitle.Text" xml:space="preserve">
+    <value>🕐 Время отсутствия (AFK)</value>
+  </data>
+  <data name="Dialog_SetDisplayName_Title" xml:space="preserve">
+    <value>Установить имя для {0}</value>
+  </data>
+  <data name="Dialog_SetDisplayName_Desc" xml:space="preserve">
+    <value>Установите пользовательское имя для этого процесса. Оригинальное имя будет использоваться для отслеживания.</value>
+  </data>
+  <data name="Dialog_SetDisplayName_Placeholder" xml:space="preserve">
+    <value>Введите имя для {0}</value>
+  </data>
+  <data name="Dialog_Save" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="Dialog_Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="Dialog_Remove" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="Dialog_SetTimeLimit_Title" xml:space="preserve">
+    <value>Установить лимит времени для {0}</value>
+  </data>
+  <data name="Dialog_SetTimeLimit_Placeholder" xml:space="preserve">
+    <value>Минуты (например, 60)</value>
+  </data>
+</root>

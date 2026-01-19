@@ -1,6 +1,6 @@
 param (
-    [string]$SourcePath = "DigitalWellbeingWinUI3\Strings\en-US\Resources.resw",
-    [string]$StringsDir = "DigitalWellbeingWinUI3\Strings"
+    [string]$SourcePath = "UsageLogger\Strings\en-US\Resources.resw",
+    [string]$StringsDir = "UsageLogger\Strings"
 )
 
 $ErrorActionPreference = "Stop"
