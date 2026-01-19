@@ -11,8 +11,122 @@ namespace UsageLogger.Core;
 public static class ApplicationPath
 {
     private const SpecialFolder ApplicationPathFolder = SpecialFolder.LocalApplicationData;
-    private const string ApplicationFolderName = "usagelogger";
-    private const string LegacyFolderName = "digital-wellbeing"; // For migration
+    private const string ApplicationFolderName = "UsageLoggerData"; // Separated from Install Folder
+    private const string LegacyFolderName = "digital-wellbeing"; 
+    // We also check "usagelogger" in case user migrated to mixed folder previously
+    private const string MixedFolderName = "usagelogger"; 
+
+    // ... (Lines 16-246 same) ...
+
+    /// <summary>
+    /// Migrates data from legacy folders ('digital-wellbeing', 'usagelogger') to 'UsageLoggerData'.
+    /// </summary>
+    public static void MigrateLegacyData()
+    {
+#if !DEBUG
+        try
+        {
+            string newPath = APP_LOCATION;
+            if (Directory.Exists(newPath)) return; // Already migrated/setup
+
+            var sources = new[] 
+            {
+                Path.Combine(GetFolderPath(ApplicationPathFolder), LegacyFolderName),
+                Path.Combine(GetFolderPath(ApplicationPathFolder), MixedFolderName)
+            };
+
+            foreach (var legacyPath in sources)
+            {
+                if (!Directory.Exists(legacyPath)) continue;
+
+                try 
+                {
+                    // Copy ONLY Data (in case legacy is Mixed App+Data)
+                    string[] foldersToCopy = { "dailylogs", "settings", "Icons", "CustomIcons", "Debug" };
+                    string[] filesToCopy = { "user_preferences.json", "custom_log_path.txt", "known_apps.json" };
+
+                    bool foundData = false;
+
+                    // 1. Copy Folders
+                    foreach (var dirName in foldersToCopy)
+                    {
+                        string srcDir = Path.Combine(legacyPath, dirName);
+                        if (Directory.Exists(srcDir))
+                        {
+                            foundData = true;
+                            string destDir = Path.Combine(newPath, dirName);
+                            Directory.CreateDirectory(destDir);
+                            
+                            // Recursive copy
+                            foreach (string dirPath in Directory.GetDirectories(srcDir, "*", SearchOption.AllDirectories))
+                            {
+                                Directory.CreateDirectory(dirPath.Replace(srcDir, destDir));
+                            }
+                            foreach (string newPathSub in Directory.GetFiles(srcDir, "*.*", SearchOption.AllDirectories))
+                            {
+                                File.Copy(newPathSub, newPathSub.Replace(srcDir, destDir), true);
+                            }
+                        }
+                    }
+
+                    // 2. Copy Config Files
+                    Directory.CreateDirectory(newPath); // Ensure root exists
+                    foreach (var fileName in filesToCopy)
+                    {
+                        string srcFile = Path.Combine(legacyPath, fileName);
+                        if (File.Exists(srcFile))
+                        {
+                            foundData = true;
+                            File.Copy(srcFile, Path.Combine(newPath, fileName), true);
+                        }
+                    }
+
+                    // 3. Rename Source ONLY if it's NOT an App Install (no .exe)
+                    bool isAppInstall = Directory.GetFiles(legacyPath, "*.exe").Length > 0;
+                    if (foundData && !isAppInstall)
+                    {
+                        try 
+                        {
+                            string backupPath = legacyPath + ".bak";
+                            if (Directory.Exists(backupPath)) Directory.Delete(backupPath, true);
+                            Directory.Move(legacyPath, backupPath);
+                        }
+                        catch { }
+                    }
+                    
+                    if (foundData) 
+                    {
+                         System.Diagnostics.Debug.WriteLine($"[Migration] Migrated data from '{legacyPath}' to '{newPath}'");
+                         break; // Found primary data source, stop looking
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[Migration] Error processing '{legacyPath}': {ex.Message}");
+                }
+            }
+
+            // Sanitization: If custom log path still points to "digital-wellbeing" or "usagelogger", reset
+            try
+            {
+                 string? customPath = GetCustomLogsFolderRaw();
+                 if (!string.IsNullOrEmpty(customPath))
+                 {
+                     if (customPath.IndexOf("digital-wellbeing", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                         customPath.IndexOf("usagelogger", StringComparison.OrdinalIgnoreCase) >= 0)
+                     {
+                         ClearCustomLogsFolder();
+                     }
+                 }
+            }
+            catch { }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[Migration] Data migration failed: {ex.Message}");
+        }
+#endif
+    }
     private const string SettingsFolderName = "settings";
     private const string IconsFolderName = "Icons";
     private const string DebugFolderName = "Debug";
@@ -243,66 +357,7 @@ public static class ApplicationPath
         return newLocation;
     }
 
-    /// <summary>
-    /// Migrates data from the old 'digital-wellbeing' folder to the new 'usagelogger' folder.
-    /// Should be called once at application startup.
-    /// </summary>
-    public static void MigrateLegacyData()
-    {
-#if !DEBUG
-        try
-        {
-            string legacyPath = Path.Combine(GetFolderPath(ApplicationPathFolder), LegacyFolderName);
-            string newPath = APP_LOCATION;
 
-            // Only migrate if legacy exists and new doesn't
-            if (Directory.Exists(legacyPath) && !Directory.Exists(newPath))
-            {
-                Directory.Move(legacyPath, newPath);
-                System.Diagnostics.Debug.WriteLine($"[Migration] Moved data from '{legacyPath}' to '{newPath}'");
-            }
-            else if (Directory.Exists(legacyPath) && Directory.Exists(newPath))
-            {
-                // Both exist - merge files (copy missing files from legacy)
-                foreach (var file in Directory.GetFiles(legacyPath, "*", SearchOption.AllDirectories))
-                {
-                    string relativePath = file.Substring(legacyPath.Length + 1);
-                    string destPath = Path.Combine(newPath, relativePath);
-                    if (!File.Exists(destPath))
-                    {
-                        Directory.CreateDirectory(Path.GetDirectoryName(destPath)!);
-                        File.Copy(file, destPath);
-                    }
-                }
-                
-                // Rename legacy folder to .bak to complete migration visual
-                try 
-                {
-                    string backupPath = legacyPath + ".bak";
-                    if (Directory.Exists(backupPath)) Directory.Delete(backupPath, true);
-                    Directory.Move(legacyPath, backupPath);
-                }
-                catch { /* Ignore if in use */ }
-            }
-
-            // Sanitization: If custom log path still points to "digital-wellbeing", reset it to default
-            try
-            {
-                 string? customPath = GetCustomLogsFolderRaw();
-                 if (!string.IsNullOrEmpty(customPath) && customPath.IndexOf("digital-wellbeing", StringComparison.OrdinalIgnoreCase) >= 0)
-                 {
-                     ClearCustomLogsFolder(); // Resets to default (APP_LOCATION/dailylogs) which is now 'usagelogger'
-                     System.Diagnostics.Debug.WriteLine("[Migration] Reset legacy custom log path to default");
-                 }
-            }
-            catch { }
-        }
-        catch (Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine($"[Migration] Data migration failed: {ex.Message}");
-        }
-#endif
-    }
 
     /// <summary>
     /// Removes the legacy autorun registry key if present.
