@@ -32,7 +32,9 @@ public static class ApplicationPath
             var sources = new[] 
             {
                 Path.Combine(GetFolderPath(ApplicationPathFolder), LegacyFolderName),
-                Path.Combine(GetFolderPath(ApplicationPathFolder), MixedFolderName)
+                Path.Combine(GetFolderPath(ApplicationPathFolder), MixedFolderName),
+                Path.Combine(GetFolderPath(ApplicationPathFolder), LegacyFolderName + ".bak"), // Auto-recover from .bak
+                Path.Combine(GetFolderPath(ApplicationPathFolder), MixedFolderName + ".bak")
             };
 
             foreach (var legacyPath in sources)
@@ -48,6 +50,7 @@ public static class ApplicationPath
                     bool foundData = false;
 
                     // 1. Copy Folders
+                    bool allCopied = true;
                     foreach (var dirName in foldersToCopy)
                     {
                         string srcDir = Path.Combine(legacyPath, dirName);
@@ -57,14 +60,24 @@ public static class ApplicationPath
                             string destDir = Path.Combine(newPath, dirName);
                             Directory.CreateDirectory(destDir);
                             
-                            // Recursive copy
+                            // Recursive copy using Relative Path
                             foreach (string dirPath in Directory.GetDirectories(srcDir, "*", SearchOption.AllDirectories))
                             {
-                                Directory.CreateDirectory(dirPath.Replace(srcDir, destDir));
+                                string relative = Path.GetRelativePath(srcDir, dirPath);
+                                Directory.CreateDirectory(Path.Combine(destDir, relative));
                             }
-                            foreach (string newPathSub in Directory.GetFiles(srcDir, "*.*", SearchOption.AllDirectories))
+                            foreach (string filePath in Directory.GetFiles(srcDir, "*.*", SearchOption.AllDirectories))
                             {
-                                File.Copy(newPathSub, newPathSub.Replace(srcDir, destDir), true);
+                                try
+                                {
+                                    string relative = Path.GetRelativePath(srcDir, filePath);
+                                    File.Copy(filePath, Path.Combine(destDir, relative), true);
+                                }
+                                catch (Exception copyEx) 
+                                { 
+                                    allCopied = false; 
+                                    System.Diagnostics.Debug.WriteLine($"[Migration] Copy failed for {filePath}: {copyEx.Message}");
+                                }
                             }
                         }
                     }
@@ -77,27 +90,25 @@ public static class ApplicationPath
                         if (File.Exists(srcFile))
                         {
                             foundData = true;
-                            File.Copy(srcFile, Path.Combine(newPath, fileName), true);
+                            try 
+                            { 
+                                File.Copy(srcFile, Path.Combine(newPath, fileName), true); 
+                            }
+                            catch { allCopied = false; }
                         }
                     }
 
-                    // 3. Rename Source ONLY if it's NOT an App Install (no .exe)
-                    bool isAppInstall = Directory.GetFiles(legacyPath, "*.exe").Length > 0;
-                    if (foundData && !isAppInstall)
-                    {
-                        try 
-                        {
-                            string backupPath = legacyPath + ".bak";
-                            if (Directory.Exists(backupPath)) Directory.Delete(backupPath, true);
-                            Directory.Move(legacyPath, backupPath);
-                        }
-                        catch { }
-                    }
+                    // 3. DO NOT RENAME Source. Leaving it intact as per user request.
+                    // string backupPath = legacyPath + ".bak"; ... Directory.Move ...
                     
-                    if (foundData) 
+                    if (foundData && allCopied) 
                     {
-                         System.Diagnostics.Debug.WriteLine($"[Migration] Migrated data from '{legacyPath}' to '{newPath}'");
+                         System.Diagnostics.Debug.WriteLine($"[Migration] Migrated data from '{legacyPath}' to '{newPath}' (Source preserved)");
                          break; // Found primary data source, stop looking
+                    }
+                    else if (foundData && !allCopied)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"[Migration] Data found in '{legacyPath}' but copy incomplete. Source preserved.");
                     }
                 }
                 catch (Exception ex)
