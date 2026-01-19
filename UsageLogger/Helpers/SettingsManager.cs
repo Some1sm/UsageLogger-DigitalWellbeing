@@ -1,5 +1,6 @@
 using UsageLogger.Core;
 using UsageLogger.Core.Models;
+using UsageLogger.Core.Helpers;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -100,28 +101,7 @@ namespace UsageLogger.Helpers
         public static void UpdateAppTimeLimit(string processName, TimeSpan timeLimit)
         {
             int totalMins = (int)timeLimit.TotalMinutes;
-
-            // Remove time limit if set to 0 mins
-            if (totalMins <= 0)
-            {
-                if (appTimeLimits.ContainsKey(processName))
-                {
-                    appTimeLimits.Remove(processName);
-                }
-            }
-            // Else, update or add new
-            else
-            {
-                if (appTimeLimits.ContainsKey(processName))
-                {
-                    appTimeLimits[processName] = totalMins;
-                }
-                else
-                {
-                    appTimeLimits.Add(processName, totalMins);
-                }
-            }
-
+            appTimeLimits.UpsertOrRemove(processName, totalMins, v => v <= 0);
             SaveAppTimeLimits();
         }
 
@@ -160,12 +140,18 @@ namespace UsageLogger.Helpers
                             if (!appTags.ContainsKey(processName)) appTags.Add(processName, appTag);
                         }
                     }
-                    catch { }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"[SettingsManager] Error parsing app tag row: {ex.Message}");
+                    }
                 }
             }
             catch (FileNotFoundException) { SaveAppTags(); }
             catch (DirectoryNotFoundException) { Directory.CreateDirectory(folderPath); }
-            catch { }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[SettingsManager] LoadAppTags error: {ex.Message}");
+            }
         }
 
         private static async Task LoadTitleTags()
@@ -190,11 +176,17 @@ namespace UsageLogger.Helpers
                                 if (!titleTags.ContainsKey(key)) titleTags.Add(key, tagId);
                             }
                         }
-                        catch { }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine($"[SettingsManager] Error parsing title tag row: {ex.Message}");
+                        }
                     }
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[SettingsManager] LoadTitleTags error: {ex.Message}");
+            }
         }
 
         private static void SaveAppTags()

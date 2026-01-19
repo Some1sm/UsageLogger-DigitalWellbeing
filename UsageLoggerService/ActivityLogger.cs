@@ -19,9 +19,16 @@ namespace UsageLoggerService;
 
 public class ActivityLogger
 {
+    // Timer Constants
     public static readonly int TIMER_INTERVAL_SEC = 3;
-    private static int _bufferFlushIntervalSec = 300; // Default: 5 minutes
-    private static List<string> _ignoredWindowTitles = new List<string>(); // Cached keywords to hide
+    private const int DEFAULT_BUFFER_FLUSH_INTERVAL_SEC = 300; // 5 minutes
+    private const int IMMEDIATE_FLUSH_INTERVAL_SEC = 1;
+    private const int SETTINGS_THROTTLE_SEC = 30;
+    private const int MIN_IDLE_THRESHOLD_SEC = 60;
+    private const int MIN_FLUSH_INTERVAL_SEC = 60;
+    
+    private static int _bufferFlushIntervalSec = DEFAULT_BUFFER_FLUSH_INTERVAL_SEC;
+    private static List<string> _ignoredWindowTitles = new List<string>();
     private static List<CustomTitleRule> _customTitleRules = new List<CustomTitleRule>();
     private static DateTime _lastSettingsRead = DateTime.MinValue;
     private static DateTime _lastFileWriteTime = DateTime.MinValue;
@@ -33,6 +40,39 @@ public class ActivityLogger
     private static bool _focusLoaded = false;
     private static Dictionary<string, DateTime> _focusLastAlert = new Dictionary<string, DateTime>();
     private const int FOCUS_ALERT_DEBOUNCE_MINUTES = 5;
+    private const int TOAST_DEBOUNCE_MINUTES = 1;
+
+    /// <summary>
+    /// Parses a simple JSON property value from a JSON string.
+    /// </summary>
+    private static string? ParseJsonPropertyRaw(string json, string propertyName)
+    {
+        int idx = json.IndexOf($"\"{propertyName}\":");
+        if (idx < 0) return null;
+        
+        int colonIdx = json.IndexOf(':', idx);
+        int endIdx = json.IndexOf(',', colonIdx);
+        if (endIdx < 0) endIdx = json.IndexOf('}', colonIdx);
+        if (endIdx < 0) return null;
+        
+        return json.Substring(colonIdx + 1, endIdx - colonIdx - 1).Trim();
+    }
+
+    private static bool ParseJsonBool(string json, string propertyName, bool defaultValue)
+    {
+        string? value = ParseJsonPropertyRaw(json, propertyName);
+        if (value == null) return defaultValue;
+        return value.ToLowerInvariant() == "true";
+    }
+
+    private static int ParseJsonInt(string json, string propertyName, int defaultValue, int minValue = int.MinValue)
+    {
+        string? value = ParseJsonPropertyRaw(json, propertyName);
+        if (value == null) return defaultValue;
+        if (int.TryParse(value, out int result) && result >= minValue)
+            return result;
+        return defaultValue;
+    }
 
     private int GetBufferFlushInterval()
     {
@@ -57,16 +97,15 @@ public class ActivityLogger
                  // So we can just return cached value.
                  
                  // However, to be safe and mimicking old behavior (maybe external change without timestamp change? unlikely):
-                 if ((DateTime.Now - _lastSettingsRead).TotalSeconds < 30)
+                 if ((DateTime.Now - _lastSettingsRead).TotalSeconds < SETTINGS_THROTTLE_SEC)
                      return _bufferFlushIntervalSec;
                  
-                 // If > 30s, we might check again (redundant if we trust timestamp, but harmless)
                  _lastSettingsRead = DateTime.Now;
             }
         }
         else
         {
-             if ((DateTime.Now - _lastSettingsRead).TotalSeconds < 30)
+             if ((DateTime.Now - _lastSettingsRead).TotalSeconds < SETTINGS_THROTTLE_SEC)
                 return _bufferFlushIntervalSec;
              _lastSettingsRead = DateTime.Now;
         }
@@ -86,35 +125,15 @@ public class ActivityLogger
             }
 
             // Check UseRamCache first (if false, flush every 1 second for immediate writes)
-            int useRamCacheIdx = json.IndexOf("\"UseRamCache\":");
-            if (useRamCacheIdx >= 0)
+            bool useRamCache = ParseJsonBool(json, "UseRamCache", true);
+            if (!useRamCache)
             {
-                int colonIdx = json.IndexOf(':', useRamCacheIdx);
-                int endIdx = json.IndexOf(',', colonIdx);
-                if (endIdx < 0) endIdx = json.IndexOf('}', colonIdx);
-                
-                string valueStr = json.Substring(colonIdx + 1, endIdx - colonIdx - 1).Trim().ToLowerInvariant();
-                if (valueStr == "false")
-                {
-                    _bufferFlushIntervalSec = 1; // Immediate write mode
-                    return _bufferFlushIntervalSec;
-                }
+                _bufferFlushIntervalSec = IMMEDIATE_FLUSH_INTERVAL_SEC;
+                return _bufferFlushIntervalSec;
             }
 
             // Default: use DataFlushIntervalSeconds for RAM cache mode
-            int startIdx = json.IndexOf("\"DataFlushIntervalSeconds\":");
-            if (startIdx >= 0)
-            {
-                int colonIdx = json.IndexOf(':', startIdx);
-                int endIdx = json.IndexOf(',', colonIdx);
-                if (endIdx < 0) endIdx = json.IndexOf('}', colonIdx);
-                
-                string valueStr = json.Substring(colonIdx + 1, endIdx - colonIdx - 1).Trim();
-                if (int.TryParse(valueStr, out int val) && val >= 60)
-                {
-                    _bufferFlushIntervalSec = val;
-                }
-            }
+            _bufferFlushIntervalSec = ParseJsonInt(json, "DataFlushIntervalSeconds", DEFAULT_BUFFER_FLUSH_INTERVAL_SEC, MIN_FLUSH_INTERVAL_SEC);
             
             // Parse IgnoredWindowTitles array
             try
@@ -130,7 +149,10 @@ public class ActivityLogger
                         .ToList();
                 }
             }
-            catch { } // If parsing fails, keep existing list
+            catch (System.Text.Json.JsonException ex)
+            {
+                ServiceLogger.Log("Settings", $"Failed to parse IgnoredWindowTitles: {ex.Message}");
+            }
 
             // Parse CustomTitleRules array
             try
@@ -143,9 +165,15 @@ public class ActivityLogger
                                         ?? new List<CustomTitleRule>();
                 }
             }
-            catch { }
+            catch (System.Text.Json.JsonException ex)
+            {
+                ServiceLogger.Log("Settings", $"Failed to parse CustomTitleRules: {ex.Message}");
+            }
         }
-        catch { }
+        catch (Exception ex)
+        {
+            ServiceLogger.Log("Settings", $"Failed to read settings: {ex.Message}");
+        }
 
         return _bufferFlushIntervalSec;
     }
@@ -185,7 +213,6 @@ public class ActivityLogger
     /// </summary>
     private int GetIdleThresholdMs()
     {
-        // Parse IdleThresholdSeconds from settings (same approach as GetBufferFlushInterval)
         try
         {
             if (File.Exists(_settingsPath))
@@ -197,25 +224,17 @@ public class ActivityLogger
                     json = sr.ReadToEnd();
                 }
 
-                int idx = json.IndexOf("\"IdleThresholdSeconds\":");
-                if (idx >= 0)
-                {
-                    int colonIdx = json.IndexOf(':', idx);
-                    int endIdx = json.IndexOf(',', colonIdx);
-                    if (endIdx < 0) endIdx = json.IndexOf('}', colonIdx);
-                    
-                    string valueStr = json.Substring(colonIdx + 1, endIdx - colonIdx - 1).Trim();
-                    if (int.TryParse(valueStr, out int val) && val >= 60)
-                    {
-                        _idleThresholdSec = val;
-                    }
-                }
+                _idleThresholdSec = ParseJsonInt(json, "IdleThresholdSeconds", _idleThresholdSec, MIN_IDLE_THRESHOLD_SEC);
             }
         }
-        catch { }
+        catch (Exception ex)
+        {
+            ServiceLogger.Log("Settings", $"Failed to read idle threshold: {ex.Message}");
+        }
 
         return _idleThresholdSec * 1000; // Convert to ms
     }
+
 
     public ActivityLogger(IAppUsageRepository repository, SessionManager sessionManager)
     {

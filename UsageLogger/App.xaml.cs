@@ -66,9 +66,6 @@ namespace UsageLogger
                     Debug.WriteLine($"[App] Failed to register notifications: {ex.Message}");
                 }
 
-                // Migrate legacy data and registry before anything else
-                UsageLogger.Core.ApplicationPath.MigrateLegacyData();
-                UsageLogger.Core.ApplicationPath.CleanupLegacyRegistry();
 
                 // Load user preferences first
                 Helpers.UserPreferences.Load();

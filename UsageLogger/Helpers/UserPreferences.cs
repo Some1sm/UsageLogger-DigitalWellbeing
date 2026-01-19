@@ -1,4 +1,5 @@
 using UsageLogger.Core.Models;
+using UsageLogger.Core.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,7 +16,7 @@ namespace UsageLogger.Helpers
         // properties need to be loaded
         public static int DayAmount { get; set; } = 7;
         public static int DetailedUsageDayCount { get; set; } = 1;
-        public static TimeSpan MinumumDuration { get; set; } = TimeSpan.FromSeconds(0);
+        public static TimeSpan MinimumDuration { get; set; } = TimeSpan.Zero;
         public static bool EnableAutoRefresh { get; set; } = true;
         public static int RefreshIntervalSeconds { get; set; } = 60;
         public static int DataFlushIntervalSeconds { get; set; } = 300; // Service: how often RAM data is flushed to disk (5 min default)
@@ -59,7 +60,7 @@ namespace UsageLogger.Helpers
                 {
                     DayAmount,
                     DetailedUsageDayCount,
-                    MinumumDuration,
+                    MinimumDuration,
                     EnableAutoRefresh,
                     RefreshIntervalSeconds,
 
@@ -109,7 +110,7 @@ namespace UsageLogger.Helpers
 
                     if (data.TryGetProperty(nameof(DayAmount), out var prop)) DayAmount = prop.GetInt32();
                     if (data.TryGetProperty(nameof(DetailedUsageDayCount), out prop)) DetailedUsageDayCount = prop.GetInt32();
-                    if (data.TryGetProperty(nameof(MinumumDuration), out prop)) MinumumDuration = JsonSerializer.Deserialize<TimeSpan>(prop.GetRawText());
+                    if (data.TryGetProperty(nameof(MinimumDuration), out prop)) MinimumDuration = JsonSerializer.Deserialize<TimeSpan>(prop.GetRawText());
                     if (data.TryGetProperty(nameof(EnableAutoRefresh), out prop)) EnableAutoRefresh = prop.GetBoolean();
                     if (data.TryGetProperty(nameof(RefreshIntervalSeconds), out prop)) RefreshIntervalSeconds = prop.GetInt32();
                     if (data.TryGetProperty(nameof(DataFlushIntervalSeconds), out prop)) DataFlushIntervalSeconds = prop.GetInt32();
@@ -157,7 +158,10 @@ namespace UsageLogger.Helpers
                     Save();
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[UserPreferences] Load error: {ex.Message}");
+            }
         }
 
         private static void RepairCustomIconPaths()
@@ -187,25 +191,7 @@ namespace UsageLogger.Helpers
         public static void UpdateAppTimeLimit(string processName, TimeSpan timeLimit)
         {
             int totalMins = (int)timeLimit.TotalMinutes;
-
-            if (totalMins <= 0)
-            {
-                if (AppTimeLimits.ContainsKey(processName))
-                {
-                    AppTimeLimits.Remove(processName);
-                }
-            }
-            else
-            {
-                if (AppTimeLimits.ContainsKey(processName))
-                {
-                    AppTimeLimits[processName] = totalMins;
-                }
-                else
-                {
-                    AppTimeLimits.Add(processName, totalMins);
-                }
-            }
+            AppTimeLimits.UpsertOrRemove(processName, totalMins, v => v <= 0);
             Save();
         }
 

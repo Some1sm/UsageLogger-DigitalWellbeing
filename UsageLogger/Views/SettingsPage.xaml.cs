@@ -170,7 +170,7 @@ namespace UsageLogger.Views
 
             // Display
             DaysToShowTextBox.Value = UserPreferences.DayAmount;
-            MinDurationTextBox.Value = UserPreferences.MinumumDuration.TotalSeconds;
+            MinDurationTextBox.Value = UserPreferences.MinimumDuration.TotalSeconds;
 
             // Load History Stats (Async)
             _ = LoadHistoryStatsAsync();
@@ -477,7 +477,7 @@ namespace UsageLogger.Views
             // Gather all values
             UserPreferences.DayAmount = (int)DaysToShowTextBox.Value;
             UserPreferences.DetailedUsageDayCount = (int)DetailedDaysTextBox.Value;
-            UserPreferences.MinumumDuration = TimeSpan.FromSeconds(MinDurationTextBox.Value);
+            UserPreferences.MinimumDuration = TimeSpan.FromSeconds(MinDurationTextBox.Value);
             
             UserPreferences.MinimizeOnExit = ToggleMinimizeOnExit.IsOn;
             UserPreferences.IncognitoMode = ToggleIncognitoMode.IsOn;

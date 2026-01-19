@@ -81,13 +81,13 @@ public class AppUsageViewModel : INotifyPropertyChanged
 
 	public string StrTotalDuration => $"{(int)TotalDuration.TotalHours}h {TotalDuration.Minutes}m";
 
-	public string StrMinumumDuration
+	public string StrMinimumDuration
 	{
 		get
 		{
-			if (!(UserPreferences.MinumumDuration.TotalSeconds <= 0.0))
+			if (!(UserPreferences.MinimumDuration.TotalSeconds <= 0.0))
 			{
-				return "Apps that run less than " + StringHelper.TimeSpanToString(UserPreferences.MinumumDuration) + " are hidden.";
+				return "Apps that run less than " + StringHelper.TimeSpanToString(UserPreferences.MinimumDuration) + " are hidden.";
 			}
 			return "";
 		}
@@ -614,7 +614,7 @@ public class AppUsageViewModel : INotifyPropertyChanged
 				int val = 0;
 				if (TotalDuration.TotalSeconds > 0.0)
 				{
-					val = list.Count((AppUsage a) => a.Duration >= UserPreferences.MinumumDuration && a.Duration.TotalSeconds / TotalDuration.TotalSeconds * 100.0 >= 1.0);
+					val = list.Count((AppUsage a) => a.Duration >= UserPreferences.MinimumDuration && a.Duration.TotalSeconds / TotalDuration.TotalSeconds * 100.0 >= 1.0);
 				}
 				val = Math.Max(1, Math.Min(val, 50));
 				Color colorValue = new UISettings().GetColorValue(UIColorType.Accent);
@@ -626,7 +626,7 @@ public class AppUsageViewModel : INotifyPropertyChanged
 				}
 				foreach (AppUsage item3 in list)
 				{
-					if (!(item3.Duration < UserPreferences.MinumumDuration))
+					if (!(item3.Duration < UserPreferences.MinimumDuration))
 					{
 						double num4 = 0.0;
 						if (TotalDuration.TotalSeconds > 0.0)
@@ -663,7 +663,7 @@ public class AppUsageViewModel : INotifyPropertyChanged
 						{
 							foreach (KeyValuePair<string, TimeSpan> item4 in item3.ProgramBreakdown.OrderByDescending((KeyValuePair<string, TimeSpan> k) => k.Value).ToList())
 							{
-								if (!(item4.Value < UserPreferences.MinumumDuration))
+								if (!(item4.Value < UserPreferences.MinimumDuration))
 								{
 									string text = item3.ProcessName + "|" + item4.Key;
 									if (!UserPreferences.ExcludedTitles.Contains(text))
@@ -940,7 +940,7 @@ public class AppUsageViewModel : INotifyPropertyChanged
 				BackgroundAudioColumn3.Clear();
 				foreach (AppUsage backgroundAudio in backgroundAudioList)
 				{
-					if (!(backgroundAudio.Duration < UserPreferences.MinumumDuration))
+					if (!(backgroundAudio.Duration < UserPreferences.MinimumDuration))
 					{
 						int percentage = 0;
 						AppTag appTag = AppTagHelper.GetAppTag(backgroundAudio.ProcessName);
@@ -1002,7 +1002,7 @@ public class AppUsageViewModel : INotifyPropertyChanged
 	{
 		OnPropertyChanged("StrLoadedDate");
 		OnPropertyChanged("StrTotalDuration");
-		OnPropertyChanged("StrMinumumDuration");
+		OnPropertyChanged("StrMinimumDuration");
 		OnPropertyChanged("CanGoNext");
 		OnPropertyChanged("CanGoPrev");
 	}
