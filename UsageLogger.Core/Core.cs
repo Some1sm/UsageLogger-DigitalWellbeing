@@ -274,9 +274,28 @@ public static class ApplicationPath
                         File.Copy(file, destPath);
                     }
                 }
-                // Optionally delete legacy folder after merge
-                // Directory.Delete(legacyPath, true);
+                
+                // Rename legacy folder to .bak to complete migration visual
+                try 
+                {
+                    string backupPath = legacyPath + ".bak";
+                    if (Directory.Exists(backupPath)) Directory.Delete(backupPath, true);
+                    Directory.Move(legacyPath, backupPath);
+                }
+                catch { /* Ignore if in use */ }
             }
+
+            // Sanitization: If custom log path still points to "digital-wellbeing", reset it to default
+            try
+            {
+                 string? customPath = GetCustomLogsFolderRaw();
+                 if (!string.IsNullOrEmpty(customPath) && customPath.IndexOf("digital-wellbeing", StringComparison.OrdinalIgnoreCase) >= 0)
+                 {
+                     ClearCustomLogsFolder(); // Resets to default (APP_LOCATION/dailylogs) which is now 'usagelogger'
+                     System.Diagnostics.Debug.WriteLine("[Migration] Reset legacy custom log path to default");
+                 }
+            }
+            catch { }
         }
         catch (Exception ex)
         {

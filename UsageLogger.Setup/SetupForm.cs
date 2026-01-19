@@ -739,7 +739,21 @@ namespace UsageLogger.Setup
                     string legacyExe = Path.Combine(legacyInstallPath, "DigitalWellbeingWinUI3.exe");
                     if (File.Exists(legacyExe))
                     {
-                        try { Directory.Delete(legacyInstallPath, true); } catch { }
+                        // SAFETY CHECK: Do not delete if it contains ANY user data
+                        bool hasLogs = Directory.Exists(Path.Combine(legacyInstallPath, "dailylogs")) && Directory.GetFiles(Path.Combine(legacyInstallPath, "dailylogs")).Length > 0;
+                        bool hasSettings = Directory.Exists(Path.Combine(legacyInstallPath, "settings"));
+                        bool hasPreferences = File.Exists(Path.Combine(legacyInstallPath, "user_preferences.json"));
+
+                        if (hasLogs || hasSettings || hasPreferences)
+                        {
+                            System.Diagnostics.Debug.WriteLine($"[Setup] Preserving legacy folder '{legacyInstallPath}' because it contains data/settings.");
+                            // Only delete the executable to avoid confusion, but keep data
+                            try { File.Delete(legacyExe); } catch { }
+                        }
+                        else
+                        {
+                            try { Directory.Delete(legacyInstallPath, true); } catch { }
+                        }
                     }
                 }
             }
