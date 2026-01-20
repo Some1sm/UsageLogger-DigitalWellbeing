@@ -130,11 +130,84 @@ namespace UsageLogger.Views
         }
 
         private bool _isLoading = false;
+        private string _originalLanguageCode = ""; // Track original language to detect changes
+        
+        // Original values for smart dirty detection
+        private string _origStartupMode;
+        private bool _origMinimizeOnExit;
+        private bool _origIncognitoMode;
+        private int _origDayAmount;
+        private double _origMinDuration;
+        private bool _origAutoRefresh;
+        private int _origRefreshInterval;
+        private int _origDetailedDays;
+        private int _origDataFlushInterval;
+        private bool _origUseRamCache;
+        private int _origIdleThreshold;
+        private int _origAvgWatts;
+        private double _origKwhPrice;
+        private string _origCurrency;
+        private string _origTheme;
+        private string _origLogLocation;
 
-        private void MarkDirty()
+        /// <summary>
+        /// Compares current UI values against original loaded values.
+        /// Shows/hides the Apply banner based on whether there are actual changes.
+        /// </summary>
+        private void CheckForChanges()
         {
             if (_isLoading) return;
-            UnsavedChangesBanner.Visibility = Visibility.Visible;
+            
+            try
+            {
+                bool hasChanges = false;
+                
+                // Startup Mode
+                if (StartupModeComboBox.SelectedItem is ComboBoxItem startupItem)
+                    hasChanges |= (startupItem.Tag?.ToString() ?? "") != (_origStartupMode ?? "");
+                
+                // Toggles
+                hasChanges |= ToggleMinimizeOnExit.IsOn != _origMinimizeOnExit;
+                hasChanges |= ToggleIncognitoMode.IsOn != _origIncognitoMode;
+                hasChanges |= EnableAutoRefresh.IsOn != _origAutoRefresh;
+                hasChanges |= ToggleUseRamCache.IsOn != _origUseRamCache;
+                
+                // Number Boxes (check for NaN)
+                if (!double.IsNaN(DaysToShowTextBox.Value))
+                    hasChanges |= (int)DaysToShowTextBox.Value != _origDayAmount;
+                if (!double.IsNaN(MinDurationTextBox.Value))
+                    hasChanges |= MinDurationTextBox.Value != _origMinDuration;
+                if (!double.IsNaN(RefreshInterval.Value))
+                    hasChanges |= (int)RefreshInterval.Value != _origRefreshInterval;
+                if (!double.IsNaN(DetailedDaysTextBox.Value))
+                    hasChanges |= (int)DetailedDaysTextBox.Value != _origDetailedDays;
+                if (!double.IsNaN(DataFlushIntervalTextBox.Value))
+                    hasChanges |= (int)DataFlushIntervalTextBox.Value != _origDataFlushInterval;
+                if (!double.IsNaN(IdleThresholdTextBox.Value))
+                    hasChanges |= (int)IdleThresholdTextBox.Value != _origIdleThreshold;
+                
+                // Power tracking text fields
+                if (int.TryParse(TxtAvgWatts.Text, out int watts)) hasChanges |= watts != _origAvgWatts;
+                if (double.TryParse(TxtKwhPrice.Text, out double price)) hasChanges |= Math.Abs(price - _origKwhPrice) > 0.001;
+                hasChanges |= (TxtCurrency.Text ?? "") != (_origCurrency ?? "");
+                
+                // Theme
+                if (CBTheme.SelectedItem is ComboBoxItem themeItem)
+                    hasChanges |= (themeItem.Tag?.ToString() ?? "") != (_origTheme ?? "");
+                
+                // Language
+                if (CBLanguage.SelectedItem is ComboBoxItem langItem)
+                    hasChanges |= (langItem.Tag?.ToString() ?? "") != (_originalLanguageCode ?? "");
+                
+                // Log Location
+                hasChanges |= (TxtLogLocation.Text ?? "") != (_origLogLocation ?? "");
+                
+                UnsavedChangesBanner.Visibility = hasChanges ? Visibility.Visible : Visibility.Collapsed;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[Settings] CheckForChanges error: {ex.Message}");
+            }
         }
 
         private void MarkClean()
@@ -217,6 +290,9 @@ namespace UsageLogger.Views
                     currentLang = Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride;
                     Debug.WriteLine($"[Settings] LoadCurrentSettings - Fallback to PrimaryLanguageOverride: '{currentLang}'");
                 }
+                
+                // Store original language for change detection
+                _originalLanguageCode = currentLang ?? "";
 
                 bool foundLang = false;
                 foreach (ComboBoxItem item in CBLanguage.Items)
@@ -247,6 +323,24 @@ namespace UsageLogger.Views
 
             // Log Location
             LoadLogLocation();
+
+            // Store original values for smart dirty detection
+            _origStartupMode = SettingsManager.GetStartupMode().ToString();
+            _origMinimizeOnExit = UserPreferences.MinimizeOnExit;
+            _origIncognitoMode = UserPreferences.IncognitoMode;
+            _origDayAmount = UserPreferences.DayAmount;
+            _origMinDuration = UserPreferences.MinimumDuration.TotalSeconds;
+            _origAutoRefresh = UserPreferences.EnableAutoRefresh;
+            _origRefreshInterval = UserPreferences.RefreshIntervalSeconds;
+            _origDetailedDays = UserPreferences.DetailedUsageDayCount;
+            _origDataFlushInterval = UserPreferences.DataFlushIntervalSeconds;
+            _origUseRamCache = UserPreferences.UseRamCache;
+            _origIdleThreshold = UserPreferences.IdleThresholdSeconds;
+            _origAvgWatts = UserPreferences.EstimatedPowerUsageWatts;
+            _origKwhPrice = UserPreferences.KwhPrice;
+            _origCurrency = UserPreferences.CurrencySymbol ?? "";
+            _origTheme = UserPreferences.ThemeMode ?? "";
+            _origLogLocation = TxtLogLocation.Text ?? "";
 
             _isLoading = false;
             MarkClean();
@@ -417,17 +511,19 @@ namespace UsageLogger.Views
 
         private void StartupModeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-             if (!_isLoading) MarkDirty();
+             if (!_isLoading) CheckForChanges();
         }
 
         private void ToggleMinimizeOnExit_Toggled(object sender, RoutedEventArgs e)
         {
-             MarkDirty();
+             if (_isLoading) return;
+             CheckForChanges();
         }
 
         private void ToggleIncognitoMode_Toggled(object sender, RoutedEventArgs e)
         {
-            MarkDirty();
+            if (_isLoading) return;
+            CheckForChanges();
             // Update watermark immediately for visual feedback
             UserPreferences.IncognitoMode = ToggleIncognitoMode.IsOn;
             App.MainWindow?.UpdateIncognitoWatermark();
@@ -575,6 +671,18 @@ namespace UsageLogger.Views
 
             MarkClean();
 
+            // Check if language changed - requires restart
+            if (CBLanguage.SelectedItem is ComboBoxItem selectedLangItem)
+            {
+                string newLang = selectedLangItem.Tag?.ToString() ?? "";
+                if (newLang != _originalLanguageCode)
+                {
+                    Debug.WriteLine($"[Settings] Language changed from '{_originalLanguageCode}' to '{newLang}' - Restarting app");
+                    RestartApplication();
+                    return; // Don't navigate, we're restarting
+                }
+            }
+
             // Refresh UX by navigating to Dashboard
             if (App.Current is App myApp2 && myApp2.m_window is MainWindow window2)
             {
@@ -582,34 +690,60 @@ namespace UsageLogger.Views
             }
         }
 
+        /// <summary>
+        /// Restarts the application to apply language changes.
+        /// </summary>
+        private void RestartApplication()
+        {
+            try
+            {
+                string exePath = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(exePath)
+                {
+                    UseShellExecute = true
+                });
+                Application.Current.Exit();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[Settings] Failed to restart: {ex.Message}");
+            }
+        }
+
         private void Settings_ValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
         {
-            MarkDirty();
+            if (_isLoading) return;
+            CheckForChanges();
         }
 
         private void EnableAutoRefresh_Toggled(object sender, RoutedEventArgs e)
         {
-            MarkDirty();
+            if (_isLoading) return;
+            CheckForChanges();
         }
 
         private void RefreshInterval_ValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
         {
-            MarkDirty();
+            if (_isLoading) return;
+            CheckForChanges();
         }
 
         private void Settings_KeyUp(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
         {
-            MarkDirty();
+            if (_isLoading) return;
+            CheckForChanges();
         }
 
         private void CBTheme_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            MarkDirty();
+            if (_isLoading) return;
+            CheckForChanges();
         }
 
         private void CBLanguage_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            MarkDirty();
+            if (_isLoading) return;
+            CheckForChanges();
         }
 
         private void ToggleCombinedAudioView_Toggled(object sender, RoutedEventArgs e)
@@ -621,7 +755,8 @@ namespace UsageLogger.Views
 
         private void ToggleUseRamCache_Toggled(object sender, RoutedEventArgs e)
         {
-            MarkDirty();
+            if (_isLoading) return;
+            CheckForChanges();
         }
 
         private void ApplyTimelineThreshold_Click(object sender, RoutedEventArgs e)
@@ -748,7 +883,7 @@ namespace UsageLogger.Views
                 if (!string.IsNullOrEmpty(selectedPath))
                 {
                     TxtLogLocation.Text = selectedPath;
-                    MarkDirty();
+                    CheckForChanges();
                 }
             }
             catch (Exception ex)
@@ -759,7 +894,8 @@ namespace UsageLogger.Views
 
         private void TxtLogLocation_TextChanged(object sender, TextChangedEventArgs e)
         {
-            MarkDirty();
+            if (_isLoading) return;
+            CheckForChanges();
         }
 
         private void BtnResetLogLocation_Click(object sender, RoutedEventArgs e)
@@ -843,17 +979,20 @@ namespace UsageLogger.Views
 
         private void TxtAvgWatts_TextChanged(object sender, TextChangedEventArgs e)
         {
-            MarkDirty();
+            if (_isLoading) return;
+            CheckForChanges();
         }
 
         private void TxtKwhPrice_TextChanged(object sender, TextChangedEventArgs e)
         {
-            MarkDirty();
+            if (_isLoading) return;
+            CheckForChanges();
         }
 
         private void TxtCurrency_TextChanged(object sender, TextChangedEventArgs e)
         {
-            MarkDirty();
+            if (_isLoading) return;
+            CheckForChanges();
         }
     }
 }
