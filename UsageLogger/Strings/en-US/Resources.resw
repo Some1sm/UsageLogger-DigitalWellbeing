@@ -803,6 +803,21 @@
   <data name="Dialog_SetTimeLimit_Placeholder" xml:space="preserve">
     <value>Minutes (e.g., 60)</value>
   </data>
+  <data name="Dialog_ExcludeApp_Title" xml:space="preserve">
+    <value>Exclude App?</value>
+  </data>
+  <data name="Dialog_ExcludeApp_Content" xml:space="preserve">
+    <value>Are you sure you want to hide '{0}' from the dashboard? You can manage excluded apps in Settings.</value>
+  </data>
+  <data name="Dialog_ExcludeSubApp_Title" xml:space="preserve">
+    <value>Exclude Sub-App?</value>
+  </data>
+  <data name="Dialog_ExcludeSubApp_Content" xml:space="preserve">
+    <value>Are you sure you want to hide '{0}' from the dashboard? You can manage excluded items in Settings.</value>
+  </data>
+  <data name="Dialog_Exclude" xml:space="preserve">
+    <value>Exclude</value>
+  </data>
   <!-- Focus Dialog (underscore naming for consistency) -->
   <data name="Focus_Dialog_Title.Title" xml:space="preserve">
     <value>Focus Session</value>

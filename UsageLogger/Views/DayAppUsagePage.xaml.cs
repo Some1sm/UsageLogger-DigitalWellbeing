@@ -234,10 +234,10 @@ namespace UsageLogger.Views
             
             var dialog = new ContentDialog
             {
-                Title = "Exclude App?",
-                Content = $"Are you sure you want to hide '{processName}' from the dashboard? You can manage excluded apps in Settings.",
-                PrimaryButtonText = "Exclude",
-                SecondaryButtonText = "Cancel",
+                Title = LocalizationHelper.GetString("Dialog_ExcludeApp_Title"),
+                Content = string.Format(LocalizationHelper.GetString("Dialog_ExcludeApp_Content"), processName),
+                PrimaryButtonText = LocalizationHelper.GetString("Dialog_Exclude"),
+                SecondaryButtonText = LocalizationHelper.GetString("Dialog_Cancel"),
                 XamlRoot = this.XamlRoot
             };
             
@@ -592,10 +592,10 @@ namespace UsageLogger.Views
             
             var dialog = new ContentDialog
             {
-                Title = "Exclude Sub-App?",
-                Content = $"Are you sure you want to hide '{title}' from the dashboard? You can manage excluded items in Settings.",
-                PrimaryButtonText = "Exclude",
-                SecondaryButtonText = "Cancel",
+                Title = LocalizationHelper.GetString("Dialog_ExcludeSubApp_Title"),
+                Content = string.Format(LocalizationHelper.GetString("Dialog_ExcludeSubApp_Content"), title),
+                PrimaryButtonText = LocalizationHelper.GetString("Dialog_Exclude"),
+                SecondaryButtonText = LocalizationHelper.GetString("Dialog_Cancel"),
                 XamlRoot = this.XamlRoot
             };
             
