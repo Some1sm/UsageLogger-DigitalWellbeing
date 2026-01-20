@@ -836,7 +836,7 @@ Fin : {2}</value>
     <value>Définir la Limite de Temps pour {0}</value>
   </data>
   <data name="Dialog_SetTimeLimit_Placeholder" xml:space="preserve">
-    <value>Minutes (ex: 60)</value>
+    <value>Minutes (ex. 60)</value>
   </data>
   <data name="FocusDialog_Day_Sun.Content" xml:space="preserve">
     <value>S</value>
@@ -915,5 +915,20 @@ Fin : {2}</value>
   </data>
   <data name="Rule_Dialog_Cancel" xml:space="preserve">
     <value>Cancel</value>
+  </data>
+  <data name="Dialog_ExcludeSubApp_Content" xml:space="preserve">
+    <value>Voulez-vous vraiment masquer '{0}' du tableau de bord ? Vous pouvez gérer les éléments exclus dans les Paramètres.</value>
+  </data>
+  <data name="Dialog_ExcludeApp_Title" xml:space="preserve">
+    <value>Exclure l'application ?</value>
+  </data>
+  <data name="Dialog_Exclude" xml:space="preserve">
+    <value>Exclure</value>
+  </data>
+  <data name="Dialog_ExcludeSubApp_Title" xml:space="preserve">
+    <value>Exclure la sous-application ?</value>
+  </data>
+  <data name="Dialog_ExcludeApp_Content" xml:space="preserve">
+    <value>Voulez-vous vraiment masquer '{0}' du tableau de bord ? Vous pouvez gérer les applications exclues dans les Paramètres.</value>
   </data>
 </root>

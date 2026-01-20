@@ -224,7 +224,13 @@
                "Focus_Notification_Chill":  "Stai usando \u0027{0}\u0027 invece di \u0027{1}\u0027",
                "MiscData_WastedMoneyDesc":  "Costo est. assenza",
                "Settings_Language.Text":  "Lingua",
-               "Settings_TimeLimits.Text":  "Limiti di Tempo"
+               "Settings_TimeLimits.Text":  "Limiti di Tempo",
+               "Dialog_ExcludeSubApp_Content":  "Sei sicuro di voler nascondere \u0027{0}\u0027 dalla dashboard? Puoi gestire gli elementi esclusi nelle Impostazioni.",
+               "Dialog_ExcludeApp_Title":  "Escludi App?",
+               "Dialog_SetTimeLimit_Placeholder":  "Minuti (es. 60)",
+               "Dialog_Exclude":  "Escludi",
+               "Dialog_ExcludeSubApp_Title":  "Escludi Sotto-App?",
+               "Dialog_ExcludeApp_Content":  "Sei sicuro di voler nascondere \u0027{0}\u0027 dalla dashboard? Puoi gestire le app escluse nelle Impostazioni."
            },
     "es":  {
                "MiscData_Subtitle.Text":  "Estadísticas aleatorias de hoy",
@@ -451,7 +457,13 @@
                "Focus_Notification_Chill":  "Estás usando \u0027{0}\u0027 en lugar de \u0027{1}\u0027",
                "MiscData_WastedMoneyDesc":  "Costo est. en ausencia",
                "Settings_Language.Text":  "Idioma",
-               "Settings_TimeLimits.Text":  "Límites de Tiempo"
+               "Settings_TimeLimits.Text":  "Límites de Tiempo",
+               "Dialog_ExcludeSubApp_Content":  "¿Seguro que quieres ocultar \u0027{0}\u0027 del panel? Puedes gestionar los elementos excluidos en Configuración.",
+               "Dialog_ExcludeApp_Title":  "¿Excluir App?",
+               "Dialog_SetTimeLimit_Placeholder":  "Minutos (ej. 60)",
+               "Dialog_Exclude":  "Excluir",
+               "Dialog_ExcludeSubApp_Title":  "¿Excluir Sub-App?",
+               "Dialog_ExcludeApp_Content":  "¿Seguro que quieres ocultar \u0027{0}\u0027 del panel? Puedes gestionar las apps excluidas en Configuración."
            },
     "fr":  {
                "MiscData_Subtitle.Text":  "Stats aléatoires du jour",
@@ -678,7 +690,13 @@
                "Focus_Notification_Chill":  "Vous utilisez \u0027{0}\u0027 au lieu de \u0027{1}\u0027",
                "MiscData_WastedMoneyDesc":  "Coût est. absence",
                "Settings_Language.Text":  "Langue",
-               "Settings_TimeLimits.Text":  "Limites de Temps"
+               "Settings_TimeLimits.Text":  "Limites de Temps",
+               "Dialog_ExcludeSubApp_Content":  "Voulez-vous vraiment masquer \u0027{0}\u0027 du tableau de bord ? Vous pouvez gérer les éléments exclus dans les Paramètres.",
+               "Dialog_ExcludeApp_Title":  "Exclure l\u0027application ?",
+               "Dialog_SetTimeLimit_Placeholder":  "Minutes (ex. 60)",
+               "Dialog_Exclude":  "Exclure",
+               "Dialog_ExcludeSubApp_Title":  "Exclure la sous-application ?",
+               "Dialog_ExcludeApp_Content":  "Voulez-vous vraiment masquer \u0027{0}\u0027 du tableau de bord ? Vous pouvez gérer les applications exclues dans les Paramètres."
            },
     "zh-Hans":  {
                     "MiscData_Subtitle.Text":  "今日随机统计",
@@ -905,7 +923,13 @@
                     "Focus_Notification_Chill":  "您在使用 \u0027{0}\u0027 而非 \u0027{1}\u0027",
                     "MiscData_WastedMoneyDesc":  "闲置预估成本",
                     "Settings_Language.Text":  "语言",
-                    "Settings_TimeLimits.Text":  "时间限制"
+                    "Settings_TimeLimits.Text":  "时间限制",
+                    "Dialog_ExcludeSubApp_Content":  "您确定要从仪表板中隐藏“{0}”吗？您可以在设置中管理排除的项目。",
+                    "Dialog_ExcludeApp_Title":  "排除应用？",
+                    "Dialog_SetTimeLimit_Placeholder":  "分钟 (例如 60)",
+                    "Dialog_Exclude":  "排除",
+                    "Dialog_ExcludeSubApp_Title":  "排除子应用？",
+                    "Dialog_ExcludeApp_Content":  "您确定要从仪表板中隐藏“{0}”吗？您可以在设置中管理排除的应用。"
                 },
     "ko":  {
                "MiscData_Subtitle.Text":  "오늘의 무작위 통계",
@@ -1132,7 +1156,13 @@
                "Focus_Notification_Chill":  "\u0027{1}\u0027 대신 \u0027{0}\u0027 사용 중",
                "MiscData_WastedMoneyDesc":  "부재 시 예상 비용",
                "Settings_Language.Text":  "언어",
-               "Settings_TimeLimits.Text":  "시간 제한"
+               "Settings_TimeLimits.Text":  "시간 제한",
+               "Dialog_ExcludeSubApp_Content":  "대시보드에서 \u0027{0}\u0027을(를) 숨기시겠습니까? 설정에서 제외된 항목을 관리할 수 있습니다.",
+               "Dialog_ExcludeApp_Title":  "앱 제외?",
+               "Dialog_SetTimeLimit_Placeholder":  "분 (예: 60)",
+               "Dialog_Exclude":  "제외",
+               "Dialog_ExcludeSubApp_Title":  "하위 앱 제외?",
+               "Dialog_ExcludeApp_Content":  "대시보드에서 \u0027{0}\u0027을(를) 숨기시겠습니까? 설정에서 제외된 앱을 관리할 수 있습니다."
            },
     "de":  {
                "MiscData_Subtitle.Text":  "Zufällige Statistiken",
@@ -1359,7 +1389,13 @@
                "Focus_Notification_Chill":  "Du nutzt \u0027{0}\u0027 statt \u0027{1}\u0027",
                "MiscData_WastedMoneyDesc":  "Ca. Kosten bei Abwesenheit",
                "Settings_Language.Text":  "Sprache",
-               "Settings_TimeLimits.Text":  "Zeitlimits"
+               "Settings_TimeLimits.Text":  "Zeitlimits",
+               "Dialog_ExcludeSubApp_Content":  "Möchten Sie \u0027{0}\u0027 wirklich aus dem Dashboard ausblenden? Sie können ausgeschlossene Elemente in den Einstellungen verwalten.",
+               "Dialog_ExcludeApp_Title":  "App ausschließen?",
+               "Dialog_SetTimeLimit_Placeholder":  "Minuten (z.B. 60)",
+               "Dialog_Exclude":  "Ausschließen",
+               "Dialog_ExcludeSubApp_Title":  "Unter-App ausschließen?",
+               "Dialog_ExcludeApp_Content":  "Möchten Sie \u0027{0}\u0027 wirklich aus dem Dashboard ausblenden? Sie können ausgeschlossene Apps in den Einstellungen verwalten."
            },
     "ca":  {
                "MiscData_Subtitle.Text":  "Estadístiques aleatòries d\u0027avui",
@@ -1584,7 +1620,13 @@
                "Focus_Notification_Chill":  "Estàs usant \u0027{0}\u0027 en lloc de \u0027{1}\u0027",
                "MiscData_WastedMoneyDesc":  "Cost est. en absència",
                "Settings_Language.Text":  "Idioma",
-               "Settings_TimeLimits.Text":  "Límits de Temps"
+               "Settings_TimeLimits.Text":  "Límits de Temps",
+               "Dialog_ExcludeSubApp_Content":  "Segur que vols amagar \u0027{0}\u0027 del tauler? Pots gestionar els elements exclosos a la Configuració.",
+               "Dialog_ExcludeApp_Title":  "Excloure aplicació?",
+               "Dialog_SetTimeLimit_Placeholder":  "Minuts (ex. 60)",
+               "Dialog_Exclude":  "Excloure",
+               "Dialog_ExcludeSubApp_Title":  "Excloure subaplicació?",
+               "Dialog_ExcludeApp_Content":  "Segur que vols amagar \u0027{0}\u0027 del tauler? Pots gestionar les aplicacions excloses a la Configuració."
            },
     "ru":  {
                "MiscData_Subtitle.Text":  "Случайная статистика",
@@ -1811,7 +1853,13 @@
                "Focus_Notification_Chill":  "Вы используете \u0027{0}\u0027 вместо \u0027{1}\u0027",
                "MiscData_WastedMoneyDesc":  "Ок. стоимость простоя",
                "Settings_Language.Text":  "Язык",
-               "Settings_TimeLimits.Text":  "Лимиты времени"
+               "Settings_TimeLimits.Text":  "Лимиты времени",
+               "Dialog_ExcludeSubApp_Content":  "Вы уверены, что хотите скрыть \u0027{0}\u0027 из панели управления? Вы можете управлять исключенными элементами в настройках.",
+               "Dialog_ExcludeApp_Title":  "Исключить приложение?",
+               "Dialog_SetTimeLimit_Placeholder":  "Минуты (например, 60)",
+               "Dialog_Exclude":  "Исключить",
+               "Dialog_ExcludeSubApp_Title":  "Исключить под-приложение?",
+               "Dialog_ExcludeApp_Content":  "Вы уверены, что хотите скрыть \u0027{0}\u0027 из панели управления? Вы можете управлять исключенными приложениями в настройках."
            },
     "ja":  {
                "MiscData_Subtitle.Text":  "今日のランダム統計",
@@ -2038,7 +2086,13 @@
                "Focus_Notification_Chill":  "\u0027{1}\u0027 の代わりに \u0027{0}\u0027 を使用中",
                "MiscData_WastedMoneyDesc":  "離席中の推計コスト",
                "Settings_Language.Text":  "言語",
-               "Settings_TimeLimits.Text":  "時間制限"
+               "Settings_TimeLimits.Text":  "時間制限",
+               "Dialog_ExcludeSubApp_Content":  "ダッシュボードから \u0027{0}\u0027 を非表示にしますか？除外された項目は設定で管理できます。",
+               "Dialog_ExcludeApp_Title":  "アプリを除外しますか？",
+               "Dialog_SetTimeLimit_Placeholder":  "分 (例: 60)",
+               "Dialog_Exclude":  "除外",
+               "Dialog_ExcludeSubApp_Title":  "サブアプリを除外しますか？",
+               "Dialog_ExcludeApp_Content":  "ダッシュボードから \u0027{0}\u0027 を非表示にしますか？除外されたアプリは設定で管理できます。"
            },
     "pt-BR":  {
                   "MiscData_Subtitle.Text":  "Estatísticas aleatórias de hoje",
@@ -2265,6 +2319,12 @@
                   "Focus_Notification_Chill":  "Você está usando \u0027{0}\u0027 em vez de \u0027{1}\u0027",
                   "MiscData_WastedMoneyDesc":  "Custo est. ausente",
                   "Settings_Language.Text":  "Idioma",
-                  "Settings_TimeLimits.Text":  "Limites de Tempo"
+                  "Settings_TimeLimits.Text":  "Limites de Tempo",
+                  "Dialog_ExcludeSubApp_Content":  "Tem certeza que deseja ocultar \u0027{0}\u0027 do painel? Você pode gerenciar itens excluídos nas Configurações.",
+                  "Dialog_ExcludeApp_Title":  "Excluir App?",
+                  "Dialog_SetTimeLimit_Placeholder":  "Minutos (ex. 60)",
+                  "Dialog_Exclude":  "Excluir",
+                  "Dialog_ExcludeSubApp_Title":  "Excluir Sub-App?",
+                  "Dialog_ExcludeApp_Content":  "Tem certeza que deseja ocultar \u0027{0}\u0027 do painel? Você pode gerenciar apps excluídos nas Configurações."
               }
 }

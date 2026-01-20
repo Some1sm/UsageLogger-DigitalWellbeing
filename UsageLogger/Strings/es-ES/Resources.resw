@@ -893,7 +893,7 @@ Termina: {2}</value>
     <value>Establecer Límite de Tiempo par {0}</value>
   </data>
   <data name="Dialog_SetTimeLimit_Placeholder" xml:space="preserve">
-    <value>Minutos (ej., 60)</value>
+    <value>Minutos (ej. 60)</value>
   </data>
   <data name="FocusDialog_Day_Sun.Content" xml:space="preserve">
     <value>S</value>
@@ -915,5 +915,20 @@ Termina: {2}</value>
   </data>
   <data name="FocusDialog_Day_Sat.Content" xml:space="preserve">
     <value>S</value>
+  </data>
+  <data name="Dialog_ExcludeSubApp_Content" xml:space="preserve">
+    <value>¿Seguro que quieres ocultar '{0}' del panel? Puedes gestionar los elementos excluidos en Configuración.</value>
+  </data>
+  <data name="Dialog_ExcludeApp_Title" xml:space="preserve">
+    <value>¿Excluir App?</value>
+  </data>
+  <data name="Dialog_Exclude" xml:space="preserve">
+    <value>Excluir</value>
+  </data>
+  <data name="Dialog_ExcludeSubApp_Title" xml:space="preserve">
+    <value>¿Excluir Sub-App?</value>
+  </data>
+  <data name="Dialog_ExcludeApp_Content" xml:space="preserve">
+    <value>¿Seguro que quieres ocultar '{0}' del panel? Puedes gestionar las apps excluidas en Configuración.</value>
   </data>
 </root>

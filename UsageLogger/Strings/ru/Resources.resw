@@ -916,4 +916,19 @@
   <data name="Rule_Dialog_Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="Dialog_ExcludeSubApp_Content" xml:space="preserve">
+    <value>Вы уверены, что хотите скрыть '{0}' из панели управления? Вы можете управлять исключенными элементами в настройках.</value>
+  </data>
+  <data name="Dialog_ExcludeApp_Title" xml:space="preserve">
+    <value>Исключить приложение?</value>
+  </data>
+  <data name="Dialog_Exclude" xml:space="preserve">
+    <value>Исключить</value>
+  </data>
+  <data name="Dialog_ExcludeSubApp_Title" xml:space="preserve">
+    <value>Исключить под-приложение?</value>
+  </data>
+  <data name="Dialog_ExcludeApp_Content" xml:space="preserve">
+    <value>Вы уверены, что хотите скрыть '{0}' из панели управления? Вы можете управлять исключенными приложениями в настройках.</value>
+  </data>
 </root>

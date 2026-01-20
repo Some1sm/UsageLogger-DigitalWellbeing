@@ -916,4 +916,19 @@ Fine: {2}</value>
   <data name="Rule_Dialog_Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="Dialog_ExcludeSubApp_Content" xml:space="preserve">
+    <value>Sei sicuro di voler nascondere '{0}' dalla dashboard? Puoi gestire gli elementi esclusi nelle Impostazioni.</value>
+  </data>
+  <data name="Dialog_ExcludeApp_Title" xml:space="preserve">
+    <value>Escludi App?</value>
+  </data>
+  <data name="Dialog_Exclude" xml:space="preserve">
+    <value>Escludi</value>
+  </data>
+  <data name="Dialog_ExcludeSubApp_Title" xml:space="preserve">
+    <value>Escludi Sotto-App?</value>
+  </data>
+  <data name="Dialog_ExcludeApp_Content" xml:space="preserve">
+    <value>Sei sicuro di voler nascondere '{0}' dalla dashboard? Puoi gestire le app escluse nelle Impostazioni.</value>
+  </data>
 </root>

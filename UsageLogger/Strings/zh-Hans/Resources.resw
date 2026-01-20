@@ -916,4 +916,19 @@
   <data name="Rule_Dialog_Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="Dialog_ExcludeSubApp_Content" xml:space="preserve">
+    <value>您确定要从仪表板中隐藏“{0}”吗？您可以在设置中管理排除的项目。</value>
+  </data>
+  <data name="Dialog_ExcludeApp_Title" xml:space="preserve">
+    <value>排除应用？</value>
+  </data>
+  <data name="Dialog_Exclude" xml:space="preserve">
+    <value>排除</value>
+  </data>
+  <data name="Dialog_ExcludeSubApp_Title" xml:space="preserve">
+    <value>排除子应用？</value>
+  </data>
+  <data name="Dialog_ExcludeApp_Content" xml:space="preserve">
+    <value>您确定要从仪表板中隐藏“{0}”吗？您可以在设置中管理排除的应用。</value>
+  </data>
 </root>

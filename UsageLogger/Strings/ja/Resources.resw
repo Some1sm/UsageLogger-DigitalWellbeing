@@ -916,4 +916,19 @@
   <data name="Rule_Dialog_Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="Dialog_ExcludeSubApp_Content" xml:space="preserve">
+    <value>ダッシュボードから '{0}' を非表示にしますか？除外された項目は設定で管理できます。</value>
+  </data>
+  <data name="Dialog_ExcludeApp_Title" xml:space="preserve">
+    <value>アプリを除外しますか？</value>
+  </data>
+  <data name="Dialog_Exclude" xml:space="preserve">
+    <value>除外</value>
+  </data>
+  <data name="Dialog_ExcludeSubApp_Title" xml:space="preserve">
+    <value>サブアプリを除外しますか？</value>
+  </data>
+  <data name="Dialog_ExcludeApp_Content" xml:space="preserve">
+    <value>ダッシュボードから '{0}' を非表示にしますか？除外されたアプリは設定で管理できます。</value>
+  </data>
 </root>

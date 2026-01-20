@@ -914,6 +914,21 @@ Acaba: {2}</value>
     <value>Estableix límit de temps per a {0}</value>
   </data>
   <data name="Dialog_SetTimeLimit_Placeholder" xml:space="preserve">
-    <value>Minuts (p. ex., 60)</value>
+    <value>Minuts (ex. 60)</value>
+  </data>
+  <data name="Dialog_ExcludeSubApp_Content" xml:space="preserve">
+    <value>Segur que vols amagar '{0}' del tauler? Pots gestionar els elements exclosos a la Configuració.</value>
+  </data>
+  <data name="Dialog_ExcludeApp_Title" xml:space="preserve">
+    <value>Excloure aplicació?</value>
+  </data>
+  <data name="Dialog_Exclude" xml:space="preserve">
+    <value>Excloure</value>
+  </data>
+  <data name="Dialog_ExcludeSubApp_Title" xml:space="preserve">
+    <value>Excloure subaplicació?</value>
+  </data>
+  <data name="Dialog_ExcludeApp_Content" xml:space="preserve">
+    <value>Segur que vols amagar '{0}' del tauler? Pots gestionar les aplicacions excloses a la Configuració.</value>
   </data>
 </root>
