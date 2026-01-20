@@ -196,18 +196,11 @@ namespace UsageLogger.Setup
 
         private void CheckInstallationState()
         {
-            bool isInstalled = IsAppInstalled(out string existingPath, out bool isUserInstall, out bool isLegacyInstall);
+            bool isInstalled = IsAppInstalled(out string existingPath, out bool isUserInstall);
 
             if (isInstalled)
             {
-                if (isLegacyInstall)
-                {
-                    statusLabel.Text = "DigitalWellbeing detected. Click Install to migrate to UsageLogger.";
-                }
-                else
-                {
-                    statusLabel.Text = "UsageLogger is currently installed.";
-                }
+                statusLabel.Text = "UsageLogger is currently installed.";
                 
                 // Set the install path and scope to match existing installation (for repair/migrate)
                 txtInstallPath.Text = existingPath ?? (isUserInstall ? DefaultUserPath : DefaultDevicePath);
@@ -216,18 +209,8 @@ namespace UsageLogger.Setup
                 
                 HideInstallOptions();
                 
-                if (isLegacyInstall)
-                {
-                    // Show Install button for migration
-                    btnInstall.Text = "Migrate";
-                    btnInstall.Visible = true;
-                    btnRepair.Visible = false;
-                }
-                else
-                {
-                    btnInstall.Visible = false;
-                    btnRepair.Visible = true;
-                }
+                btnInstall.Visible = false;
+                btnRepair.Visible = true;
                 btnUninstall.Visible = true;
             }
             else
@@ -240,13 +223,12 @@ namespace UsageLogger.Setup
             }
         }
 
-        private const string LegacyRegistryKeyPath = @"Software\Microsoft\Windows\CurrentVersion\Uninstall\DigitalWellbeing";
 
-        private bool IsAppInstalled(out string installPath, out bool isUserInstall, out bool isLegacyInstall)
+
+        private bool IsAppInstalled(out string installPath, out bool isUserInstall)
         {
             installPath = null;
             isUserInstall = false;
-            isLegacyInstall = false;
 
             // Check for new UsageLogger install first
             // Check HKCU (user install)
@@ -271,42 +253,14 @@ namespace UsageLogger.Setup
                 }
             }
 
-            // Check for legacy DigitalWellbeing install
-            // Check HKCU (user install)
-            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(LegacyRegistryKeyPath))
-            {
-                if (key != null)
-                {
-                    installPath = key.GetValue("InstallLocation") as string;
-                    isUserInstall = true;
-                    isLegacyInstall = true;
-                    return true;
-                }
-            }
-
-            // Check HKLM (device install)
-            using (RegistryKey key = Registry.LocalMachine.OpenSubKey(LegacyRegistryKeyPath))
-            {
-                if (key != null)
-                {
-                    installPath = key.GetValue("InstallLocation") as string;
-                    isUserInstall = false;
-                    isLegacyInstall = true;
-                    return true;
-                }
-            }
-
             return false;
         }
 
-        private bool IsAppInstalled(out string installPath, out bool isUserInstall)
-        {
-            return IsAppInstalled(out installPath, out isUserInstall, out _);
-        }
+
 
         private bool IsAppInstalled()
         {
-            return IsAppInstalled(out _, out _, out _);
+            return IsAppInstalled(out _, out _);
         }
 
         private bool IsRunningAsAdmin()
@@ -403,13 +357,7 @@ namespace UsageLogger.Setup
             // Kill both new and legacy process names for migration
             foreach (var proc in Process.GetProcessesByName("UsageLogger")) { try { proc.Kill(); } catch { } }
             foreach (var proc in Process.GetProcessesByName("UsageLoggerService")) { try { proc.Kill(); } catch { } }
-            foreach (var proc in Process.GetProcessesByName("DigitalWellbeingWinUI3")) { try { proc.Kill(); } catch { } }
-            foreach (var proc in Process.GetProcessesByName("DigitalWellbeingService")) { try { proc.Kill(); } catch { } }
             await Task.Delay(1000);
-
-            // Clean up legacy DigitalWellbeing installation
-            UpdateStatus("Cleaning up legacy installation...");
-            await Task.Run(() => CleanupLegacyInstallation());
 
             UpdateStatus("Extracting files...");
             await Task.Run(() => 
@@ -714,13 +662,11 @@ namespace UsageLogger.Setup
                 using (RegistryKey parent = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Uninstall", true))
                 {
                     parent?.DeleteSubKeyTree(AppName, false);
-                    parent?.DeleteSubKeyTree("DigitalWellbeing", false); // Legacy
                 }
 
                 using (RegistryKey parent = Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Uninstall", true))
                 {
                     parent?.DeleteSubKeyTree(AppName, false);
-                    parent?.DeleteSubKeyTree("DigitalWellbeing", false); // Legacy
                 }
             }
             catch (Exception ex)
@@ -740,93 +686,8 @@ namespace UsageLogger.Setup
             MessageBox.Show($"Operation Failed:\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        private void CleanupLegacyInstallation()
-        {
-            try
-            {
-                // Remove legacy shortcuts
-                string[] legacyShortcuts = new[]
-                {
-                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), "DigitalWellbeing.lnk"),
-                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), "DigitalWellbeing Service.lnk"),
-                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup), "DigitalWellbeing.lnk"),
-                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup), "DigitalWellbeing Service.lnk"),
-                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "DigitalWellbeing.lnk"),
-                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonDesktopDirectory), "DigitalWellbeing.lnk"),
-                };
 
-                foreach (var path in legacyShortcuts)
-                {
-                    if (File.Exists(path)) try { File.Delete(path); } catch { }
-                }
 
-                // Remove legacy program menu folder
-                string[] legacyProgramPaths = new[]
-                {
-                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Programs), "DigitalWellbeing"),
-                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonPrograms), "DigitalWellbeing")
-                };
-
-                foreach (var path in legacyProgramPaths)
-                {
-                    if (Directory.Exists(path)) try { Directory.Delete(path, true); } catch { }
-                }
-
-                // Get legacy install path from registry before removing
-                string legacyInstallPath = null;
-                using (RegistryKey key = Registry.CurrentUser.OpenSubKey(LegacyRegistryKeyPath))
-                {
-                    legacyInstallPath = key?.GetValue("InstallLocation") as string;
-                }
-                if (legacyInstallPath == null)
-                {
-                    using (RegistryKey key = Registry.LocalMachine.OpenSubKey(LegacyRegistryKeyPath))
-                    {
-                        legacyInstallPath = key?.GetValue("InstallLocation") as string;
-                    }
-                }
-
-                // Remove legacy registry entry
-                try
-                {
-                    using (RegistryKey parent = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Uninstall", true))
-                    {
-                        parent?.DeleteSubKeyTree("DigitalWellbeing", false);
-                    }
-                    using (RegistryKey parent = Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Uninstall", true))
-                    {
-                        parent?.DeleteSubKeyTree("DigitalWellbeing", false);
-                    }
-                }
-                catch { }
-
-                // Remove legacy install folder (different from new path)
-                if (!string.IsNullOrEmpty(legacyInstallPath) && Directory.Exists(legacyInstallPath))
-                {
-                    // Only delete if it's actually the legacy folder (contains old exe name)
-                    string legacyExe = Path.Combine(legacyInstallPath, "DigitalWellbeingWinUI3.exe");
-                    if (File.Exists(legacyExe))
-                    {
-                        // SAFETY CHECK: Do not delete if it contains ANY user data
-                        bool hasLogs = Directory.Exists(Path.Combine(legacyInstallPath, "dailylogs")) && Directory.GetFiles(Path.Combine(legacyInstallPath, "dailylogs")).Length > 0;
-                        bool hasSettings = Directory.Exists(Path.Combine(legacyInstallPath, "settings"));
-                        bool hasPreferences = File.Exists(Path.Combine(legacyInstallPath, "user_preferences.json"));
-
-                        if (hasLogs || hasSettings || hasPreferences)
-                        {
-                            System.Diagnostics.Debug.WriteLine($"[Setup] Preserving legacy folder '{legacyInstallPath}' because it contains data/settings.");
-                            // Only delete the executable to avoid confusion, but keep data
-                            try { File.Delete(legacyExe); } catch { }
-                        }
-                        else
-                        {
-                            try { Directory.Delete(legacyInstallPath, true); } catch { }
-                        }
-                    }
-                }
-            }
-            catch { }
-        }
 
         private void CreateShortcut(string folder, string name, string target, string workDir)
         {

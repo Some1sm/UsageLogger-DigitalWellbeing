@@ -14,9 +14,9 @@ namespace UsageLogger.Core.Helpers
     /// </summary>
     public static class LiveSessionCache
     {
-        private const string MAP_NAME = "DigitalWellbeing_LiveSessionMap_v3";
+        private const string MAP_NAME = "UsageLogger_LiveSessionMap_v1";
         private const int MAP_SIZE = 512 * 1024; // 512KB for multiple sessions
-        private const string MUTEX_NAME = "DigitalWellbeing_LiveSessionMutex_v3";
+        private const string MUTEX_NAME = "UsageLogger_LiveSessionMutex_v1";
         
         // Keep MMF alive as static field - DO NOT DISPOSE until app exits
         private static MemoryMappedFile? _mmf;
