@@ -16,6 +16,18 @@ class Program
     [STAThread]
     static void Main(string[] args)
     {
+        // Single-instance check using Mutex
+        const string mutexName = "Global\\UsageLoggerService_SingleInstance";
+        bool createdNew;
+        using var mutex = new Mutex(true, mutexName, out createdNew);
+        
+        if (!createdNew)
+        {
+            // Another instance is already running - exit silently
+            ServiceLogger.Log("Service", "Another instance already running. Exiting.");
+            return;
+        }
+
         // Initialize tray icon
         TrayManager.Init();
 
