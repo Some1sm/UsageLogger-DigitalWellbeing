@@ -133,13 +133,43 @@ namespace UsageLogger.Helpers
         {
             try
             {
+                Debug.WriteLine($"[SettingsManager] SetStartupMode called with: {mode}");
+                
                 RegistryKey key = Registry.CurrentUser.OpenSubKey(ApplicationPath.AUTORUN_REGPATH, true);
-                if (key == null) return;
+                if (key == null) 
+                {
+                    Debug.WriteLine($"[SettingsManager] ERROR: Could not open registry key for writing");
+                    return;
+                }
 
                 switch (mode)
                 {
                     case StartupMode.None:
-                        key.DeleteValue(ApplicationPath.AUTORUN_REGKEY, false);
+                        // First check if registry entry exists
+                        var existingValue = key.GetValue(ApplicationPath.AUTORUN_REGKEY);
+                        if (existingValue != null)
+                        {
+                            Debug.WriteLine($"[SettingsManager] Deleting registry key: {ApplicationPath.AUTORUN_REGKEY}");
+                            key.DeleteValue(ApplicationPath.AUTORUN_REGKEY, false);
+                            
+                            // Verify deletion
+                            var afterDelete = key.GetValue(ApplicationPath.AUTORUN_REGKEY);
+                            if (afterDelete != null)
+                            {
+                                Debug.WriteLine($"[SettingsManager] WARNING: Key still exists after deletion!");
+                            }
+                            else
+                            {
+                                Debug.WriteLine($"[SettingsManager] Successfully deleted startup entry");
+                            }
+                        }
+                        else
+                        {
+                            Debug.WriteLine($"[SettingsManager] No startup registry entry to delete");
+                        }
+                        
+                        // Also cleanup any legacy startup folder shortcuts (from old installer versions)
+                        CleanupStartupShortcuts();
                         break;
 
                     case StartupMode.TrackerOnly:
@@ -148,6 +178,7 @@ namespace UsageLogger.Helpers
                         if (!string.IsNullOrEmpty(servicePath))
                         {
                             key.SetValue(ApplicationPath.AUTORUN_REGKEY, servicePath);
+                            Debug.WriteLine($"[SettingsManager] Set startup to service: {servicePath}");
                         }
                         break;
 
@@ -156,9 +187,12 @@ namespace UsageLogger.Helpers
                         using (Process process = Process.GetCurrentProcess())
                         {
                             key.SetValue(ApplicationPath.AUTORUN_REGKEY, process.MainModule.FileName);
+                            Debug.WriteLine($"[SettingsManager] Set startup to UI: {process.MainModule.FileName}");
                         }
                         break;
                 }
+                
+                key.Close();
             }
             catch (Exception ex)
             {
@@ -221,6 +255,37 @@ namespace UsageLogger.Helpers
         public static bool IsRunningOnStartup()
         {
             return GetStartupMode() != StartupMode.None;
+        }
+
+        /// <summary>
+        /// Removes any startup folder shortcuts that may have been created by old installer versions.
+        /// This ensures that disabling startup in Settings truly disables all startup methods.
+        /// </summary>
+        private static void CleanupStartupShortcuts()
+        {
+            string[] shortcutPaths = new[]
+            {
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), "UsageLogger.lnk"),
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), "UsageLogger Service.lnk"),
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), "DigitalWellbeing.lnk"),
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), "DigitalWellbeing Service.lnk")
+            };
+
+            foreach (var path in shortcutPaths)
+            {
+                if (File.Exists(path))
+                {
+                    try 
+                    { 
+                        File.Delete(path);
+                        Debug.WriteLine($"[SettingsManager] Deleted startup shortcut: {path}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"[SettingsManager] Failed to delete shortcut {path}: {ex.Message}");
+                    }
+                }
+            }
         }
 
         #endregion

@@ -488,19 +488,15 @@ namespace UsageLogger.Setup
             await Task.Run(() =>
             {
                 // Choose appropriate folders based on install scope
-                Environment.SpecialFolder startupFolder = isDeviceInstall ? Environment.SpecialFolder.CommonStartup : Environment.SpecialFolder.Startup;
                 Environment.SpecialFolder desktopFolder = isDeviceInstall ? Environment.SpecialFolder.CommonDesktopDirectory : Environment.SpecialFolder.DesktopDirectory;
                 Environment.SpecialFolder programsFolder = isDeviceInstall ? Environment.SpecialFolder.CommonPrograms : Environment.SpecialFolder.Programs;
 
                 // Desktop shortcut for UI app
                 CreateShortcut(Environment.GetFolderPath(desktopFolder), "UsageLogger.lnk", exePath, installPath);
                 
-                // Service Startup Shortcut (background service always runs on startup)
-                string serviceExePath = Path.Combine(installPath, "UsageLoggerService.exe");
-                CreateShortcut(Environment.GetFolderPath(startupFolder), "UsageLogger Service.lnk", serviceExePath, installPath);
-                
-                // NOTE: UI app startup is managed through Settings > "Run on Startup" toggle (uses registry)
-                // This prevents duplicate startup entries
+                // NOTE: Startup behavior is managed through Settings > "Run on Startup" toggle (uses registry)
+                // We no longer create a hardcoded startup shortcut here to prevent duplicate entries
+                // and allow the user to control startup behavior from the app settings
 
                 string infoPrograms = Path.Combine(Environment.GetFolderPath(programsFolder), AppName);
                 if (!Directory.Exists(infoPrograms)) Directory.CreateDirectory(infoPrograms);
