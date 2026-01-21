@@ -127,6 +127,9 @@
   <data name="Settings_AppRuntime.Text" xml:space="preserve">
     <value>実行設定</value>
   </data>
+  <data name="Settings_ReportBug.Content" xml:space="preserve">
+    <value>バグを報告</value>
+  </data>
   <data name="Settings_RunOnStartup.Text" xml:space="preserve">
     <value>スタートアップ時実行</value>
   </data>

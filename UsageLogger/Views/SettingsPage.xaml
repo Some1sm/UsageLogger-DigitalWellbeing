@@ -480,6 +480,7 @@
                   <TextBlock l:Uids.Uid="Settings_CreatedBy" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                   <TextBlock l:Uids.Uid="Settings_Copyright" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                   <HyperlinkButton l:Uids.Uid="Settings_SourceCode" NavigateUri="https://github.com/Some1sm/UsageLogger-DigitalWellbeing"/>
+                  <HyperlinkButton l:Uids.Uid="Settings_ReportBug" NavigateUri="https://github.com/Some1sm/UsageLogger-DigitalWellbeing/issues"/>
              </StackPanel>
 
         </StackPanel>

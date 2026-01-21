@@ -127,6 +127,9 @@
   <data name="Settings_AppRuntime.Text" xml:space="preserve">
     <value>应用运行</value>
   </data>
+  <data name="Settings_ReportBug.Content" xml:space="preserve">
+    <value>报告错误</value>
+  </data>
   <data name="Settings_RunOnStartup.Text" xml:space="preserve">
     <value>开机启动</value>
   </data>

@@ -184,6 +184,9 @@ Acaba: {2}</value>
   <data name="Settings_AppRuntime.Text" xml:space="preserve">
     <value>Execució de l'App</value>
   </data>
+  <data name="Settings_ReportBug.Content" xml:space="preserve">
+    <value>Informar d'un error</value>
+  </data>
   <data name="Settings_RunOnStartup.Text" xml:space="preserve">
     <value>Executar a l'Inici</value>
   </data>

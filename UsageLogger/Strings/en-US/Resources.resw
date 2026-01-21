@@ -182,6 +182,9 @@
   <data name="Settings_AppRuntime.Text" xml:space="preserve">
     <value>App Runtime</value>
   </data>
+  <data name="Settings_ReportBug.Content" xml:space="preserve">
+    <value>Report a Bug</value>
+  </data>
   <data name="Settings_RunOnStartup.Text" xml:space="preserve">
     <value>Run on Startup</value>
   </data>

@@ -127,6 +127,9 @@
   <data name="Settings_AppRuntime.Text" xml:space="preserve">
     <value>앱 실행</value>
   </data>
+  <data name="Settings_ReportBug.Content" xml:space="preserve">
+    <value>버그 신고</value>
+  </data>
   <data name="Settings_RunOnStartup.Text" xml:space="preserve">
     <value>시작 시 실행</value>
   </data>

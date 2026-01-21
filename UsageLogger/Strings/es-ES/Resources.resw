@@ -127,6 +127,9 @@
   <data name="Settings_AppRuntime.Text" xml:space="preserve">
     <value>Ejecución de App</value>
   </data>
+  <data name="Settings_ReportBug.Content" xml:space="preserve">
+    <value>Reportar un error</value>
+  </data>
   <data name="Settings_RunOnStartup.Text" xml:space="preserve">
     <value>Ejecutar al Inicio</value>
   </data>
