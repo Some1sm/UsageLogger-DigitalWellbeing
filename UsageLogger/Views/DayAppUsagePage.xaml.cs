@@ -756,6 +756,55 @@ namespace UsageLogger.Views
             }
         }
 
+        private async void BtnRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            if (BtnRefresh == null || RefreshButtonAnimation == null) return;
+
+            // 1. Start Animation & Disable Button
+            BtnRefresh.IsEnabled = false;
+            RefreshButtonAnimation.Begin();
+
+            try
+            {
+                // 2. Signal Service to Flush
+                UsageLogger.Core.Helpers.LiveSessionCache.RequestFlush();
+
+                // 3. Poll for Handshake (Wait for service to clear the flag)
+                // Service loop is 2s, so we wait up to 4s for absolute safety
+                bool signalProcessed = false;
+                for (int i = 0; i < 20; i++) // 20 * 200ms = 4s
+                {
+                    await Task.Delay(200);
+                    if (!UsageLogger.Core.Helpers.LiveSessionCache.PeekFlushRequest())
+                    {
+                        signalProcessed = true;
+                        break;
+                    }
+                }
+
+                if (!signalProcessed)
+                {
+                    System.Diagnostics.Debug.WriteLine("[Refresh] Handshake timed out - service might be busy or not running.");
+                }
+
+                // Small extra buffer for file system to settle after flush
+                await Task.Delay(300);
+
+                // 4. Reload Data
+                ViewModel.LoadWeeklyData();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Refresh Error: {ex}");
+            }
+            finally
+            {
+                // 5. Stop Animation & Restore Button
+                RefreshButtonAnimation.Stop();
+                BtnRefresh.IsEnabled = true;
+            }
+        }
+
         // === Spinable Pie Chart Easter Egg: Event Handlers ===
 
 

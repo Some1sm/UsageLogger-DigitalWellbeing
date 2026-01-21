@@ -149,6 +149,13 @@
                 </StackPanel>
             </Border>
         </DataTemplate>
+        <Storyboard x:Name="RefreshButtonAnimation">
+            <DoubleAnimation
+                Storyboard.TargetName="RefreshIconRotation"
+                Storyboard.TargetProperty="Angle"
+                From="0" To="360" Duration="0:0:1"
+                RepeatBehavior="Forever" />
+        </Storyboard>
     </Page.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
@@ -159,37 +166,61 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,20">
-                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="15,10">
-                    <StackPanel Orientation="Horizontal">
-                        <Button Background="Transparent" VerticalAlignment="Center" BorderThickness="0" Padding="0" Margin="0,0,10,0" ToolTipService.ToolTip="Select Date">
-                            <TextBlock Text="📅" VerticalAlignment="Center"/>
-                            <Button.Flyout>
-                                <Flyout x:Name="CalendarFlyout" Placement="Bottom">
-                                    <CalendarView x:Name="CalendarPicker" SelectionMode="Single" SelectedDatesChanged="CalendarPicker_SelectedDatesChanged" />
-                                </Flyout>
-                            </Button.Flyout>
-                        </Button>
-                        <TextBlock Text="{x:Bind ViewModel.StrLoadedDate, Mode=OneWay}" Style="{ThemeResource TitleTextBlockStyle}" FontSize="18" VerticalAlignment="Center" Width="250" TextAlignment="Center"/>
-                        <Button Content="&lt;" Command="{x:Null}" IsEnabled="{x:Bind ViewModel.CanGoPrev, Mode=OneWay}" Click="BtnPrev_Click" Background="Transparent" BorderThickness="0" Margin="10,0,0,0"/>
-                        <Button Content="&gt;" Command="{x:Null}" IsEnabled="{x:Bind ViewModel.CanGoNext, Mode=OneWay}" Click="BtnNext_Click" Background="Transparent" BorderThickness="0"/>
-                    </StackPanel>
-                </Border>
-                
-                <!-- Total Duration Label + Trend -->
-                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="15,10" Margin="10,0,0,0" VerticalAlignment="Center">
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <TextBlock l:Uids.Uid="Dashboard_Total" Opacity="0.6" VerticalAlignment="Center"/>
-                        <TextBlock Text="{x:Bind ViewModel.StrTotalDuration, Mode=OneWay}" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                        
-                        <!-- Trend Indicator -->
-                        <StackPanel Orientation="Horizontal" Margin="12,0,0,0" VerticalAlignment="Center" ToolTipService.ToolTip="{x:Bind ViewModel.TrendDescription, Mode=OneWay}">
-                            <TextBlock Text="{x:Bind ViewModel.TrendPercentage, Mode=OneWay}" FontWeight="Bold" Foreground="{x:Bind GetTrendBrush(ViewModel.TrendIsGood), Mode=OneWay}"/>
-                            <TextBlock Text="{x:Bind ViewModel.TrendDescription, Mode=OneWay}" Opacity="0.6" Margin="6,0,0,0" FontSize="12" VerticalAlignment="Center"/>
+            <Grid Grid.Row="0" Margin="0,0,0,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="15,10">
+                        <StackPanel Orientation="Horizontal">
+                            <Button Background="Transparent" VerticalAlignment="Center" BorderThickness="0" Padding="0" Margin="0,0,10,0" ToolTipService.ToolTip="Select Date">
+                                <TextBlock Text="📅" VerticalAlignment="Center"/>
+                                <Button.Flyout>
+                                    <Flyout x:Name="CalendarFlyout" Placement="Bottom">
+                                        <CalendarView x:Name="CalendarPicker" SelectionMode="Single" SelectedDatesChanged="CalendarPicker_SelectedDatesChanged" />
+                                    </Flyout>
+                                </Button.Flyout>
+                            </Button>
+                            <TextBlock Text="{x:Bind ViewModel.StrLoadedDate, Mode=OneWay}" Style="{ThemeResource TitleTextBlockStyle}" FontSize="18" VerticalAlignment="Center" Width="250" TextAlignment="Center"/>
+                            <Button Content="&lt;" Command="{x:Null}" IsEnabled="{x:Bind ViewModel.CanGoPrev, Mode=OneWay}" Click="BtnPrev_Click" Background="Transparent" BorderThickness="0" Margin="10,0,0,0"/>
+                            <Button Content="&gt;" Command="{x:Null}" IsEnabled="{x:Bind ViewModel.CanGoNext, Mode=OneWay}" Click="BtnNext_Click" Background="Transparent" BorderThickness="0"/>
                         </StackPanel>
+                    </Border>
+                    
+                    <!-- Total Duration Label + Trend -->
+                    <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="15,10" Margin="10,0,0,0" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock l:Uids.Uid="Dashboard_Total" Opacity="0.6" VerticalAlignment="Center"/>
+                            <TextBlock Text="{x:Bind ViewModel.StrTotalDuration, Mode=OneWay}" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                            
+                            <!-- Trend Indicator -->
+                            <StackPanel Orientation="Horizontal" Margin="12,0,0,0" VerticalAlignment="Center" ToolTipService.ToolTip="{x:Bind ViewModel.TrendDescription, Mode=OneWay}">
+                                <TextBlock Text="{x:Bind ViewModel.TrendPercentage, Mode=OneWay}" FontWeight="Bold" Foreground="{x:Bind GetTrendBrush(ViewModel.TrendIsGood), Mode=OneWay}"/>
+                                <TextBlock Text="{x:Bind ViewModel.TrendDescription, Mode=OneWay}" Opacity="0.6" Margin="6,0,0,0" FontSize="12" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- Refresh Button -->
+                <Button x:Name="BtnRefresh" Grid.Column="1" Click="BtnRefresh_Click" 
+                        l:Uids.Uid="Dashboard_RefreshButton"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" 
+                        BorderThickness="1" CornerRadius="12" Padding="12,8"
+                        VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon x:Name="RefreshIcon" Glyph="&#xE72C;" FontSize="16">
+                            <FontIcon.RenderTransform>
+                                <RotateTransform x:Name="RefreshIconRotation" CenterX="8" CenterY="8"/>
+                            </FontIcon.RenderTransform>
+                        </FontIcon>
+                        <TextBlock l:Uids.Uid="Dashboard_Refresh" VerticalAlignment="Center" FontWeight="SemiBold"/>
                     </StackPanel>
-                </Border>
-            </StackPanel>
+                </Button>
+            </Grid>
 
             <!-- ROW 1: CHARTS (Side by Side) -->
             <Grid Grid.Row="1" Margin="0,0,0,20">

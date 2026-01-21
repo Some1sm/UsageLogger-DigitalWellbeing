@@ -20,7 +20,7 @@ namespace UsageLoggerService;
 public class ActivityLogger
 {
     // Timer Constants
-    public static readonly int TIMER_INTERVAL_SEC = 3;
+    public static readonly int TIMER_INTERVAL_SEC = 2; // Increased frequency for better responsiveness
     private const int DEFAULT_BUFFER_FLUSH_INTERVAL_SEC = 300; // 5 minutes
     private const int IMMEDIATE_FLUSH_INTERVAL_SEC = 1;
     private const int SETTINGS_THROTTLE_SEC = 30;
@@ -308,6 +308,13 @@ public class ActivityLogger
     {
         // Refresh settings cache (includes IgnoredWindowTitles and IdleThreshold)
         GetBufferFlushInterval();
+
+        // Check for manual flush request from UI
+        if (UsageLogger.Core.Helpers.LiveSessionCache.CheckAndClearFlushRequest())
+        {
+            ServiceLogger.Log("Service", "Manual flush requested via IPC.");
+            await FlushBufferAsync();
+        }
         
         // --- Priority 1: Locked Screen ---
         if (_isLocked)

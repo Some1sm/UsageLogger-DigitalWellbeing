@@ -383,6 +383,12 @@
   <data name="Dashboard_ExcludeApp.Text" xml:space="preserve">
     <value>Exclude App</value>
   </data>
+  <data name="Dashboard_Refresh.Text" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="Dashboard_RefreshButton.ToolTip" xml:space="preserve">
+    <value>Save &amp; Refresh Dashboard</value>
+  </data>
   <data name="Dashboard_Total.Text" xml:space="preserve">
     <value>Total:</value>
   </data>

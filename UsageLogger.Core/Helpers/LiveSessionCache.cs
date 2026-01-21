@@ -18,6 +18,9 @@ namespace UsageLogger.Core.Helpers
         private const int MAP_SIZE = 512 * 1024; // 512KB for multiple sessions
         private const string MUTEX_NAME = "UsageLogger_LiveSessionMutex_v1";
         
+        // Signal byte at the very end of the map (offset 512KB - 1)
+        private const int FLUSH_SIGNAL_OFFSET = MAP_SIZE - 1;
+        
         // Keep MMF alive as static field - DO NOT DISPOSE until app exits
         private static MemoryMappedFile? _mmf;
         private static readonly object _lock = new object();
@@ -161,6 +164,63 @@ namespace UsageLogger.Core.Helpers
         public static void Clear()
         {
             WriteAll(new List<AppSession>());
+        }
+
+        /// <summary>
+        /// UI calls this to request the service to flush RAM buffer to disk.
+        /// </summary>
+        public static void RequestFlush()
+        {
+            try
+            {
+                var mmf = GetOrCreateMMF();
+                using (var accessor = mmf.CreateViewAccessor())
+                {
+                    accessor.Write(FLUSH_SIGNAL_OFFSET, (byte)1);
+                }
+            }
+            catch { }
+        }
+
+        /// <summary>
+        /// Service calls this to check if a flush was requested.
+        /// If requested, it clears the signal and returns true.
+        /// </summary>
+        public static bool CheckAndClearFlushRequest()
+        {
+            try
+            {
+                var mmf = GetOrCreateMMF();
+                using (var accessor = mmf.CreateViewAccessor())
+                {
+                    byte signal = accessor.ReadByte(FLUSH_SIGNAL_OFFSET);
+                    if (signal == 1)
+                    {
+                        accessor.Write(FLUSH_SIGNAL_OFFSET, (byte)0);
+                        return true;
+                    }
+                }
+            }
+            catch { }
+            return false;
+        }
+
+        /// <summary>
+        /// UI calls this to see if the service has processed the flush request.
+        /// Returns true if signal is still 1 (pending), false if 0 (processed).
+        /// </summary>
+        public static bool PeekFlushRequest()
+        {
+            try
+            {
+                var mmf = GetOrCreateMMF();
+                using (var accessor = mmf.CreateViewAccessor())
+                {
+                    return accessor.ReadByte(FLUSH_SIGNAL_OFFSET) == 1;
+                }
+            }
+            catch { }
+            return false;
         }
     }
 }
