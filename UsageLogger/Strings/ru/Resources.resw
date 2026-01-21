@@ -292,6 +292,12 @@
   <data name="Dashboard_ExcludeApp.Text" xml:space="preserve">
     <value>Исключить</value>
   </data>
+  <data name="Dashboard_Refresh.Text" xml:space="preserve">
+    <value>Обновить</value>
+  </data>
+  <data name="Dashboard_RefreshButton.ToolTip" xml:space="preserve">
+    <value>Сохранить и обновить панель мониторинга</value>
+  </data>
   <data name="Dashboard_Total.Text" xml:space="preserve">
     <value>Всего:</value>
   </data>

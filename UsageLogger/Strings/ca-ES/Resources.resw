@@ -385,6 +385,12 @@ Acaba: {2}</value>
   <data name="Dashboard_ExcludeApp.Text" xml:space="preserve">
     <value>Excloure App</value>
   </data>
+  <data name="Dashboard_Refresh.Text" xml:space="preserve">
+    <value>Actualitzar</value>
+  </data>
+  <data name="Dashboard_RefreshButton.ToolTip" xml:space="preserve">
+    <value>Desa i actualitza el tauler</value>
+  </data>
   <data name="Dashboard_Total.Text" xml:space="preserve">
     <value>Total:</value>
   </data>

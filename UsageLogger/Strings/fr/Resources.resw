@@ -292,6 +292,12 @@
   <data name="Dashboard_ExcludeApp.Text" xml:space="preserve">
     <value>Exclure App</value>
   </data>
+  <data name="Dashboard_Refresh.Text" xml:space="preserve">
+    <value>Actualiser</value>
+  </data>
+  <data name="Dashboard_RefreshButton.ToolTip" xml:space="preserve">
+    <value>Enregistrer et actualiser le tableau de bord</value>
+  </data>
   <data name="Dashboard_Total.Text" xml:space="preserve">
     <value>Total :</value>
   </data>

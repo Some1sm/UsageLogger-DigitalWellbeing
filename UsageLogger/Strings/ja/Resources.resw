@@ -292,6 +292,12 @@
   <data name="Dashboard_ExcludeApp.Text" xml:space="preserve">
     <value>アプリを除外</value>
   </data>
+  <data name="Dashboard_Refresh.Text" xml:space="preserve">
+    <value>更新</value>
+  </data>
+  <data name="Dashboard_RefreshButton.ToolTip" xml:space="preserve">
+    <value>保存してダッシュボードを更新</value>
+  </data>
   <data name="Dashboard_Total.Text" xml:space="preserve">
     <value>合計:</value>
   </data>
