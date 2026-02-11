@@ -254,7 +254,7 @@
     <value>由 David Cepero 创建</value>
   </data>
   <data name="Settings_Copyright.Text" xml:space="preserve">
-    <value>版权所有 © 2025。</value>
+    <value>版权所有 © 2026。根据 GNU GPLv3 许可。</value>
   </data>
   <data name="Settings_SourceCode.Content" xml:space="preserve">
     <value>源代码 (GitHub)</value>

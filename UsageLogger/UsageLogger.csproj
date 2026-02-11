@@ -15,6 +15,7 @@
     <Authors>David Cepero López</Authors>
     <Company>Some1sm</Company>
     <Product>UsageLogger</Product>
+    <Copyright>Copyright © 2026. Licensed under GNU GPLv3.</Copyright>
     <AssemblyTitle>UsageLogger</AssemblyTitle>
     <AssemblyName>UsageLogger</AssemblyName>
     <Version>1.0.0.0</Version>

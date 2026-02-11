@@ -324,64 +324,75 @@ namespace UsageLogger.Views
 
         private async void MenuFlyoutItem_SetCustomIcon_Click(object sender, RoutedEventArgs e)
         {
-            var item = sender as MenuFlyoutItem;
-            string processName = item.Tag as string;
-            if (string.IsNullOrEmpty(processName)) return;
-
-            // Check if already has a custom icon
-            string currentCustomIconPath = UsageLogger.Helpers.UserPreferences.GetCustomIconPath(processName);
-            bool hasCustomIcon = !string.IsNullOrEmpty(currentCustomIconPath);
-
-            // Create file picker
-            var picker = new Windows.Storage.Pickers.FileOpenPicker();
-            
-            // Get the window handle for the picker
-            var window = (Application.Current as App)?.m_window;
-            var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
-            WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
-
-            // Configure picker
-            picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.PicturesLibrary;
-            picker.FileTypeFilter.Add(".png");
-            picker.FileTypeFilter.Add(".jpg");
-            picker.FileTypeFilter.Add(".jpeg");
-            picker.FileTypeFilter.Add(".ico");
-            picker.FileTypeFilter.Add(".bmp");
-
-            // Show dialog with option to remove if custom icon exists
-            if (hasCustomIcon)
+            try
             {
-                var confirmDialog = new ContentDialog
-                {
-                    Title = $"Custom Icon for {processName}",
-                    Content = "This process already has a custom icon. What would you like to do?",
-                    PrimaryButtonText = "Change Icon",
-                    SecondaryButtonText = "Remove Custom Icon",
-                    CloseButtonText = "Cancel",
-                    XamlRoot = this.XamlRoot
-                };
+                var item = sender as MenuFlyoutItem;
+                string processName = item.Tag as string;
+                if (string.IsNullOrEmpty(processName)) return;
 
-                var result = await confirmDialog.ShowAsync();
+                // Check if already has a custom icon
+                string currentCustomIconPath = UsageLogger.Helpers.UserPreferences.GetCustomIconPath(processName);
+                bool hasCustomIcon = !string.IsNullOrEmpty(currentCustomIconPath);
+
+                // Show dialog with option to remove if custom icon exists (BEFORE picking file)
+                if (hasCustomIcon)
+                {
+                    var confirmDialog = new ContentDialog
+                    {
+                        Title = $"Custom Icon for {processName}",
+                        Content = "This process already has a custom icon. What would you like to do?",
+                        PrimaryButtonText = "Change Icon",
+                        SecondaryButtonText = "Remove Custom Icon",
+                        CloseButtonText = "Cancel",
+                        XamlRoot = this.XamlRoot
+                    };
+
+                    var result = await confirmDialog.ShowAsync();
+                    
+                    if (result == ContentDialogResult.Secondary)
+                    {
+                        // Remove custom icon
+                        UsageLogger.Helpers.IconManager.DeleteCustomIcon(processName);
+                        UsageLogger.Helpers.UserPreferences.RemoveCustomIconPath(processName);
+                        ViewModel.RefreshDayView();
+                        return;
+                    }
+                    else if (result != ContentDialogResult.Primary)
+                    {
+                        return; // Cancelled
+                    }
+                }
+
+                // Create file picker
+                var picker = new Windows.Storage.Pickers.FileOpenPicker();
                 
-                if (result == ContentDialogResult.Secondary)
+                // Get the window handle for the picker
+                var window = (Application.Current as App)?.m_window;
+                if (window == null)
                 {
-                    // Remove custom icon
-                    UsageLogger.Helpers.IconManager.DeleteCustomIcon(processName);
-                    UsageLogger.Helpers.UserPreferences.RemoveCustomIconPath(processName);
-                    ViewModel.RefreshDayView();
-                    return;
+                     throw new InvalidOperationException("Main Window is null. Cannot initialize file picker.");
                 }
-                else if (result != ContentDialogResult.Primary)
-                {
-                    return; // Cancelled
-                }
-            }
 
-            // Pick file
-            var file = await picker.PickSingleFileAsync();
-            if (file != null)
-            {
-                try
+                var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
+                if (hwnd == IntPtr.Zero)
+                {
+                     throw new InvalidOperationException("Window Handle (HWND) is Zero. Cannot initialize file picker.");
+                }
+
+                WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
+
+                // Configure picker
+                picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.PicturesLibrary;
+                picker.FileTypeFilter.Add(".png");
+                picker.FileTypeFilter.Add(".jpg");
+                picker.FileTypeFilter.Add(".jpeg");
+                picker.FileTypeFilter.Add(".ico");
+                picker.FileTypeFilter.Add(".bmp");
+                picker.FileTypeFilter.Add(".webp"); // Add webp support
+
+                // Pick file
+                var file = await picker.PickSingleFileAsync();
+                if (file != null)
                 {
                     // Copy icon to custom icons folder
                     string newIconPath = UsageLogger.Helpers.IconManager.CopyCustomIcon(file.Path, processName);
@@ -396,29 +407,22 @@ namespace UsageLogger.Views
                     }
                     else
                     {
-                        // Show error
-                        var errorDialog = new ContentDialog
-                        {
-                            Title = "Error",
-                            Content = "Failed to copy icon file. Please try a different image.",
-                            CloseButtonText = "OK",
-                            XamlRoot = this.XamlRoot
-                        };
-                        await errorDialog.ShowAsync();
+                        throw new Exception("Failed to copy icon file.");
                     }
                 }
-                catch (Exception ex)
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"SetCustomIcon Error: {ex}");
+                
+                var errorDialog = new ContentDialog
                 {
-                    System.Diagnostics.Debug.WriteLine($"Custom icon upload error: {ex}");
-                    var errorDialog = new ContentDialog
-                    {
-                        Title = "Error",
-                        Content = $"Failed to set custom icon: {ex.Message}",
-                        CloseButtonText = "OK",
-                        XamlRoot = this.XamlRoot
-                    };
-                    await errorDialog.ShowAsync();
-                }
+                    Title = "Error Setting Icon",
+                    Content = $"An error occurred: {ex.Message}",
+                    CloseButtonText = "OK",
+                    XamlRoot = this.XamlRoot
+                };
+                try { await errorDialog.ShowAsync(); } catch { /* Ignore dialog error */ }
             }
         }
         // Field to store the current sub-item for context menu operations

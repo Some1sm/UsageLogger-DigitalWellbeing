@@ -288,7 +288,7 @@ namespace UsageLogger.ViewModels
                     !effectiveProgramName.Equals(s.ProcessName, StringComparison.OrdinalIgnoreCase))
                 {
                     // Priority: Title-specific tag > ProgramName tag > Process tag
-                    int? titleTagId = UsageLogger.Helpers.SettingsManager.GetTitleTagId(s.ProcessName, effectiveProgramName);
+                    int? titleTagId = UsageLogger.Helpers.UserPreferences.GetTitleTagId(s.ProcessName, effectiveProgramName);
                     if (titleTagId.HasValue)
                     {
                         tag = (AppTag)titleTagId.Value;

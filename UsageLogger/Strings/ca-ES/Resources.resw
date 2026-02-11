@@ -344,7 +344,7 @@ Acaba: {2}</value>
     <value>Creat per David Cepero</value>
   </data>
   <data name="Settings_Copyright.Text" xml:space="preserve">
-    <value>Copyright © 2025. Tots els drets reservats.</value>
+    <value>Copyright © 2026. Llicenciat sota GNU GPLv3.</value>
   </data>
   <data name="Settings_SourceCode.Content" xml:space="preserve">
     <value>Codi Font (GitHub)</value>

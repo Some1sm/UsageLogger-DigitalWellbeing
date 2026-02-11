@@ -7,7 +7,7 @@
     <Company>Some1sm</Company>
     <Product>UsageLogger Service</Product>
     <Description>A service needed by UsageLogger For Windows to function properly.</Description>
-    <Copyright>© 2026 David Cepero</Copyright>
+    <Copyright>Copyright © 2026. Licensed under GNU GPLv3.</Copyright>
     <AssemblyTitle>UsageLoggerService</AssemblyTitle>
     <AssemblyName>UsageLoggerService</AssemblyName>
     <Version>1.0.0.0</Version>

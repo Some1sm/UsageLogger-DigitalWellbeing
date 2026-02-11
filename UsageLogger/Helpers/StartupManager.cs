@@ -1,121 +1,17 @@
 using UsageLogger.Core;
-using UsageLogger.Core.Models;
-using UsageLogger.Core.Helpers;
 using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 
 namespace UsageLogger.Helpers
 {
-    public static class SettingsManager
+    /// <summary>
+    /// Manages application startup configuration (registry, shortcuts).
+    /// Renamed from SettingsManager after tag/time-limit methods were moved to UserPreferences.
+    /// </summary>
+    public static class StartupManager
     {
-        public static Task WaitForInit { get; private set; } = Task.CompletedTask; // No async load needed anymore
-
-        static SettingsManager()
-        {
-            // Data is loaded by UserPreferences static constructor synchronously
-        }
-
-        #region App Time Limits
-
-        // Delegate to UserPreferences
-        public static Dictionary<string, int> appTimeLimits => UserPreferences.AppTimeLimits;
-        
-        // Deprecated/Unused but kept for compatibility if needed
-        private static void SaveAppTimeLimits() => UserPreferences.Save();
-
-        public static Dictionary<string, AppTag> GetAllAppTags()
-        {
-            return new Dictionary<string, AppTag>(UserPreferences.AppTags);
-        }
-
-        // Deprecated: No-op or just ensure loaded
-        private static Task LoadAppTimeLimits() => Task.CompletedTask;
-
-        public static void UpdateAppTimeLimit(string processName, TimeSpan timeLimit)
-        {
-            // UserPreferences has the logic now
-            UserPreferences.UpdateAppTimeLimit(processName, timeLimit);
-        }
-
-        #endregion
-
-        #region App Tags
-
-        // Delegate to UserPreferences
-        public static Dictionary<string, AppTag> appTags => UserPreferences.AppTags;
-        public static Dictionary<string, int> titleTags => UserPreferences.TitleTags;
-
-        // Deprecated
-        private static Task LoadAppTags() => Task.CompletedTask;
-        private static Task LoadTitleTags() => Task.CompletedTask;
-        private static void SaveAppTags() => UserPreferences.Save();
-        private static void SaveTitleTags() => UserPreferences.Save();
-
-
-
-        public static void UpdateAppTag(string processName, AppTag appTag)
-        {
-            if (appTag == AppTag.Untagged) appTags.Remove(processName);
-            else appTags[processName] = appTag;
-            SaveAppTags();
-        }
-
-        public static void UpdateTitleTag(string processName, string keyword, int tagId)
-        {
-            string key = processName + "|" + keyword;
-            if (tagId == 0) titleTags.Remove(key);
-            else titleTags[key] = tagId;
-            SaveTitleTags();
-        }
-
-        public static void RemoveTag(int tagId)
-        {
-            // Remove from Apps
-            var keysToUpdate = appTags.Where(kvp => (int)kvp.Value == tagId).Select(kvp => kvp.Key).ToList();
-            foreach (var key in keysToUpdate) appTags.Remove(key);
-            if (keysToUpdate.Count > 0) SaveAppTags();
-
-            // Remove from Titles
-            var titlesToUpdate = titleTags.Where(kvp => kvp.Value == tagId).Select(kvp => kvp.Key).ToList();
-            foreach (var key in titlesToUpdate) titleTags.Remove(key);
-            if (titlesToUpdate.Count > 0) SaveTitleTags();
-        }
-
-        public static AppTag GetAppTag(string processName)
-        {
-            if (appTags.ContainsKey(processName)) return appTags[processName];
-            return AppTag.Untagged;
-        }
-
-        // New lookup method
-        public static int? GetTitleTagId(string processName, string title)
-        {
-            // Simple keyword matching against dictionary keys?
-            // "Process|Keyword".
-            // Since we can't efficiently search "Contains" on 1000 dictionary keys every frame, we should cache or optimize.
-            // But usually titleTags count is small (<50).
-            
-            foreach (var kvp in titleTags)
-            {
-                var parts = kvp.Key.Split('|');
-                if (parts[0] == processName && title.IndexOf(parts[1], StringComparison.OrdinalIgnoreCase) >= 0)
-                {
-                    return kvp.Value;
-                }
-            }
-            return null;
-        }
-
-        #endregion
-
-        #region Run on Startup
-
         /// <summary>
         /// Startup mode options for the application.
         /// </summary>
@@ -133,12 +29,12 @@ namespace UsageLogger.Helpers
         {
             try
             {
-                Debug.WriteLine($"[SettingsManager] SetStartupMode called with: {mode}");
+                Debug.WriteLine($"[StartupManager] SetStartupMode called with: {mode}");
                 
                 RegistryKey key = Registry.CurrentUser.OpenSubKey(ApplicationPath.AUTORUN_REGPATH, true);
                 if (key == null) 
                 {
-                    Debug.WriteLine($"[SettingsManager] ERROR: Could not open registry key for writing");
+                    Debug.WriteLine($"[StartupManager] ERROR: Could not open registry key for writing");
                     return;
                 }
 
@@ -149,23 +45,23 @@ namespace UsageLogger.Helpers
                         var existingValue = key.GetValue(ApplicationPath.AUTORUN_REGKEY);
                         if (existingValue != null)
                         {
-                            Debug.WriteLine($"[SettingsManager] Deleting registry key: {ApplicationPath.AUTORUN_REGKEY}");
+                            Debug.WriteLine($"[StartupManager] Deleting registry key: {ApplicationPath.AUTORUN_REGKEY}");
                             key.DeleteValue(ApplicationPath.AUTORUN_REGKEY, false);
                             
                             // Verify deletion
                             var afterDelete = key.GetValue(ApplicationPath.AUTORUN_REGKEY);
                             if (afterDelete != null)
                             {
-                                Debug.WriteLine($"[SettingsManager] WARNING: Key still exists after deletion!");
+                                Debug.WriteLine($"[StartupManager] WARNING: Key still exists after deletion!");
                             }
                             else
                             {
-                                Debug.WriteLine($"[SettingsManager] Successfully deleted startup entry");
+                                Debug.WriteLine($"[StartupManager] Successfully deleted startup entry");
                             }
                         }
                         else
                         {
-                            Debug.WriteLine($"[SettingsManager] No startup registry entry to delete");
+                            Debug.WriteLine($"[StartupManager] No startup registry entry to delete");
                         }
                         
                         // Also cleanup any legacy startup folder shortcuts (from old installer versions)
@@ -178,7 +74,7 @@ namespace UsageLogger.Helpers
                         if (!string.IsNullOrEmpty(servicePath))
                         {
                             key.SetValue(ApplicationPath.AUTORUN_REGKEY, servicePath);
-                            Debug.WriteLine($"[SettingsManager] Set startup to service: {servicePath}");
+                            Debug.WriteLine($"[StartupManager] Set startup to service: {servicePath}");
                         }
                         break;
 
@@ -187,7 +83,7 @@ namespace UsageLogger.Helpers
                         using (Process process = Process.GetCurrentProcess())
                         {
                             key.SetValue(ApplicationPath.AUTORUN_REGKEY, process.MainModule.FileName);
-                            Debug.WriteLine($"[SettingsManager] Set startup to UI: {process.MainModule.FileName}");
+                            Debug.WriteLine($"[StartupManager] Set startup to UI: {process.MainModule.FileName}");
                         }
                         break;
                 }
@@ -196,7 +92,7 @@ namespace UsageLogger.Helpers
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"[SettingsManager] SetStartupMode error: {ex.Message}");
+                Debug.WriteLine($"[StartupManager] SetStartupMode error: {ex.Message}");
             }
         }
 
@@ -278,17 +174,14 @@ namespace UsageLogger.Helpers
                     try 
                     { 
                         File.Delete(path);
-                        Debug.WriteLine($"[SettingsManager] Deleted startup shortcut: {path}");
+                        Debug.WriteLine($"[StartupManager] Deleted startup shortcut: {path}");
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine($"[SettingsManager] Failed to delete shortcut {path}: {ex.Message}");
+                        Debug.WriteLine($"[StartupManager] Failed to delete shortcut {path}: {ex.Message}");
                     }
                 }
             }
         }
-
-        #endregion
-
     }
 }

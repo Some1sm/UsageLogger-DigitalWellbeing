@@ -277,16 +277,30 @@ namespace UsageLogger.Controls
             // 1. Calculate max possible bar width if we reserve space for (Items + 1) gaps of equal width?
             // Simplified approach: calculate RemainingSpace after applying MaxBarWidth clamp.
             
-            // Max space available for Bars if Gap was 0:
-            float maxPossibleBarWidth = chartWidth / items.Count;
+            // Max space available per item (Slot width)
+            float slotWidth = chartWidth / items.Count;
             
-            // Apply clamps (Default Max 50, but don't clamp min yet, wait to see if it fits)
-            float barWidth = Math.Min(maxPossibleBarWidth, (float)MaxBarWidth);
+            // Apply clamps (Default Max 50). 
+            // If slotWidth is smaller than MaxBarWidth (dense chart), apply a spacing factor (e.g. 0.85)
+            // to ensure bars don't touch each other.
+            float effMaxBarWidth = (float)MaxBarWidth;
+            float barWidth;
+            
+            if (slotWidth < effMaxBarWidth)
+            {
+                 // Dense chart: use 85% of slot width (15% gap)
+                 barWidth = slotWidth * 0.85f;
+            }
+            else
+            {
+                 // Sparse chart: use MaxBarWidth
+                 barWidth = effMaxBarWidth;
+            }
             
             // Enforce minimum VISIBLE width (e.g. 1px). 
             // Previous min was 4, which might cause overflow on very small charts.
             // Let's try to maintain 4 if possible, but shrink if needed.
-            if (barWidth < 4 && maxPossibleBarWidth >= 4) barWidth = 4;
+            if (barWidth < 4 && slotWidth >= 4) barWidth = 4;
             
             // 3. Calculate remaining space and distribute as gaps (Items.Count + 1 intervals)
             float totalBarWidth = items.Count * barWidth;

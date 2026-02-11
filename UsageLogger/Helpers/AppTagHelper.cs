@@ -3,7 +3,7 @@ using Microsoft.UI;
 using Microsoft.UI.Xaml.Media;
 using System;
 using System.Collections.Generic;
-using System.Linq; // Added for Linq
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace UsageLogger.Helpers
@@ -38,50 +38,44 @@ namespace UsageLogger.Helpers
 
         public static AppTag GetAppTag(string processName)
         {
-            return SettingsManager.GetAppTag(processName);
+            return UserPreferences.GetAppTag(processName);
         }
 
         public static void UpdateAppTag(string processName, AppTag tag)
         {
-            SettingsManager.UpdateAppTag(processName, tag);
+            UserPreferences.UpdateAppTag(processName, tag);
         }
 
         public static void UpdateTitleTag(string processName, string keyword, int tagId)
         {
-            SettingsManager.UpdateTitleTag(processName, keyword, tagId);
+            UserPreferences.UpdateTitleTag(processName, keyword, tagId);
         }
         
         public static AppTag GetTitleTag(string processName, string title)
         {
-            int? id = SettingsManager.GetTitleTagId(processName, title);
+            int? id = UserPreferences.GetTitleTagId(processName, title);
             if (id.HasValue) return (AppTag)id.Value;
             return AppTag.Untagged;
         }
 
         public static void RemoveTag(int tagId)
         {
-            SettingsManager.RemoveTag(tagId);
+            UserPreferences.RemoveTagFromAll(tagId);
         }
 
         public static SolidColorBrush GetBrush(string hex)
         {
             return new SolidColorBrush(ColorHelper.GetColorFromHex(hex));
         }
+
         public static async Task ValidateAppTags()
         {
-            await SettingsManager.WaitForInit;
-
             var validIds = UserPreferences.CustomTags.Select(t => t.Id).ToHashSet();
             // Default Tag (Untagged = 0) is always valid
             validIds.Add(0);
 
             var orphanApps = new List<string>();
-
-            // Accessing SettingsManager.appTags directly might need it to be exposed or we use a getter/setter approach
-            // Currently SettingsManager.appTags is internal or public? It's public static.
-            
-            // We need to iterate a copy to modify
-            var currentTags = SettingsManager.GetAllAppTags(); 
+            var currentTags = UserPreferences.GetAllAppTags(); 
 
             foreach (var kvp in currentTags)
             {
@@ -93,7 +87,7 @@ namespace UsageLogger.Helpers
 
             foreach (var app in orphanApps)
             {
-                SettingsManager.UpdateAppTag(app, AppTag.Untagged);
+                UserPreferences.UpdateAppTag(app, AppTag.Untagged);
             }
         }
     }

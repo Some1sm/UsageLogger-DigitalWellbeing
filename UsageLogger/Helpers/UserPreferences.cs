@@ -307,6 +307,62 @@ namespace UsageLogger.Helpers
             Save();
         }
 
+        #region App Tag Operations
+
+        public static Dictionary<string, AppTag> GetAllAppTags()
+        {
+            return new Dictionary<string, AppTag>(AppTags);
+        }
+
+        public static void UpdateAppTag(string processName, AppTag appTag)
+        {
+            if (appTag == AppTag.Untagged) AppTags.Remove(processName);
+            else AppTags[processName] = appTag;
+            Save();
+        }
+
+        public static void UpdateTitleTag(string processName, string keyword, int tagId)
+        {
+            string key = processName + "|" + keyword;
+            if (tagId == 0) TitleTags.Remove(key);
+            else TitleTags[key] = tagId;
+            Save();
+        }
+
+        public static void RemoveTagFromAll(int tagId)
+        {
+            // Remove from Apps
+            var keysToUpdate = AppTags.Where(kvp => (int)kvp.Value == tagId).Select(kvp => kvp.Key).ToList();
+            foreach (var key in keysToUpdate) AppTags.Remove(key);
+
+            // Remove from Titles
+            var titlesToUpdate = TitleTags.Where(kvp => kvp.Value == tagId).Select(kvp => kvp.Key).ToList();
+            foreach (var key in titlesToUpdate) TitleTags.Remove(key);
+
+            if (keysToUpdate.Count > 0 || titlesToUpdate.Count > 0) Save();
+        }
+
+        public static AppTag GetAppTag(string processName)
+        {
+            if (AppTags.ContainsKey(processName)) return AppTags[processName];
+            return AppTag.Untagged;
+        }
+
+        public static int? GetTitleTagId(string processName, string title)
+        {
+            foreach (var kvp in TitleTags)
+            {
+                var parts = kvp.Key.Split('|');
+                if (parts[0] == processName && title.IndexOf(parts[1], StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    return kvp.Value;
+                }
+            }
+            return null;
+        }
+
+        #endregion
+
         /// <summary>
         /// Gets the display name for a process. Returns the custom display name if set, otherwise returns the original process name.
         /// </summary>

@@ -57,16 +57,6 @@ namespace UsageLogger.Helpers
             }
         }
 
-        #region App Time Limit Checker (DEPRECATED - Moved to TimeLimitEnforcer.cs)
-        public static void InitNotifierTimer()
-        {
-            // No-op
-        }
 
-        public static void ResetNotificationForApp(string processName)
-        {
-            // No-op
-        }
-        #endregion
     }
 }

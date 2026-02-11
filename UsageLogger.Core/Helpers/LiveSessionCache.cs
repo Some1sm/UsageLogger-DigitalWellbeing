@@ -148,18 +148,6 @@ namespace UsageLogger.Core.Helpers
             return new List<AppSession>();
         }
 
-        // Legacy single-session methods for compatibility
-        public static void Write(AppSession session)
-        {
-            if (session == null) return;
-            WriteAll(new List<AppSession> { session });
-        }
-
-        public static AppSession? Read()
-        {
-            var sessions = ReadAll();
-            return sessions.Count > 0 ? sessions[sessions.Count - 1] : null;
-        }
 
         public static void Clear()
         {

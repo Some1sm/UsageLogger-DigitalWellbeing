@@ -254,7 +254,7 @@
     <value>제작: David Cepero</value>
   </data>
   <data name="Settings_Copyright.Text" xml:space="preserve">
-    <value>Copyright © 2025. All rights reserved.</value>
+    <value>Copyright © 2026. GNU GPLv3 라이선스.</value>
   </data>
   <data name="Settings_SourceCode.Content" xml:space="preserve">
     <value>소스 코드 (GitHub)</value>

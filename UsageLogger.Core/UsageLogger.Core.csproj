@@ -6,7 +6,7 @@
     <Company>Some1sm</Company>
     <Product>UsageLogger.Core</Product>
     <Description>Needed libraries for UsageLogger for Windows</Description>
-    <Copyright>© 2025 David Cepero</Copyright>
+    <Copyright>Copyright © 2026. Licensed under GNU GPLv3.</Copyright>
     <AssemblyTitle>UsageLogger.Core</AssemblyTitle>
     <Version>1.0.0.0</Version>
     <AssemblyVersion>0.8.1.0</AssemblyVersion>

@@ -220,7 +220,7 @@ namespace UsageLogger.Views
             _isLoading = true;
 
             // Run on Startup (ComboBox mode)
-            var currentMode = SettingsManager.GetStartupMode();
+            var currentMode = StartupManager.GetStartupMode();
             foreach (ComboBoxItem item in StartupModeComboBox.Items)
             {
                 if (item.Tag?.ToString() == currentMode.ToString())
@@ -325,7 +325,7 @@ namespace UsageLogger.Views
             LoadLogLocation();
 
             // Store original values for smart dirty detection
-            _origStartupMode = SettingsManager.GetStartupMode().ToString();
+            _origStartupMode = StartupManager.GetStartupMode().ToString();
             _origMinimizeOnExit = UserPreferences.MinimizeOnExit;
             _origIncognitoMode = UserPreferences.IncognitoMode;
             _origDayAmount = UserPreferences.DayAmount;
@@ -381,100 +381,43 @@ namespace UsageLogger.Views
         
         private void LoadHiddenSubApps()
         {
-            LoadHiddenSubApps(_hiddenKeywordsVisible);
+            SubAppRulesHelper.LoadHiddenSubApps(HiddenSubAppsList, TglHideRetroactively, _hiddenKeywordsVisible);
         }
         
         private void LoadHiddenSubApps(bool showActualText)
         {
-            HiddenSubAppsList.Items.Clear();
-            foreach (string keyword in UserPreferences.IgnoredWindowTitles)
-            {
-                if (showActualText)
-                {
-                    HiddenSubAppsList.Items.Add(keyword);
-                }
-                else
-                {
-                    // Mask the keyword with bullets (same length)
-                    HiddenSubAppsList.Items.Add(new string('●', keyword.Length));
-                }
-            }
-            // Load toggle state
-            TglHideRetroactively.IsOn = UserPreferences.HideSubAppsRetroactively;
+            SubAppRulesHelper.LoadHiddenSubApps(HiddenSubAppsList, TglHideRetroactively, showActualText);
         }
 
         private void BtnAddHiddenKeyword_Click(object sender, RoutedEventArgs e)
         {
-            string keyword = TxtNewHiddenKeyword.Text?.Trim();
-            if (!string.IsNullOrEmpty(keyword) && !UserPreferences.IgnoredWindowTitles.Contains(keyword, StringComparer.OrdinalIgnoreCase))
-            {
-                UserPreferences.IgnoredWindowTitles.Add(keyword);
-                UserPreferences.Save();
-                LoadHiddenSubApps();
-                TxtNewHiddenKeyword.Text = "";
-            }
+            SubAppRulesHelper.AddHiddenKeyword(TxtNewHiddenKeyword, LoadHiddenSubApps);
         }
 
         // ===== Custom Title Rules =====
         private void LoadCustomRules()
         {
-            CustomRulesList.ItemsSource = null;
-            CustomRulesList.ItemsSource = UserPreferences.CustomTitleRules;
+            SubAppRulesHelper.LoadCustomRules(CustomRulesList);
         }
 
         private async void BtnAddRule_Click(object sender, RoutedEventArgs e)
         {
-            var dialog = new EditTitleRuleDialog();
-            dialog.XamlRoot = this.XamlRoot;
-            if (await dialog.ShowAsync() == ContentDialogResult.Primary)
-            {
-                UserPreferences.CustomTitleRules.Add(dialog.Result);
-                UserPreferences.Save();
-                LoadCustomRules();
-            }
+            SubAppRulesHelper.AddRule(this.XamlRoot, LoadCustomRules);
         }
 
         private async void BtnEditRule_Click(object sender, RoutedEventArgs e)
         {
-            var btn = sender as Button;
-            var rule = btn?.Tag as UsageLogger.Core.Models.CustomTitleRule;
-            if (rule == null) return;
-
-            var dialog = new EditTitleRuleDialog(rule);
-            dialog.XamlRoot = this.XamlRoot;
-            if (await dialog.ShowAsync() == ContentDialogResult.Primary)
-            {
-                // Result is already updated by reference in dialog but we need to trigger save/refresh
-                UserPreferences.Save();
-                LoadCustomRules(); // Refresh list to show changes
-            }
+            SubAppRulesHelper.EditRule(sender, this.XamlRoot, LoadCustomRules);
         }
 
         private void BtnDeleteRule_Click(object sender, RoutedEventArgs e)
         {
-            var btn = sender as Button;
-            var rule = btn?.Tag as UsageLogger.Core.Models.CustomTitleRule;
-            if (rule != null)
-            {
-                UserPreferences.CustomTitleRules.Remove(rule);
-                UserPreferences.Save();
-                LoadCustomRules();
-            }
+            SubAppRulesHelper.DeleteRule(sender, LoadCustomRules);
         }
 
         private void HiddenSubAppsList_DoubleTapped(object sender, Microsoft.UI.Xaml.Input.DoubleTappedRoutedEventArgs e)
         {
-            if (HiddenSubAppsList.SelectedItem != null && _hiddenKeywordsVisible)
-            {
-                // Only allow deletion when keywords are visible (user has focused the textbox)
-                int index = HiddenSubAppsList.SelectedIndex;
-                if (index >= 0 && index < UserPreferences.IgnoredWindowTitles.Count)
-                {
-                    UserPreferences.IgnoredWindowTitles.RemoveAt(index);
-                    UserPreferences.Save();
-                    LoadHiddenSubApps();
-                }
-            }
+            SubAppRulesHelper.RemoveHiddenKeyword(HiddenSubAppsList, _hiddenKeywordsVisible, LoadHiddenSubApps);
         }
         
         private void HiddenSubAppsList_Tapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
@@ -595,9 +538,9 @@ namespace UsageLogger.Views
                 if (StartupModeComboBox.SelectedItem is ComboBoxItem selectedItem)
                 {
                     string modeTag = selectedItem.Tag?.ToString() ?? "None";
-                    if (Enum.TryParse<SettingsManager.StartupMode>(modeTag, out var mode))
+                    if (Enum.TryParse<StartupManager.StartupMode>(modeTag, out var mode))
                     {
-                        SettingsManager.SetStartupMode(mode);
+                        StartupManager.SetStartupMode(mode);
                     }
                 }
             }
@@ -776,120 +719,54 @@ namespace UsageLogger.Views
 
         private void LoadTags()
         {
-            Tags.Clear();
-            foreach (var tag in UserPreferences.CustomTags)
-            {
-                Tags.Add(tag);
-            }
+            TagSettingsHelper.LoadTags(Tags);
         }
 
         private void BtnAddTag_Click(object sender, RoutedEventArgs e)
         {
-            int nextId = Tags.Count > 0 ? Tags.Max(t => t.Id) + 1 : 0;
-            // Ensure ID doesn't conflict (basic check)
-            while (Tags.Any(t => t.Id == nextId)) nextId++;
-
-            var newTag = new CustomAppTag(nextId, "New Tag", "#808080"); // Gray default
-            Tags.Add(newTag);
-            SaveTags();
+            TagSettingsHelper.AddTag(Tags);
         }
 
         private void BtnDeleteTag_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button btn && btn.Tag is int id)
-            {
-                // Prevent deleting default tags if desired, or allow it.
-                // For now allow it, but maybe warn? User wants to "edit existing ones".
-                // Let's remove constraint for now.
-                var tagToRemove = Tags.FirstOrDefault(t => t.Id == id);
-                if (tagToRemove != null)
-                {
-                    // Clean up assigned apps
-                    UsageLogger.Helpers.AppTagHelper.RemoveTag(tagToRemove.Id);
-                    
-                    Tags.Remove(tagToRemove);
-                    SaveTags();
-                }
-            }
+            TagSettingsHelper.DeleteTag(Tags, sender);
         }
 
         private void TagName_LostFocus(object sender, RoutedEventArgs e)
         {
-            // Save when name editing finishes
-            SaveTags();
+            TagSettingsHelper.SaveTags(Tags);
         }
 
         private void ColorPicker_ColorChanged(ColorPicker sender, ColorChangedEventArgs args)
         {
-            if (sender.Tag is int id)
-            {
-                var tag = Tags.FirstOrDefault(t => t.Id == id);
-                if (tag != null)
-                {
-                    tag.HexColor = args.NewColor.ToString(); // #AARRGGBB
-                    SaveTags();
-                    
-                    // Force refresh list item to update button background immediately if binding doesn't catch it
-                    // Binding OneWay/TwoWay on HexColor might rely on PropertyChanged which CustomAppTag doesn't implement yet.
-                    // Ideally CustomAppTag should implement INotifyPropertyChanged.
-                    // For now, we save. The button background binding might need a converter or direct update.
-                    // Actually, let's update the button background directly if we can, or just rely on binding if model notifies.
-                    // Since CustomAppTag is POCO, UI won't update automatically.
-                    // We can re-assign the list or implement INPC.
-                    // Quick fix: Re-load tags? No, that resets scroll.
-                    // Better: Implement INPC in CustomAppTag. Or just let it be for now and see if user complains.
-                    // Actually, I can optimize this later.
-                }
-            }
+            TagSettingsHelper.OnColorChanged(Tags, sender, args);
         }
         
         // Alternative: Use Flyout Closed event to save color.
         private void ColorPickerFlyout_Closed(object sender, object e)
         {
-             SaveTags();
-             // Refresh list to show new color if needed
-             var copy = new ObservableCollection<CustomAppTag>(Tags);
-             Tags.Clear();
-             foreach(var t in copy) Tags.Add(t);
+            TagSettingsHelper.OnColorPickerFlyoutClosed(Tags);
         }
 
         private void SaveTags()
         {
-            UserPreferences.CustomTags = Tags.ToList();
-            UserPreferences.Save();
+            TagSettingsHelper.SaveTags(Tags);
         }
 
         public Microsoft.UI.Xaml.Media.SolidColorBrush GetBrush(string hex)
         {
-            return new Microsoft.UI.Xaml.Media.SolidColorBrush(UsageLogger.Helpers.ColorHelper.GetColorFromHex(hex));
+            return TagSettingsHelper.GetBrush(hex);
         }
 
         // ===== Log Location =====
         private void LoadLogLocation()
         {
-            string customPath = ApplicationPath.GetCustomLogsFolderRaw();
-            TxtLogLocation.Text = string.IsNullOrEmpty(customPath) ? ApplicationPath.UsageLogsFolder : customPath;
+            LogLocationHelper.LoadLogLocation(TxtLogLocation);
         }
 
         private void BtnBrowseLogLocation_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                // Use COM IFileOpenDialog which is more reliable for unpackaged apps
-                var dialog = new NativeFolderDialog();
-                var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(App.MainWindow);
-                
-                string selectedPath = dialog.ShowDialog(hwnd, TxtLogLocation.Text);
-                if (!string.IsNullOrEmpty(selectedPath))
-                {
-                    TxtLogLocation.Text = selectedPath;
-                    CheckForChanges();
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"FolderPicker failed: {ex.Message}");
-            }
+            LogLocationHelper.BrowseLogLocation(TxtLogLocation, App.MainWindow, CheckForChanges);
         }
 
         private void TxtLogLocation_TextChanged(object sender, TextChangedEventArgs e)
@@ -900,20 +777,12 @@ namespace UsageLogger.Views
 
         private void BtnResetLogLocation_Click(object sender, RoutedEventArgs e)
         {
-            ApplicationPath.ClearCustomLogsFolder();
-            TxtLogLocation.Text = ApplicationPath.UsageLogsFolder;
-            
-            // Restart Service
-            RestartBackgroundService();
+            LogLocationHelper.ResetLogLocation(TxtLogLocation, RestartBackgroundService);
         }
 
         private void BtnOpenLogFolder_Click(object sender, RoutedEventArgs e)
         {
-            string logFolder = ApplicationPath.UsageLogsFolder;
-            if (System.IO.Directory.Exists(logFolder))
-            {
-                Process.Start(new ProcessStartInfo(logFolder) { UseShellExecute = true });
-            }
+            LogLocationHelper.OpenLogFolder();
         }
 
         private void RestartBackgroundService()
