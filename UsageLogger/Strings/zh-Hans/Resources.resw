@@ -940,4 +940,22 @@
   <data name="Dialog_ExcludeApp_Content" xml:space="preserve">
     <value>您确定要从仪表板中隐藏“{0}”吗？您可以在设置中管理排除的应用。</value>
   </data>
+  <data name="Settings_BackdropType.Text" xml:space="preserve">
+    <value>窗口效果</value>
+  </data>
+  <data name="Settings_BackdropTypeDesc.Text" xml:space="preserve">
+    <value>背景透明风格</value>
+  </data>
+  <data name="Settings_BackdropMica.Content" xml:space="preserve">
+    <value>云母</value>
+  </data>
+  <data name="Settings_BackdropMicaAlt.Content" xml:space="preserve">
+    <value>云母 Alt</value>
+  </data>
+  <data name="Settings_BackdropAcrylic.Content" xml:space="preserve">
+    <value>亚克力</value>
+  </data>
+  <data name="Settings_BackdropNone.Content" xml:space="preserve">
+    <value>无（纯色）</value>
+  </data>
 </root>

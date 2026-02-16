@@ -940,4 +940,22 @@ Fin : {2}</value>
   <data name="Dialog_ExcludeApp_Content" xml:space="preserve">
     <value>Voulez-vous vraiment masquer '{0}' du tableau de bord ? Vous pouvez gérer les applications exclues dans les Paramètres.</value>
   </data>
+  <data name="Settings_BackdropType.Text" xml:space="preserve">
+    <value>Effet de Fenêtre</value>
+  </data>
+  <data name="Settings_BackdropTypeDesc.Text" xml:space="preserve">
+    <value>Style de transparence de l'arrière-plan</value>
+  </data>
+  <data name="Settings_BackdropMica.Content" xml:space="preserve">
+    <value>Mica</value>
+  </data>
+  <data name="Settings_BackdropMicaAlt.Content" xml:space="preserve">
+    <value>Mica Alt</value>
+  </data>
+  <data name="Settings_BackdropAcrylic.Content" xml:space="preserve">
+    <value>Acrylique</value>
+  </data>
+  <data name="Settings_BackdropNone.Content" xml:space="preserve">
+    <value>Aucun (Solide)</value>
+  </data>
 </root>

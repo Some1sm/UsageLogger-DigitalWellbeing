@@ -48,6 +48,7 @@ namespace UsageLogger.Helpers
         public static int EstimatedPowerUsageWatts { get; set; } = 150; // Default estimation
         public static double KwhPrice { get; set; } = 0.15; // Default price per kWh
         public static string CurrencySymbol { get; set; } = "$"; // Default currency
+        public static string BackdropType { get; set; } = "Mica"; // Mica, MicaAlt, Acrylic, None
 
         static UserPreferences()
         {
@@ -90,7 +91,8 @@ namespace UsageLogger.Helpers
                     IdleThresholdSeconds,
                     EstimatedPowerUsageWatts,
                     KwhPrice,
-                    CurrencySymbol
+                    CurrencySymbol,
+                    BackdropType
                 };
 
                 string json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
@@ -140,6 +142,7 @@ namespace UsageLogger.Helpers
                     if (data.TryGetProperty(nameof(EstimatedPowerUsageWatts), out prop)) EstimatedPowerUsageWatts = prop.GetInt32();
                     if (data.TryGetProperty(nameof(KwhPrice), out prop)) KwhPrice = prop.GetDouble();
                     if (data.TryGetProperty(nameof(CurrencySymbol), out prop)) CurrencySymbol = prop.GetString();
+                    if (data.TryGetProperty(nameof(BackdropType), out prop)) BackdropType = prop.GetString() ?? "Mica";
 
                     // Load AppTags and TitleTags
                     if (data.TryGetProperty(nameof(AppTags), out prop)) 

@@ -940,4 +940,22 @@ Acaba: {2}</value>
   <data name="Dialog_ExcludeApp_Content" xml:space="preserve">
     <value>Segur que vols amagar '{0}' del tauler? Pots gestionar les aplicacions excloses a la Configuració.</value>
   </data>
+  <data name="Settings_BackdropType.Text" xml:space="preserve">
+    <value>Efecte de Finestra</value>
+  </data>
+  <data name="Settings_BackdropTypeDesc.Text" xml:space="preserve">
+    <value>Estil de transparència del fons</value>
+  </data>
+  <data name="Settings_BackdropMica.Content" xml:space="preserve">
+    <value>Mica</value>
+  </data>
+  <data name="Settings_BackdropMicaAlt.Content" xml:space="preserve">
+    <value>Mica Alt</value>
+  </data>
+  <data name="Settings_BackdropAcrylic.Content" xml:space="preserve">
+    <value>Acrílic</value>
+  </data>
+  <data name="Settings_BackdropNone.Content" xml:space="preserve">
+    <value>Cap (Sòlid)</value>
+  </data>
 </root>

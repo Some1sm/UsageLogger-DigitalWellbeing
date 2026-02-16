@@ -940,4 +940,22 @@
   <data name="Dialog_ExcludeApp_Content" xml:space="preserve">
     <value>ダッシュボードから '{0}' を非表示にしますか？除外されたアプリは設定で管理できます。</value>
   </data>
+  <data name="Settings_BackdropType.Text" xml:space="preserve">
+    <value>ウィンドウ効果</value>
+  </data>
+  <data name="Settings_BackdropTypeDesc.Text" xml:space="preserve">
+    <value>背景の透明スタイル</value>
+  </data>
+  <data name="Settings_BackdropMica.Content" xml:space="preserve">
+    <value>マイカ</value>
+  </data>
+  <data name="Settings_BackdropMicaAlt.Content" xml:space="preserve">
+    <value>マイカ Alt</value>
+  </data>
+  <data name="Settings_BackdropAcrylic.Content" xml:space="preserve">
+    <value>アクリル</value>
+  </data>
+  <data name="Settings_BackdropNone.Content" xml:space="preserve">
+    <value>なし（ソリッド）</value>
+  </data>
 </root>

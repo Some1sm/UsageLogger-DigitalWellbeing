@@ -16,6 +16,7 @@ using Windows.Foundation.Collections;
 using UsageLogger.Helpers;
 using UsageLogger.Views;
 using System.Windows.Input;
+using Microsoft.UI.Composition.SystemBackdrops;
 
 namespace UsageLogger
 {
@@ -45,6 +46,9 @@ namespace UsageLogger
                 }
             }
             catch { }
+
+            // Apply Backdrop (Mica/Acrylic/None)
+            ApplyBackdrop();
             
             InitWindowManagement();
 
@@ -329,6 +333,56 @@ namespace UsageLogger
         private void LogDebug(string message)
         {
             System.Diagnostics.Debug.WriteLine($"[MainWindow] {message}");
+        }
+
+        #endregion
+
+        #region Backdrop
+
+        /// <summary>
+        /// Applies the window backdrop based on UserPreferences.BackdropType.
+        /// Options: Mica (default), MicaAlt, Acrylic, None (opaque).
+        /// </summary>
+        public void ApplyBackdrop()
+        {
+            try
+            {
+                string backdropType = UserPreferences.BackdropType ?? "Mica";
+
+                switch (backdropType)
+                {
+                    case "MicaAlt":
+                        this.SystemBackdrop = new Microsoft.UI.Xaml.Media.MicaBackdrop
+                        {
+                            Kind = MicaKind.BaseAlt
+                        };
+                        RootGrid.Background = new SolidColorBrush(Microsoft.UI.Colors.Transparent);
+                        break;
+
+                    case "Acrylic":
+                        this.SystemBackdrop = new Microsoft.UI.Xaml.Media.DesktopAcrylicBackdrop();
+                        RootGrid.Background = new SolidColorBrush(Microsoft.UI.Colors.Transparent);
+                        break;
+
+                    case "None":
+                        this.SystemBackdrop = null;
+                        // Restore opaque background
+                        RootGrid.Background = (SolidColorBrush)Application.Current.Resources["ApplicationPageBackgroundThemeBrush"];
+                        break;
+
+                    case "Mica":
+                    default:
+                        this.SystemBackdrop = new Microsoft.UI.Xaml.Media.MicaBackdrop();
+                        RootGrid.Background = new SolidColorBrush(Microsoft.UI.Colors.Transparent);
+                        break;
+                }
+
+                System.Diagnostics.Debug.WriteLine($"[MainWindow] Applied backdrop: {backdropType}");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[MainWindow] Failed to apply backdrop: {ex.Message}");
+            }
         }
 
         #endregion

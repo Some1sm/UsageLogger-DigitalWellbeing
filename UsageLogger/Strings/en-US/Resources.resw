@@ -940,4 +940,22 @@
   <data name="Rule_Dialog_Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="Settings_BackdropType.Text" xml:space="preserve">
+    <value>Window Effect</value>
+  </data>
+  <data name="Settings_BackdropTypeDesc.Text" xml:space="preserve">
+    <value>Background transparency style</value>
+  </data>
+  <data name="Settings_BackdropMica.Content" xml:space="preserve">
+    <value>Mica</value>
+  </data>
+  <data name="Settings_BackdropMicaAlt.Content" xml:space="preserve">
+    <value>Mica Alt</value>
+  </data>
+  <data name="Settings_BackdropAcrylic.Content" xml:space="preserve">
+    <value>Acrylic</value>
+  </data>
+  <data name="Settings_BackdropNone.Content" xml:space="preserve">
+    <value>None (Solid)</value>
+  </data>
 </root>

@@ -326,6 +326,24 @@
                     </ComboBox>
                 </Grid>
 
+                 <!-- Window Effect (Backdrop) -->
+                <Grid x:Name="GridBackdrop" Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Spacing="2">
+                        <TextBlock l:Uids.Uid="Settings_BackdropType" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                        <TextBlock l:Uids.Uid="Settings_BackdropTypeDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
+                    </StackPanel>
+                    <ComboBox x:Name="CBBackdrop" Grid.Column="1" SelectionChanged="CBBackdrop_SelectionChanged" Width="150">
+                        <ComboBoxItem l:Uids.Uid="Settings_BackdropMica" Tag="Mica"/>
+                        <ComboBoxItem l:Uids.Uid="Settings_BackdropMicaAlt" Tag="MicaAlt"/>
+                        <ComboBoxItem l:Uids.Uid="Settings_BackdropAcrylic" Tag="Acrylic"/>
+                        <ComboBoxItem l:Uids.Uid="Settings_BackdropNone" Tag="None"/>
+                    </ComboBox>
+                </Grid>
+
                  <!-- Language -->
                 <Grid x:Name="GridLanguage" Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
                     <Grid.ColumnDefinitions>

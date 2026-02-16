@@ -940,4 +940,22 @@ Fine: {2}</value>
   <data name="Dialog_ExcludeApp_Content" xml:space="preserve">
     <value>Sei sicuro di voler nascondere '{0}' dalla dashboard? Puoi gestire le app escluse nelle Impostazioni.</value>
   </data>
+  <data name="Settings_BackdropType.Text" xml:space="preserve">
+    <value>Effetto Finestra</value>
+  </data>
+  <data name="Settings_BackdropTypeDesc.Text" xml:space="preserve">
+    <value>Stile di trasparenza dello sfondo</value>
+  </data>
+  <data name="Settings_BackdropMica.Content" xml:space="preserve">
+    <value>Mica</value>
+  </data>
+  <data name="Settings_BackdropMicaAlt.Content" xml:space="preserve">
+    <value>Mica Alt</value>
+  </data>
+  <data name="Settings_BackdropAcrylic.Content" xml:space="preserve">
+    <value>Acrilico</value>
+  </data>
+  <data name="Settings_BackdropNone.Content" xml:space="preserve">
+    <value>Nessuno (Solido)</value>
+  </data>
 </root>

@@ -940,4 +940,22 @@
   <data name="Dialog_ExcludeApp_Content" xml:space="preserve">
     <value>대시보드에서 '{0}'을(를) 숨기시겠습니까? 설정에서 제외된 앱을 관리할 수 있습니다.</value>
   </data>
+  <data name="Settings_BackdropType.Text" xml:space="preserve">
+    <value>창 효과</value>
+  </data>
+  <data name="Settings_BackdropTypeDesc.Text" xml:space="preserve">
+    <value>배경 투명도 스타일</value>
+  </data>
+  <data name="Settings_BackdropMica.Content" xml:space="preserve">
+    <value>마이카</value>
+  </data>
+  <data name="Settings_BackdropMicaAlt.Content" xml:space="preserve">
+    <value>마이카 Alt</value>
+  </data>
+  <data name="Settings_BackdropAcrylic.Content" xml:space="preserve">
+    <value>아크릴</value>
+  </data>
+  <data name="Settings_BackdropNone.Content" xml:space="preserve">
+    <value>없음 (솔리드)</value>
+  </data>
 </root>

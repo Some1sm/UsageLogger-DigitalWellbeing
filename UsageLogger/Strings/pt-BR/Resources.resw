@@ -940,4 +940,22 @@ Fim: {2}</value>
   <data name="Dialog_ExcludeApp_Content" xml:space="preserve">
     <value>Tem certeza que deseja ocultar '{0}' do painel? Você pode gerenciar apps excluídos nas Configurações.</value>
   </data>
+  <data name="Settings_BackdropType.Text" xml:space="preserve">
+    <value>Efeito de Janela</value>
+  </data>
+  <data name="Settings_BackdropTypeDesc.Text" xml:space="preserve">
+    <value>Estilo de transparência do fundo</value>
+  </data>
+  <data name="Settings_BackdropMica.Content" xml:space="preserve">
+    <value>Mica</value>
+  </data>
+  <data name="Settings_BackdropMicaAlt.Content" xml:space="preserve">
+    <value>Mica Alt</value>
+  </data>
+  <data name="Settings_BackdropAcrylic.Content" xml:space="preserve">
+    <value>Acrílico</value>
+  </data>
+  <data name="Settings_BackdropNone.Content" xml:space="preserve">
+    <value>Nenhum (Sólido)</value>
+  </data>
 </root>

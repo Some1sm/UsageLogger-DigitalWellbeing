@@ -940,4 +940,22 @@ Ende: {2}</value>
   <data name="Dialog_ExcludeApp_Content" xml:space="preserve">
     <value>Möchten Sie '{0}' wirklich aus dem Dashboard ausblenden? Sie können ausgeschlossene Apps in den Einstellungen verwalten.</value>
   </data>
+  <data name="Settings_BackdropType.Text" xml:space="preserve">
+    <value>Fenstereffekt</value>
+  </data>
+  <data name="Settings_BackdropTypeDesc.Text" xml:space="preserve">
+    <value>Hintergrund-Transparenzstil</value>
+  </data>
+  <data name="Settings_BackdropMica.Content" xml:space="preserve">
+    <value>Mica</value>
+  </data>
+  <data name="Settings_BackdropMicaAlt.Content" xml:space="preserve">
+    <value>Mica Alt</value>
+  </data>
+  <data name="Settings_BackdropAcrylic.Content" xml:space="preserve">
+    <value>Acryl</value>
+  </data>
+  <data name="Settings_BackdropNone.Content" xml:space="preserve">
+    <value>Keine (Solide)</value>
+  </data>
 </root>

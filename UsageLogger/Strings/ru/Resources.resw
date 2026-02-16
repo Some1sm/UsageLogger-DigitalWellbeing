@@ -940,4 +940,22 @@
   <data name="Dialog_ExcludeApp_Content" xml:space="preserve">
     <value>Вы уверены, что хотите скрыть '{0}' из панели управления? Вы можете управлять исключенными приложениями в настройках.</value>
   </data>
+  <data name="Settings_BackdropType.Text" xml:space="preserve">
+    <value>Эффект окна</value>
+  </data>
+  <data name="Settings_BackdropTypeDesc.Text" xml:space="preserve">
+    <value>Стиль прозрачности фона</value>
+  </data>
+  <data name="Settings_BackdropMica.Content" xml:space="preserve">
+    <value>Mica</value>
+  </data>
+  <data name="Settings_BackdropMicaAlt.Content" xml:space="preserve">
+    <value>Mica Alt</value>
+  </data>
+  <data name="Settings_BackdropAcrylic.Content" xml:space="preserve">
+    <value>Акрил</value>
+  </data>
+  <data name="Settings_BackdropNone.Content" xml:space="preserve">
+    <value>Нет (Сплошной)</value>
+  </data>
 </root>

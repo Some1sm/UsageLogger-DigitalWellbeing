@@ -120,6 +120,7 @@ namespace UsageLogger.Views
             SetGridLayout(GridTheme);
             SetGridLayout(GridLanguage);
             SetGridLayout(GridCombinedAudio);
+            SetGridLayout(GridBackdrop);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -149,6 +150,7 @@ namespace UsageLogger.Views
         private string _origCurrency;
         private string _origTheme;
         private string _origLogLocation;
+        private string _origBackdrop;
 
         /// <summary>
         /// Compares current UI values against original loaded values.
@@ -194,6 +196,10 @@ namespace UsageLogger.Views
                 // Theme
                 if (CBTheme.SelectedItem is ComboBoxItem themeItem)
                     hasChanges |= (themeItem.Tag?.ToString() ?? "") != (_origTheme ?? "");
+                
+                // Backdrop
+                if (CBBackdrop.SelectedItem is ComboBoxItem backdropItem)
+                    hasChanges |= (backdropItem.Tag?.ToString() ?? "") != (_origBackdrop ?? "");
                 
                 // Language
                 if (CBLanguage.SelectedItem is ComboBoxItem langItem)
@@ -279,6 +285,18 @@ namespace UsageLogger.Views
             }
             if (CBTheme.SelectedItem == null) CBTheme.SelectedIndex = 0; // Default System
 
+            // Backdrop
+            string backdrop = UserPreferences.BackdropType ?? "Mica";
+            foreach (ComboBoxItem item in CBBackdrop.Items)
+            {
+                if (item.Tag.ToString() == backdrop)
+                {
+                    CBBackdrop.SelectedItem = item;
+                    break;
+                }
+            }
+            if (CBBackdrop.SelectedItem == null) CBBackdrop.SelectedIndex = 0; // Default Mica
+
             // Language
             try
             {
@@ -340,6 +358,7 @@ namespace UsageLogger.Views
             _origKwhPrice = UserPreferences.KwhPrice;
             _origCurrency = UserPreferences.CurrencySymbol ?? "";
             _origTheme = UserPreferences.ThemeMode ?? "";
+            _origBackdrop = UserPreferences.BackdropType ?? "Mica";
             _origLogLocation = TxtLogLocation.Text ?? "";
 
             _isLoading = false;
@@ -563,6 +582,18 @@ namespace UsageLogger.Views
                 }
             }
 
+            // Backdrop
+            if (CBBackdrop.SelectedItem is ComboBoxItem backdropItem)
+            {
+                string backdrop = backdropItem.Tag.ToString();
+                UserPreferences.BackdropType = backdrop;
+                
+                if (App.Current is App myBackdropApp && myBackdropApp.m_window is MainWindow backdropWindow)
+                {
+                    backdropWindow.ApplyBackdrop();
+                }
+            }
+
             // Language (Requires Restart usually)
             if (CBLanguage.SelectedItem is ComboBoxItem langItem)
             {
@@ -684,6 +715,12 @@ namespace UsageLogger.Views
         }
 
         private void CBLanguage_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_isLoading) return;
+            CheckForChanges();
+        }
+
+        private void CBBackdrop_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (_isLoading) return;
             CheckForChanges();

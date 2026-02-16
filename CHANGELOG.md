@@ -12,6 +12,7 @@ The **1.0.0 stable release** represents a complete rewrite from the original WPF
 ### ✨ Added
 - **Win2D Rendering Engine** — Replaced LiveCharts2/SkiaSharp with custom Win2D (DirectX) charts for hardware-accelerated, buttery-smooth rendering.
 - **Treemap Visualization** — Replaced pie charts with a hierarchical treemap showing usage by Category → App → Sub-App with auto-contrast text labels.
+- **Mica/Acrylic Backdrop** — Added native Windows 11 transparency effects (Mica, Mica Alt, Acrylic) with light/dark theme support.
 - **Activity Heatmap** — Added a color-coded weekly heatmap showing active hours, with click-to-navigate to any day's timeline.
 - **Daily Timeline** — Visual session timeline with colored blocks per app, including audio activity indicators and smart tooltip collision detection.
 - **Force Refresh** — Dashboard button to instantly sync data from the background service buffer, bypassing the 5-minute flush interval.
