@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Some1sm/Windows-Digital-Wellbeing/releases"><img src="https://img.shields.io/badge/version-1.0.0-blue?style=flat-square" alt="Version"></a>
+  <a href="https://github.com/Some1sm/UsageLogger-DigitalWellbeing/releases"><img src="https://img.shields.io/badge/version-1.0.0-blue?style=flat-square" alt="Version"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPLv3-green?style=flat-square" alt="License"></a>
   <img src="https://img.shields.io/badge/platform-Windows%2011-0078D4?style=flat-square&logo=windows11" alt="Platform">
   <img src="https://img.shields.io/badge/.NET-8.0-512BD4?style=flat-square&logo=dotnet" alt=".NET 8">
@@ -59,12 +59,12 @@ Full translation support for **11 languages**:
 ## 📥 Installation
 
 ### Installer (Recommended)
-1. Download **`UsageLogger_Installer.exe`** from the [Releases](https://github.com/Some1sm/Windows-Digital-Wellbeing/releases) page.
+1. Download **`UsageLogger_Installer.exe`** from the [Releases](https://github.com/Some1sm/UsageLogger-DigitalWellbeing/releases) page.
 2. Run the installer — Windows SmartScreen may appear since the app is unsigned; click **"More info" → "Run anyway"**.
 3. The app and background service will be installed automatically.
 
 ### Portable
-1. Download **`UsageLogger_Portable.zip`** from the [Releases](https://github.com/Some1sm/Windows-Digital-Wellbeing/releases) page.
+1. Download **`UsageLogger_Portable.zip`** from the [Releases](https://github.com/Some1sm/UsageLogger-DigitalWellbeing/releases) page.
 2. Extract to any folder and run `UsageLogger.exe`.
 
 ### Requirements
@@ -108,8 +108,8 @@ UsageLogger uses a **hybrid two-process architecture**:
 ### Building from Source
 ```powershell
 # Clone the repository
-git clone https://github.com/Some1sm/Windows-Digital-Wellbeing.git
-cd Windows-Digital-Wellbeing
+git clone https://github.com/Some1sm/UsageLogger-DigitalWellbeing.git
+cd UsageLogger-DigitalWellbeing
 
 # Build the installer (~30 MB)
 .\publish.ps1

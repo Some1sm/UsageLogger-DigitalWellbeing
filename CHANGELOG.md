@@ -51,6 +51,6 @@ The **1.0.0 stable release** represents a complete rewrite from the original WPF
 
 ---
 
-*For previous release notes, see the [Releases](https://github.com/Some1sm/Windows-Digital-Wellbeing/releases) page.*
+*For previous release notes, see the [Releases](https://github.com/Some1sm/UsageLogger-DigitalWellbeing/releases) page.*
 
 *Created by David Cepero · © 2025-2026*

@@ -8,7 +8,7 @@
 - Added a **Force Refresh** button to the Dashboard.
 - Bypass the background buffer to see your latest usage stats immediately.
 - Includes a smooth rotation animation and live sync status.
-- [View Demo](https://github.com/Some1sm/Windows-Digital-Wellbeing/releases)
+- [View Demo](https://github.com/Some1sm/UsageLogger-DigitalWellbeing/releases)
 
 ### 🌍 Global Localization
 - **11 New Languages**: Full translation support added for:
