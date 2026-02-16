@@ -117,9 +117,10 @@ namespace UsageLogger.Helpers
                     {
                         if (icon != null)
                         {
-                            using (Bitmap bmp = icon.ToBitmap())
+                            using (Bitmap rawBmp = icon.ToBitmap())
+                            using (Bitmap finalBmp = TrimAndScaleIcon(rawBmp, 64))
                             {
-                                CacheImage(bmp, appName);
+                                CacheImage(finalBmp, appName);
                                 return GetCachedImage(appName);
                             }
                         }
@@ -195,6 +196,80 @@ namespace UsageLogger.Helpers
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Trims transparent padding from an icon bitmap and scales it to a consistent size.
+        /// Fixes the SHIL_JUMBO issue where small icons appear in the top-left of a 256x256 canvas.
+        /// </summary>
+        private static Bitmap TrimAndScaleIcon(Bitmap source, int targetSize)
+        {
+            // Find the actual content bounding box by scanning for non-transparent pixels
+            int minX = source.Width, minY = source.Height, maxX = 0, maxY = 0;
+            bool hasContent = false;
+
+            for (int y = 0; y < source.Height; y++)
+            {
+                for (int x = 0; x < source.Width; x++)
+                {
+                    Color pixel = source.GetPixel(x, y);
+                    if (pixel.A > 10) // Non-transparent threshold
+                    {
+                        hasContent = true;
+                        if (x < minX) minX = x;
+                        if (y < minY) minY = y;
+                        if (x > maxX) maxX = x;
+                        if (y > maxY) maxY = y;
+                    }
+                }
+            }
+
+            if (!hasContent)
+            {
+                // Entirely transparent — return a copy of the source as-is
+                return new Bitmap(source);
+            }
+
+            int contentWidth = maxX - minX + 1;
+            int contentHeight = maxY - minY + 1;
+
+            // If content fills most of the canvas (>70%), no trimming needed
+            double fillRatio = (double)(contentWidth * contentHeight) / (source.Width * source.Height);
+            if (fillRatio > 0.5 && contentWidth > targetSize / 2)
+            {
+                // Already good — just scale to target
+                Bitmap scaled = new Bitmap(targetSize, targetSize);
+                using (Graphics g = Graphics.FromImage(scaled))
+                {
+                    g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                    g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+                    g.DrawImage(source, 0, 0, targetSize, targetSize);
+                }
+                return scaled;
+            }
+
+            // Crop to content bounds, then scale
+            // Make it square by using the larger dimension
+            int cropSize = Math.Max(contentWidth, contentHeight);
+            int cropX = minX - (cropSize - contentWidth) / 2;
+            int cropY = minY - (cropSize - contentHeight) / 2;
+            cropX = Math.Max(0, cropX);
+            cropY = Math.Max(0, cropY);
+            cropSize = Math.Min(cropSize, Math.Min(source.Width - cropX, source.Height - cropY));
+
+            Bitmap result = new Bitmap(targetSize, targetSize);
+            using (Graphics g = Graphics.FromImage(result))
+            {
+                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+                g.DrawImage(source,
+                    new Rectangle(0, 0, targetSize, targetSize),
+                    new Rectangle(cropX, cropY, cropSize, cropSize),
+                    GraphicsUnit.Pixel);
+            }
+
+            Debug.WriteLine($"ICON - Trimmed from {source.Width}x{source.Height} (content: {contentWidth}x{contentHeight} at {minX},{minY}) -> {targetSize}x{targetSize}");
+            return result;
         }
 
         private static void CreateAppDirectories()
