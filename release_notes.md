@@ -1,4 +1,4 @@
-﻿# Digital Wellbeing for Windows v1.0.0 (Feature Update) 🚀
+﻿# UsageLogger for Windows v1.0.0 (Feature Update) 🚀
 
 **This update introduces instant dashboard refreshing, complete localization for 11 languages, and significant performance optimizations.**
 
@@ -8,7 +8,7 @@
 - Added a **Force Refresh** button to the Dashboard.
 - Bypass the background buffer to see your latest usage stats immediately.
 - Includes a smooth rotation animation and live sync status.
-- [View Demo](https://github.com/Some1sm/Windows-Digital-Wellbeing)
+- [View Demo](https://github.com/Some1sm/Windows-Digital-Wellbeing/releases)
 
 ### 🌍 Global Localization
 - **11 New Languages**: Full translation support added for:
@@ -48,7 +48,7 @@
 
 ---
 
-# Digital Wellbeing for Windows v0.8.1 (Alpha Preview) 🚀
+# UsageLogger for Windows v0.8.1 (Alpha Preview) 🚀
 
 **This update brings a major visual overhaul to the Distribution Analysis and critical bug fixes across the entire application.**
 
@@ -85,4 +85,4 @@ We've completely replaced the old Pie Charts with a modern **Treemap** for analy
 3. Project is open source! Feel free to contribute or report issues.
 
 ---
-*Created by David Cepero. Copyright © 2025.*
+*Created by David Cepero. Copyright © 2025-2026.*
