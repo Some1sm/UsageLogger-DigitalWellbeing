@@ -366,8 +366,11 @@ namespace UsageLogger
 
                     case "None":
                         this.SystemBackdrop = null;
-                        // Restore opaque background
-                        RootGrid.Background = (SolidColorBrush)Application.Current.Resources["ApplicationPageBackgroundThemeBrush"];
+                        // Restore opaque background using the window's actual theme
+                        var bgColor = RootGrid.ActualTheme == Microsoft.UI.Xaml.ElementTheme.Dark
+                            ? Microsoft.UI.ColorHelper.FromArgb(255, 32, 32, 32)     // Win11 dark bg
+                            : Microsoft.UI.ColorHelper.FromArgb(255, 243, 243, 243); // Win11 light bg
+                        RootGrid.Background = new SolidColorBrush(bgColor);
                         break;
 
                     case "Mica":
