@@ -15,12 +15,34 @@ namespace UsageLogger.Helpers
         [DllImport("shell32.dll", CharSet = CharSet.Auto)]
         private static extern IntPtr SHGetFileInfo(string pszPath, uint dwFileAttributes, ref SHFILEINFO psfi, uint cbFileInfo, uint uFlags);
 
+        [DllImport("shell32.dll", EntryPoint = "#727")]
+        private static extern int SHGetImageList(int iImageList, ref Guid riid, ref IImageList ppv);
+
         [DllImport("user32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool DestroyIcon(IntPtr hIcon);
 
-        [DllImport("kernel32.dll")]
-        static extern uint GetLastError();
+        // COM IImageList interface for extracting icons from the shell image list
+        [ComImport]
+        [Guid("46EB5926-582E-4017-9FDF-E8998DAA0950")]
+        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        private interface IImageList
+        {
+            [PreserveSig] int Add(IntPtr hbmImage, IntPtr hbmMask, ref int pi);
+            [PreserveSig] int ReplaceIcon(int i, IntPtr hicon, ref int pi);
+            [PreserveSig] int SetOverlayImage(int iImage, int iOverlay);
+            [PreserveSig] int Replace(int i, IntPtr hbmImage, IntPtr hbmMask);
+            [PreserveSig] int AddMasked(IntPtr hbmImage, int crMask, ref int pi);
+            [PreserveSig] int Draw(ref IMAGELISTDRAWPARAMS pimldp);
+            [PreserveSig] int Remove(int i);
+            [PreserveSig] int GetIcon(int i, int flags, ref IntPtr picon);
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct IMAGELISTDRAWPARAMS
+        {
+            public int cbSize;
+        }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
         private struct SHFILEINFO
@@ -35,10 +57,14 @@ namespace UsageLogger.Helpers
         };
 
         private const uint SHGFI_ICON = 0x100;
-        private const uint SHGFI_LARGEICON = 0x0;    // 'Large icon
-        private const uint SHGFI_SMALLICON = 0x1;    // 'Small icon
-        private const uint SHGFI_USEFILEATTRIBUTES = 0x10;
+        private const uint SHGFI_LARGEICON = 0x0;
+        private const uint SHGFI_SYSICONINDEX = 0x4000;     // Get the icon index for image list
         private const uint FILE_ATTRIBUTE_NORMAL = 0x80;
+
+        // Shell image list sizes
+        private const int SHIL_JUMBO = 0x4;       // 256x256
+        private const int SHIL_EXTRALARGE = 0x2;  // 48x48
+        private const int ILD_TRANSPARENT = 0x1;
 
         public static BitmapImage GetIconSource(string appName)
         {
@@ -57,7 +83,6 @@ namespace UsageLogger.Helpers
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"CUSTOM ICON - FAILED to load: {ex}");
-                    // Fall through to cached/extracted icon
                 }
             }
 
@@ -106,22 +131,70 @@ namespace UsageLogger.Helpers
                 Debug.WriteLine($"ICON - FAILED to extract or cache: {ex}");
             }
 
-            return null; // Return null if failed, UI should handle fallback
+            return null;
         }
 
+        /// <summary>
+        /// Extracts a high-resolution icon from the given file path.
+        /// Fallback chain: SHIL_JUMBO (256x256) → SHIL_EXTRALARGE (48x48) → SHGFI_LARGEICON (32x32).
+        /// </summary>
         private static Icon GetIcon(string filePath)
         {
+            // Step 1: Get the icon index from the system image list
             SHFILEINFO shinfo = new SHFILEINFO();
-            IntPtr hImgSmall = SHGetFileInfo(filePath, FILE_ATTRIBUTE_NORMAL, ref shinfo, (uint)Marshal.SizeOf(shinfo), SHGFI_ICON | SHGFI_SMALLICON | SHGFI_USEFILEATTRIBUTES);
+            IntPtr result = SHGetFileInfo(filePath, FILE_ATTRIBUTE_NORMAL, ref shinfo,
+                (uint)Marshal.SizeOf(shinfo), SHGFI_SYSICONINDEX);
 
-            if (hImgSmall == IntPtr.Zero)
+            if (result == IntPtr.Zero)
             {
                 return null;
             }
 
-            Icon icon = (Icon)Icon.FromHandle(shinfo.hIcon).Clone();
-            DestroyIcon(shinfo.hIcon);
-            return icon;
+            int iconIndex = shinfo.iIcon;
+
+            // Step 2: Try SHIL_JUMBO (256x256) first, then SHIL_EXTRALARGE (48x48)
+            int[] sizes = { SHIL_JUMBO, SHIL_EXTRALARGE };
+            Guid iidImageList = new Guid("46EB5926-582E-4017-9FDF-E8998DAA0950");
+
+            foreach (int size in sizes)
+            {
+                try
+                {
+                    IImageList imgList = null;
+                    int hr = SHGetImageList(size, ref iidImageList, ref imgList);
+                    if (hr == 0 && imgList != null)
+                    {
+                        IntPtr hIcon = IntPtr.Zero;
+                        hr = imgList.GetIcon(iconIndex, ILD_TRANSPARENT, ref hIcon);
+                        if (hr == 0 && hIcon != IntPtr.Zero)
+                        {
+                            Icon icon = (Icon)Icon.FromHandle(hIcon).Clone();
+                            DestroyIcon(hIcon);
+                            Debug.WriteLine($"ICON - Extracted at SHIL={size} for: {filePath}");
+                            return icon;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"ICON - SHIL={size} failed: {ex.Message}");
+                }
+            }
+
+            // Step 3: Fallback to SHGFI_LARGEICON (32x32)
+            Debug.WriteLine($"ICON - Falling back to SHGFI_LARGEICON for: {filePath}");
+            shinfo = new SHFILEINFO();
+            result = SHGetFileInfo(filePath, FILE_ATTRIBUTE_NORMAL, ref shinfo,
+                (uint)Marshal.SizeOf(shinfo), SHGFI_ICON | SHGFI_LARGEICON);
+
+            if (result != IntPtr.Zero && shinfo.hIcon != IntPtr.Zero)
+            {
+                Icon fallbackIcon = (Icon)Icon.FromHandle(shinfo.hIcon).Clone();
+                DestroyIcon(shinfo.hIcon);
+                return fallbackIcon;
+            }
+
+            return null;
         }
 
         private static void CreateAppDirectories()
