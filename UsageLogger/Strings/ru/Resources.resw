@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -957,5 +957,14 @@
   </data>
   <data name="Settings_BackdropNone.Content" xml:space="preserve">
     <value>Нет (Сплошной)</value>
+  </data>
+  <data name="Dashboard_EmptyTitle.Text" xml:space="preserve">
+    <value>Нет данных</value>
+  </data>
+  <data name="Dashboard_EmptyDesc.Text" xml:space="preserve">
+    <value>Данные появятся здесь в течение 5 минут. Настройте частоту в Настройки > Данные > Интервал сброса данных.</value>
+  </data>
+  <data name="Dashboard_EmptySettingsBtnText.Text" xml:space="preserve">
+    <value>Открыть настройки</value>
   </data>
 </root>

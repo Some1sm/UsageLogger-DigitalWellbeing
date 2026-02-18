@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -957,5 +957,14 @@ Termina: {2}</value>
   </data>
   <data name="Settings_BackdropNone.Content" xml:space="preserve">
     <value>Ninguno (Sólido)</value>
+  </data>
+  <data name="Dashboard_EmptyTitle.Text" xml:space="preserve">
+    <value>Sin datos aun</value>
+  </data>
+  <data name="Dashboard_EmptyDesc.Text" xml:space="preserve">
+    <value>Los datos de uso apareceran aqui en 5 minutos. Puedes ajustar la frecuencia en Ajustes > Datos > Intervalo de vaciado.</value>
+  </data>
+  <data name="Dashboard_EmptySettingsBtnText.Text" xml:space="preserve">
+    <value>Abrir ajustes de datos</value>
   </data>
 </root>

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -957,5 +957,14 @@ Fim: {2}</value>
   </data>
   <data name="Settings_BackdropNone.Content" xml:space="preserve">
     <value>Nenhum (Sólido)</value>
+  </data>
+  <data name="Dashboard_EmptyTitle.Text" xml:space="preserve">
+    <value>Sem dados ainda</value>
+  </data>
+  <data name="Dashboard_EmptyDesc.Text" xml:space="preserve">
+    <value>Os dados aparecerao aqui em 5 minutos. Ajuste a frequencia em Configuracoes > Dados > Intervalo de descarga.</value>
+  </data>
+  <data name="Dashboard_EmptySettingsBtnText.Text" xml:space="preserve">
+    <value>Abrir configuracoes</value>
   </data>
 </root>

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -957,5 +957,14 @@ Acaba: {2}</value>
   </data>
   <data name="Settings_BackdropNone.Content" xml:space="preserve">
     <value>Cap (Sòlid)</value>
+  </data>
+  <data name="Dashboard_EmptyTitle.Text" xml:space="preserve">
+    <value>Encara no hi ha dades</value>
+  </data>
+  <data name="Dashboard_EmptyDesc.Text" xml:space="preserve">
+    <value>Les dades apareixeran aqui en 5 minuts. Pots ajustar la frequencia a Configuracio > Dades > Interval de buidatge.</value>
+  </data>
+  <data name="Dashboard_EmptySettingsBtnText.Text" xml:space="preserve">
+    <value>Obrir configuracio de dades</value>
   </data>
 </root>

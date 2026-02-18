@@ -746,6 +746,19 @@ namespace UsageLogger.Views
                 : Visibility.Collapsed;
         }
 
+        // Helper method for dashboard empty state
+        public Visibility IsDashboardEmpty(int count)
+        {
+            return count == 0 ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private void BtnGoToSettings_Click(object sender, RoutedEventArgs e)
+        {
+            // Navigate to Settings page
+            var mainWindow = (Application.Current as App)?.m_window as MainWindow;
+            mainWindow?.NavigateToSettings();
+        }
+
         private void UpdateViewMode(bool showCombined)
         {
             if (showCombined)

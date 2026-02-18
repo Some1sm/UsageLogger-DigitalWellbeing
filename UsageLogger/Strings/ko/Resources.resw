@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -957,5 +957,14 @@
   </data>
   <data name="Settings_BackdropNone.Content" xml:space="preserve">
     <value>없음 (솔리드)</value>
+  </data>
+  <data name="Dashboard_EmptyTitle.Text" xml:space="preserve">
+    <value>아직 데이터 없음</value>
+  </data>
+  <data name="Dashboard_EmptyDesc.Text" xml:space="preserve">
+    <value>사용 데이터가 5분 이내에 표시됩니다. 설정 > 데이터 > 데이터 플러시 간격에서 조정하세요.</value>
+  </data>
+  <data name="Dashboard_EmptySettingsBtnText.Text" xml:space="preserve">
+    <value>데이터 설정 열기</value>
   </data>
 </root>

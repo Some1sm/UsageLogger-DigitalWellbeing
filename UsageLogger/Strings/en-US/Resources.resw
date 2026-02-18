@@ -958,4 +958,13 @@
   <data name="Settings_BackdropNone.Content" xml:space="preserve">
     <value>None (Solid)</value>
   </data>
+  <data name="Dashboard_EmptyTitle.Text" xml:space="preserve">
+    <value>No data yet</value>
+  </data>
+  <data name="Dashboard_EmptyDesc.Text" xml:space="preserve">
+    <value>Usage data will appear here within 5 minutes. You can adjust the update frequency in Settings > Data > Data Flush Interval.</value>
+  </data>
+  <data name="Dashboard_EmptySettingsBtnText.Text" xml:space="preserve">
+    <value>Open Data Settings</value>
+  </data>
 </root>
