@@ -1,7 +1,3 @@
-﻿<p align="center">
-  <img src="UsageLogger/Assets/icon.png" alt="UsageLogger Logo" width="128" height="128">
-</p>
-
 <h1 align="center">UsageLogger for Windows</h1>
 
 <p align="center">
