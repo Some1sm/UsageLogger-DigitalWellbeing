@@ -399,6 +399,7 @@
                      <RowDefinition Height="Auto"/>
                      <RowDefinition Height="Auto"/>
                      <RowDefinition Height="Auto"/>
+                     <RowDefinition Height="Auto"/>
                  </Grid.RowDefinitions>
                  
                  <!-- Log Storage Location -->
@@ -434,6 +435,17 @@
                        <TextBlock l:Uids.Uid="Settings_IdleThreshold" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
                        <TextBlock l:Uids.Uid="Settings_IdleThresholdDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
                        <NumberBox x:Name="IdleThresholdTextBox" Value="300" SpinButtonPlacementMode="Compact" Width="150" Minimum="60" Maximum="3600" HorizontalAlignment="Left" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp"/>
+                   </StackPanel>
+
+                   <!-- Day Start Time -->
+                   <StackPanel Grid.Row="3" Spacing="5" Margin="0,10,0,0">
+                       <TextBlock l:Uids.Uid="Settings_DayStartHour" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                       <TextBlock l:Uids.Uid="Settings_DayStartHourDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
+                       <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                           <NumberBox x:Name="DayStartHourTextBox" Value="0" SpinButtonPlacementMode="Compact" Width="100" Minimum="0" Maximum="23" HorizontalAlignment="Left" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp" Header="Hour"/>
+                           <TextBlock Text=":" VerticalAlignment="Bottom" Margin="0,0,0,8" FontSize="18" FontWeight="Bold"/>
+                           <NumberBox x:Name="DayStartMinuteTextBox" Value="0" SpinButtonPlacementMode="Compact" Width="100" Minimum="0" Maximum="59" HorizontalAlignment="Left" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp" Header="Min"/>
+                       </StackPanel>
                    </StackPanel>
               </Grid>
               </StackPanel>

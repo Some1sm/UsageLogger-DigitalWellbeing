@@ -151,6 +151,8 @@ namespace UsageLogger.Views
         private string _origTheme;
         private string _origLogLocation;
         private string _origBackdrop;
+        private int _origDayStartHour;
+        private int _origDayStartMinute;
 
         /// <summary>
         /// Compares current UI values against original loaded values.
@@ -187,6 +189,10 @@ namespace UsageLogger.Views
                     hasChanges |= (int)DataFlushIntervalTextBox.Value != _origDataFlushInterval;
                 if (!double.IsNaN(IdleThresholdTextBox.Value))
                     hasChanges |= (int)IdleThresholdTextBox.Value != _origIdleThreshold;
+                if (!double.IsNaN(DayStartHourTextBox.Value))
+                    hasChanges |= (int)DayStartHourTextBox.Value != _origDayStartHour;
+                if (!double.IsNaN(DayStartMinuteTextBox.Value))
+                    hasChanges |= (int)DayStartMinuteTextBox.Value != _origDayStartMinute;
                 
                 // Power tracking text fields
                 if (int.TryParse(TxtAvgWatts.Text, out int watts)) hasChanges |= watts != _origAvgWatts;
@@ -267,6 +273,11 @@ namespace UsageLogger.Views
             
             // Idle Threshold (AFK Detection)
             IdleThresholdTextBox.Value = UserPreferences.IdleThresholdSeconds;
+            
+            // Day Start Hour
+            // Day Start Time
+            DayStartHourTextBox.Value = UserPreferences.DayStartMinutes / 60;
+            DayStartMinuteTextBox.Value = UserPreferences.DayStartMinutes % 60;
             
             // Power Tracking
             TxtAvgWatts.Text = UserPreferences.EstimatedPowerUsageWatts.ToString();
@@ -360,6 +371,8 @@ namespace UsageLogger.Views
             _origTheme = UserPreferences.ThemeMode ?? "";
             _origBackdrop = UserPreferences.BackdropType ?? "Mica";
             _origLogLocation = TxtLogLocation.Text ?? "";
+            _origDayStartHour = UserPreferences.DayStartMinutes / 60;
+            _origDayStartMinute = UserPreferences.DayStartMinutes % 60;
 
             _isLoading = false;
             MarkClean();
@@ -545,6 +558,12 @@ namespace UsageLogger.Views
             UserPreferences.DataFlushIntervalSeconds = (int)DataFlushIntervalTextBox.Value;
             UserPreferences.UseRamCache = ToggleUseRamCache.IsOn;
             UserPreferences.IdleThresholdSeconds = (int)IdleThresholdTextBox.Value;
+
+            // Day Start Time
+            int dsh = (int)DayStartHourTextBox.Value;
+            int dsm = (int)DayStartMinuteTextBox.Value;
+            UserPreferences.DayStartMinutes = (dsh * 60) + dsm;
+            UsageLogger.Core.Helpers.DateHelper.DayStartMinutes = UserPreferences.DayStartMinutes;
 
             // Power Tracking
             if (int.TryParse(TxtAvgWatts.Text, out int watts)) UserPreferences.EstimatedPowerUsageWatts = watts;

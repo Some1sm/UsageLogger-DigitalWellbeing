@@ -87,6 +87,11 @@ public class ServiceSettingsReader
 
             _bufferFlushIntervalSec = ParseJsonInt(json, "DataFlushIntervalSeconds", DEFAULT_BUFFER_FLUSH_INTERVAL_SEC, MIN_FLUSH_INTERVAL_SEC);
 
+            // Sync DayStartMinutes to Core DateHelper
+            int dayStartHour = ParseJsonInt(json, "DayStartHour", 0, 0);
+            int dayStartMinute = ParseJsonInt(json, "DayStartMinute", 0, 0);
+            UsageLogger.Core.Helpers.DateHelper.DayStartMinutes = Math.Clamp(dayStartHour, 0, 23) * 60 + Math.Clamp(dayStartMinute, 0, 59);
+
             // Parse IgnoredWindowTitles array
             try
             {

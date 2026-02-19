@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -465,6 +465,12 @@
   </data>
   <data name="Settings_IdleThresholdDesc.Text" xml:space="preserve">
     <value>Время до статса 'AFK' (300с).</value>
+  </data>
+  <data name="Settings_DayStartHour.Text" xml:space="preserve">
+    <value>Час начала дня</value>
+  </data>
+  <data name="Settings_DayStartHourDesc.Text" xml:space="preserve">
+    <value>Час (0–23), когда начинается новый день для отслеживания использования.</value>
   </data>
   <data name="Settings_PowerTitle.Text" xml:space="preserve">
     <value>Энергия и Стоимость</value>

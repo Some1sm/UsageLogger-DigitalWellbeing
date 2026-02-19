@@ -15,7 +15,7 @@ namespace UsageLogger.ViewModels
     {
         private AppSessionRepository _repository;
         
-        private DateTime _selectedDate = DateTime.Now;
+        private DateTime _selectedDate = UsageLogger.Core.Helpers.DateHelper.GetLogicalToday();
         public DateTime SelectedDate
         {
             get => _selectedDate;
@@ -31,7 +31,7 @@ namespace UsageLogger.ViewModels
             }
         }
 
-        public bool CanGoNext => SelectedDate.Date < DateTime.Now.Date;
+        public bool CanGoNext => SelectedDate.Date < UsageLogger.Core.Helpers.DateHelper.GetLogicalToday();
 
         public ObservableCollection<DayTimelineViewModel> Days { get; } = new ObservableCollection<DayTimelineViewModel>();
 
@@ -130,7 +130,7 @@ namespace UsageLogger.ViewModels
 
             NextDayCommand = new RelayCommand(_ => SelectedDate = SelectedDate.AddDays(1));
             PreviousDayCommand = new RelayCommand(_ => SelectedDate = SelectedDate.AddDays(-1));
-            TodayCommand = new RelayCommand(_ => SelectedDate = DateTime.Now);
+            TodayCommand = new RelayCommand(_ => SelectedDate = UsageLogger.Core.Helpers.DateHelper.GetLogicalToday());
             
             ZoomInCommand = new RelayCommand(_ => 
             {

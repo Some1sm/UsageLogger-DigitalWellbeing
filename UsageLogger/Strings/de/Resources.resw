@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -465,6 +465,12 @@ Ende: {2}</value>
   </data>
   <data name="Settings_IdleThresholdDesc.Text" xml:space="preserve">
     <value>Zeit bis 'Abwesend' (300s).</value>
+  </data>
+  <data name="Settings_DayStartHour.Text" xml:space="preserve">
+    <value>Tagesbeginn (Stunde)</value>
+  </data>
+  <data name="Settings_DayStartHourDesc.Text" xml:space="preserve">
+    <value>Stunde (0–23), zu der ein neuer Tag beginnt. Auf 4 setzen, um naechtliche Aktivitaet dem Vortag zuzuordnen.</value>
   </data>
   <data name="Settings_PowerTitle.Text" xml:space="preserve">
     <value>Verbrauch &amp; Kosten</value>

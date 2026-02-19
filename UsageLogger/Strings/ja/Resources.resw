@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -465,6 +465,12 @@
   </data>
   <data name="Settings_IdleThresholdDesc.Text" xml:space="preserve">
     <value>離席判定までの時間 (300s).</value>
+  </data>
+  <data name="Settings_DayStartHour.Text" xml:space="preserve">
+    <value>1日の開始時刻</value>
+  </data>
+  <data name="Settings_DayStartHourDesc.Text" xml:space="preserve">
+    <value>使用状況の追跡で新しい日が始まる時刻（0～6）。</value>
   </data>
   <data name="Settings_PowerTitle.Text" xml:space="preserve">
     <value>消費電力とコスト</value>

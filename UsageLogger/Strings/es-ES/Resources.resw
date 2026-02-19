@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -465,6 +465,12 @@ Termina: {2}</value>
   </data>
   <data name="Settings_IdleThresholdDesc.Text" xml:space="preserve">
     <value>Tiempo antes de marcar como Ausente (300s).</value>
+  </data>
+  <data name="Settings_DayStartHour.Text" xml:space="preserve">
+    <value>Hora de inicio del dia</value>
+  </data>
+  <data name="Settings_DayStartHourDesc.Text" xml:space="preserve">
+    <value>Hora (0–23) en la que comienza un nuevo dia para el seguimiento de uso. Establezca en 4 para agrupar la actividad nocturna con el dia anterior.</value>
   </data>
   <data name="Settings_PowerTitle.Text" xml:space="preserve">
     <value>Consumo y Costo</value>

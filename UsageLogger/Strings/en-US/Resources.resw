@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -463,6 +463,12 @@
   </data>
   <data name="Settings_IdleThresholdDesc.Text" xml:space="preserve">
     <value>Time of inactivity before logging as "AFK" (default 300s = 5 min).</value>
+  </data>
+  <data name="Settings_DayStartHour.Text" xml:space="preserve">
+    <value>Day Start Hour</value>
+  </data>
+  <data name="Settings_DayStartHourDesc.Text" xml:space="preserve">
+    <value>Hour (0–23) when a new day begins for usage tracking. Set to 4 to group late-night activity with the previous day.</value>
   </data>
   <data name="Settings_PowerTitle.Text" xml:space="preserve">
     <value>Power Consumption &amp; Cost</value>

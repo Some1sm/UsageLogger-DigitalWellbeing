@@ -1,4 +1,5 @@
 #nullable enable
+using UsageLogger.Core.Helpers;
 using UsageLogger.Core.Interfaces;
 using UsageLogger.Core.Models;
 using System;
@@ -23,20 +24,62 @@ public class AppSessionRepository : IAppSessionRepository
 
     public async Task<List<AppSession>> GetSessionsForDateAsync(DateTime date)
     {
-        string filePath = GetFilePath(date);
+        int dayStartMinutes = DateHelper.DayStartMinutes;
+
+        // When DayStartMinutes > 0, load from two calendar days and filter by logical window
+        if (dayStartMinutes > 0)
+        {
+            var (windowStart, windowEnd) = DateHelper.GetCalendarWindow(date);
+            DateTime calDay1 = date.Date;               // e.g., Tuesday
+            DateTime calDay2 = date.Date.AddDays(1);     // e.g., Wednesday
+
+            var sessionsDay1 = await ReadSessionsFromFile(calDay1);
+            var sessionsDay2 = await ReadSessionsFromFile(calDay2);
+
+            var allSessions = new List<AppSession>();
+            allSessions.AddRange(sessionsDay1.Where(s => s.StartTime >= windowStart));
+            allSessions.AddRange(sessionsDay2.Where(s => s.StartTime < windowEnd));
+
+            // Merge live sessions if this is the current logical day
+            if (date.Date == DateHelper.GetLogicalToday().Date)
+            {
+                MergeLiveSessions(allSessions, windowStart, windowEnd);
+            }
+
+            return ConsolidateSessions(allSessions);
+        }
+
+        // --- Standard path (DayStartHour == 0) ---
+        var sessions = await ReadSessionsFromFile(date);
+
+        // MERGE ALL LIVE SESSIONS (from RAM)
+        if (date.Date == DateTime.Now.Date)
+        {
+            MergeLiveSessions(sessions, date.Date, date.Date.AddDays(1));
+        }
+
+        return ConsolidateSessions(sessions);
+    }
+
+    /// <summary>
+    /// Reads sessions from a calendar-date file (or legacy fallback).
+    /// </summary>
+    private async Task<List<AppSession>> ReadSessionsFromFile(DateTime calendarDate)
+    {
         List<AppSession> sessions = new List<AppSession>();
+        string filePath = GetFilePath(calendarDate);
 
         if (!File.Exists(filePath))
         {
             // FALLBACK: Try Legacy Usage Log
-            string legacyPath = Path.Combine(_logsFolderPath, $"{date:MM-dd-yyyy}.log");
+            string legacyPath = Path.Combine(_logsFolderPath, $"{calendarDate:MM-dd-yyyy}.log");
             if (File.Exists(legacyPath))
             {
-                try 
+                try
                 {
                     await using var fs = new FileStream(legacyPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                     using var reader = new StreamReader(fs);
-                    
+
                     string? line;
                     while ((line = await reader.ReadLineAsync()) != null)
                     {
@@ -49,14 +92,13 @@ public class AppSessionRepository : IAppSessionRepository
                             if (int.TryParse(parts[1], out int seconds))
                             {
                                 string programName = parts.Length > 2 ? parts[2] : "";
-                                // Create Pseudo-Session for legacy data compatibility
-                                DateTime start = date.Date;
+                                DateTime start = calendarDate.Date;
                                 DateTime end = start.AddSeconds(seconds);
                                 sessions.Add(new AppSession(processName, programName, start, end, false, null));
                             }
                         }
                     }
-                } 
+                }
                 catch { }
             }
             return sessions;
@@ -66,7 +108,7 @@ public class AppSessionRepository : IAppSessionRepository
         {
             await using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             using var reader = new StreamReader(fs);
-            
+
             string? line;
             while ((line = await reader.ReadLineAsync()) != null)
             {
@@ -83,7 +125,7 @@ public class AppSessionRepository : IAppSessionRepository
                         long endTicks = long.Parse(parts[3], CultureInfo.InvariantCulture);
                         bool isAfk = bool.Parse(parts[4]);
 
-                        System.Collections.Generic.List<string>? audioSources = null;
+                        List<string>? audioSources = null;
                         if (parts.Length >= 6 && !string.IsNullOrEmpty(parts[5]))
                         {
                             audioSources = parts[5].Split(';').ToList();
@@ -100,39 +142,39 @@ public class AppSessionRepository : IAppSessionRepository
             Console.WriteLine($"Session Repo Read Error: {ex.Message}");
         }
 
-        // MERGE ALL LIVE SESSIONS (from RAM)
-        if (date.Date == DateTime.Now.Date)
+        return sessions;
+    }
+
+    /// <summary>
+    /// Merges live sessions from RAM cache into the session list, filtering by time window.
+    /// </summary>
+    private void MergeLiveSessions(List<AppSession> sessions, DateTime windowStart, DateTime windowEnd)
+    {
+        try
         {
-            try
+            var ramSessions = LiveSessionCache.ReadAll();
+            foreach (var ramSession in ramSessions)
             {
-                var ramSessions = UsageLogger.Core.Helpers.LiveSessionCache.ReadAll();
-                foreach (var ramSession in ramSessions)
+                if (ramSession == null) continue;
+                if (ramSession.StartTime < windowStart || ramSession.StartTime >= windowEnd) continue;
+
+                var existing = sessions.FirstOrDefault(s => s.ProcessName == ramSession.ProcessName && Math.Abs((s.StartTime - ramSession.StartTime).TotalSeconds) < 2);
+
+                if (existing != null)
                 {
-                    if (ramSession == null || ramSession.StartTime.Date != date.Date) continue;
-                    
-                    var existing = sessions.FirstOrDefault(s => s.ProcessName == ramSession.ProcessName && Math.Abs((s.StartTime - ramSession.StartTime).TotalSeconds) < 2);
-                    
-                    if (existing != null)
-                    {
-                        existing.EndTime = ramSession.EndTime;
-                        existing.IsAfk = ramSession.IsAfk;
-                    }
-                    else
-                    {
-                        sessions.Add(ramSession);
-                    }
+                    existing.EndTime = ramSession.EndTime;
+                    existing.IsAfk = ramSession.IsAfk;
+                }
+                else
+                {
+                    sessions.Add(ramSession);
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Live Session Merge Error: " + ex.Message);
-            }
         }
-
-        // CONSOLIDATE: Merge overlapping intervals
-        sessions = ConsolidateSessions(sessions);
-
-        return sessions;
+        catch (Exception ex)
+        {
+            Console.WriteLine("Live Session Merge Error: " + ex.Message);
+        }
     }
 
     private List<AppSession> ConsolidateSessions(List<AppSession> sessions)
@@ -334,7 +376,7 @@ public class AppSessionRepository : IAppSessionRepository
                     }
                 }
                 
-                dates.Add(DateTime.Now.Date);
+                dates.Add(DateHelper.GetLogicalToday());
 
                 return dates.Count;
             }

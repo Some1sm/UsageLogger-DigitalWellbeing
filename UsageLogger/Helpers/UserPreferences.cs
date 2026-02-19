@@ -49,6 +49,7 @@ namespace UsageLogger.Helpers
         public static double KwhPrice { get; set; } = 0.15; // Default price per kWh
         public static string CurrencySymbol { get; set; } = "$"; // Default currency
         public static string BackdropType { get; set; } = "Mica"; // Mica, MicaAlt, Acrylic, None
+        public static int DayStartMinutes { get; set; } = 0; // Total minutes past midnight when a new "logical day" begins. 0 = midnight (default)
 
         static UserPreferences()
         {
@@ -92,7 +93,9 @@ namespace UsageLogger.Helpers
                     EstimatedPowerUsageWatts,
                     KwhPrice,
                     CurrencySymbol,
-                    BackdropType
+                    BackdropType,
+                    DayStartHour = DayStartMinutes / 60,
+                    DayStartMinute = DayStartMinutes % 60
                 };
 
                 string json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
@@ -143,6 +146,10 @@ namespace UsageLogger.Helpers
                     if (data.TryGetProperty(nameof(KwhPrice), out prop)) KwhPrice = prop.GetDouble();
                     if (data.TryGetProperty(nameof(CurrencySymbol), out prop)) CurrencySymbol = prop.GetString();
                     if (data.TryGetProperty(nameof(BackdropType), out prop)) BackdropType = prop.GetString() ?? "Mica";
+                    int _dsh = 0, _dsm = 0;
+                    if (data.TryGetProperty("DayStartHour", out prop)) _dsh = Math.Clamp(prop.GetInt32(), 0, 23);
+                    if (data.TryGetProperty("DayStartMinute", out prop)) _dsm = Math.Clamp(prop.GetInt32(), 0, 59);
+                    DayStartMinutes = (_dsh * 60) + _dsm;
 
                     // Load AppTags and TitleTags
                     if (data.TryGetProperty(nameof(AppTags), out prop)) 
@@ -155,6 +162,9 @@ namespace UsageLogger.Helpers
 
                     // Repair Custom Icon Paths if moved to Icons/CustomIcons
                     RepairCustomIconPaths();
+
+                    // Sync DayStartMinutes to Core DateHelper
+                    DateHelper.DayStartMinutes = DayStartMinutes;
                 }
                 else
                 {

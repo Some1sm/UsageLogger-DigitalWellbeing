@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -465,6 +465,12 @@ Acaba: {2}</value>
   </data>
   <data name="Settings_IdleThresholdDesc.Text" xml:space="preserve">
     <value>Temps abans de marcar com Absent (300s).</value>
+  </data>
+  <data name="Settings_DayStartHour.Text" xml:space="preserve">
+    <value>Hora d'inici del dia</value>
+  </data>
+  <data name="Settings_DayStartHourDesc.Text" xml:space="preserve">
+    <value>Hora (0–23) en que comenca un nou dia per al seguiment d'us. Establiu a 4 per agrupar l'activitat nocturna amb el dia anterior.</value>
   </data>
   <data name="Settings_PowerTitle.Text" xml:space="preserve">
     <value>Consum i Cost</value>

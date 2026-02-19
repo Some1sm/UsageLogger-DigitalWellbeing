@@ -28,7 +28,7 @@ public class AppUsageViewModel : INotifyPropertyChanged
 
 	private DispatcherTimer refreshTimer;
 
-	public DateTime LoadedDate = DateTime.Now.Date;
+	public DateTime LoadedDate = DateHelper.GetLogicalToday();
 
 	public TimeSpan TotalDuration;
 
@@ -71,7 +71,7 @@ public class AppUsageViewModel : INotifyPropertyChanged
 	{
 		get
 		{
-			if (!(LoadedDate.Date == DateTime.Now.Date))
+			if (!(LoadedDate.Date == DateHelper.GetLogicalToday()))
 			{
 				return LoadedDate.ToString("dddd, MMM dd yyyy");
 			}
@@ -130,7 +130,7 @@ public class AppUsageViewModel : INotifyPropertyChanged
 
 	public DateTime[] WeeklyChartLabelDates { get; set; }
 
-	public bool CanGoNext => LoadedDate.Date < DateTime.Now.Date;
+	public bool CanGoNext => LoadedDate.Date < DateHelper.GetLogicalToday();
 
 	public bool CanGoPrev => true;
 
@@ -372,7 +372,7 @@ public class AppUsageViewModel : INotifyPropertyChanged
 
 	public async void LoadWeeklyData(DateTime? baseDate = null)
 	{
-		DateTime targetDate = baseDate ?? DateTime.Now.Date;
+		DateTime targetDate = baseDate ?? DateHelper.GetLogicalToday();
 		SetLoading(value: true);
 		// UserPreferences loads synchronously in its static constructor, no need to await
 		try
@@ -523,7 +523,7 @@ public class AppUsageViewModel : INotifyPropertyChanged
 
 	private async void TryRefreshData(bool force = false)
 	{
-		if (!IsWeeklyDataLoaded || (!force && !(DateTime.Now.Date == LoadedDate.Date)))
+		if (!IsWeeklyDataLoaded || (!force && !(DateHelper.GetLogicalToday() == LoadedDate.Date)))
 		{
 			return;
 		}

@@ -1,5 +1,5 @@
 ---
-trigger: always_on
+trigger: manual
 ---
 
 # 🤖 System Rules & Project Knowledge Base
