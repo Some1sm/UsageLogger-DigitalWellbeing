@@ -256,9 +256,22 @@
                 </Border>
             </Grid>
 
-            <!-- EMPTY STATE OVERLAY (shown when no data) -->
+            <!-- LOADING OVERLAY (shown while data is being fetched) -->
+            <Border x:Name="LoadingPanel" Grid.Row="1" Grid.RowSpan="2"
+                    Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
+                    Background="{ThemeResource LayerOnMicaBaseAltFillColorDefaultBrush}"
+                    CornerRadius="12" Padding="40" Margin="0,0,0,20"
+                    HorizontalAlignment="Center" VerticalAlignment="Center">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="16">
+                    <ProgressRing IsActive="True" Width="48" Height="48"/>
+                    <TextBlock Text="Loading..." FontSize="16" Opacity="0.6"
+                               HorizontalAlignment="Center" TextAlignment="Center"/>
+                </StackPanel>
+            </Border>
+
+            <!-- EMPTY STATE OVERLAY (shown when no data after loading completes) -->
             <Border x:Name="EmptyStatePanel" Grid.Row="1" Grid.RowSpan="2"
-                    Visibility="{x:Bind IsDashboardEmpty(ViewModel.DayListItems.Count), Mode=OneWay}"
+                    Visibility="{x:Bind IsDashboardEmpty(ViewModel.DayListItems.Count, ViewModel.IsLoading), Mode=OneWay}"
                     Background="{ThemeResource LayerOnMicaBaseAltFillColorDefaultBrush}"
                     CornerRadius="12" Padding="40" Margin="0,0,0,20"
                     HorizontalAlignment="Center" VerticalAlignment="Center">

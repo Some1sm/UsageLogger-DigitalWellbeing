@@ -4,6 +4,14 @@ All notable changes to **UsageLogger for Windows** are documented in this file.
 
 ---
 
+## [1.0.1] — 2026-02-19
+
+### ✨ Added
+- **Custom Day Boundary** — Users can now configure the "start of day" (e.g., 04:30 AM) to group late-night activity with the previous calendar day. Supports hour (0–23) and minute (0–59) precision.
+
+### 🐛 Fixed
+- Fixed "No data yet" message appearing briefly while data is loading; added a proper loading indicator.
+
 ## [1.0.0] — 2026-02-16
 
 ### 🚀 Highlights

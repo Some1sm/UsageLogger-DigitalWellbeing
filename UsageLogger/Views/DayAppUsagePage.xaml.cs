@@ -746,10 +746,10 @@ namespace UsageLogger.Views
                 : Visibility.Collapsed;
         }
 
-        // Helper method for dashboard empty state
-        public Visibility IsDashboardEmpty(int count)
+        // Helper method for dashboard empty state — only shows when NOT loading and truly empty
+        public Visibility IsDashboardEmpty(int count, bool isLoading)
         {
-            return count == 0 ? Visibility.Visible : Visibility.Collapsed;
+            return (!isLoading && count == 0) ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void BtnGoToSettings_Click(object sender, RoutedEventArgs e)
