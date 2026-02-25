@@ -1,11 +1,13 @@
 using UsageLogger.Core.Helpers;
 using UsageLogger.Core.Models;
 using UsageLogger.Helpers;
+using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml.Media;
 using System;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Windows.Input;
 
 namespace UsageLogger.Models
@@ -114,6 +116,15 @@ namespace UsageLogger.Models
             set { if (_isExpanded != value) { _isExpanded = value; OnPropertyChanged(); OnPropertyChanged(nameof(ChevronRotation)); } }
         }
 
+        private double _animatedHeight = 0;
+        public double AnimatedHeight
+        {
+            get => _animatedHeight;
+            set { if (Math.Abs(_animatedHeight - value) > 0.1) { _animatedHeight = value; OnPropertyChanged(); } }
+        }
+
+        // Timer for height animation (runs on UI thread via DispatcherQueueTimer)
+
         public double ChevronRotation => IsExpanded ? 180 : 0;
 
         public ICommand ToggleExpandCommand { get; private set; }
@@ -128,7 +139,59 @@ namespace UsageLogger.Models
             IconSource = IconManager.GetIconSource(processName);
             _AppTag = appTag;
             
-            ToggleExpandCommand = new RelayCommand((param) => IsExpanded = !IsExpanded);
+            ToggleExpandCommand = new RelayCommand((_) =>
+            {
+                IsExpanded = !IsExpanded;
+                AnimateHeight(IsExpanded ? 250 : 0);
+            });
+        }
+
+        private DispatcherQueueTimer? _animTimer;
+
+        private void AnimateHeight(double targetHeight)
+        {
+            // Stop any currently running animation immediately
+            _animTimer?.Stop();
+
+            bool expanding = targetHeight > _animatedHeight;
+            double startHeight = _animatedHeight;
+            double totalChange = targetHeight - startHeight;
+
+            if (Math.Abs(totalChange) < 1)
+            {
+                AnimatedHeight = targetHeight;
+                return;
+            }
+
+            // Expanding: 220ms ease-out cubic (fast start, graceful stop)
+            // Collapsing: 180ms ease-in cubic (snappy, no slow startup feel)
+            int durationMs = expanding ? 320 : 260;
+            var startTime = DateTime.UtcNow;
+
+            var dispatcher = DispatcherQueue.GetForCurrentThread();
+            _animTimer = dispatcher.CreateTimer();
+            _animTimer.Interval = TimeSpan.FromMilliseconds(8); // ~120fps target
+            _animTimer.IsRepeating = true;
+
+            _animTimer.Tick += (timer, _) =>
+            {
+                double elapsed = (DateTime.UtcNow - startTime).TotalMilliseconds;
+                double t = Math.Min(elapsed / durationMs, 1.0);
+
+                // Both directions use ease-out cubic: starts fast, decelerates.
+                // This ensures immediate visual response on click regardless of direction.
+                double eased = 1 - Math.Pow(1 - t, 3);
+
+                AnimatedHeight = startHeight + totalChange * eased;
+
+                if (t >= 1.0)
+                {
+                    AnimatedHeight = targetHeight;
+                    timer.Stop();
+                }
+            };
+
+            _animTimer.Start();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

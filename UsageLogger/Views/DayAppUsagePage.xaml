@@ -83,12 +83,8 @@
                         </FontIcon>
                     </Grid>
 
-                    <!-- Accordion Body -->
-                    <!-- Accordion Body -->
-                    <!-- Accordion Body -->
-                    <!-- Removed redundant ScrollViewer -->
-                    <ListView ItemsSource="{Binding Children}" SelectionMode="Single" MaxHeight="250"
-                              Visibility="{Binding IsExpanded, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <!-- Accordion Body - slides via AnimatedHeight binding -->
+                    <ListView ItemsSource="{Binding Children}" SelectionMode="Single" MaxHeight="{Binding AnimatedHeight}">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
