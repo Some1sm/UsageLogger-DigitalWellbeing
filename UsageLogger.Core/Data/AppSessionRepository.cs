@@ -131,7 +131,13 @@ public class AppSessionRepository : IAppSessionRepository
                             audioSources = parts[5].Split(';').ToList();
                         }
 
-                        sessions.Add(new AppSession(processName, programName, new DateTime(startTicks), new DateTime(endTicks), isAfk, audioSources));
+                        var session = new AppSession(processName, programName, new DateTime(startTicks), new DateTime(endTicks), isAfk, audioSources);
+
+                        // Retroactive fix: if audio was playing, it can't truly be AFK
+                        if (session.IsAfk && session.AudioSources.Count > 0)
+                            session.IsAfk = false;
+
+                        sessions.Add(session);
                     }
                 }
                 catch { } // Skip malformed lines

@@ -26,13 +26,13 @@ public class SessionManager
         _sessionBuffer = new List<AppSession>();
     }
 
-    public void Update(string processName, string programName, List<string>? audioSources = null)
+    public void Update(string processName, string programName, List<string>? audioSources = null, bool audioPlaying = false)
     {
         if (string.IsNullOrEmpty(processName)) return;
         if (audioSources == null) audioSources = new List<string>();
 
         uint idleTime = UserInputInfo.GetIdleTime();
-        bool isAfk = idleTime > AFK_THRESHOLD_MS;
+        bool isAfk = idleTime > AFK_THRESHOLD_MS && !audioPlaying;
 
         DateTime now = DateTime.Now;
 

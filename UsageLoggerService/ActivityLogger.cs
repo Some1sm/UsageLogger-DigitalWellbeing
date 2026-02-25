@@ -119,11 +119,12 @@ public class ActivityLogger
         }
 
         // --- Priority 2: AFK (Idle Timeout) - but NOT if media is playing ---
+        bool audioPlaying = AudioSessionTracker.IsGlobalAudioPlaying();
         uint idleMs = UserInputInfo.GetIdleTime();
         int idleThresholdMs = _settingsReader.GetIdleThresholdMs();
         if (idleMs > idleThresholdMs)
         {
-            if (!AudioSessionTracker.IsGlobalAudioPlaying())
+            if (!audioPlaying)
             {
                 await UpdateTimeEntryAsync("Away", "AFK");
                 _sessionManager.Update("Away", "AFK", new List<string>());
@@ -138,7 +139,7 @@ public class ActivityLogger
         if (currProcessId == 0)
         {
             await UpdateTimeEntryAsync("System Idle", "Desktop");
-            _sessionManager.Update("System Idle", "Desktop", new List<string>());
+            _sessionManager.Update("System Idle", "Desktop", new List<string>(), audioPlaying);
             return;
         }
 
@@ -201,7 +202,7 @@ public class ActivityLogger
             }
 
             var validAudioApps = _audioTracker.UpdatePersistence(currentAudioApps);
-            _sessionManager.Update(processName, programName, validAudioApps);
+            _sessionManager.Update(processName, programName, validAudioApps, audioPlaying);
 
             // Check Focus Schedule enforcement
             _focusManager.CheckFocusSchedules(processName, programName);
