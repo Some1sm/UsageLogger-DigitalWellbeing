@@ -420,17 +420,42 @@
 
                 <!-- Data Flush Interval -->
                 <Grid Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0" Spacing="2">
+
+                    <StackPanel Grid.Row="0" Grid.Column="0" Spacing="2">
                         <TextBlock l:Uids.Uid="Settings_DataFlush" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
                         <TextBlock l:Uids.Uid="Settings_DataFlushDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
                     </StackPanel>
-                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10">
-                        <ToggleSwitch x:Name="ToggleUseRamCache" Toggled="ToggleUseRamCache_Toggled" OnContent="RAM Cache" OffContent="Direct Write"/>
-                        <NumberBox x:Name="DataFlushIntervalTextBox" Value="300" SpinButtonPlacementMode="Compact" Width="150" Minimum="60" Maximum="1800" HorizontalAlignment="Left" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp" IsEnabled="{x:Bind ToggleUseRamCache.IsOn, Mode=OneWay}"/>
+
+                    <!-- Segmented Mode Selector -->
+                    <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" Spacing="0" VerticalAlignment="Center">
+                        <ToggleButton x:Name="BtnRamCache" Content="RAM Cache"
+                                      CornerRadius="6,0,0,6" Padding="12,6"
+                                      Checked="BtnRamCache_Checked"
+                                      Unchecked="BtnRamCache_Unchecked"/>
+                        <ToggleButton x:Name="BtnDirectWrite" Content="Direct Write"
+                                      CornerRadius="0,6,6,0" Padding="12,6"
+                                      Checked="BtnDirectWrite_Checked"
+                                      Unchecked="BtnDirectWrite_Unchecked"/>
+                    </StackPanel>
+
+                    <!-- Interval NumberBox (only relevant when RAM Cache is on) -->
+                    <StackPanel x:Name="FlushIntervalRow"
+                                Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                Orientation="Horizontal" Spacing="12"
+                                HorizontalAlignment="Center" Margin="0,12,0,0">
+                        <TextBlock Text="Flush every" VerticalAlignment="Center" Style="{ThemeResource CaptionTextBlockStyle}"/>
+                        <NumberBox x:Name="DataFlushIntervalTextBox" Value="300" SpinButtonPlacementMode="Compact" Width="120"
+                                   Minimum="60" Maximum="1800"
+                                   ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp"/>
+                        <TextBlock Text="seconds" VerticalAlignment="Center" Style="{ThemeResource CaptionTextBlockStyle}"/>
                     </StackPanel>
                 </Grid>
 
@@ -450,17 +475,25 @@
                 <!-- Day Start Time -->
                 <Grid Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*" MaxWidth="320"/>
+                        <ColumnDefinition Width="32"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0" Spacing="2">
                         <TextBlock l:Uids.Uid="Settings_DayStartHour" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
                         <TextBlock l:Uids.Uid="Settings_DayStartHourDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
                     </StackPanel>
-                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                        <NumberBox x:Name="DayStartHourTextBox" Value="0" SpinButtonPlacementMode="Compact" Width="100" Minimum="0" Maximum="23" HorizontalAlignment="Left" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp" Header="Hour"/>
-                        <TextBlock Text=":" VerticalAlignment="Bottom" Margin="0,0,0,8" FontSize="18" FontWeight="Bold"/>
-                        <NumberBox x:Name="DayStartMinuteTextBox" Value="0" SpinButtonPlacementMode="Compact" Width="100" Minimum="0" Maximum="59" HorizontalAlignment="Left" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp" Header="Min"/>
+                    <!-- Spacer column -->
+                    <StackPanel Grid.Column="2" Spacing="4" VerticalAlignment="Center">
+                        <TextBlock Text="HH:MM or H:MM am/pm"
+                                   Style="{ThemeResource CaptionTextBlockStyle}"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                   HorizontalAlignment="Center"/>
+                        <TextBox x:Name="TxtDayStartTime" Width="160"
+                                 PlaceholderText="e.g. 21:30 or 9:30 pm"
+                                 HorizontalAlignment="Center"
+                                 LostFocus="TxtDayStartTime_LostFocus"
+                                 KeyUp="TxtDayStartTime_KeyUp"/>
                     </StackPanel>
                 </Grid>
               </StackPanel>

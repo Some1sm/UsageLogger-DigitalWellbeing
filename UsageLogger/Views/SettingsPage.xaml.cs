@@ -174,7 +174,7 @@ namespace UsageLogger.Views
                 hasChanges |= ToggleMinimizeOnExit.IsOn != _origMinimizeOnExit;
                 hasChanges |= ToggleIncognitoMode.IsOn != _origIncognitoMode;
                 hasChanges |= EnableAutoRefresh.IsOn != _origAutoRefresh;
-                hasChanges |= ToggleUseRamCache.IsOn != _origUseRamCache;
+                hasChanges |= (BtnRamCache.IsChecked == true) != _origUseRamCache;
                 
                 // Number Boxes (check for NaN)
                 if (!double.IsNaN(DaysToShowTextBox.Value))
@@ -189,10 +189,12 @@ namespace UsageLogger.Views
                     hasChanges |= (int)DataFlushIntervalTextBox.Value != _origDataFlushInterval;
                 if (!double.IsNaN(IdleThresholdTextBox.Value))
                     hasChanges |= (int)IdleThresholdTextBox.Value != _origIdleThreshold;
-                if (!double.IsNaN(DayStartHourTextBox.Value))
-                    hasChanges |= (int)DayStartHourTextBox.Value != _origDayStartHour;
-                if (!double.IsNaN(DayStartMinuteTextBox.Value))
-                    hasChanges |= (int)DayStartMinuteTextBox.Value != _origDayStartMinute;
+                // Day Start Text
+                if (ParseDayStartTime(TxtDayStartTime.Text, out int dsh, out int dsm))
+                {
+                    hasChanges |= dsh != _origDayStartHour;
+                    hasChanges |= dsm != _origDayStartMinute;
+                }
                 
                 // Power tracking text fields
                 if (int.TryParse(TxtAvgWatts.Text, out int watts)) hasChanges |= watts != _origAvgWatts;
@@ -269,15 +271,19 @@ namespace UsageLogger.Views
 
             // Data Flush Interval
             DataFlushIntervalTextBox.Value = UserPreferences.DataFlushIntervalSeconds;
-            ToggleUseRamCache.IsOn = UserPreferences.UseRamCache;
+            bool useRam = UserPreferences.UseRamCache;
+            BtnRamCache.IsChecked = useRam;
+            BtnDirectWrite.IsChecked = !useRam;
+            FlushIntervalRow.Visibility = useRam ? Visibility.Visible : Visibility.Collapsed;
             
             // Idle Threshold (AFK Detection)
             IdleThresholdTextBox.Value = UserPreferences.IdleThresholdSeconds;
             
-            // Day Start Hour
             // Day Start Time
-            DayStartHourTextBox.Value = UserPreferences.DayStartMinutes / 60;
-            DayStartMinuteTextBox.Value = UserPreferences.DayStartMinutes % 60;
+            int loadedMinutes = UserPreferences.DayStartMinutes;
+            int loadedH = loadedMinutes / 60;
+            int loadedM = loadedMinutes % 60;
+            TxtDayStartTime.Text = $"{loadedH:D2}:{loadedM:D2}";
             
             // Power Tracking
             TxtAvgWatts.Text = UserPreferences.EstimatedPowerUsageWatts.ToString();
@@ -556,13 +562,13 @@ namespace UsageLogger.Views
             UserPreferences.RefreshIntervalSeconds = (int)RefreshInterval.Value;
             
             UserPreferences.DataFlushIntervalSeconds = (int)DataFlushIntervalTextBox.Value;
-            UserPreferences.UseRamCache = ToggleUseRamCache.IsOn;
+            UserPreferences.UseRamCache = BtnRamCache.IsChecked == true;
             UserPreferences.IdleThresholdSeconds = (int)IdleThresholdTextBox.Value;
 
-            // Day Start Time
-            int dsh = (int)DayStartHourTextBox.Value;
-            int dsm = (int)DayStartMinuteTextBox.Value;
-            UserPreferences.DayStartMinutes = (dsh * 60) + dsm;
+            // Day Start Time - parse from text box
+            int parsedH = 0, parsedM = 0;
+            ParseDayStartTime(TxtDayStartTime.Text, out parsedH, out parsedM);
+            UserPreferences.DayStartMinutes = (parsedH * 60) + parsedM;
             UsageLogger.Core.Helpers.DateHelper.DayStartMinutes = UserPreferences.DayStartMinutes;
 
             // Power Tracking
@@ -752,9 +758,76 @@ namespace UsageLogger.Views
             UserPreferences.Save();
         }
 
-        private void ToggleUseRamCache_Toggled(object sender, RoutedEventArgs e)
+        // ===== RAM Cache segmented selector =====
+        private void BtnRamCache_Checked(object sender, RoutedEventArgs e)
+        {
+            if (_isLoading || BtnDirectWrite == null || FlushIntervalRow == null) return;
+            BtnDirectWrite.IsChecked = false;
+            FlushIntervalRow.Visibility = Visibility.Visible;
+            CheckForChanges();
+        }
+        private void BtnRamCache_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (_isLoading || BtnDirectWrite == null || FlushIntervalRow == null) return;
+            if (BtnDirectWrite.IsChecked != true) { BtnRamCache.IsChecked = true; return; }
+            FlushIntervalRow.Visibility = Visibility.Collapsed;
+        }
+        private void BtnDirectWrite_Checked(object sender, RoutedEventArgs e)
+        {
+            if (_isLoading || BtnRamCache == null || FlushIntervalRow == null) return;
+            BtnRamCache.IsChecked = false;
+            FlushIntervalRow.Visibility = Visibility.Collapsed;
+            CheckForChanges();
+        }
+        private void BtnDirectWrite_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (_isLoading || BtnRamCache == null || FlushIntervalRow == null) return;
+            if (BtnRamCache.IsChecked != true) { BtnDirectWrite.IsChecked = true; return; }
+            FlushIntervalRow.Visibility = Visibility.Visible;
+        }
+
+        // ===== Day Start Time text parser =====
+        private static bool ParseDayStartTime(string input, out int hour, out int minute)
+        {
+            hour = 0; minute = 0;
+            if (string.IsNullOrWhiteSpace(input)) return false;
+
+            input = input.Trim().ToLowerInvariant();
+            bool isPm = input.Contains("pm");
+            bool isAm = input.Contains("am");
+            input = input.Replace("pm", "").Replace("am", "").Trim();
+
+            // Accept H:MM or HH:MM
+            var parts = input.Split(':');
+            if (parts.Length != 2) return false;
+            if (!int.TryParse(parts[0].Trim(), out hour)) return false;
+            if (!int.TryParse(parts[1].Trim(), out minute)) return false;
+
+            // 12-hour conversion
+            if (isPm && hour < 12) hour += 12;
+            if (isAm && hour == 12) hour = 0;
+
+            hour   = Math.Clamp(hour,   0, 23);
+            minute = Math.Clamp(minute, 0, 59);
+            return true;
+        }
+
+        private void TxtDayStartTime_LostFocus(object sender, RoutedEventArgs e)
         {
             if (_isLoading) return;
+            if (ParseDayStartTime(TxtDayStartTime.Text, out int h, out int m))
+                TxtDayStartTime.Text = $"{h:D2}:{m:D2}";
+            CheckForChanges();
+        }
+
+        private void TxtDayStartTime_KeyUp(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
+        {
+            if (_isLoading) return;
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                if (ParseDayStartTime(TxtDayStartTime.Text, out int h, out int m))
+                    TxtDayStartTime.Text = $"{h:D2}:{m:D2}";
+            }
             CheckForChanges();
         }
 
