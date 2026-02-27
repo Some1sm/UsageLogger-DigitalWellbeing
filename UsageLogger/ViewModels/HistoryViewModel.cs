@@ -379,9 +379,29 @@ namespace UsageLogger.ViewModels
                     {
                         grid[day, hour] += minutes;
                         
-                        // Track app breakdown per cell
+                        // Determine the label for this session based on the selected ViewMode
+                        string name = CurrentViewMode switch
+                        {
+                            ChartViewMode.Categories => AppTagHelper.GetTagDisplayName(
+                                // Use sub-app tag if available and explicitly tagged, else parent tag
+                                s.ProgramName != s.ProcessName && !string.IsNullOrEmpty(s.ProgramName)
+                                    ? AppTagHelper.GetTitleTag(s.ProcessName, s.ProgramName) is AppTag t2 && t2 != AppTag.Untagged
+                                        ? AppTagHelper.GetTitleTag(s.ProcessName, s.ProgramName)
+                                        : AppTagHelper.GetAppTag(s.ProcessName)
+                                    : AppTagHelper.GetAppTag(s.ProcessName)),
+
+                            ChartViewMode.SubApps =>
+                                // Show sub-app name when available, otherwise fall back to app display name
+                                (s.ProgramName != s.ProcessName && !string.IsNullOrEmpty(s.ProgramName))
+                                    ? s.ProgramName
+                                    : UserPreferences.GetDisplayName(s.ProcessName),
+
+                            _ => // Apps (default)
+                                UserPreferences.GetDisplayName(s.ProcessName)
+                        };
+
+                        // Track label breakdown per cell
                         var apps = cellApps[(day, hour)];
-                        string name = UserPreferences.GetDisplayName(s.ProcessName);
                         if (apps.ContainsKey(name)) apps[name] += minutes;
                         else apps[name] = minutes;
                     }
@@ -394,6 +414,14 @@ namespace UsageLogger.ViewModels
             // Store cell details for tooltips
             _heatmapCellDetails.Clear();
             string[] dayNames = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+
+            // Label for tooltip changes based on view mode
+            string topLabel = CurrentViewMode switch
+            {
+                ChartViewMode.Categories => "Top Category",
+                ChartViewMode.SubApps    => "Top Sub-App",
+                _                        => "Top App"
+            };
             
             var heatmapPoints = new ObservableCollection<HeatmapDataPoint>();
             var uiSettings = new Windows.UI.ViewManagement.UISettings();
@@ -405,14 +433,14 @@ namespace UsageLogger.ViewModels
                 {
                     double val = grid[d, h];
                     
-                    // Get top app for this cell
+                    // Get top entry for this cell (respects ViewMode via the label computed above)
                     var topApp = cellApps[(d, h)].OrderByDescending(x => x.Value).FirstOrDefault();
                     string topAppName = topApp.Key ?? "No activity";
                     double topAppMinutes = topApp.Value;
 
                     string timeStr = $"{h:D2}:00";
                     string totalStr = StringHelper.FormatDurationCompact(TimeSpan.FromMinutes(val));
-                    string tooltip = $"{dayNames[d]} at {timeStr} • {totalStr} • Top: {topAppName}";
+                    string tooltip = $"{dayNames[d]} at {timeStr} • {totalStr} • {topLabel}: {topAppName}";
 
                     heatmapPoints.Add(new HeatmapDataPoint
                     {
