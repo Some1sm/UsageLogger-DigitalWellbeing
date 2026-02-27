@@ -413,3 +413,17 @@ dotnet build UsageLogger/UsageLogger.csproj -c Release
 | **User settings** | `%LocalAppData%\digital-wellbeing\user_preferences.json` |
 | **Icon cache** | `%LocalAppData%\digital-wellbeing\Icons\` |
 | **Installer output** | Root workspace folder |
+
+### Version Numbers
+
+Current version: **v1.0.2** — update in all 4 places when bumping:
+
+| Project | File | Line |
+|---|---|---|
+| WinUI 3 UI | [UsageLogger.csproj](file:///h:/Coding/DigitalWellbeing/DigitalWellbeing_myworkGemini2/UsageLogger/UsageLogger.csproj#L21) | `<Version>` (line 21) |
+| Core Library | [UsageLogger.Core.csproj](file:///h:/Coding/DigitalWellbeing/DigitalWellbeing_myworkGemini2/UsageLogger.Core/UsageLogger.Core.csproj#L11) | `<Version>` (line 11) |
+| Background Service | [UsageLoggerService.csproj](file:///h:/Coding/DigitalWellbeing/DigitalWellbeing_myworkGemini2/UsageLoggerService/UsageLoggerService.csproj#L13) | `<Version>` (line 13) |
+| Installer | [UsageLogger.Setup.csproj](file:///h:/Coding/DigitalWellbeing/DigitalWellbeing_myworkGemini2/UsageLogger.Setup/UsageLogger.Setup.csproj#L9) | `<Version>` (line 9) |
+
+> [!NOTE]
+> `obj/` and `bin/` files (AssemblyInfo, deps.json, etc.) are auto-regenerated on build — do **not** edit them manually.
