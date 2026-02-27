@@ -394,60 +394,75 @@
                     </StackPanel>
                 </Expander.Header>
                 <StackPanel Spacing="10" Padding="0,10,0,0">
-             <Grid Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
-                 <Grid.RowDefinitions>
-                     <RowDefinition Height="Auto"/>
-                     <RowDefinition Height="Auto"/>
-                     <RowDefinition Height="Auto"/>
-                     <RowDefinition Height="Auto"/>
-                 </Grid.RowDefinitions>
-                 
-                 <!-- Log Storage Location -->
-                 <StackPanel Grid.Row="0" Spacing="5" Margin="0,0,0,10">
-                      <TextBlock l:Uids.Uid="Settings_LogStorage" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                      <TextBlock l:Uids.Uid="Settings_LogStorageDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                     <Grid Margin="0,5,0,0">
-                         <Grid.ColumnDefinitions>
-                             <ColumnDefinition Width="*"/>
-                             <ColumnDefinition Width="Auto"/>
-                             <ColumnDefinition Width="Auto"/>
-                             <ColumnDefinition Width="Auto"/>
-                         </Grid.ColumnDefinitions>
-                         <TextBox x:Name="TxtLogLocation" Grid.Column="0" PlaceholderText="Default Location" Margin="0,0,10,0" MaxWidth="400" HorizontalAlignment="Left" TextWrapping="NoWrap" AcceptsReturn="False" TextChanged="TxtLogLocation_TextChanged"/>
-                          <Button Grid.Column="1" l:Uids.Uid="Settings_BtnOpen" Click="BtnOpenAppFolder_Click" Margin="0,0,5,0"/>
-                          <Button Grid.Column="2" l:Uids.Uid="Settings_BtnBrowse" Click="BtnBrowseLogLocation_Click" Margin="0,0,5,0"/>
-                          <Button Grid.Column="3" l:Uids.Uid="Settings_BtnReset" Click="BtnResetLogLocation_Click"/>
-                     </Grid>
-                 </StackPanel>
+                <!-- Log Storage Location -->
+                <Grid Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Spacing="2" Margin="0,0,0,8">
+                        <TextBlock l:Uids.Uid="Settings_LogStorage" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                        <TextBlock l:Uids.Uid="Settings_LogStorageDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    </StackPanel>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="TxtLogLocation" Grid.Column="0" PlaceholderText="Default Location" Margin="0,0,10,0" MaxWidth="400" HorizontalAlignment="Left" TextWrapping="NoWrap" AcceptsReturn="False" TextChanged="TxtLogLocation_TextChanged"/>
+                        <Button Grid.Column="1" l:Uids.Uid="Settings_BtnOpen" Click="BtnOpenAppFolder_Click" Margin="0,0,5,0"/>
+                        <Button Grid.Column="2" l:Uids.Uid="Settings_BtnBrowse" Click="BtnBrowseLogLocation_Click" Margin="0,0,5,0"/>
+                        <Button Grid.Column="3" l:Uids.Uid="Settings_BtnReset" Click="BtnResetLogLocation_Click"/>
+                    </Grid>
+                </Grid>
 
-                  <!-- Data Flush Interval -->
-                   <StackPanel Grid.Row="1" Spacing="5">
-                       <TextBlock l:Uids.Uid="Settings_DataFlush" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                       <TextBlock l:Uids.Uid="Settings_DataFlushDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
-                       <StackPanel Orientation="Horizontal" Spacing="10">
-                           <ToggleSwitch x:Name="ToggleUseRamCache" Toggled="ToggleUseRamCache_Toggled" OnContent="RAM Cache" OffContent="Direct Write"/>
-                           <NumberBox x:Name="DataFlushIntervalTextBox" Value="300" SpinButtonPlacementMode="Compact" Width="150" Minimum="60" Maximum="1800" HorizontalAlignment="Left" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp" IsEnabled="{x:Bind ToggleUseRamCache.IsOn, Mode=OneWay}"/>
-                       </StackPanel>
-                   </StackPanel>
+                <!-- Data Flush Interval -->
+                <Grid Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Spacing="2">
+                        <TextBlock l:Uids.Uid="Settings_DataFlush" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                        <TextBlock l:Uids.Uid="Settings_DataFlushDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10">
+                        <ToggleSwitch x:Name="ToggleUseRamCache" Toggled="ToggleUseRamCache_Toggled" OnContent="RAM Cache" OffContent="Direct Write"/>
+                        <NumberBox x:Name="DataFlushIntervalTextBox" Value="300" SpinButtonPlacementMode="Compact" Width="150" Minimum="60" Maximum="1800" HorizontalAlignment="Left" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp" IsEnabled="{x:Bind ToggleUseRamCache.IsOn, Mode=OneWay}"/>
+                    </StackPanel>
+                </Grid>
 
-                   <!-- Idle Threshold (AFK Detection) -->
-                   <StackPanel Grid.Row="2" Spacing="5" Margin="0,10,0,0">
-                       <TextBlock l:Uids.Uid="Settings_IdleThreshold" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                       <TextBlock l:Uids.Uid="Settings_IdleThresholdDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
-                       <NumberBox x:Name="IdleThresholdTextBox" Value="300" SpinButtonPlacementMode="Compact" Width="150" Minimum="60" Maximum="3600" HorizontalAlignment="Left" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp"/>
-                   </StackPanel>
+                <!-- Idle Threshold (AFK Detection) -->
+                <Grid Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Spacing="2">
+                        <TextBlock l:Uids.Uid="Settings_IdleThreshold" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                        <TextBlock l:Uids.Uid="Settings_IdleThresholdDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
+                    </StackPanel>
+                    <NumberBox x:Name="IdleThresholdTextBox" Grid.Column="1" Value="300" SpinButtonPlacementMode="Compact" Width="150" Minimum="60" Maximum="3600" HorizontalAlignment="Left" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp"/>
+                </Grid>
 
-                   <!-- Day Start Time -->
-                   <StackPanel Grid.Row="3" Spacing="5" Margin="0,10,0,0">
-                       <TextBlock l:Uids.Uid="Settings_DayStartHour" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                       <TextBlock l:Uids.Uid="Settings_DayStartHourDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
-                       <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                           <NumberBox x:Name="DayStartHourTextBox" Value="0" SpinButtonPlacementMode="Compact" Width="100" Minimum="0" Maximum="23" HorizontalAlignment="Left" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp" Header="Hour"/>
-                           <TextBlock Text=":" VerticalAlignment="Bottom" Margin="0,0,0,8" FontSize="18" FontWeight="Bold"/>
-                           <NumberBox x:Name="DayStartMinuteTextBox" Value="0" SpinButtonPlacementMode="Compact" Width="100" Minimum="0" Maximum="59" HorizontalAlignment="Left" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp" Header="Min"/>
-                       </StackPanel>
-                   </StackPanel>
-              </Grid>
+                <!-- Day Start Time -->
+                <Grid Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Spacing="2">
+                        <TextBlock l:Uids.Uid="Settings_DayStartHour" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                        <TextBlock l:Uids.Uid="Settings_DayStartHourDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                        <NumberBox x:Name="DayStartHourTextBox" Value="0" SpinButtonPlacementMode="Compact" Width="100" Minimum="0" Maximum="23" HorizontalAlignment="Left" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp" Header="Hour"/>
+                        <TextBlock Text=":" VerticalAlignment="Bottom" Margin="0,0,0,8" FontSize="18" FontWeight="Bold"/>
+                        <NumberBox x:Name="DayStartMinuteTextBox" Value="0" SpinButtonPlacementMode="Compact" Width="100" Minimum="0" Maximum="59" HorizontalAlignment="Left" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp" Header="Min"/>
+                    </StackPanel>
+                </Grid>
               </StackPanel>
             </Expander>
 
