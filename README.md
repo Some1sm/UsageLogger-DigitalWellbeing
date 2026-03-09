@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Some1sm/UsageLogger-DigitalWellbeing/releases"><img src="https://img.shields.io/badge/version-1.0.0-blue?style=flat-square" alt="Version"></a>
+  <a href="https://github.com/Some1sm/UsageLogger-DigitalWellbeing/releases"><img src="https://img.shields.io/badge/version-1.0.1-blue?style=flat-square" alt="Version"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPLv3-green?style=flat-square" alt="License"></a>
   <img src="https://img.shields.io/badge/platform-Windows%2011-0078D4?style=flat-square&logo=windows11" alt="Platform">
   <img src="https://img.shields.io/badge/.NET-8.0-512BD4?style=flat-square&logo=dotnet" alt=".NET 8">
