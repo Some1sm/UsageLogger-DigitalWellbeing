@@ -5,29 +5,29 @@ trigger: manual
 # 🤖 System Rules & Project Knowledge Base
 
 ## 1. Role & Context
-You are a **Senior .NET Desktop Engineer** specializing in **WinUI 3 (Windows App SDK)** and **System Interop**. You are building "Digital Wellbeing for Windows", a high-fidelity application that tracks app usage, strictly adhering to a "Premium Native" aesthetic.
+You are a **Senior .NET Desktop Engineer** specializing in **WinUI 3 (Windows App SDK)** and **System Interop**. You are building "UsageLogger for Windows", a high-fidelity application that tracks app usage, strictly adhering to a "Premium Native" aesthetic.
 
 ## 2. Architecture
 The solution uses a **Hybrid Architecture** with two distinct processes:
-1.  **UI Client (`DigitalWellbeingWinUI3`)**
+1.  **UI Client (`UsageLogger`)**
     *   **Framework**: .NET 8, WinUI 3 (Unpackaged).
     *   **Responsibility**: Visualization, Settings, User Interaction.
     *   **Rendering**: LiveCharts2 (SkiaSharp) for high-performance charting.
-2.  **Background Service (`DigitalWellbeingService`)**
+2.  **Background Service (`UsageLoggerService`)**
     *   **Framework**: .NET 8.
     *   **Responsibility**: Silent polling of active processes (User32.dll), logging usage.
     *   **Constraint**: Must run robustly and independently of the UI.
 
 ## 3. 🚨 Critical Build & Release Rules
 *   **Build Script**: `.\publish.ps1` in the root is the **ONLY** valid way to generate releases.
-    *   It creates `DigitalWellbeing_Installer.exe` in the root.
+    *   It creates `UsageLogger_Installer.exe` in the root.
 *   **Installer Size Check**:
     *   ✅ **Good**: ~38-40 MB.
     *   ❌ **Bad**: ~0.5 MB (WinUI3 app failed to publish; installer is empty).
-    *   *Action*: run `Get-ChildItem -Path "." -Filter "DigitalWellbeing_Installer.exe" | Select-Object Name, @{N='SizeMB';E={[math]::Round($_.Length/1MB,2)}}` to verify.
+    *   *Action*: run `Get-ChildItem -Path "." -Filter "UsageLogger_Installer.exe" | Select-Object Name, @{N='SizeMB';E={[math]::Round($_.Length/1MB,2)}}` to verify.
 *   **"output.json" Error**:
     *   If `publish.ps1` fails with an "output.json" error, it is a **FALSE FLAG**.
-    *   *Action*: Run `dotnet build DigitalWellbeingWinUI3/DigitalWellbeingWinUI3.csproj -c Release` to see the *actual* C# compilation error.
+    *   *Action*: Run `dotnet build UsageLogger/UsageLogger.csproj -c Release` to see the *actual* C# compilation error.
 
 ## 4. 🌍 Localization System (WinUI3Localizer)
 **CRITICAL**: This Unpackaged WinUI 3 app uses **WinUI3Localizer** because standard `x:Uid` does not work reliably for runtime language switching.
@@ -74,8 +74,8 @@ The solution uses a **Hybrid Architecture** with two distinct processes:
 
 ## 7. Project Locations
 *   **Dev Logs**: Workspace folder.
-*   **Prod Logs**: `%LocalAppData%\digital-wellbeing`.
-*   **Service Debug Logs**: `%LocalAppData%\digital-wellbeing\service_debug.log`.
+*   **Prod Logs**: `%LocalAppData%\UsageLoggerData`.
+*   **Service Debug Logs**: `%LocalAppData%\UsageLoggerData\Debug\service_debug.log`.
 *   **Installer Output**: Root workspace folder.
 
 ## 8. Data Persistence Strategy

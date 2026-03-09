@@ -14,6 +14,32 @@
 
 ---
 
+## 🖼️ Screenshots
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/23db0c65-fdd4-4e62-8985-f5708e431538" alt="UsageLogger Dashboard" width="100%" />
+</p>
+
+<details>
+<summary><b>View more screenshots</b></summary>
+<br>
+
+#### Distribution Analysis
+<img src="https://github.com/user-attachments/assets/c05516f0-09f6-4239-a86a-f12ab2bcf919" alt="Distribution Analysis 1" width="49%" />
+<img src="https://github.com/user-attachments/assets/84672622-d16e-4859-9dd5-e9b8b3bda267" alt="Distribution Analysis 2" width="49%" />
+
+#### Detailed Usage & Focus Schedule
+<img src="https://github.com/user-attachments/assets/f727034c-d767-450b-82bf-220a4fcab726" alt="Detailed Usage" width="49%" />
+<img src="https://github.com/user-attachments/assets/59e159d6-730b-4e8c-9341-5802561101d6" alt="Focus Schedule" width="49%" />
+
+#### Fun Facts & Settings
+<img src="https://github.com/user-attachments/assets/da160bcc-a79e-4118-bc99-31d8c798158b" alt="Fun Facts" width="49%" />
+<img src="https://github.com/user-attachments/assets/2cb50973-1e17-446c-9276-3cc9a2bfc2ce" alt="Settings" width="49%" />
+
+</details>
+
+---
+
 ## ✨ Features
 
 ### 📊 Dashboard & Analytics
