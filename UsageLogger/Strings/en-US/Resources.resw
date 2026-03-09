@@ -973,4 +973,19 @@
   <data name="Dashboard_EmptySettingsBtnText.Text" xml:space="preserve">
     <value>Open Data Settings</value>
   </data>
+  <data name="History_SearchPlaceholder.PlaceholderText" xml:space="preserve">
+    <value>Search app usage...</value>
+  </data>
+  <data name="History_SearchNoResults" xml:space="preserve">
+    <value>No results found</value>
+  </data>
+  <data name="History_AppLookupTitle.Text" xml:space="preserve">
+    <value>App Lookup</value>
+  </data>
+  <data name="History_TopAppLabel.Text" xml:space="preserve">
+    <value>Most Used App</value>
+  </data>
+  <data name="History_SearchNewThisPeriod" xml:space="preserve">
+    <value>New this period</value>
+  </data>
 </root>

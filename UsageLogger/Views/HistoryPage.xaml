@@ -126,6 +126,43 @@
                         <controls:Win2DBarChart x:Name="TrendChartContainer" ItemsSource="{x:Bind ViewModel.TrendData, Mode=OneWay}" TargetLineValue="{x:Bind ViewModel.PreviousPeriodAverage, Mode=OneWay}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Height="250"/>
                     </StackPanel>
                 </Border>
+
+                <!-- App Lookup -->
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="20">
+                    <StackPanel>
+                        <TextBlock l:Uids.Uid="History_AppLookupTitle" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,12"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Left: Search -->
+                            <StackPanel Grid.Column="0" Spacing="6">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <FontIcon Glyph="&#xE721;" FontSize="14" Opacity="0.5" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <TextBox Grid.Column="1" x:Name="AppSearchBox" l:Uids.Uid="History_SearchPlaceholder" TextChanged="AppSearchBox_TextChanged"/>
+                                </Grid>
+                                <TextBlock Text="{Binding SearchResultText}" FontWeight="SemiBold" Opacity="0.8" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                            </StackPanel>
+
+                            <!-- Divider -->
+                            <Border Grid.Column="1" Width="1" Background="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="20,0"/>
+
+                            <!-- Right: Top App -->
+                            <StackPanel Grid.Column="2" Spacing="4">
+                                <TextBlock l:Uids.Uid="History_TopAppLabel" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                                <TextBlock Text="{Binding TopAppText}" FontSize="16" FontWeight="Bold" TextTrimming="CharacterEllipsis"/>
+                                <TextBlock Text="{Binding TopAppComparisonText}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="13" Opacity="0.7"/>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
                 
                 <!-- Distribution Analysis -->
                 <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="20">

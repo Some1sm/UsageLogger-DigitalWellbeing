@@ -973,4 +973,19 @@
   <data name="Dashboard_EmptySettingsBtnText.Text" xml:space="preserve">
     <value>Открыть настройки</value>
   </data>
+  <data name="History_SearchPlaceholder.PlaceholderText" xml:space="preserve">
+    <value>Поиск использования...</value>
+  </data>
+  <data name="History_SearchNoResults" xml:space="preserve">
+    <value>Нет результатов</value>
+  </data>
+  <data name="History_AppLookupTitle.Text" xml:space="preserve">
+    <value>Поиск приложения</value>
+  </data>
+  <data name="History_TopAppLabel.Text" xml:space="preserve">
+    <value>Самое используемое</value>
+  </data>
+  <data name="History_SearchNewThisPeriod" xml:space="preserve">
+    <value>Новое за период</value>
+  </data>
 </root>

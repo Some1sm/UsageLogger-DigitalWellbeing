@@ -165,6 +165,125 @@ namespace UsageLogger.ViewModels
 
         public RelayCommand GenerateChartCommand { get; }
 
+        // Cached sessions for search
+        private List<AppSession> _cachedSessions = new();
+        private List<AppSession> _cachedPrevSessions = new();
+
+        private string _searchResultText;
+        public string SearchResultText
+        {
+            get => _searchResultText;
+            set { if (_searchResultText != value) { _searchResultText = value; OnPropertyChanged(); } }
+        }
+
+        // Top app for the selected period
+        private string _topAppText;
+        public string TopAppText
+        {
+            get => _topAppText;
+            set { if (_topAppText != value) { _topAppText = value; OnPropertyChanged(); } }
+        }
+
+        private string _topAppComparisonText;
+        public string TopAppComparisonText
+        {
+            get => _topAppComparisonText;
+            set { if (_topAppComparisonText != value) { _topAppComparisonText = value; OnPropertyChanged(); } }
+        }
+
+        private void ComputeTopApp()
+        {
+            if (_cachedSessions.Count == 0)
+            {
+                TopAppText = null;
+                TopAppComparisonText = null;
+                return;
+            }
+
+            var topGroup = _cachedSessions
+                .Where(s => !AppUsageViewModel.IsProcessExcluded(s.ProcessName))
+                .GroupBy(s => s.ProcessName)
+                .OrderByDescending(g => g.Sum(s => s.Duration.TotalMinutes))
+                .FirstOrDefault();
+
+            if (topGroup == null) { TopAppText = null; TopAppComparisonText = null; return; }
+
+            string displayName = UserPreferences.GetDisplayName(topGroup.Key);
+            double currentMinutes = topGroup.Sum(s => s.Duration.TotalMinutes);
+            string durationStr = StringHelper.FormatDurationCompact(TimeSpan.FromMinutes(currentMinutes));
+            TopAppText = $"{displayName}: {durationStr}";
+
+            // Comparison with previous period
+            double prevMinutes = _cachedPrevSessions
+                .Where(s => s.ProcessName.Equals(topGroup.Key, StringComparison.OrdinalIgnoreCase))
+                .Sum(s => s.Duration.TotalMinutes);
+
+            TopAppComparisonText = FormatComparison(currentMinutes, prevMinutes);
+        }
+
+        private string FormatComparison(double currentMinutes, double prevMinutes)
+        {
+            if (prevMinutes <= 0)
+                return currentMinutes > 0 ? "🆕 " + LocalizationHelper.GetString("History_SearchNewThisPeriod") : null;
+
+            double changePercent = ((currentMinutes - prevMinutes) / prevMinutes) * 100;
+            string arrow = changePercent >= 0 ? "↑" : "↓";
+            string prevDur = StringHelper.FormatDurationCompact(TimeSpan.FromMinutes(prevMinutes));
+            return $"{arrow} {Math.Abs(changePercent):F0}% (prev: {prevDur})";
+        }
+
+        public void SearchApp(string query)
+        {
+            if (string.IsNullOrWhiteSpace(query) || _cachedSessions.Count == 0)
+            {
+                SearchResultText = null;
+                return;
+            }
+
+            string q = query.Trim();
+            var matching = _cachedSessions.Where(s =>
+                !AppUsageViewModel.IsProcessExcluded(s.ProcessName) &&
+                (s.ProcessName.Contains(q, StringComparison.OrdinalIgnoreCase) ||
+                 UserPreferences.GetDisplayName(s.ProcessName).Contains(q, StringComparison.OrdinalIgnoreCase) ||
+                 (!string.IsNullOrEmpty(s.ProgramName) && s.ProgramName.Contains(q, StringComparison.OrdinalIgnoreCase))))
+                .ToList();
+
+            if (matching.Count == 0)
+            {
+                SearchResultText = LocalizationHelper.GetString("History_SearchNoResults");
+                return;
+            }
+
+            // Group by display label and pick the top group by total usage
+            var topGroup = matching
+                .GroupBy(s => s.ProcessName.Contains(q, StringComparison.OrdinalIgnoreCase)
+                    ? UserPreferences.GetDisplayName(s.ProcessName)
+                    : s.ProgramName ?? UserPreferences.GetDisplayName(s.ProcessName))
+                .OrderByDescending(g => g.Sum(s => s.Duration.TotalMinutes))
+                .First();
+
+            string bestMatch = topGroup.Key;
+            double totalMinutes = topGroup.Sum(s => s.Duration.TotalMinutes);
+            string durationStr = StringHelper.FormatDurationCompact(TimeSpan.FromMinutes(totalMinutes));
+
+            // Previous period comparison scoped to the same best-match label
+            var prevMatching = _cachedPrevSessions.Where(s =>
+                !AppUsageViewModel.IsProcessExcluded(s.ProcessName) &&
+                (s.ProcessName.Contains(q, StringComparison.OrdinalIgnoreCase) ||
+                 UserPreferences.GetDisplayName(s.ProcessName).Contains(q, StringComparison.OrdinalIgnoreCase) ||
+                 (!string.IsNullOrEmpty(s.ProgramName) && s.ProgramName.Contains(q, StringComparison.OrdinalIgnoreCase))))
+                .GroupBy(s => s.ProcessName.Contains(q, StringComparison.OrdinalIgnoreCase)
+                    ? UserPreferences.GetDisplayName(s.ProcessName)
+                    : s.ProgramName ?? UserPreferences.GetDisplayName(s.ProcessName))
+                .FirstOrDefault(g => g.Key == bestMatch);
+            double prevMinutes = prevMatching?.Sum(s => s.Duration.TotalMinutes) ?? 0;
+            string comparison = FormatComparison(totalMinutes, prevMinutes);
+
+            SearchResultText = $"{bestMatch}: {durationStr}";
+            if (!string.IsNullOrEmpty(comparison))
+                SearchResultText += $"  {comparison}";
+        }
+
         public HistoryViewModel()
         {
             GenerateChartCommand = new RelayCommand(_ => GenerateChart());
@@ -284,6 +403,8 @@ namespace UsageLogger.ViewModels
 
                 // Load current period
                 List<AppSession> allSessions = await LoadSessionsForDateRange(StartDate.Date, EndDate.Date);
+                _cachedSessions = allSessions;
+                SearchResultText = null;
                 Debug.WriteLine($"[HistoryViewModel] Loaded {allSessions.Count} sessions.");
 
                 if (allSessions.Count == 0)
@@ -291,6 +412,8 @@ namespace UsageLogger.ViewModels
                     TotalHoursText = "0h 0m 0s";
                     TotalChangeText = "No data found for this period.";
                     ErrorMessage = "No activity logs found for the selected date range.";
+                    TopAppText = null;
+                    TopAppComparisonText = null;
                     return;
                 }
 
@@ -299,6 +422,10 @@ namespace UsageLogger.ViewModels
                 DateTime prevStart = StartDate.Date.AddDays(-dayCount);
                 DateTime prevEnd = StartDate.Date.AddDays(-1);
                 List<AppSession> prevSessions = await LoadSessionsForDateRange(prevStart, prevEnd);
+                _cachedPrevSessions = prevSessions;
+
+                // Compute top app for the card
+                ComputeTopApp();
 
                 // Generate Heatmap with cell details
                 GenerateHeatMap(allSessions);

@@ -973,4 +973,19 @@ Fim: {2}</value>
   <data name="Dashboard_EmptySettingsBtnText.Text" xml:space="preserve">
     <value>Abrir configuracoes</value>
   </data>
+  <data name="History_SearchPlaceholder.PlaceholderText" xml:space="preserve">
+    <value>Pesquisar uso do app...</value>
+  </data>
+  <data name="History_SearchNoResults" xml:space="preserve">
+    <value>Nenhum resultado</value>
+  </data>
+  <data name="History_AppLookupTitle.Text" xml:space="preserve">
+    <value>Busca de App</value>
+  </data>
+  <data name="History_TopAppLabel.Text" xml:space="preserve">
+    <value>App mais usado</value>
+  </data>
+  <data name="History_SearchNewThisPeriod" xml:space="preserve">
+    <value>Novo neste período</value>
+  </data>
 </root>

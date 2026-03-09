@@ -973,4 +973,19 @@
   <data name="Dashboard_EmptySettingsBtnText.Text" xml:space="preserve">
     <value>打开数据设置</value>
   </data>
+  <data name="History_SearchPlaceholder.PlaceholderText" xml:space="preserve">
+    <value>搜索应用使用...</value>
+  </data>
+  <data name="History_SearchNoResults" xml:space="preserve">
+    <value>无结果</value>
+  </data>
+  <data name="History_AppLookupTitle.Text" xml:space="preserve">
+    <value>应用查找</value>
+  </data>
+  <data name="History_TopAppLabel.Text" xml:space="preserve">
+    <value>最常用应用</value>
+  </data>
+  <data name="History_SearchNewThisPeriod" xml:space="preserve">
+    <value>本期新增</value>
+  </data>
 </root>

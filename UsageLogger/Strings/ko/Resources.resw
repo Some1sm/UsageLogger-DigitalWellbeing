@@ -973,4 +973,19 @@
   <data name="Dashboard_EmptySettingsBtnText.Text" xml:space="preserve">
     <value>데이터 설정 열기</value>
   </data>
+  <data name="History_SearchPlaceholder.PlaceholderText" xml:space="preserve">
+    <value>앱 사용 검색...</value>
+  </data>
+  <data name="History_SearchNoResults" xml:space="preserve">
+    <value>결과 없음</value>
+  </data>
+  <data name="History_AppLookupTitle.Text" xml:space="preserve">
+    <value>앱 검색</value>
+  </data>
+  <data name="History_TopAppLabel.Text" xml:space="preserve">
+    <value>가장 많이 사용한 앱</value>
+  </data>
+  <data name="History_SearchNewThisPeriod" xml:space="preserve">
+    <value>이번 기간에 신규</value>
+  </data>
 </root>

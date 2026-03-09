@@ -973,4 +973,19 @@
   <data name="Dashboard_EmptySettingsBtnText.Text" xml:space="preserve">
     <value>データ設定を開く</value>
   </data>
+  <data name="History_SearchPlaceholder.PlaceholderText" xml:space="preserve">
+    <value>アプリの使用を検索...</value>
+  </data>
+  <data name="History_SearchNoResults" xml:space="preserve">
+    <value>結果なし</value>
+  </data>
+  <data name="History_AppLookupTitle.Text" xml:space="preserve">
+    <value>アプリ検索</value>
+  </data>
+  <data name="History_TopAppLabel.Text" xml:space="preserve">
+    <value>最も使用されたアプリ</value>
+  </data>
+  <data name="History_SearchNewThisPeriod" xml:space="preserve">
+    <value>今期間の新規</value>
+  </data>
 </root>

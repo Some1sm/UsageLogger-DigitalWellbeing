@@ -973,4 +973,19 @@ Ende: {2}</value>
   <data name="Dashboard_EmptySettingsBtnText.Text" xml:space="preserve">
     <value>Dateneinstellungen oeffnen</value>
   </data>
+  <data name="History_SearchPlaceholder.PlaceholderText" xml:space="preserve">
+    <value>App-Nutzung suchen...</value>
+  </data>
+  <data name="History_SearchNoResults" xml:space="preserve">
+    <value>Keine Ergebnisse</value>
+  </data>
+  <data name="History_AppLookupTitle.Text" xml:space="preserve">
+    <value>App-Suche</value>
+  </data>
+  <data name="History_TopAppLabel.Text" xml:space="preserve">
+    <value>Meistgenutzte App</value>
+  </data>
+  <data name="History_SearchNewThisPeriod" xml:space="preserve">
+    <value>Neu in diesem Zeitraum</value>
+  </data>
 </root>

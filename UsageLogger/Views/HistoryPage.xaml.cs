@@ -86,5 +86,10 @@ namespace UsageLogger.Views
                 ViewModel.GenerateChart();
             }
         }
+
+        private void AppSearchBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ViewModel.SearchApp(AppSearchBox.Text);
+        }
     }
 }
