@@ -4,6 +4,20 @@ All notable changes to **UsageLogger for Windows** are documented in this file.
 
 ---
 
+## [1.0.2] — 2026-03-09
+
+### ✨ Added
+- **App Lookup Card** — New "App Lookup" section in Distribution Analysis with a title and two-column layout: search on the left, most used app on the right.
+- **AutoSuggest Search** — Replaced the basic search box with an AutoSuggestBox dropdown that shows matching app/sub-app names as you type, allowing exact selection.
+- **Trend Chart Overlay** — Searching for an app highlights its per-day usage on the Usage Trends bar chart using the app's category color.
+- **Period Comparison** — Search results and the top app now show comparison against the previous period (e.g. `↑ 15% (prev: 3h 48m)`).
+
+### 🔧 Changed
+- Search suggestions now respect **Custom Title Rules**, so renamed sub-apps (e.g. "x.com/home" → "X") appear correctly.
+- Search suggestions are filtered by the **Minimum App Duration** setting to exclude noise apps.
+
+---
+
 ## [1.0.1] — 2026-02-19
 
 ### ✨ Added

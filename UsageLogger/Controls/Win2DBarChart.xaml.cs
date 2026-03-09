@@ -214,13 +214,39 @@ namespace UsageLogger.Controls
             set => SetValue(MaxBarWidthProperty, value);
         }
 
+        // Overlay data source (for search highlight)
+        public static readonly DependencyProperty OverlaySourceProperty =
+            DependencyProperty.Register(nameof(OverlaySource), typeof(IEnumerable<BarChartItem>), typeof(Win2DBarChart), new PropertyMetadata(null, OnPropertyChanged));
+
+        public IEnumerable<BarChartItem> OverlaySource
+        {
+            get => (IEnumerable<BarChartItem>)GetValue(OverlaySourceProperty);
+            set => SetValue(OverlaySourceProperty, value);
+        }
+
         private static void OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is Win2DBarChart chart && chart.Canvas != null)
             {
+                // Rebuild overlay lookup if OverlaySource changed
+                if (e.Property == OverlaySourceProperty)
+                {
+                    chart._overlayLookup = null;
+                    if (chart.OverlaySource != null)
+                    {
+                        chart._overlayLookup = new Dictionary<DateTime, BarChartItem>();
+                        foreach (var item in chart.OverlaySource)
+                        {
+                            if (item.Date.HasValue)
+                                chart._overlayLookup[item.Date.Value.Date] = item;
+                        }
+                    }
+                }
                 chart.Canvas.Invalidate();
             }
         }
+
+        private Dictionary<DateTime, BarChartItem> _overlayLookup;
 
         private void Canvas_Draw(CanvasControl sender, CanvasDrawEventArgs args)
         {
@@ -396,6 +422,18 @@ namespace UsageLogger.Controls
                 // Draw Animated Bar
                 var drawRect = new Windows.Foundation.Rect(x, y, barWidth, barHeight);
                 ds.FillRoundedRectangle(drawRect, radius, radius, barColor);
+
+                // Draw overlay segment (search highlight)
+                if (_overlayLookup != null && item.Date.HasValue && _overlayLookup.TryGetValue(item.Date.Value.Date, out var overlayItem) && overlayItem.Value > 0)
+                {
+                    float overlayBarHeight = (float)(overlayItem.Value / maxVal * chartHeight) * animationFactor;
+                    if (overlayBarHeight > barHeight) overlayBarHeight = barHeight; // Clamp to main bar
+                    float overlayY = height - marginBottom - overlayBarHeight;
+                    var overlayRect = new Windows.Foundation.Rect(x, overlayY, barWidth, overlayBarHeight);
+                    // Draw with the overlay color (category color) at ~70% opacity
+                    Color overlayColor = Color.FromArgb(180, overlayItem.Color.R, overlayItem.Color.G, overlayItem.Color.B);
+                    ds.FillRoundedRectangle(overlayRect, radius, radius, overlayColor);
+                }
 
                 // Only draw label if stride allows (prevents overlap)
                 if (!string.IsNullOrEmpty(item.Label) && i % labelStride == 0)

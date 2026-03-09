@@ -87,9 +87,28 @@ namespace UsageLogger.Views
             }
         }
 
-        private void AppSearchBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void AppSearchBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
-            ViewModel.SearchApp(AppSearchBox.Text);
+            // Only update suggestions when user is typing, not when a suggestion is chosen
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            {
+                sender.ItemsSource = ViewModel.GetSearchSuggestions(sender.Text);
+            }
+        }
+
+        private void AppSearchBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+        {
+            if (args.SelectedItem is string selected)
+            {
+                sender.Text = selected;
+            }
+        }
+
+        private void AppSearchBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            string query = args.ChosenSuggestion as string ?? args.QueryText;
+            bool exactMatch = args.ChosenSuggestion != null;
+            ViewModel.SearchApp(query, exactMatch);
         }
     }
 }

@@ -12,6 +12,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using Windows.UI;
 
 namespace UsageLogger.ViewModels
 {
@@ -176,6 +177,14 @@ namespace UsageLogger.ViewModels
             set { if (_searchResultText != value) { _searchResultText = value; OnPropertyChanged(); } }
         }
 
+        // Overlay data for trend chart (search highlight per day)
+        private ObservableCollection<BarChartItem> _searchOverlayData;
+        public ObservableCollection<BarChartItem> SearchOverlayData
+        {
+            get => _searchOverlayData;
+            set { if (_searchOverlayData != value) { _searchOverlayData = value; OnPropertyChanged(); } }
+        }
+
         // Top app for the selected period
         private string _topAppText;
         public string TopAppText
@@ -232,56 +241,161 @@ namespace UsageLogger.ViewModels
             return $"{arrow} {Math.Abs(changePercent):F0}% (prev: {prevDur})";
         }
 
-        public void SearchApp(string query)
+        public List<string> GetSearchSuggestions(string query)
+        {
+            if (string.IsNullOrWhiteSpace(query) || _cachedSessions.Count == 0)
+                return new List<string>();
+
+            string q = query.Trim();
+            var rules = UserPreferences.CustomTitleRules;
+            var minDuration = UserPreferences.MinimumDuration;
+
+            // Build a dictionary of label -> total duration
+            var labelDurations = new Dictionary<string, double>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var s in _cachedSessions)
+            {
+                if (AppUsageViewModel.IsProcessExcluded(s.ProcessName)) continue;
+
+                string label = GetSessionLabel(s);
+                if (!labelDurations.ContainsKey(label))
+                    labelDurations[label] = 0;
+                labelDurations[label] += s.Duration.TotalSeconds;
+            }
+
+            // Filter: matches query AND exceeds minimum duration
+            return labelDurations
+                .Where(kvp => kvp.Key.Contains(q, StringComparison.OrdinalIgnoreCase) && kvp.Value >= minDuration.TotalSeconds)
+                .OrderBy(kvp => kvp.Key)
+                .Select(kvp => kvp.Key)
+                .ToList();
+        }
+
+        private string GetSessionLabel(AppSession s)
+        {
+            string displayName = UserPreferences.GetDisplayName(s.ProcessName);
+            if (!string.IsNullOrEmpty(s.ProgramName) && s.ProgramName != s.ProcessName)
+            {
+                // Apply custom title rules
+                var rules = UserPreferences.CustomTitleRules;
+                if (rules != null && rules.Count > 0)
+                    return WindowTitleParser.Parse(s.ProcessName, s.ProgramName, rules);
+                return s.ProgramName;
+            }
+            return displayName;
+        }
+
+        public void SearchApp(string query, bool exactMatch = false)
         {
             if (string.IsNullOrWhiteSpace(query) || _cachedSessions.Count == 0)
             {
                 SearchResultText = null;
+                SearchOverlayData = null;
                 return;
             }
 
             string q = query.Trim();
-            var matching = _cachedSessions.Where(s =>
-                !AppUsageViewModel.IsProcessExcluded(s.ProcessName) &&
-                (s.ProcessName.Contains(q, StringComparison.OrdinalIgnoreCase) ||
-                 UserPreferences.GetDisplayName(s.ProcessName).Contains(q, StringComparison.OrdinalIgnoreCase) ||
-                 (!string.IsNullOrEmpty(s.ProgramName) && s.ProgramName.Contains(q, StringComparison.OrdinalIgnoreCase))))
-                .ToList();
+
+            // Filter sessions: exact match or contains
+            List<AppSession> matching;
+            if (exactMatch)
+            {
+                matching = _cachedSessions.Where(s =>
+                    !AppUsageViewModel.IsProcessExcluded(s.ProcessName) &&
+                    (UserPreferences.GetDisplayName(s.ProcessName).Equals(q, StringComparison.OrdinalIgnoreCase) ||
+                     (!string.IsNullOrEmpty(s.ProgramName) && s.ProgramName.Equals(q, StringComparison.OrdinalIgnoreCase))))
+                    .ToList();
+            }
+            else
+            {
+                matching = _cachedSessions.Where(s =>
+                    !AppUsageViewModel.IsProcessExcluded(s.ProcessName) &&
+                    (s.ProcessName.Contains(q, StringComparison.OrdinalIgnoreCase) ||
+                     UserPreferences.GetDisplayName(s.ProcessName).Contains(q, StringComparison.OrdinalIgnoreCase) ||
+                     (!string.IsNullOrEmpty(s.ProgramName) && s.ProgramName.Contains(q, StringComparison.OrdinalIgnoreCase))))
+                    .ToList();
+            }
 
             if (matching.Count == 0)
             {
                 SearchResultText = LocalizationHelper.GetString("History_SearchNoResults");
+                SearchOverlayData = null;
                 return;
             }
 
             // Group by display label and pick the top group by total usage
             var topGroup = matching
-                .GroupBy(s => s.ProcessName.Contains(q, StringComparison.OrdinalIgnoreCase)
-                    ? UserPreferences.GetDisplayName(s.ProcessName)
-                    : s.ProgramName ?? UserPreferences.GetDisplayName(s.ProcessName))
+                .GroupBy(s => GetSessionLabel(s))
                 .OrderByDescending(g => g.Sum(s => s.Duration.TotalMinutes))
                 .First();
+
+            // If exact match was requested, try to find the exact group first
+            if (exactMatch)
+            {
+                var exactGroup = matching
+                    .GroupBy(s => GetSessionLabel(s))
+                    .FirstOrDefault(g => g.Key.Equals(q, StringComparison.OrdinalIgnoreCase));
+                if (exactGroup != null) topGroup = exactGroup;
+            }
 
             string bestMatch = topGroup.Key;
             double totalMinutes = topGroup.Sum(s => s.Duration.TotalMinutes);
             string durationStr = StringHelper.FormatDurationCompact(TimeSpan.FromMinutes(totalMinutes));
 
-            // Previous period comparison scoped to the same best-match label
-            var prevMatching = _cachedPrevSessions.Where(s =>
-                !AppUsageViewModel.IsProcessExcluded(s.ProcessName) &&
-                (s.ProcessName.Contains(q, StringComparison.OrdinalIgnoreCase) ||
-                 UserPreferences.GetDisplayName(s.ProcessName).Contains(q, StringComparison.OrdinalIgnoreCase) ||
-                 (!string.IsNullOrEmpty(s.ProgramName) && s.ProgramName.Contains(q, StringComparison.OrdinalIgnoreCase))))
-                .GroupBy(s => s.ProcessName.Contains(q, StringComparison.OrdinalIgnoreCase)
-                    ? UserPreferences.GetDisplayName(s.ProcessName)
-                    : s.ProgramName ?? UserPreferences.GetDisplayName(s.ProcessName))
-                .FirstOrDefault(g => g.Key == bestMatch);
-            double prevMinutes = prevMatching?.Sum(s => s.Duration.TotalMinutes) ?? 0;
+            // Previous period comparison scoped to the same label
+            List<AppSession> prevFiltered;
+            if (exactMatch)
+            {
+                prevFiltered = _cachedPrevSessions.Where(s =>
+                    !AppUsageViewModel.IsProcessExcluded(s.ProcessName) &&
+                    (UserPreferences.GetDisplayName(s.ProcessName).Equals(bestMatch, StringComparison.OrdinalIgnoreCase) ||
+                     (!string.IsNullOrEmpty(s.ProgramName) && s.ProgramName.Equals(bestMatch, StringComparison.OrdinalIgnoreCase))))
+                    .ToList();
+            }
+            else
+            {
+                prevFiltered = _cachedPrevSessions.Where(s =>
+                    !AppUsageViewModel.IsProcessExcluded(s.ProcessName) &&
+                    (s.ProcessName.Contains(q, StringComparison.OrdinalIgnoreCase) ||
+                     UserPreferences.GetDisplayName(s.ProcessName).Contains(q, StringComparison.OrdinalIgnoreCase) ||
+                     (!string.IsNullOrEmpty(s.ProgramName) && s.ProgramName.Contains(q, StringComparison.OrdinalIgnoreCase))))
+                    .ToList();
+            }
+            var prevGroup = prevFiltered
+                .GroupBy(s => GetSessionLabel(s))
+                .FirstOrDefault(g => g.Key.Equals(bestMatch, StringComparison.OrdinalIgnoreCase));
+            double prevMinutes = prevGroup?.Sum(s => s.Duration.TotalMinutes) ?? 0;
             string comparison = FormatComparison(totalMinutes, prevMinutes);
 
             SearchResultText = $"{bestMatch}: {durationStr}";
             if (!string.IsNullOrEmpty(comparison))
                 SearchResultText += $"  {comparison}";
+
+            // Build per-day overlay for trend chart
+            // Get the category color for the best-matching process
+            string overlayProcessName = topGroup.First().ProcessName;
+            var tag = AppTagHelper.GetAppTag(overlayProcessName);
+            var customTag = UserPreferences.CustomTags.FirstOrDefault(t => t.Id == (int)tag);
+            Color overlayColor = customTag != null
+                ? ColorHelper.GetColorFromHex(customTag.HexColor)
+                : Color.FromArgb(255, 100, 200, 255); // Default blue if untagged
+
+            var overlay = new ObservableCollection<BarChartItem>();
+            var dailyGroups = topGroup
+                .GroupBy(s => s.StartTime.Date)
+                .ToDictionary(g => g.Key, g => g.Sum(s => s.Duration.TotalMinutes));
+
+            for (var d = StartDate.Date; d <= EndDate.Date; d = d.AddDays(1))
+            {
+                double minutes = dailyGroups.ContainsKey(d) ? dailyGroups[d] : 0;
+                overlay.Add(new BarChartItem
+                {
+                    Date = d,
+                    Value = minutes / 60.0, // Hours to match main chart
+                    Color = overlayColor
+                });
+            }
+            SearchOverlayData = overlay;
         }
 
         public HistoryViewModel()
@@ -405,6 +519,7 @@ namespace UsageLogger.ViewModels
                 List<AppSession> allSessions = await LoadSessionsForDateRange(StartDate.Date, EndDate.Date);
                 _cachedSessions = allSessions;
                 SearchResultText = null;
+                SearchOverlayData = null;
                 Debug.WriteLine($"[HistoryViewModel] Loaded {allSessions.Count} sessions.");
 
                 if (allSessions.Count == 0)
