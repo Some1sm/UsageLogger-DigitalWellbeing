@@ -19,6 +19,9 @@ namespace UsageLogger.Views
         {
             this.InitializeComponent();
             LoadApps();
+            
+            // Default to current time for new schedules
+            StartTimePicker.Time = DateTime.Now.TimeOfDay;
         }
 
         public FocusScheduleDialog(FocusSession existingSession) : this()
