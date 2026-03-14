@@ -269,15 +269,34 @@ namespace UsageLogger.ViewModels
                         
                     if (subAppLabel != displayName)
                     {
-                        if (!labelDurations.ContainsKey(subAppLabel)) labelDurations[subAppLabel] = 0;
-                        labelDurations[subAppLabel] += s.Duration.TotalSeconds;
+                        string combinedLabel = $"{displayName} > {subAppLabel}";
+                        if (!labelDurations.ContainsKey(combinedLabel)) labelDurations[combinedLabel] = 0;
+                        labelDurations[combinedLabel] += s.Duration.TotalSeconds;
                     }
                 }
             }
 
             // Filter: matches query AND exceeds minimum duration
             return labelDurations
-                .Where(kvp => kvp.Key.Contains(q, StringComparison.OrdinalIgnoreCase) && kvp.Value >= minDuration.TotalSeconds)
+                .Where(kvp => 
+                {
+                    if (kvp.Value < minDuration.TotalSeconds) return false;
+                    
+                    int sepIdx = kvp.Key.IndexOf(" > ");
+                    if (sepIdx >= 0)
+                    {
+                        // It's a combined label "Parent > SubApp"
+                        string parentPart = kvp.Key.Substring(0, sepIdx).Trim();
+                        string subAppPart = kvp.Key.Substring(sepIdx + 3).Trim();
+
+                        // Only show combined label if query matches the sub-app part, OR query contains ">"
+                        if (q.Contains(">")) return kvp.Key.Contains(q, StringComparison.OrdinalIgnoreCase);
+                        return subAppPart.Contains(q, StringComparison.OrdinalIgnoreCase);
+                    }
+                    
+                    // It's a normal parent app, just match normally
+                    return kvp.Key.Contains(q, StringComparison.OrdinalIgnoreCase);
+                })
                 .OrderBy(kvp => kvp.Key)
                 .Select(kvp => kvp.Key)
                 .ToList();
@@ -324,16 +343,30 @@ namespace UsageLogger.ViewModels
                             subAppLabel = WindowTitleParser.Parse(s.ProcessName, s.ProgramName, rules);
                         
                         if (subAppLabel != displayName) 
-                            labels.Add(subAppLabel);
+                        {
+                            string combinedLabel = $"{displayName} > {subAppLabel}";
+                            labels.Add(combinedLabel);
+                        }
                     }
                     return labels.Select(l => new { Label = l, Session = s });
                 });
 
-            // Filter by query
+            // Filter by query (exactMatch or contains).
+            // When querying sub-apps ("Parent > SubApp"), only match if query matches the subApp part (unless query contains ">" or exactMatch)
             var matchingGroups = allLabelSessions
-                .Where(x => exactMatch 
-                    ? x.Label.Equals(q, StringComparison.OrdinalIgnoreCase) 
-                    : x.Label.Contains(q, StringComparison.OrdinalIgnoreCase))
+                .Where(x => {
+                    if (exactMatch) return x.Label.Equals(q, StringComparison.OrdinalIgnoreCase);
+
+                    int sepIdx = x.Label.IndexOf(" > ");
+                    if (sepIdx >= 0)
+                    {
+                        string subAppPart = x.Label.Substring(sepIdx + 3).Trim();
+                        if (q.Contains(">")) return x.Label.Contains(q, StringComparison.OrdinalIgnoreCase);
+                        return subAppPart.Contains(q, StringComparison.OrdinalIgnoreCase);
+                    }
+
+                    return x.Label.Contains(q, StringComparison.OrdinalIgnoreCase);
+                })
                 .GroupBy(x => x.Label)
                 .ToList();
 
@@ -366,7 +399,11 @@ namespace UsageLogger.ViewModels
                         string subAppLabel = s.ProgramName;
                         if (rules != null && rules.Count > 0)
                             subAppLabel = WindowTitleParser.Parse(s.ProcessName, s.ProgramName, rules);
-                        if (subAppLabel != displayName) labels.Add(subAppLabel);
+                        if (subAppLabel != displayName) 
+                        {
+                            string combinedLabel = $"{displayName} > {subAppLabel}";
+                            labels.Add(combinedLabel);
+                        }
                     }
                     return labels.Select(l => new { Label = l, Session = s });
                 });
