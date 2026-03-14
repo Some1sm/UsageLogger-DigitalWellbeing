@@ -68,9 +68,8 @@ namespace UsageLogger.Helpers
             "ShellExperienceHost",
             "StartMenuExperienceHost",
             "SearchHost",
-            "DigitalWellbeingWinUI3",
+            "UsageLogger",
             "UsageLoggerService",
-            "DigitalWellbeing",
             "UsageLogger (Startup)",
             "LockApp"
         };
