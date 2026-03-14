@@ -421,9 +421,21 @@ namespace UsageLogger.ViewModels
                 SearchResultText += $"  {comparison}";
 
             // Build per-day overlay for trend chart
-            // Get the category color for the best-matching process
-            string overlayProcessName = topSessions.First().ProcessName;
-            var tag = AppTagHelper.GetAppTag(overlayProcessName);
+            // Get the category color for the best-matching process/title
+            var firstSession = topSessions.First();
+            string overlayProcessName = firstSession.ProcessName;
+            
+            var tag = UsageLogger.Core.Models.AppTag.Untagged;
+            if (bestMatch.Contains(" > ") && !string.IsNullOrEmpty(firstSession.ProgramName))
+            {
+                tag = AppTagHelper.GetTitleTag(overlayProcessName, firstSession.ProgramName);
+            }
+            
+            if (tag == UsageLogger.Core.Models.AppTag.Untagged)
+            {
+                tag = AppTagHelper.GetAppTag(overlayProcessName);
+            }
+
             var customTag = UserPreferences.CustomTags.FirstOrDefault(t => t.Id == (int)tag);
             Color overlayColor = customTag != null
                 ? ColorHelper.GetColorFromHex(customTag.HexColor)
