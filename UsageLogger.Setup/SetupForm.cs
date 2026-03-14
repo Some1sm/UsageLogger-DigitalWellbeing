@@ -635,10 +635,10 @@ namespace UsageLogger.Setup
                     using (RegistryKey key = parent.CreateSubKey(AppName))
                     {
                         key.SetValue("DisplayName", AppName);
-                        key.SetValue("ApplicationVersion", "0.8.1.0");
+                        key.SetValue("ApplicationVersion", "1.0.2.0");
                         key.SetValue("Publisher", PublisherName);
                         key.SetValue("DisplayIcon", Path.Combine(installLocation, "UsageLogger.exe"));
-                        key.SetValue("DisplayVersion", "0.8.1.0");
+                        key.SetValue("DisplayVersion", "1.0.2.0");
                         key.SetValue("InstallDate", DateTime.Now.ToString("yyyyMMdd"));
                         key.SetValue("UninstallString", $"\"{uninstallExePath}\" /uninstall");
                         key.SetValue("QuietUninstallString", $"\"{uninstallExePath}\" /uninstall");
