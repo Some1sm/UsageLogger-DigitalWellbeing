@@ -8,9 +8,10 @@
     xmlns:l="using:WinUI3Localizer"
     mc:Ignorable="d"
     l:Uids.Uid="ReportDialog"
-    DefaultButton="Primary">
+    DefaultButton="Primary"
+    FullSizeDesired="True">
 
-    <Grid MinWidth="680" MaxWidth="920" MinHeight="460" RowSpacing="12">
+    <Grid RowSpacing="12">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -27,7 +28,7 @@
         <!-- Image Preview Card -->
         <Border Grid.Row="1" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
                 CornerRadius="8" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" 
-                BorderThickness="1" Padding="8" MaxHeight="520">
+                BorderThickness="1" Padding="16">
             <Grid>
                 <ProgressRing x:Name="LoadingRing" IsActive="True" Width="40" Height="40" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <Image x:Name="ReportImagePreview" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
