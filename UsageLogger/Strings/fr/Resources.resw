@@ -1006,4 +1006,13 @@ Fin : {2}</value>
   <data name="Sessions_MergeInterruptions.Text" xml:space="preserve">
     <value>Combiner les transitions</value>
   </data>
+  <data name="Settings_GroupDashboard.Text" xml:space="preserve">
+    <value>Tableau de bord</value>
+  </data>
+  <data name="Settings_GroupDetailedUsage.Text" xml:space="preserve">
+    <value>Utilisation détaillée (Chronologie)</value>
+  </data>
+  <data name="Settings_GroupAppearance.Text" xml:space="preserve">
+    <value>Apparence et Personnalisation</value>
+  </data>
 </root>

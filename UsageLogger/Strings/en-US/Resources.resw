@@ -1006,4 +1006,13 @@
   <data name="Sessions_MergeInterruptions.Text" xml:space="preserve">
     <value>Merge Short Switches</value>
   </data>
+  <data name="Settings_GroupDashboard.Text" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+  <data name="Settings_GroupDetailedUsage.Text" xml:space="preserve">
+    <value>Detailed Usage (Timeline)</value>
+  </data>
+  <data name="Settings_GroupAppearance.Text" xml:space="preserve">
+    <value>Appearance &amp; Personalization</value>
+  </data>
 </root>

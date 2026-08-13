@@ -1006,4 +1006,13 @@
   <data name="Sessions_MergeInterruptions.Text" xml:space="preserve">
     <value>짧은 전환 병합</value>
   </data>
+  <data name="Settings_GroupDashboard.Text" xml:space="preserve">
+    <value>대시보드</value>
+  </data>
+  <data name="Settings_GroupDetailedUsage.Text" xml:space="preserve">
+    <value>상세 사용 기록 (타임라인)</value>
+  </data>
+  <data name="Settings_GroupAppearance.Text" xml:space="preserve">
+    <value>모양 및 개인 설정</value>
+  </data>
 </root>

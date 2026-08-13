@@ -1006,4 +1006,13 @@ Fine: {2}</value>
   <data name="Sessions_MergeInterruptions.Text" xml:space="preserve">
     <value>Unisci cambi brevi</value>
   </data>
+  <data name="Settings_GroupDashboard.Text" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+  <data name="Settings_GroupDetailedUsage.Text" xml:space="preserve">
+    <value>Utilizzo Dettagliato (Cronologia)</value>
+  </data>
+  <data name="Settings_GroupAppearance.Text" xml:space="preserve">
+    <value>Aspetto e Personalizzazione</value>
+  </data>
 </root>

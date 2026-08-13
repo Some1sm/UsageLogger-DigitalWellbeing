@@ -1006,4 +1006,13 @@
   <data name="Sessions_MergeInterruptions.Text" xml:space="preserve">
     <value>短い切り替えを結合</value>
   </data>
+  <data name="Settings_GroupDashboard.Text" xml:space="preserve">
+    <value>ダッシュボード</value>
+  </data>
+  <data name="Settings_GroupDetailedUsage.Text" xml:space="preserve">
+    <value>詳細な使用状況 (タイムライン)</value>
+  </data>
+  <data name="Settings_GroupAppearance.Text" xml:space="preserve">
+    <value>外観と個人用設定</value>
+  </data>
 </root>

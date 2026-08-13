@@ -1006,4 +1006,13 @@ Fim: {2}</value>
   <data name="Sessions_MergeInterruptions.Text" xml:space="preserve">
     <value>Combinar trocas curtas</value>
   </data>
+  <data name="Settings_GroupDashboard.Text" xml:space="preserve">
+    <value>Painel Principal</value>
+  </data>
+  <data name="Settings_GroupDetailedUsage.Text" xml:space="preserve">
+    <value>Uso Detalhado (Linha do tempo)</value>
+  </data>
+  <data name="Settings_GroupAppearance.Text" xml:space="preserve">
+    <value>Aparência e Personalização</value>
+  </data>
 </root>

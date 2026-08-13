@@ -1006,4 +1006,13 @@ Acaba: {2}</value>
   <data name="Sessions_MergeInterruptions.Text" xml:space="preserve">
     <value>Combinar canvis curts</value>
   </data>
+  <data name="Settings_GroupDashboard.Text" xml:space="preserve">
+    <value>Panell Principal</value>
+  </data>
+  <data name="Settings_GroupDetailedUsage.Text" xml:space="preserve">
+    <value>Ús Detallat (Línia de temps)</value>
+  </data>
+  <data name="Settings_GroupAppearance.Text" xml:space="preserve">
+    <value>Aparença i Personalització</value>
+  </data>
 </root>

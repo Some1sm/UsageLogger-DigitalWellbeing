@@ -1006,4 +1006,13 @@
   <data name="Sessions_MergeInterruptions.Text" xml:space="preserve">
     <value>Объединять переключения</value>
   </data>
+  <data name="Settings_GroupDashboard.Text" xml:space="preserve">
+    <value>Главная панель</value>
+  </data>
+  <data name="Settings_GroupDetailedUsage.Text" xml:space="preserve">
+    <value>Подробная статистика (Таймлайн)</value>
+  </data>
+  <data name="Settings_GroupAppearance.Text" xml:space="preserve">
+    <value>Внешний вид и Персонализация</value>
+  </data>
 </root>

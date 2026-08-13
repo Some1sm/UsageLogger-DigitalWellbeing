@@ -178,38 +178,6 @@
                 
                 <Button Grid.Row="2" l:Uids.Uid="Settings_AddNewRule" Click="BtnAddRule_Click" HorizontalAlignment="Right"/>
             </Grid>
-
-            <!-- Merge Short Interruptions in Detailed Usage -->
-            <Grid Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <StackPanel Grid.Row="0" Grid.Column="0" Spacing="2">
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <FontIcon Glyph="&#xE8AB;" FontFamily="Segoe MDL2 Assets" FontSize="16"/>
-                        <TextBlock l:Uids.Uid="Settings_MergeShortInterruptions" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                    </StackPanel>
-                    <TextBlock l:Uids.Uid="Settings_MergeShortInterruptionsDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
-                </StackPanel>
-                <ToggleSwitch x:Name="ToggleMergeInterruptions" Grid.Row="0" Grid.Column="1" Toggled="ToggleMergeInterruptions_Toggled"/>
-                
-                <StackPanel x:Name="PanelInterruptionThreshold" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" Spacing="12" Margin="0,10,0,0">
-                    <TextBlock l:Uids.Uid="Settings_InterruptionThreshold" VerticalAlignment="Center" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                    <ComboBox x:Name="CmbInterruptionThreshold" SelectionChanged="CmbInterruptionThreshold_SelectionChanged" Width="130">
-                        <ComboBoxItem Content="15s" Tag="15"/>
-                        <ComboBoxItem Content="30s" Tag="30"/>
-                        <ComboBoxItem Content="45s" Tag="45"/>
-                        <ComboBoxItem Content="1m" Tag="60"/>
-                        <ComboBoxItem Content="90s" Tag="90"/>
-                        <ComboBoxItem Content="2m" Tag="120"/>
-                    </ComboBox>
-                </StackPanel>
-            </Grid>
             
             <!-- Power Tracking Settings -->
             <Grid Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
@@ -277,144 +245,196 @@
                         <TextBlock l:Uids.Uid="Settings_DisplaySummary" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                      </StackPanel>
                  </Expander.Header>
-                 <StackPanel Spacing="5" Padding="0,10,0,0">
-                <!-- Days to Show -->
-                 <Grid x:Name="GridDaysToShow" Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
-                     <Grid.ColumnDefinitions>
-                         <ColumnDefinition Width="*"/>
-                         <ColumnDefinition Width="Auto"/>
-                     </Grid.ColumnDefinitions>
-                     <StackPanel Grid.Column="0" Spacing="2">
-                         <TextBlock l:Uids.Uid="Settings_DaysToShow" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                          <TextBlock l:Uids.Uid="Settings_DaysToShowDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
+                 <StackPanel Spacing="16" Padding="0,10,0,0">
+
+                     <!-- GROUP 1: Dashboard -->
+                     <StackPanel Spacing="6">
+                         <StackPanel Orientation="Horizontal" Spacing="8" Margin="4,0,0,2">
+                             <FontIcon Glyph="&#xE80F;" FontFamily="Segoe MDL2 Assets" FontSize="14" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+                             <TextBlock l:Uids.Uid="Settings_GroupDashboard" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                         </StackPanel>
+
+                         <!-- Days to Show -->
+                         <Grid x:Name="GridDaysToShow" Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
+                             <Grid.ColumnDefinitions>
+                                 <ColumnDefinition Width="*"/>
+                                 <ColumnDefinition Width="Auto"/>
+                             </Grid.ColumnDefinitions>
+                             <StackPanel Grid.Column="0" Spacing="2">
+                                 <TextBlock l:Uids.Uid="Settings_DaysToShow" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                                 <TextBlock l:Uids.Uid="Settings_DaysToShowDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
+                             </StackPanel>
+                             <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="10">
+                                 <NumberBox x:Name="DaysToShowTextBox" Value="7" SpinButtonPlacementMode="Compact" Width="150" Minimum="1" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp"/>
+                                 <TextBlock x:Name="DaysAvailableHint" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" Visibility="Collapsed"/>
+                             </StackPanel>
+                         </Grid>
+
+                         <!-- Minimum Duration -->
+                         <Grid x:Name="GridMinDuration" Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
+                             <Grid.ColumnDefinitions>
+                                 <ColumnDefinition Width="*"/>
+                                 <ColumnDefinition Width="Auto"/>
+                             </Grid.ColumnDefinitions>
+                             <StackPanel Grid.Column="0" Spacing="2">
+                                 <TextBlock l:Uids.Uid="Settings_MinDuration" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                                 <TextBlock l:Uids.Uid="Settings_MinDurationDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
+                             </StackPanel>
+                             <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="10">
+                                 <NumberBox x:Name="MinDurationTextBox" Value="0" SpinButtonPlacementMode="Compact" Width="150" Minimum="0" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp"/>
+                             </StackPanel>
+                         </Grid>
+
+                         <!-- Refresh Interval -->
+                         <Grid x:Name="GridAutoRefresh" Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
+                             <Grid.ColumnDefinitions>
+                                 <ColumnDefinition Width="*"/>
+                                 <ColumnDefinition Width="Auto"/>
+                             </Grid.ColumnDefinitions>
+                             <StackPanel Grid.Column="0" Spacing="2">
+                                 <TextBlock l:Uids.Uid="Settings_AutoRefresh" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                                 <TextBlock l:Uids.Uid="Settings_AutoRefreshDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
+                             </StackPanel>
+                             <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="10">
+                                 <ToggleSwitch x:Name="EnableAutoRefresh" Toggled="EnableAutoRefresh_Toggled"/>
+                                 <NumberBox x:Name="RefreshInterval" Width="150" SpinButtonPlacementMode="Compact" Minimum="6" Maximum="600" ValueChanged="RefreshInterval_ValueChanged" IsEnabled="{x:Bind EnableAutoRefresh.IsOn, Mode=OneWay}" KeyUp="Settings_KeyUp"/>
+                             </StackPanel>
+                         </Grid>
                      </StackPanel>
-                       <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="10">
-                          <NumberBox x:Name="DaysToShowTextBox" Value="7" SpinButtonPlacementMode="Compact" Width="150" Minimum="1" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp"/>
-                          <TextBlock x:Name="DaysAvailableHint" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" Visibility="Collapsed"/>
-                      </StackPanel>
-                 </Grid>
 
-                 <!-- Days to Show on Detailed Usage -->
-                 <Grid x:Name="GridDetailedDays" Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
-                     <Grid.ColumnDefinitions>
-                         <ColumnDefinition Width="*"/>
-                         <ColumnDefinition Width="Auto"/>
-                     </Grid.ColumnDefinitions>
-                     <StackPanel Grid.Column="0" Spacing="2">
-                          <TextBlock l:Uids.Uid="Settings_DetailedDays" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                          <TextBlock l:Uids.Uid="Settings_DetailedDaysDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
+                     <!-- GROUP 2: Detailed Usage (Timeline) -->
+                     <StackPanel Spacing="6">
+                         <StackPanel Orientation="Horizontal" Spacing="8" Margin="4,0,0,2">
+                             <FontIcon Glyph="&#xE823;" FontFamily="Segoe MDL2 Assets" FontSize="14" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+                             <TextBlock l:Uids.Uid="Settings_GroupDetailedUsage" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                         </StackPanel>
+
+                         <!-- Days to Show on Detailed Usage -->
+                         <Grid x:Name="GridDetailedDays" Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
+                             <Grid.ColumnDefinitions>
+                                 <ColumnDefinition Width="*"/>
+                                 <ColumnDefinition Width="Auto"/>
+                             </Grid.ColumnDefinitions>
+                             <StackPanel Grid.Column="0" Spacing="2">
+                                 <TextBlock l:Uids.Uid="Settings_DetailedDays" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                                 <TextBlock l:Uids.Uid="Settings_DetailedDaysDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
+                             </StackPanel>
+                             <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="10">
+                                 <NumberBox x:Name="DetailedDaysTextBox" Value="1" SpinButtonPlacementMode="Compact" Width="150" Minimum="1" Maximum="7" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp"/>
+                             </StackPanel>
+                         </Grid>
+
+                         <!-- Merge Short Interruptions in Detailed Usage -->
+                         <Grid x:Name="GridMergeInterruptions" Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
+                             <Grid.ColumnDefinitions>
+                                 <ColumnDefinition Width="*"/>
+                                 <ColumnDefinition Width="Auto"/>
+                             </Grid.ColumnDefinitions>
+                             <Grid.RowDefinitions>
+                                 <RowDefinition Height="Auto"/>
+                                 <RowDefinition Height="Auto"/>
+                             </Grid.RowDefinitions>
+                             <StackPanel Grid.Row="0" Grid.Column="0" Spacing="2">
+                                 <TextBlock l:Uids.Uid="Settings_MergeShortInterruptions" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                                 <TextBlock l:Uids.Uid="Settings_MergeShortInterruptionsDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
+                             </StackPanel>
+                             <ToggleSwitch x:Name="ToggleMergeInterruptions" Grid.Row="0" Grid.Column="1" Toggled="ToggleMergeInterruptions_Toggled"/>
+                             
+                             <StackPanel x:Name="PanelInterruptionThreshold" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" Spacing="12" Margin="0,10,0,0">
+                                 <TextBlock l:Uids.Uid="Settings_InterruptionThreshold" VerticalAlignment="Center" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                 <ComboBox x:Name="CmbInterruptionThreshold" SelectionChanged="CmbInterruptionThreshold_SelectionChanged" Width="130">
+                                     <ComboBoxItem Content="15s" Tag="15"/>
+                                     <ComboBoxItem Content="30s" Tag="30"/>
+                                     <ComboBoxItem Content="45s" Tag="45"/>
+                                     <ComboBoxItem Content="1m" Tag="60"/>
+                                     <ComboBoxItem Content="90s" Tag="90"/>
+                                     <ComboBoxItem Content="2m" Tag="120"/>
+                                 </ComboBox>
+                             </StackPanel>
+                         </Grid>
+
+                         <!-- Combined Audio View -->
+                         <Grid x:Name="GridCombinedAudio" Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
+                             <Grid.ColumnDefinitions>
+                                 <ColumnDefinition Width="*"/>
+                                 <ColumnDefinition Width="Auto"/>
+                             </Grid.ColumnDefinitions>
+                             <StackPanel Grid.Column="0" Spacing="2">
+                                 <TextBlock l:Uids.Uid="Settings_CombinedAudio" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                                 <TextBlock l:Uids.Uid="Settings_CombinedAudioDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
+                             </StackPanel>
+                             <ToggleSwitch x:Name="ToggleCombinedAudioView" Grid.Column="1" Toggled="ToggleCombinedAudioView_Toggled"/>
+                         </Grid>
                      </StackPanel>
-                     <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="10">
-                         <NumberBox x:Name="DetailedDaysTextBox" Value="1" SpinButtonPlacementMode="Compact" Width="150" Minimum="1" Maximum="7" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp"/>
+
+                     <!-- GROUP 3: Appearance & Personalization / Misc -->
+                     <StackPanel Spacing="6">
+                         <StackPanel Orientation="Horizontal" Spacing="8" Margin="4,0,0,2">
+                             <FontIcon Glyph="&#xE790;" FontFamily="Segoe MDL2 Assets" FontSize="14" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+                             <TextBlock l:Uids.Uid="Settings_GroupAppearance" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                         </StackPanel>
+
+                         <!-- Theme Mode -->
+                         <Grid x:Name="GridTheme" Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
+                             <Grid.ColumnDefinitions>
+                                 <ColumnDefinition Width="*"/>
+                                 <ColumnDefinition Width="Auto"/>
+                             </Grid.ColumnDefinitions>
+                             <StackPanel Grid.Column="0" Spacing="2">
+                                 <TextBlock l:Uids.Uid="Settings_ThemeMode" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                             </StackPanel>
+                             <ComboBox x:Name="CBTheme" Grid.Column="1" SelectionChanged="CBTheme_SelectionChanged" Width="150">
+                                 <ComboBoxItem l:Uids.Uid="Settings_ThemeSystem" Tag="System"/>
+                                 <ComboBoxItem l:Uids.Uid="Settings_ThemeLight" Tag="Light"/>
+                                 <ComboBoxItem l:Uids.Uid="Settings_ThemeDark" Tag="Dark"/>
+                             </ComboBox>
+                         </Grid>
+
+                         <!-- Window Effect (Backdrop) -->
+                         <Grid x:Name="GridBackdrop" Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
+                             <Grid.ColumnDefinitions>
+                                 <ColumnDefinition Width="*"/>
+                                 <ColumnDefinition Width="Auto"/>
+                             </Grid.ColumnDefinitions>
+                             <StackPanel Grid.Column="0" Spacing="2">
+                                 <TextBlock l:Uids.Uid="Settings_BackdropType" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                                 <TextBlock l:Uids.Uid="Settings_BackdropTypeDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
+                             </StackPanel>
+                             <ComboBox x:Name="CBBackdrop" Grid.Column="1" SelectionChanged="CBBackdrop_SelectionChanged" Width="150">
+                                 <ComboBoxItem l:Uids.Uid="Settings_BackdropMica" Tag="Mica"/>
+                                 <ComboBoxItem l:Uids.Uid="Settings_BackdropMicaAlt" Tag="MicaAlt"/>
+                                 <ComboBoxItem l:Uids.Uid="Settings_BackdropAcrylic" Tag="Acrylic"/>
+                                 <ComboBoxItem l:Uids.Uid="Settings_BackdropNone" Tag="None"/>
+                             </ComboBox>
+                         </Grid>
+
+                         <!-- Language -->
+                         <Grid x:Name="GridLanguage" Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
+                             <Grid.ColumnDefinitions>
+                                 <ColumnDefinition Width="*"/>
+                                 <ColumnDefinition Width="Auto"/>
+                             </Grid.ColumnDefinitions>
+                             <StackPanel Grid.Column="0" Spacing="2">
+                                 <TextBlock l:Uids.Uid="Settings_Language" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                                 <TextBlock l:Uids.Uid="Settings_LanguageDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
+                             </StackPanel>
+                             <ComboBox x:Name="CBLanguage" Grid.Column="1" Width="200" SelectionChanged="CBLanguage_SelectionChanged">
+                                 <ComboBoxItem Content="System Default" Tag=""/>
+                                 <ComboBoxItem Content="English" Tag="en-US"/>
+                                 <ComboBoxItem Content="Español (Spanish)" Tag="es-ES"/>
+                                 <ComboBoxItem Content="Français (French)" Tag="fr"/>
+                                 <ComboBoxItem Content="Deutsch (German)" Tag="de"/>
+                                 <ComboBoxItem Content="Italiano (Italian)" Tag="it"/>
+                                 <ComboBoxItem Content="Português (Brasil)" Tag="pt-BR"/>
+                                 <ComboBoxItem Content="中文 (Simplified)" Tag="zh-Hans"/>
+                                 <ComboBoxItem Content="日本語 (Japanese)" Tag="ja"/>
+                                 <ComboBoxItem Content="한국어 (Korean)" Tag="ko"/>
+                                 <ComboBoxItem Content="Русский (Russian)" Tag="ru"/>
+                                 <ComboBoxItem Content="Català (Catalan)" Tag="ca-ES"/>
+                             </ComboBox>
+                         </Grid>
                      </StackPanel>
-                 </Grid>
-
-                 <!-- Minimum Duration -->
-                <Grid x:Name="GridMinDuration" Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0" Spacing="2">
-                        <TextBlock l:Uids.Uid="Settings_MinDuration" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                        <TextBlock l:Uids.Uid="Settings_MinDurationDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="10">
-                        <NumberBox x:Name="MinDurationTextBox" Value="0" SpinButtonPlacementMode="Compact" Width="150" Minimum="0" ValueChanged="Settings_ValueChanged" KeyUp="Settings_KeyUp"/>
-                    </StackPanel>
-                </Grid>
-
-                <!-- Refresh Interval -->
-                <Grid x:Name="GridAutoRefresh" Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0" Spacing="2">
-                        <TextBlock l:Uids.Uid="Settings_AutoRefresh" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                         <TextBlock l:Uids.Uid="Settings_AutoRefreshDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
-                    </StackPanel>
-                     <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="10">
-                         <ToggleSwitch x:Name="EnableAutoRefresh" Toggled="EnableAutoRefresh_Toggled"/>
-                         <NumberBox x:Name="RefreshInterval" Width="150" SpinButtonPlacementMode="Compact" Minimum="6" Maximum="600" ValueChanged="RefreshInterval_ValueChanged" IsEnabled="{x:Bind EnableAutoRefresh.IsOn, Mode=OneWay}" KeyUp="Settings_KeyUp"/>
-                     </StackPanel>
-                </Grid>
-
-
-
-                 <!-- Theme Mode -->
-                <Grid x:Name="GridTheme" Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0" Spacing="2">
-                        <TextBlock l:Uids.Uid="Settings_ThemeMode" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                    </StackPanel>
-                    <ComboBox x:Name="CBTheme" Grid.Column="1" SelectionChanged="CBTheme_SelectionChanged" Width="150">
-                        <ComboBoxItem l:Uids.Uid="Settings_ThemeSystem" Tag="System"/>
-                        <ComboBoxItem l:Uids.Uid="Settings_ThemeLight" Tag="Light"/>
-                        <ComboBoxItem l:Uids.Uid="Settings_ThemeDark" Tag="Dark"/>
-                    </ComboBox>
-                </Grid>
-
-                 <!-- Window Effect (Backdrop) -->
-                <Grid x:Name="GridBackdrop" Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0" Spacing="2">
-                        <TextBlock l:Uids.Uid="Settings_BackdropType" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                        <TextBlock l:Uids.Uid="Settings_BackdropTypeDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
-                    </StackPanel>
-                    <ComboBox x:Name="CBBackdrop" Grid.Column="1" SelectionChanged="CBBackdrop_SelectionChanged" Width="150">
-                        <ComboBoxItem l:Uids.Uid="Settings_BackdropMica" Tag="Mica"/>
-                        <ComboBoxItem l:Uids.Uid="Settings_BackdropMicaAlt" Tag="MicaAlt"/>
-                        <ComboBoxItem l:Uids.Uid="Settings_BackdropAcrylic" Tag="Acrylic"/>
-                        <ComboBoxItem l:Uids.Uid="Settings_BackdropNone" Tag="None"/>
-                    </ComboBox>
-                </Grid>
-
-                 <!-- Language -->
-                <Grid x:Name="GridLanguage" Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0" Spacing="2">
-                        <TextBlock l:Uids.Uid="Settings_Language" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                        <TextBlock l:Uids.Uid="Settings_LanguageDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
-                    </StackPanel>
-                    <ComboBox x:Name="CBLanguage" Grid.Column="1" Width="200" SelectionChanged="CBLanguage_SelectionChanged">
-                        <ComboBoxItem Content="System Default" Tag=""/>
-                        <ComboBoxItem Content="English" Tag="en-US"/>
-                        <ComboBoxItem Content="Español (Spanish)" Tag="es-ES"/>
-                        <ComboBoxItem Content="Français (French)" Tag="fr"/>
-                        <ComboBoxItem Content="Deutsch (German)" Tag="de"/>
-                        <ComboBoxItem Content="Italiano (Italian)" Tag="it"/>
-                        <ComboBoxItem Content="Português (Brasil)" Tag="pt-BR"/>
-                        <ComboBoxItem Content="中文 (Simplified)" Tag="zh-Hans"/>
-                        <ComboBoxItem Content="日本語 (Japanese)" Tag="ja"/>
-                        <ComboBoxItem Content="한국어 (Korean)" Tag="ko"/>
-                        <ComboBoxItem Content="Русский (Russian)" Tag="ru"/>
-                        <ComboBoxItem Content="Català (Catalan)" Tag="ca-ES"/>
-                    </ComboBox>
-                </Grid>
-                
-                <!-- Combined Audio View -->
-                <Grid x:Name="GridCombinedAudio" Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0" Spacing="2">
-                        <TextBlock l:Uids.Uid="Settings_CombinedAudio" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                        <TextBlock l:Uids.Uid="Settings_CombinedAudioDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
-                    </StackPanel>
-                    <ToggleSwitch x:Name="ToggleCombinedAudioView" Grid.Column="1" Toggled="ToggleCombinedAudioView_Toggled"/>
-                </Grid>
-             </StackPanel>
+                 </StackPanel>
             </Expander>
 
             <!-- Data -->

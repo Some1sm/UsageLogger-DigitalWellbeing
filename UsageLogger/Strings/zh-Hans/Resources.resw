@@ -1006,4 +1006,13 @@
   <data name="Sessions_MergeInterruptions.Text" xml:space="preserve">
     <value>合并简短切换</value>
   </data>
+  <data name="Settings_GroupDashboard.Text" xml:space="preserve">
+    <value>仪表盘</value>
+  </data>
+  <data name="Settings_GroupDetailedUsage.Text" xml:space="preserve">
+    <value>详细使用记录 (时间轴)</value>
+  </data>
+  <data name="Settings_GroupAppearance.Text" xml:space="preserve">
+    <value>外观与个性化</value>
+  </data>
 </root>

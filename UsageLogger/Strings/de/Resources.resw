@@ -1006,4 +1006,13 @@ Ende: {2}</value>
   <data name="Sessions_MergeInterruptions.Text" xml:space="preserve">
     <value>Kurzwechsel verbinden</value>
   </data>
+  <data name="Settings_GroupDashboard.Text" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+  <data name="Settings_GroupDetailedUsage.Text" xml:space="preserve">
+    <value>Detaillierte Nutzung (Zeitleiste)</value>
+  </data>
+  <data name="Settings_GroupAppearance.Text" xml:space="preserve">
+    <value>Erscheinungsbild &amp; Personalisierung</value>
+  </data>
 </root>
