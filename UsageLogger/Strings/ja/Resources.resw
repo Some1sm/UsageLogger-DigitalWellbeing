@@ -1030,4 +1030,40 @@
   <data name="Sessions_Tooltip_AFK" xml:space="preserve">
     <value>離席中</value>
   </data>
+  <data name="Dashboard_DailyGoal.Text" xml:space="preserve">
+    <value>1日の目標</value>
+  </data>
+  <data name="Dashboard_SetDailyGoal.Text" xml:space="preserve">
+    <value>1日のスクリーンタイム目標</value>
+  </data>
+  <data name="Dashboard_HoursUnit.Text" xml:space="preserve">
+    <value>時間</value>
+  </data>
+  <data name="Settings_DailyGoal.Text" xml:space="preserve">
+    <value>1日のスクリーンタイム目標</value>
+  </data>
+  <data name="Settings_DailyGoalDesc.Text" xml:space="preserve">
+    <value>ダッシュボードに進捗リングを表示して、1日の利用時間の上限を設定します。</value>
+  </data>
+  <data name="Sessions_SearchHighlight.PlaceholderText" xml:space="preserve">
+    <value>アプリまたはカテゴリを強調表示...</value>
+  </data>
+  <data name="History_VisualReportButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>週間サマリーのインフォグラフィック画像を生成</value>
+  </data>
+  <data name="History_VisualReportText.Text" xml:space="preserve">
+    <value>ビジュアルレポート</value>
+  </data>
+  <data name="ReportDialog.Title" xml:space="preserve">
+    <value>週間ビジュアルレポート</value>
+  </data>
+  <data name="ReportDialog.PrimaryButtonText" xml:space="preserve">
+    <value>📋 画像をコピー</value>
+  </data>
+  <data name="ReportDialog.SecondaryButtonText" xml:space="preserve">
+    <value>💾 画像を保存...</value>
+  </data>
+  <data name="ReportDialog.CloseButtonText" xml:space="preserve">
+    <value>閉じる</value>
+  </data>
 </root>

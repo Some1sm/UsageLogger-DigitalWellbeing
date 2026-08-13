@@ -102,6 +102,53 @@ namespace UsageLogger.ViewModels
             }
         }
 
+        private string _filterQuery = string.Empty;
+        public string FilterQuery
+        {
+            get => _filterQuery;
+            set
+            {
+                if (_filterQuery != value)
+                {
+                    _filterQuery = value;
+                    OnPropertyChanged();
+                    UpdateDaysFilter();
+                }
+            }
+        }
+
+        public void UpdateDaysFilter()
+        {
+            foreach (var day in Days)
+            {
+                day.FilterQuery = _filterQuery;
+            }
+        }
+
+        public List<string> GetFilterSuggestions(string query)
+        {
+            if (string.IsNullOrWhiteSpace(query)) return new List<string>();
+            var set = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            
+            foreach (var day in Days)
+            {
+                if (day.SessionBlocks == null) continue;
+                foreach (var b in day.SessionBlocks)
+                {
+                    if (!string.IsNullOrEmpty(b.ProcessName) && b.ProcessName.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0)
+                        set.Add(b.ProcessName);
+                    
+                    var dName = UserPreferences.GetDisplayName(b.ProcessName);
+                    if (!string.IsNullOrEmpty(dName) && dName.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0)
+                        set.Add(dName);
+
+                    if (!string.IsNullOrEmpty(b.Title) && b.Title.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0 && b.Title.Length < 35)
+                        set.Add(b.Title);
+                }
+            }
+            return set.Take(8).ToList();
+        }
+
         public bool MergeShortInterruptions
         {
             get => UserPreferences.MergeShortInterruptions;
@@ -252,6 +299,7 @@ namespace UsageLogger.ViewModels
                 {
                     // Update in place
                     existingVM.ViewMode = ViewMode;
+                    existingVM.FilterQuery = FilterQuery;
                     existingVM.LoadSessions(result.Sessions, PixelsPerHour);
                 }
                 else
@@ -259,6 +307,7 @@ namespace UsageLogger.ViewModels
                     // Add new
                     var dayVM = new DayTimelineViewModel(result.Date);
                     dayVM.ViewMode = ViewMode;
+                    dayVM.FilterQuery = FilterQuery;
                     dayVM.LoadSessions(result.Sessions, PixelsPerHour);
                     // Insert in order?
                     // Simple append if we assume chronological generation, but safer to insert.

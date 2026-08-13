@@ -1,8 +1,9 @@
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using UsageLogger.ViewModels;
 using UsageLogger.Controls;
 using Microsoft.UI.Xaml.Controls;
-
-using System.Linq;
 
 namespace UsageLogger.Views
 {
@@ -121,6 +122,25 @@ namespace UsageLogger.Views
             string query = args.ChosenSuggestion as string ?? args.QueryText;
             bool exactMatch = args.ChosenSuggestion != null;
             ViewModel.SearchApp(query, exactMatch);
+        }
+
+        private async void BtnVisualReport_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            try
+            {
+                var dialog = new VisualReportDialog
+                {
+                    XamlRoot = this.XamlRoot
+                };
+                
+                DateTime refDate = ViewModel.EndDate != default ? ViewModel.EndDate.DateTime : DateTime.Now;
+                _ = dialog.InitializeReportAsync(refDate);
+                await dialog.ShowAsync();
+            }
+            catch (System.Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[VisualReport] ShowDialog error: {ex.Message}");
+            }
         }
     }
 }

@@ -54,6 +54,20 @@
                     <!-- Generate Button -->
                     <Button l:Uids.Uid="History_ApplyButton" Command="{x:Bind ViewModel.GenerateChartCommand}" Style="{StaticResource AccentButtonStyle}" VerticalAlignment="Bottom" Padding="20,6"/>
                 </StackPanel>
+
+                <!-- Separator -->
+                <Border Width="1" Background="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="5,0"/>
+
+                <!-- Generate Visual Report / Infographic -->
+                <Button x:Name="BtnVisualReport" 
+                        Click="BtnVisualReport_Click" 
+                        VerticalAlignment="Bottom" 
+                        Padding="14,6">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <TextBlock Text="📸" VerticalAlignment="Center"/>
+                        <TextBlock l:Uids.Uid="History_VisualReportText" Text="Visual Report" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Button>
                 
             </StackPanel>
         </Border>

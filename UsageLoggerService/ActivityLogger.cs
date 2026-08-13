@@ -34,8 +34,11 @@ public class ActivityLogger
     private readonly ServiceSettingsReader _settingsReader;
     private readonly FocusScheduleManager _focusManager;
 
+    public static ActivityLogger? Instance { get; private set; }
+
     public ActivityLogger(IAppUsageRepository repository, SessionManager sessionManager)
     {
+        Instance = this;
         folderPath = ApplicationPath.UsageLogsFolder;
         autoRunFilePath = ApplicationPath.autorunFilePath;
 
@@ -232,6 +235,11 @@ public class ActivityLogger
         {
             await FlushBufferAsync();
         }
+
+        double totalSec = _cachedUsage.Where(u => !u.ProcessName.Equals("idle", StringComparison.OrdinalIgnoreCase) && 
+                                                  !u.ProcessName.Equals("afk", StringComparison.OrdinalIgnoreCase))
+                                      .Sum(u => u.Duration.TotalSeconds);
+        TrayManager.UpdateTooltip(TimeSpan.FromSeconds(totalSec));
     }
 
     private async Task FlushBufferAsync()
@@ -251,6 +259,33 @@ public class ActivityLogger
         catch (Exception ex)
         {
             Console.WriteLine($"Failed to flush buffer: {ex.Message}");
+        }
+    }
+
+    public (TimeSpan TotalActive, List<(string AppName, TimeSpan Duration)> TopApps, bool IsFocusActive, string FocusName) GetTodaySummary()
+    {
+        lock (_cachedUsage)
+        {
+            var nonAfk = _cachedUsage.Where(u => !u.ProcessName.Equals("idle", StringComparison.OrdinalIgnoreCase) && 
+                                                 !u.ProcessName.Equals("afk", StringComparison.OrdinalIgnoreCase)).ToList();
+
+            var grouped = nonAfk
+                .GroupBy(u => u.ProcessName, StringComparer.OrdinalIgnoreCase)
+                .Select(g => (
+                    AppName: string.IsNullOrEmpty(g.Key) ? "Unknown" : g.Key,
+                    Duration: TimeSpan.FromSeconds(g.Sum(x => x.Duration.TotalSeconds))
+                ))
+                .OrderByDescending(x => x.Duration)
+                .ToList();
+
+            TimeSpan total = TimeSpan.FromSeconds(grouped.Sum(g => g.Duration.TotalSeconds));
+            var top3 = grouped.Take(3).ToList();
+
+            var activeFocus = _focusManager?.GetActiveFocusSession();
+            bool isFocus = activeFocus != null;
+            string focusName = activeFocus?.Name ?? "Focus Mode";
+
+            return (total, top3, isFocus, focusName);
         }
     }
 

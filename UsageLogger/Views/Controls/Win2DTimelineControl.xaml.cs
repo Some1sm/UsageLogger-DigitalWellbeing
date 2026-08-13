@@ -194,7 +194,8 @@ namespace UsageLogger.Views.Controls
                 e.PropertyName == nameof(DayTimelineViewModel.CanvasHeight) ||
                 e.PropertyName == nameof(DayTimelineViewModel.CurrentTimeTop) ||
                 e.PropertyName == nameof(DayTimelineViewModel.CurrentTimeVisibility) ||
-                e.PropertyName == nameof(DayTimelineViewModel.TimelineWidth))
+                e.PropertyName == nameof(DayTimelineViewModel.TimelineWidth) ||
+                e.PropertyName == nameof(DayTimelineViewModel.FilterQuery))
             {
                 // Sync HEIGHT on any relevant property change (for zoom)
                 double h = Math.Max(100, _subscribedViewModel.CanvasHeight);
@@ -302,6 +303,8 @@ namespace UsageLogger.Views.Controls
             using var durFormat = new CanvasTextFormat { FontSize = 10, FontFamily = "Segoe UI", FontStyle = Windows.UI.Text.FontStyle.Italic };
             
             var drawnLabels = new List<Windows.Foundation.Rect>();
+            string query = vm.FilterQuery?.Trim();
+            bool isFiltered = !string.IsNullOrEmpty(query);
 
             // Pass 1: Draw Main Blocks (Backgrounds + Text)
             foreach (var block in sessionBlocks)
@@ -316,16 +319,46 @@ namespace UsageLogger.Views.Controls
                    blockColor = brush.Color;
                 }
 
+                bool isMatch = true;
+                if (isFiltered)
+                {
+                    isMatch = (block.ProcessName != null && block.ProcessName.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                              (block.Title != null && block.Title.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                              (block.OriginalSession?.ProgramName != null && block.OriginalSession.ProgramName.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                              (block.AudioSources != null && block.AudioSources.Any(a => a.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0));
+                    
+                    if (!isMatch)
+                    {
+                        var dName = UserPreferences.GetDisplayName(block.ProcessName);
+                        if (!string.IsNullOrEmpty(dName) && dName.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            isMatch = true;
+                        }
+                    }
+                }
+
+                // Opacity based on filter match
+                byte indicatorAlpha = (byte)(!isFiltered ? 255 : (isMatch ? 255 : 40));
+                byte bgAlpha = (byte)(!isFiltered ? 50 : (isMatch ? 110 : 15));
+                Color indColor = Color.FromArgb(indicatorAlpha, blockColor.R, blockColor.G, blockColor.B);
+                Color bg = Color.FromArgb(bgAlpha, blockColor.R, blockColor.G, blockColor.B);
+
                 // Indicator
-                ds.FillRoundedRectangle((float)0, top, 4f, height, 2f, 2f, blockColor);
+                ds.FillRoundedRectangle(0f, top, 4f, height, 2f, 2f, indColor);
                 
                 // Main Block Background
-                Color bg = Color.FromArgb(50, blockColor.R, blockColor.G, blockColor.B);
                 ds.FillRoundedRectangle(4f, top, mainBlockWidth, height, 4f, 4f, bg);
+
+                if (isFiltered && isMatch)
+                {
+                    // Highlight glowing border
+                    ds.DrawRoundedRectangle(4f, top, mainBlockWidth, height, 4f, 4f, Color.FromArgb(220, 255, 255, 255), 1.5f);
+                }
 
                 if (block.IsAfk)
                 {
-                    Color afkColor = Color.FromArgb(80, 255, 185, 0);
+                    byte afkAlpha = (byte)(!isFiltered ? 80 : (isMatch ? 120 : 20));
+                    Color afkColor = Color.FromArgb(afkAlpha, 255, 185, 0);
                     ds.FillRoundedRectangle(4f, top, mainBlockWidth, height, 4f, 4f, afkColor);
                 }
 
@@ -411,7 +444,8 @@ namespace UsageLogger.Views.Controls
                      float labelHeight = (float)layout.LayoutBounds.Height; // Approx
                      float textY = top + 2; // Default top
                      
-                     ds.DrawTextLayout(layout, textX, textY, Colors.White);
+                     Color textColor = (!isFiltered || isMatch) ? Colors.White : Color.FromArgb(75, 255, 255, 255);
+                     ds.DrawTextLayout(layout, textX, textY, textColor);
                 }
             }
 

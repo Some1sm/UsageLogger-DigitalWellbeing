@@ -56,12 +56,25 @@
                 </Border>
             </StackPanel>
 
-            <!-- View Mode Dropdown -->
-            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="8">
-                <TextBlock l:Uids.Uid="Sessions_ViewLabel" VerticalAlignment="Center" Opacity="0.7"/>
-                <ComboBox ItemsSource="{x:Bind ViewModel.ViewModeDisplayOptions}" 
-                          SelectedIndex="{x:Bind ViewModel.SelectedViewModeIndex, Mode=TwoWay}" 
-                          Width="110"/>
+            <!-- View Mode Dropdown + Highlight Filter -->
+            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="16">
+                <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                    <TextBlock l:Uids.Uid="Sessions_ViewLabel" VerticalAlignment="Center" Opacity="0.7"/>
+                    <ComboBox ItemsSource="{x:Bind ViewModel.ViewModeDisplayOptions}" 
+                              SelectedIndex="{x:Bind ViewModel.SelectedViewModeIndex, Mode=TwoWay}" 
+                              Width="110"/>
+                </StackPanel>
+
+                <!-- Search / Highlight Filter -->
+                <AutoSuggestBox x:Name="TimelineSearchBox" 
+                                l:Uids.Uid="Sessions_SearchHighlight"
+                                PlaceholderText="Highlight app or category..." 
+                                TextChanged="TimelineSearchBox_TextChanged"
+                                SuggestionChosen="TimelineSearchBox_SuggestionChosen"
+                                QuerySubmitted="TimelineSearchBox_QuerySubmitted"
+                                Width="220" 
+                                VerticalAlignment="Center"
+                                QueryIcon="Find"/>
             </StackPanel>
 
             <!-- Zoom Controls -->

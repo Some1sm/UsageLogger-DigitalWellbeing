@@ -85,6 +85,94 @@ public class AppUsageViewModel : INotifyPropertyChanged
 
 	public string StrTotalDuration => $"{(int)TotalDuration.TotalHours}h {TotalDuration.Minutes}m";
 
+	public bool EnableDailyGoal
+	{
+		get => UserPreferences.EnableDailyGoal;
+		set
+		{
+			if (UserPreferences.EnableDailyGoal != value)
+			{
+				UserPreferences.EnableDailyGoal = value;
+				UserPreferences.Save();
+				NotifyGoalChanged();
+			}
+		}
+	}
+
+	public int DailyGoalMinutes
+	{
+		get => UserPreferences.DailyGoalMinutes;
+		set
+		{
+			if (UserPreferences.DailyGoalMinutes != value)
+			{
+				UserPreferences.DailyGoalMinutes = Math.Max(15, value);
+				UserPreferences.Save();
+				NotifyGoalChanged();
+			}
+		}
+	}
+
+	public double DailyGoalHours => Math.Max(1, DailyGoalMinutes / 60);
+
+	public double DailyGoalProgress
+	{
+		get
+		{
+			if (!EnableDailyGoal || DailyGoalMinutes <= 0) return 0;
+			return Math.Min(100.0, (TotalDuration.TotalMinutes / DailyGoalMinutes) * 100.0);
+		}
+	}
+
+	public string DailyGoalPercentageText
+	{
+		get
+		{
+			if (!EnableDailyGoal) return "";
+			int targetHours = DailyGoalMinutes / 60;
+			int targetMins = DailyGoalMinutes % 60;
+			string targetStr = targetMins > 0 ? $"{targetHours}h {targetMins}m" : $"{targetHours}h";
+			return $"{DailyGoalProgress:F0}% of {targetStr} goal";
+		}
+	}
+
+	public string DailyGoalStatusText
+	{
+		get
+		{
+			if (!EnableDailyGoal) return "";
+			int totalMins = (int)TotalDuration.TotalMinutes;
+			if (totalMins <= DailyGoalMinutes)
+			{
+				int remaining = DailyGoalMinutes - totalMins;
+				int h = remaining / 60;
+				int m = remaining % 60;
+				string remStr = h > 0 ? $"{h}h {m}m" : $"{m}m";
+				return $"{remStr} left";
+			}
+			else
+			{
+				int over = totalMins - DailyGoalMinutes;
+				int h = over / 60;
+				int m = over % 60;
+				string overStr = h > 0 ? $"{h}h {m}m" : $"{m}m";
+				return $"+{overStr} over goal";
+			}
+		}
+	}
+
+	public bool DailyGoalIsExceeded => EnableDailyGoal && TotalDuration.TotalMinutes > DailyGoalMinutes;
+
+	public void NotifyGoalChanged()
+	{
+		OnPropertyChanged(nameof(EnableDailyGoal));
+		OnPropertyChanged(nameof(DailyGoalMinutes));
+		OnPropertyChanged(nameof(DailyGoalProgress));
+		OnPropertyChanged(nameof(DailyGoalPercentageText));
+		OnPropertyChanged(nameof(DailyGoalStatusText));
+		OnPropertyChanged(nameof(DailyGoalIsExceeded));
+	}
+
 	public string StrMinimumDuration
 	{
 		get
@@ -651,6 +739,7 @@ public class AppUsageViewModel : INotifyPropertyChanged
 		OnPropertyChanged("StrMinimumDuration");
 		OnPropertyChanged("CanGoNext");
 		OnPropertyChanged("CanGoPrev");
+		NotifyGoalChanged();
 	}
 
 	public static bool IsProcessExcluded(string processName)

@@ -1030,4 +1030,40 @@
   <data name="Sessions_Tooltip_AFK" xml:space="preserve">
     <value>자리 비움</value>
   </data>
+  <data name="Dashboard_DailyGoal.Text" xml:space="preserve">
+    <value>일일 목표</value>
+  </data>
+  <data name="Dashboard_SetDailyGoal.Text" xml:space="preserve">
+    <value>일일 스크린 타임 목표</value>
+  </data>
+  <data name="Dashboard_HoursUnit.Text" xml:space="preserve">
+    <value>시간</value>
+  </data>
+  <data name="Settings_DailyGoal.Text" xml:space="preserve">
+    <value>일일 스크린 타임 목표</value>
+  </data>
+  <data name="Settings_DailyGoalDesc.Text" xml:space="preserve">
+    <value>대시보드에 진행 링을 표시하여 일일 스크린 타임 목표를 설정합니다.</value>
+  </data>
+  <data name="Sessions_SearchHighlight.PlaceholderText" xml:space="preserve">
+    <value>앱 또는 카테고리 강조 표시...</value>
+  </data>
+  <data name="History_VisualReportButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>주간 요약 인포그래픽 이미지 생성</value>
+  </data>
+  <data name="History_VisualReportText.Text" xml:space="preserve">
+    <value>시각적 보고서</value>
+  </data>
+  <data name="ReportDialog.Title" xml:space="preserve">
+    <value>주간 시각적 보고서</value>
+  </data>
+  <data name="ReportDialog.PrimaryButtonText" xml:space="preserve">
+    <value>📋 이미지 복사</value>
+  </data>
+  <data name="ReportDialog.SecondaryButtonText" xml:space="preserve">
+    <value>💾 이미지 저장...</value>
+  </data>
+  <data name="ReportDialog.CloseButtonText" xml:space="preserve">
+    <value>닫기</value>
+  </data>
 </root>

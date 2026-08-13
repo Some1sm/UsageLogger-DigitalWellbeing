@@ -114,6 +114,7 @@ namespace UsageLogger.Views
             SetGridLayout(GridMinimizeOnExit);
             SetGridLayout(GridIncognito);
             SetGridLayout(GridDaysToShow);
+            SetGridLayout(GridDailyGoal);
             SetGridLayout(GridDetailedDays);
             SetGridLayout(GridMinDuration);
             SetGridLayout(GridAutoRefresh);
@@ -139,6 +140,8 @@ namespace UsageLogger.Views
         private bool _origIncognitoMode;
         private bool _origMergeShortInterruptions;
         private int _origInterruptionThreshold;
+        private bool _origEnableDailyGoal;
+        private int _origDailyGoalHours;
         private int _origDayAmount;
         private double _origMinDuration;
         private bool _origAutoRefresh;
@@ -178,10 +181,13 @@ namespace UsageLogger.Views
                 hasChanges |= ToggleMergeInterruptions.IsOn != _origMergeShortInterruptions;
                 if (CmbInterruptionThreshold.SelectedItem is ComboBoxItem thresholdItem && int.TryParse(thresholdItem.Tag?.ToString(), out int threshVal))
                     hasChanges |= threshVal != _origInterruptionThreshold;
+                hasChanges |= ToggleEnableDailyGoal.IsOn != _origEnableDailyGoal;
                 hasChanges |= EnableAutoRefresh.IsOn != _origAutoRefresh;
                 hasChanges |= (BtnRamCache.IsChecked == true) != _origUseRamCache;
                 
                 // Number Boxes (check for NaN)
+                if (!double.IsNaN(DailyGoalHoursBox.Value))
+                    hasChanges |= (int)DailyGoalHoursBox.Value != _origDailyGoalHours;
                 if (!double.IsNaN(DaysToShowTextBox.Value))
                     hasChanges |= (int)DaysToShowTextBox.Value != _origDayAmount;
                 if (!double.IsNaN(MinDurationTextBox.Value))
@@ -278,6 +284,8 @@ namespace UsageLogger.Views
 
             // Display
             DaysToShowTextBox.Value = UserPreferences.DayAmount;
+            ToggleEnableDailyGoal.IsOn = UserPreferences.EnableDailyGoal;
+            DailyGoalHoursBox.Value = Math.Max(1, UserPreferences.DailyGoalMinutes / 60);
             MinDurationTextBox.Value = UserPreferences.MinimumDuration.TotalSeconds;
 
             // Load History Stats (Async)
@@ -386,6 +394,8 @@ namespace UsageLogger.Views
             _origIncognitoMode = UserPreferences.IncognitoMode;
             _origMergeShortInterruptions = UserPreferences.MergeShortInterruptions;
             _origInterruptionThreshold = UserPreferences.InterruptionThresholdSeconds;
+            _origEnableDailyGoal = UserPreferences.EnableDailyGoal;
+            _origDailyGoalHours = Math.Max(1, UserPreferences.DailyGoalMinutes / 60);
             _origDayAmount = UserPreferences.DayAmount;
             _origMinDuration = UserPreferences.MinimumDuration.TotalSeconds;
             _origAutoRefresh = UserPreferences.EnableAutoRefresh;
@@ -578,6 +588,11 @@ namespace UsageLogger.Views
             UserPreferences.DayAmount = (int)DaysToShowTextBox.Value;
             UserPreferences.DetailedUsageDayCount = (int)DetailedDaysTextBox.Value;
             UserPreferences.MinimumDuration = TimeSpan.FromSeconds(MinDurationTextBox.Value);
+            UserPreferences.EnableDailyGoal = ToggleEnableDailyGoal.IsOn;
+            if (!double.IsNaN(DailyGoalHoursBox.Value))
+            {
+                UserPreferences.DailyGoalMinutes = (int)DailyGoalHoursBox.Value * 60;
+            }
             
             UserPreferences.MinimizeOnExit = ToggleMinimizeOnExit.IsOn;
             UserPreferences.IncognitoMode = ToggleIncognitoMode.IsOn;
@@ -738,6 +753,18 @@ namespace UsageLogger.Views
         }
 
         private void Settings_ValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
+        {
+            if (_isLoading) return;
+            CheckForChanges();
+        }
+
+        private void ToggleEnableDailyGoal_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (_isLoading) return;
+            CheckForChanges();
+        }
+
+        private void DailyGoalHours_ValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
         {
             if (_isLoading) return;
             CheckForChanges();

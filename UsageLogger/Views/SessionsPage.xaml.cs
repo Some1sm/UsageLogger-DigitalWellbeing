@@ -81,6 +81,33 @@ namespace UsageLogger.Views
             ViewModel.TotalAvailableWidth = e.NewSize.Width - 2; // Subtract border
         }
 
+        private void TimelineSearchBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            {
+                var suggestions = ViewModel.GetFilterSuggestions(sender.Text);
+                sender.ItemsSource = suggestions;
+                ViewModel.FilterQuery = sender.Text;
+            }
+            else if (args.Reason == AutoSuggestionBoxTextChangeReason.ProgrammaticChange)
+            {
+                ViewModel.FilterQuery = sender.Text;
+            }
+        }
+
+        private void TimelineSearchBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+        {
+            if (args.SelectedItem is string chosen)
+            {
+                sender.Text = chosen;
+                ViewModel.FilterQuery = chosen;
+            }
+        }
+
+        private void TimelineSearchBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            ViewModel.FilterQuery = sender.Text;
+        }
     }
 
     public class DateFormatConverter : Microsoft.UI.Xaml.Data.IValueConverter

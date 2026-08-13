@@ -1030,4 +1030,40 @@
   <data name="Sessions_Tooltip_AFK" xml:space="preserve">
     <value>离开</value>
   </data>
+  <data name="Dashboard_DailyGoal.Text" xml:space="preserve">
+    <value>每日目标</value>
+  </data>
+  <data name="Dashboard_SetDailyGoal.Text" xml:space="preserve">
+    <value>每日屏幕时间目标</value>
+  </data>
+  <data name="Dashboard_HoursUnit.Text" xml:space="preserve">
+    <value>小时</value>
+  </data>
+  <data name="Settings_DailyGoal.Text" xml:space="preserve">
+    <value>每日屏幕时间目标</value>
+  </data>
+  <data name="Settings_DailyGoalDesc.Text" xml:space="preserve">
+    <value>在仪表板上显示进度环，设定每日屏幕使用时间预算。</value>
+  </data>
+  <data name="Sessions_SearchHighlight.PlaceholderText" xml:space="preserve">
+    <value>高亮显示应用或分类...</value>
+  </data>
+  <data name="History_VisualReportButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>生成每周活动摘要信息图</value>
+  </data>
+  <data name="History_VisualReportText.Text" xml:space="preserve">
+    <value>视觉周报</value>
+  </data>
+  <data name="ReportDialog.Title" xml:space="preserve">
+    <value>每周视觉活动报告</value>
+  </data>
+  <data name="ReportDialog.PrimaryButtonText" xml:space="preserve">
+    <value>📋 复制图片</value>
+  </data>
+  <data name="ReportDialog.SecondaryButtonText" xml:space="preserve">
+    <value>💾 保存图片...</value>
+  </data>
+  <data name="ReportDialog.CloseButtonText" xml:space="preserve">
+    <value>关闭</value>
+  </data>
 </root>

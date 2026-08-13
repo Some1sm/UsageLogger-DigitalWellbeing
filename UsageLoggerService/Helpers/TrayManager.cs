@@ -22,7 +22,8 @@ namespace UsageLoggerService.Helpers
         public static void Init()
         {
             _contextMenu = new ContextMenuStrip();
-            _contextMenu.Items.Add("Open", null, (s, e) => LaunchUI());
+            _contextMenu.Items.Add("📊 Quick Glance", null, (s, e) => UI.QuickGlanceForm.ShowQuickGlance());
+            _contextMenu.Items.Add("Open Dashboard", null, (s, e) => LaunchUI());
             _contextMenu.Items.Add("-"); // Separator
             _contextMenu.Items.Add("Exit", null, (s, e) => ExitAll());
 
@@ -52,10 +53,19 @@ namespace UsageLoggerService.Helpers
                 _notifyIcon.Icon = SystemIcons.Application;
             }
 
-            // Double-click to open
+            // Left-click to open Quick Glance popup
+            _notifyIcon.MouseClick += (s, e) =>
+            {
+                if (e.Button == MouseButtons.Left)
+                {
+                    UI.QuickGlanceForm.ShowQuickGlance();
+                }
+            };
+
+            // Double-click to open main dashboard
             _notifyIcon.DoubleClick += (s, e) => LaunchUI();
 
-            ServiceLogger.Log("TrayManager", "Tray icon initialized.");
+            ServiceLogger.Log("TrayManager", "Tray icon initialized with Quick Glance support.");
         }
 
         /// <summary>
@@ -147,6 +157,16 @@ namespace UsageLoggerService.Helpers
             if (_notifyIcon != null)
             {
                 _notifyIcon.ShowBalloonTip(5000, title, message, ToolTipIcon.Info);
+            }
+        }
+
+        public static void UpdateTooltip(TimeSpan activeToday)
+        {
+            if (_notifyIcon != null)
+            {
+                string text = $"UsageLogger • {(int)activeToday.TotalHours}h {activeToday.Minutes}m today";
+                if (text.Length > 63) text = text.Substring(0, 63);
+                try { _notifyIcon.Text = text; } catch { }
             }
         }
     }

@@ -78,6 +78,20 @@ namespace UsageLogger.ViewModels
             set { _viewMode = value; OnPropertyChanged(); }
         }
 
+        private string _filterQuery = string.Empty;
+        public string FilterQuery
+        {
+            get => _filterQuery;
+            set
+            {
+                if (_filterQuery != value)
+                {
+                    _filterQuery = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         public DayTimelineViewModel(DateTime date)
         {
             Date = date;

@@ -6,9 +6,12 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:l="using:WinUI3Localizer"
     xmlns:controls="using:UsageLogger.Controls"
+    xmlns:converters="using:UsageLogger.Converters"
     mc:Ignorable="d">
 
     <Page.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+
         <DataTemplate x:Key="SubDetailItemTemplate">
             <Grid Padding="75,2,15,2" Margin="0,1" ToolTipService.ToolTip="{Binding FullTitle}">
                 <Grid.ColumnDefinitions>
@@ -238,6 +241,56 @@
                                 <TextBlock Text="{x:Bind ViewModel.TrendPercentage, Mode=OneWay}" FontWeight="Bold" Foreground="{x:Bind GetTrendBrush(ViewModel.TrendIsGood), Mode=OneWay}"/>
                                 <TextBlock Text="{x:Bind ViewModel.TrendDescription, Mode=OneWay}" Opacity="0.6" Margin="6,0,0,0" FontSize="12" VerticalAlignment="Center"/>
                             </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Screen Time Goal Progress Card -->
+                    <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
+                            CornerRadius="12" 
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" 
+                            BorderThickness="1" 
+                            Padding="12,8" 
+                            Margin="10,0,0,0" 
+                            VerticalAlignment="Center"
+                            Visibility="{x:Bind ViewModel.EnableDailyGoal, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                            <!-- Progress Ring -->
+                            <Grid Width="28" Height="28" VerticalAlignment="Center">
+                                <ProgressRing Value="{x:Bind ViewModel.DailyGoalProgress, Mode=OneWay}" 
+                                              Maximum="100" 
+                                              IsIndeterminate="False" 
+                                              Width="28" Height="28" 
+                                              Foreground="{x:Bind GetGoalBrush(ViewModel.DailyGoalIsExceeded), Mode=OneWay}"/>
+                                <FontIcon Glyph="&#xE734;" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.7"/>
+                            </Grid>
+                            
+                            <StackPanel VerticalAlignment="Center" Spacing="1">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <TextBlock l:Uids.Uid="Dashboard_DailyGoal" FontSize="11" Opacity="0.6" FontWeight="SemiBold"/>
+                                    <TextBlock Text="{x:Bind ViewModel.DailyGoalPercentageText, Mode=OneWay}" FontSize="11" FontWeight="SemiBold" Opacity="0.9"/>
+                                </StackPanel>
+                                <TextBlock Text="{x:Bind ViewModel.DailyGoalStatusText, Mode=OneWay}" 
+                                           FontSize="12" 
+                                           FontWeight="Bold" 
+                                           Foreground="{x:Bind GetGoalBrush(ViewModel.DailyGoalIsExceeded), Mode=OneWay}"/>
+                            </StackPanel>
+
+                            <!-- Quick Goal Edit Flyout -->
+                            <Button Background="Transparent" BorderThickness="0" Padding="4" Margin="2,0,0,0" ToolTipService.ToolTip="Adjust Daily Goal">
+                                <FontIcon Glyph="&#xE70F;" FontSize="11" Opacity="0.5"/>
+                                <Button.Flyout>
+                                    <Flyout x:Name="GoalFlyout" Placement="Bottom">
+                                        <StackPanel Spacing="10" Width="200" Padding="4">
+                                            <TextBlock l:Uids.Uid="Dashboard_SetDailyGoal" FontWeight="SemiBold" FontSize="14"/>
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <NumberBox x:Name="GoalHoursInput" Value="{x:Bind ViewModel.DailyGoalHours, Mode=OneWay}" Minimum="1" Maximum="24" SpinButtonPlacementMode="Compact" Width="100"/>
+                                                <TextBlock l:Uids.Uid="Dashboard_HoursUnit" VerticalAlignment="Center" Opacity="0.7"/>
+                                            </StackPanel>
+                                            <Button l:Uids.Uid="Dialog_Save" Click="SaveGoal_Click" Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Stretch"/>
+                                        </StackPanel>
+                                    </Flyout>
+                                </Button.Flyout>
+                            </Button>
                         </StackPanel>
                     </Border>
                 </StackPanel>

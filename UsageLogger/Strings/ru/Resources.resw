@@ -1028,6 +1028,42 @@
     <value>...+ещё {0}</value>
   </data>
   <data name="Sessions_Tooltip_AFK" xml:space="preserve">
-    <value>Не на месте</value>
+    <value>Отошел</value>
+  </data>
+  <data name="Dashboard_DailyGoal.Text" xml:space="preserve">
+    <value>ЦЕЛЬ НА ДЕНЬ</value>
+  </data>
+  <data name="Dashboard_SetDailyGoal.Text" xml:space="preserve">
+    <value>Дневной лимит экранного времени</value>
+  </data>
+  <data name="Dashboard_HoursUnit.Text" xml:space="preserve">
+    <value>ч.</value>
+  </data>
+  <data name="Settings_DailyGoal.Text" xml:space="preserve">
+    <value>Дневной лимит экранного времени</value>
+  </data>
+  <data name="Settings_DailyGoalDesc.Text" xml:space="preserve">
+    <value>Установите цель экранного времени с индикатором прогресса на панели мониторинга.</value>
+  </data>
+  <data name="Sessions_SearchHighlight.PlaceholderText" xml:space="preserve">
+    <value>Выделить приложение или категорию...</value>
+  </data>
+  <data name="History_VisualReportButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Создать недельный инфографический отчет</value>
+  </data>
+  <data name="History_VisualReportText.Text" xml:space="preserve">
+    <value>Визуальный отчет</value>
+  </data>
+  <data name="ReportDialog.Title" xml:space="preserve">
+    <value>Еженедельный визуальный отчет</value>
+  </data>
+  <data name="ReportDialog.PrimaryButtonText" xml:space="preserve">
+    <value>📋 Копировать картинку</value>
+  </data>
+  <data name="ReportDialog.SecondaryButtonText" xml:space="preserve">
+    <value>💾 Сохранить картинку...</value>
+  </data>
+  <data name="ReportDialog.CloseButtonText" xml:space="preserve">
+    <value>Закрыть</value>
   </data>
 </root>

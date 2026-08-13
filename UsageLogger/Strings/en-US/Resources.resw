@@ -1030,4 +1030,40 @@
   <data name="Sessions_Tooltip_AFK" xml:space="preserve">
     <value>AFK</value>
   </data>
+  <data name="Dashboard_DailyGoal.Text" xml:space="preserve">
+    <value>DAILY GOAL</value>
+  </data>
+  <data name="Dashboard_SetDailyGoal.Text" xml:space="preserve">
+    <value>Daily Screen Time Goal</value>
+  </data>
+  <data name="Dashboard_HoursUnit.Text" xml:space="preserve">
+    <value>hours</value>
+  </data>
+  <data name="Settings_DailyGoal.Text" xml:space="preserve">
+    <value>Daily Screen Time Goal</value>
+  </data>
+  <data name="Settings_DailyGoalDesc.Text" xml:space="preserve">
+    <value>Set a daily screen time budget with a progress indicator on the Dashboard.</value>
+  </data>
+  <data name="Sessions_SearchHighlight.PlaceholderText" xml:space="preserve">
+    <value>Highlight app or category...</value>
+  </data>
+  <data name="History_VisualReportButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Generate Weekly Visual Report Infographic</value>
+  </data>
+  <data name="History_VisualReportText.Text" xml:space="preserve">
+    <value>Visual Report</value>
+  </data>
+  <data name="ReportDialog.Title" xml:space="preserve">
+    <value>Weekly Visual Report</value>
+  </data>
+  <data name="ReportDialog.PrimaryButtonText" xml:space="preserve">
+    <value>📋 Copy Image</value>
+  </data>
+  <data name="ReportDialog.SecondaryButtonText" xml:space="preserve">
+    <value>💾 Save Image...</value>
+  </data>
+  <data name="ReportDialog.CloseButtonText" xml:space="preserve">
+    <value>Close</value>
+  </data>
 </root>

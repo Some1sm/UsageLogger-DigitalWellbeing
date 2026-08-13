@@ -38,6 +38,8 @@ namespace UsageLogger.Views
         private double _lastMinDurationSec = -1;
         private bool _lastCombinedAudio = false;
         private int _lastDayStartMinutes = -1;
+        private bool _lastEnableDailyGoal = true;
+        private int _lastDailyGoalMinutes = -1;
 
         protected override void OnNavigatedTo(Microsoft.UI.Xaml.Navigation.NavigationEventArgs e)
         {
@@ -70,6 +72,13 @@ namespace UsageLogger.Views
             {
                 _lastDayStartMinutes = UserPreferences.DayStartMinutes;
                 settingsChanged = true;
+            }
+
+            if (_lastEnableDailyGoal != UserPreferences.EnableDailyGoal || _lastDailyGoalMinutes != UserPreferences.DailyGoalMinutes)
+            {
+                _lastEnableDailyGoal = UserPreferences.EnableDailyGoal;
+                _lastDailyGoalMinutes = UserPreferences.DailyGoalMinutes;
+                ViewModel.NotifyGoalChanged();
             }
 
             if (settingsChanged && ViewModel.IsWeeklyDataLoaded)
@@ -1004,6 +1013,30 @@ namespace UsageLogger.Views
             {
                 // Hex: #FF4D4F
                 return new Microsoft.UI.Xaml.Media.SolidColorBrush(Windows.UI.Color.FromArgb(255, 255, 77, 79));
+            }
+        }
+
+        public Microsoft.UI.Xaml.Media.Brush GetGoalBrush(bool isExceeded)
+        {
+            if (isExceeded)
+            {
+                // Amber/Orange for exceeding budget: #FFA000
+                return new Microsoft.UI.Xaml.Media.SolidColorBrush(Windows.UI.Color.FromArgb(255, 255, 160, 0));
+            }
+            else
+            {
+                // Green for on track
+                return new Microsoft.UI.Xaml.Media.SolidColorBrush(Windows.UI.Color.FromArgb(255, 0, 204, 106));
+            }
+        }
+
+        private void SaveGoal_Click(object sender, RoutedEventArgs e)
+        {
+            if (GoalHoursInput != null && !double.IsNaN(GoalHoursInput.Value))
+            {
+                int hours = (int)Math.Clamp(GoalHoursInput.Value, 1, 24);
+                ViewModel.DailyGoalMinutes = hours * 60;
+                GoalFlyout?.Hide();
             }
         }
 

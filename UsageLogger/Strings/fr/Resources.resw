@@ -1030,4 +1030,40 @@ Fin : {2}</value>
   <data name="Sessions_Tooltip_AFK" xml:space="preserve">
     <value>Absent</value>
   </data>
+  <data name="Dashboard_DailyGoal.Text" xml:space="preserve">
+    <value>OBJECTIF QUOTIDIEN</value>
+  </data>
+  <data name="Dashboard_SetDailyGoal.Text" xml:space="preserve">
+    <value>Objectif de temps d'écran quotidien</value>
+  </data>
+  <data name="Dashboard_HoursUnit.Text" xml:space="preserve">
+    <value>heures</value>
+  </data>
+  <data name="Settings_DailyGoal.Text" xml:space="preserve">
+    <value>Objectif de temps d'écran quotidien</value>
+  </data>
+  <data name="Settings_DailyGoalDesc.Text" xml:space="preserve">
+    <value>Définissez un budget de temps d'écran quotidien avec indicateur de progression sur le tableau de bord.</value>
+  </data>
+  <data name="Sessions_SearchHighlight.PlaceholderText" xml:space="preserve">
+    <value>Mettre en évidence l'application ou catégorie...</value>
+  </data>
+  <data name="History_VisualReportButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Générer une infographie de résumé hebdomadaire</value>
+  </data>
+  <data name="History_VisualReportText.Text" xml:space="preserve">
+    <value>Rapport Visuel</value>
+  </data>
+  <data name="ReportDialog.Title" xml:space="preserve">
+    <value>Rapport Visuel Hebdomadaire</value>
+  </data>
+  <data name="ReportDialog.PrimaryButtonText" xml:space="preserve">
+    <value>📋 Copier l'image</value>
+  </data>
+  <data name="ReportDialog.SecondaryButtonText" xml:space="preserve">
+    <value>💾 Enregistrer l'image...</value>
+  </data>
+  <data name="ReportDialog.CloseButtonText" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
 </root>

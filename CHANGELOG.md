@@ -7,6 +7,11 @@ All notable changes to **UsageLogger for Windows** are documented in this file.
 ## [1.0.3] — 2026-08-13
 
 ### ✨ Added
+- **System Tray Quick Glance** — Single left-click on the tray icon opens a dark-themed popup card showing today's total active screen time, your top 3 apps with progress bars, and active Focus Mode status — without opening the main window. The tray tooltip also updates live with today's screen time.
+- **Daily Screen Time Budget** — Set a daily overall screen time goal (e.g. max 6h/day) from Dashboard settings; a progress ring on the Dashboard tracks real-time usage against the target, changing color from green → amber → red as you approach or exceed it, with a quick-adjust flyout for on-the-fly changes.
+- **Dashboard Goal Progress Ring** — A subtle visual progress indicator on the Dashboard header showing percentage completion toward your daily screen time target, with an exceeded-state glow when over budget.
+- **Highlight Filter in Detailed Usage** — A search/filter `AutoSuggestBox` in the Detailed Usage toolbar lets you type an app name or category to instantly highlight only matching sessions across multi-day timelines with vibrant colors and a glowing outline, while non-matching blocks dim to 15–40% opacity.
+- **Weekly Visual Report / Infographic** — One-click "📸 Visual Report" button in History generates a shareable 1200×800 dark-themed infographic PNG (via Win2D offscreen rendering) with total screen time, daily average, active days, week-over-week trend, top 5 apps breakdown with progress bars, and a daily bar chart — copyable to clipboard or saveable as a PNG file.
 - **Combine Short Interruptions in Detailed Usage** — Added a configurable setting to merge brief switches to other apps (shorter than 15s–120s) into the surrounding primary session, keeping timelines smooth and unified without fragmenting continuous blocks.
 - **Interruption Visual Indicators & Inspection** — Merged blocks display color-coded visual accent notches at the exact timestamps of interruptions, a `⚡` badge indicator, and a rich multi-line tooltip breakdown with exact time ranges and durations.
 - **Full Localization for Timeline Tooltips** — Interruption breakdowns, timestamps, and AFK status in Detailed Usage tooltips are fully localized across all 11 supported languages.
@@ -16,6 +21,7 @@ All notable changes to **UsageLogger for Windows** are documented in this file.
 - **Midnight Session Boundary Splitting** — Long-running sessions spanning midnight are now automatically split at `00:00:00` so usage is credited accurately to each respective calendar day.
 - **Graceful Shutdown Flush Hooks** — Added `ApplicationExit`, `ProcessExit`, and `SessionEnding` lifecycle hooks to ensure all uncommitted in-memory session buffers are safely written to disk when Windows shuts down, logs off, or reboots.
 - **Seamless Page Navigation Caching** — Enabled `NavigationCacheMode.Required` across primary views (`DayAppUsagePage`, `HistoryPage`, `SessionsPage`, `MiscDataPage`, `FocusPage`) for instant, flicker-free tab switching.
+- **New Localization Keys for Wellbeing Features** — Added 12 new resource keys (Daily Goal, Search Highlight, Visual Report dialog) across all 11 supported languages (en-US, es-ES, ca-ES, de, fr, it, pt-BR, ru, ja, ko, zh-Hans).
 
 ### 🎨 UI & UX Improvements
 - **Settings Page Display Grouping** — Reorganized the Display settings into three structured sections matching the application pages: **Dashboard**, **Detailed Usage (Timeline)**, and **Appearance & Personalization (Misc)**.

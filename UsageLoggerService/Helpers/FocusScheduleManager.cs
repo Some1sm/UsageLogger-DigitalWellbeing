@@ -197,6 +197,17 @@ public class FocusScheduleManager
             catch { }
         });
     }
+
+    public ServiceFocusSession? GetActiveFocusSession()
+    {
+        LoadFocusSchedule();
+        if (!_focusMonitoringEnabled) return null;
+        foreach (var s in _focusSessions)
+        {
+            if (s.IsEnabled && s.IsActiveNow()) return s;
+        }
+        return null;
+    }
 }
 
 // ServiceFocusSession - mirrors the UI's FocusSession for JSON compatibility

@@ -52,6 +52,8 @@ namespace UsageLogger.Helpers
         public static int DayStartMinutes { get; set; } = 0; // Total minutes past midnight when a new "logical day" begins. 0 = midnight (default)
         public static bool MergeShortInterruptions { get; set; } = true; // Combine short app switches in Detailed Usage
         public static int InterruptionThresholdSeconds { get; set; } = 30; // Threshold in seconds for micro-interruptions (default 30s)
+        public static bool EnableDailyGoal { get; set; } = true; // Daily screen time budget goal
+        public static int DailyGoalMinutes { get; set; } = 360; // Default daily goal: 6 hours (360 mins)
 
         static UserPreferences()
         {
@@ -98,6 +100,8 @@ namespace UsageLogger.Helpers
                     BackdropType,
                     MergeShortInterruptions,
                     InterruptionThresholdSeconds,
+                    EnableDailyGoal,
+                    DailyGoalMinutes,
                     DayStartHour = DayStartMinutes / 60,
                     DayStartMinute = DayStartMinutes % 60
                 };
@@ -152,6 +156,8 @@ namespace UsageLogger.Helpers
                     if (data.TryGetProperty(nameof(BackdropType), out prop)) BackdropType = prop.GetString() ?? "Mica";
                     if (data.TryGetProperty(nameof(MergeShortInterruptions), out prop)) MergeShortInterruptions = prop.GetBoolean();
                     if (data.TryGetProperty(nameof(InterruptionThresholdSeconds), out prop)) InterruptionThresholdSeconds = prop.GetInt32();
+                    if (data.TryGetProperty(nameof(EnableDailyGoal), out prop)) EnableDailyGoal = prop.GetBoolean();
+                    if (data.TryGetProperty(nameof(DailyGoalMinutes), out prop)) DailyGoalMinutes = prop.GetInt32();
                     int _dsh = 0, _dsm = 0;
                     if (data.TryGetProperty("DayStartHour", out prop)) _dsh = Math.Clamp(prop.GetInt32(), 0, 23);
                     if (data.TryGetProperty("DayStartMinute", out prop)) _dsm = Math.Clamp(prop.GetInt32(), 0, 59);

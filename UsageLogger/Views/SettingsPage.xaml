@@ -270,6 +270,22 @@
                              </StackPanel>
                          </Grid>
 
+                         <!-- Daily Screen Time Goal -->
+                         <Grid x:Name="GridDailyGoal" Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
+                             <Grid.ColumnDefinitions>
+                                 <ColumnDefinition Width="*"/>
+                                 <ColumnDefinition Width="Auto"/>
+                             </Grid.ColumnDefinitions>
+                             <StackPanel Grid.Column="0" Spacing="2">
+                                 <TextBlock l:Uids.Uid="Settings_DailyGoal" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                                 <TextBlock l:Uids.Uid="Settings_DailyGoalDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
+                             </StackPanel>
+                             <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="10">
+                                 <ToggleSwitch x:Name="ToggleEnableDailyGoal" Toggled="ToggleEnableDailyGoal_Toggled"/>
+                                 <NumberBox x:Name="DailyGoalHoursBox" Value="6" SpinButtonPlacementMode="Compact" Width="100" Minimum="1" Maximum="24" ValueChanged="DailyGoalHours_ValueChanged" IsEnabled="{x:Bind ToggleEnableDailyGoal.IsOn, Mode=OneWay}" KeyUp="Settings_KeyUp"/>
+                             </StackPanel>
+                         </Grid>
+
                          <!-- Minimum Duration -->
                          <Grid x:Name="GridMinDuration" Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
                              <Grid.ColumnDefinitions>
