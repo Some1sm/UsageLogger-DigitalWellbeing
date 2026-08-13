@@ -159,6 +159,45 @@ public static class DayChartUpdater
                                     subItem.BackgroundBrush = new SolidColorBrush(bgColor);
                                 }
                             }
+
+                            // Populate SubDetails for grouped sub-apps
+                            if (item.DetailedBreakdown != null && item.DetailedBreakdown.TryGetValue(sub.Key, out var detailsDict) && detailsDict.Count > 0)
+                            {
+                                double subTotalSec = sub.Value.TotalSeconds > 1.0 ? sub.Value.TotalSeconds : 1.0;
+                                foreach (var detail in detailsDict.OrderByDescending(d => d.Value))
+                                {
+                                    if (detail.Value < TimeSpan.FromSeconds(1)) continue;
+
+                                    string detailTitle = detail.Key;
+                                    string detailCompKey = item.ProcessName + "|" + detailTitle;
+                                    if (UserPreferences.ExcludedTitles.Contains(detailCompKey)) continue;
+
+                                    if (UserPreferences.TitleDisplayNames.TryGetValue(detailCompKey, out var detailDispName))
+                                    {
+                                        detailTitle = "* " + detailDispName;
+                                    }
+
+                                    int detailPercentage = (int)Math.Round(detail.Value.TotalSeconds / subTotalSec * 100.0);
+                                    AppTag detailTag = AppTagHelper.GetTitleTag(item.ProcessName, detail.Key);
+
+                                    var detailItem = new AppUsageSubDetailItem(detailTitle, item.ProcessName, sub.Key, detail.Value, detailPercentage, detailTag);
+                                    if (detailTag != AppTag.Untagged)
+                                    {
+                                        SolidColorBrush detailTagBrush = AppTagHelper.GetTagColor(detailTag) as SolidColorBrush;
+                                        detailItem.TagIndicatorBrush = detailTagBrush;
+                                        detailItem.TagTextBrush = detailTagBrush;
+                                    }
+                                    else
+                                    {
+                                        detailItem.TagIndicatorBrush = new SolidColorBrush(Colors.Transparent);
+                                        detailItem.TagTextBrush = null;
+                                    }
+
+                                    subItem.SubDetails.Add(detailItem);
+                                }
+                                subItem.NotifyDetailsChanged();
+                            }
+
                             listItem.Children.Add(subItem);
                         }
                     }
@@ -261,6 +300,22 @@ public static class DayChartUpdater
                         {
                             existingChild.Duration = newChild.Duration;
                             existingChild.Percentage = newChild.Percentage;
+
+                            // Sync SubDetails
+                            if (existingChild.SubDetails.Count != newChild.SubDetails.Count)
+                            {
+                                existingChild.SubDetails.Clear();
+                                foreach (var d in newChild.SubDetails) existingChild.SubDetails.Add(d);
+                            }
+                            else
+                            {
+                                for (int dIdx = 0; dIdx < existingChild.SubDetails.Count; dIdx++)
+                                {
+                                    existingChild.SubDetails[dIdx].Duration = newChild.SubDetails[dIdx].Duration;
+                                    existingChild.SubDetails[dIdx].Percentage = newChild.SubDetails[dIdx].Percentage;
+                                }
+                            }
+                            existingChild.NotifyDetailsChanged();
                         }
                     }
                     foreach (var newChild in updated.Children)

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -279,6 +279,12 @@
   </data>
   <data name="Tray_Exit.Text" xml:space="preserve">
     <value>종료</value>
+  </data>
+  <data name="Dashboard_ToggleUngroup.Text" xml:space="preserve">
+    <value>그룹 해제 / 그룹화</value>
+  </data>
+  <data name="SubApp_GroupedItemsTooltip" xml:space="preserve">
+    <value>{0} ({1}개 그룹화된 항목 - 그룹 해제하려면 클릭)</value>
   </data>
   <data name="Dashboard_SetTimeLimit.Text" xml:space="preserve">
     <value>제한 설정</value>

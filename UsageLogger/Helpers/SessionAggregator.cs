@@ -51,7 +51,7 @@ public static class SessionAggregator
     }
 
     /// <summary>
-    /// Aggregates flat AppSession list into AppUsage objects with ProgramBreakdown.
+    /// Aggregates flat AppSession list into AppUsage objects with ProgramBreakdown and DetailedBreakdown.
     /// Applies retroactive sub-app hiding.
     /// </summary>
     public static List<AppUsage> AggregateSessions(List<AppSession> sessions)
@@ -68,25 +68,53 @@ public static class SessionAggregator
             var appUsage = usageMap[session.ProcessName];
             appUsage.Duration = appUsage.Duration.Add(session.Duration);
 
-            if (string.IsNullOrEmpty(appUsage.ProgramName) && !string.IsNullOrEmpty(session.ProgramName))
-            {
-                appUsage.ProgramName = session.ProgramName;
-            }
+            string specificTitle = !string.IsNullOrEmpty(session.ProgramName) ? session.ProgramName : session.ProcessName;
+            string groupedTitle = specificTitle;
 
-            // Aggregate Sub-App / Title breakdown with retroactive hide filter
-            string effectiveProgramName = session.ProgramName;
-            if (UserPreferences.ShouldHideSubApp(session.ProgramName))
+            if (UserPreferences.CustomTitleRules != null && UserPreferences.CustomTitleRules.Count > 0)
             {
-                effectiveProgramName = session.ProcessName; // Merge into parent
-            }
-            string title = !string.IsNullOrEmpty(effectiveProgramName) ? effectiveProgramName : session.ProcessName;
-            if (appUsage.ProgramBreakdown.ContainsKey(title))
-            {
-                appUsage.ProgramBreakdown[title] = appUsage.ProgramBreakdown[title].Add(session.Duration);
+                groupedTitle = WindowTitleParser.Parse(session.ProcessName, specificTitle, UserPreferences.CustomTitleRules);
             }
             else
             {
-                appUsage.ProgramBreakdown[title] = session.Duration;
+                groupedTitle = WindowTitleParser.Parse(session.ProcessName, specificTitle);
+            }
+
+            // Apply retroactive hide filter: use ProcessName if sub-app should be hidden
+            if (UserPreferences.ShouldHideSubApp(groupedTitle) || UserPreferences.ShouldHideSubApp(specificTitle))
+            {
+                groupedTitle = session.ProcessName;
+                specificTitle = session.ProcessName;
+            }
+
+            if (string.IsNullOrEmpty(appUsage.ProgramName))
+            {
+                appUsage.ProgramName = groupedTitle;
+            }
+
+            // Aggregate into ProgramBreakdown (Grouped umbrella title)
+            if (appUsage.ProgramBreakdown.ContainsKey(groupedTitle))
+            {
+                appUsage.ProgramBreakdown[groupedTitle] = appUsage.ProgramBreakdown[groupedTitle].Add(session.Duration);
+            }
+            else
+            {
+                appUsage.ProgramBreakdown[groupedTitle] = session.Duration;
+            }
+
+            // Aggregate into DetailedBreakdown (Specific titles under Grouped title)
+            if (!appUsage.DetailedBreakdown.ContainsKey(groupedTitle))
+            {
+                appUsage.DetailedBreakdown[groupedTitle] = new Dictionary<string, TimeSpan>();
+            }
+
+            if (appUsage.DetailedBreakdown[groupedTitle].ContainsKey(specificTitle))
+            {
+                appUsage.DetailedBreakdown[groupedTitle][specificTitle] = appUsage.DetailedBreakdown[groupedTitle][specificTitle].Add(session.Duration);
+            }
+            else
+            {
+                appUsage.DetailedBreakdown[groupedTitle][specificTitle] = session.Duration;
             }
         }
         return usageMap.Values.ToList();

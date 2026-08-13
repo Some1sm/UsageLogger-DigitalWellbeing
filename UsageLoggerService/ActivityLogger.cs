@@ -179,8 +179,7 @@ public class ActivityLogger
                     }
                     else
                     {
-                        programName = UsageLogger.Core.Helpers.WindowTitleParser.Parse(
-                            processName, rawTitle ?? "", _settingsReader.CustomTitleRules.ToList());
+                        programName = UsageLogger.Core.Helpers.WindowTitleParser.CleanTitle(processName, rawTitle ?? "");
                     }
                 }
                 catch { }

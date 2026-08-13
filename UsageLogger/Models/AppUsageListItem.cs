@@ -142,7 +142,7 @@ namespace UsageLogger.Models
             ToggleExpandCommand = new RelayCommand((_) =>
             {
                 IsExpanded = !IsExpanded;
-                AnimateHeight(IsExpanded ? 250 : 0);
+                AnimateHeight(IsExpanded ? 800 : 0);
             });
         }
 

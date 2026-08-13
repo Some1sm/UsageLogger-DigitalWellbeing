@@ -662,43 +662,67 @@ public class AppUsageViewModel : INotifyPropertyChanged
                 Dictionary<string, AppUsage> dictionary = new Dictionary<string, AppUsage>();
                 foreach (AppSession item in sessions)
                 {
+                    string specificTitle = !string.IsNullOrEmpty(item.ProgramName) ? item.ProgramName : item.ProcessName;
+                    string groupedTitle = specificTitle;
+
                     // RETROACTIVE RULE APPLICATION:
                     // Re-parse the ProgramName using current rules. This allows users to see
                     // changes immediately after adding a rule, even for past sessions.
                     if (UserPreferences.CustomTitleRules != null && UserPreferences.CustomTitleRules.Count > 0)
                     {
-                        item.ProgramName = UsageLogger.Core.Helpers.WindowTitleParser.Parse(
+                        groupedTitle = UsageLogger.Core.Helpers.WindowTitleParser.Parse(
                             item.ProcessName, 
-                            item.ProgramName, 
+                            specificTitle, 
                             UserPreferences.CustomTitleRules
                         );
+                    }
+                    else
+                    {
+                        groupedTitle = UsageLogger.Core.Helpers.WindowTitleParser.Parse(
+                            item.ProcessName,
+                            specificTitle
+                        );
+                    }
+
+                    // Apply retroactive hide filter: use ProcessName if sub-app should be hidden
+                    if (UserPreferences.ShouldHideSubApp(groupedTitle) || UserPreferences.ShouldHideSubApp(specificTitle))
+                    {
+                        groupedTitle = item.ProcessName;
+                        specificTitle = item.ProcessName;
                     }
 
                     if (!dictionary.ContainsKey(item.ProcessName))
                     {
-                        dictionary[item.ProcessName] = new AppUsage(item.ProcessName, item.ProgramName, TimeSpan.Zero);
+                        dictionary[item.ProcessName] = new AppUsage(item.ProcessName, groupedTitle, TimeSpan.Zero);
                     }
                     dictionary[item.ProcessName].Duration = dictionary[item.ProcessName].Duration.Add(item.Duration);
-                    if (string.IsNullOrEmpty(dictionary[item.ProcessName].ProgramName) && !string.IsNullOrEmpty(item.ProgramName))
+                    if (string.IsNullOrEmpty(dictionary[item.ProcessName].ProgramName) && !string.IsNullOrEmpty(groupedTitle))
                     {
-                        dictionary[item.ProcessName].ProgramName = item.ProgramName;
+                        dictionary[item.ProcessName].ProgramName = groupedTitle;
                     }
                     
-                    // Apply retroactive hide filter: use ProcessName if sub-app should be hidden
-                    string effectiveProgramName = item.ProgramName;
-                    if (UserPreferences.ShouldHideSubApp(item.ProgramName))
+                    if (dictionary[item.ProcessName].ProgramBreakdown.ContainsKey(groupedTitle))
                     {
-                        effectiveProgramName = item.ProcessName; // Merge into parent
-                    }
-                    
-                    string key = ((!string.IsNullOrEmpty(effectiveProgramName)) ? effectiveProgramName : item.ProcessName);
-                    if (dictionary[item.ProcessName].ProgramBreakdown.ContainsKey(key))
-                    {
-                        dictionary[item.ProcessName].ProgramBreakdown[key] = dictionary[item.ProcessName].ProgramBreakdown[key].Add(item.Duration);
+                        dictionary[item.ProcessName].ProgramBreakdown[groupedTitle] = dictionary[item.ProcessName].ProgramBreakdown[groupedTitle].Add(item.Duration);
                     }
                     else
                     {
-                        dictionary[item.ProcessName].ProgramBreakdown[key] = item.Duration;
+                        dictionary[item.ProcessName].ProgramBreakdown[groupedTitle] = item.Duration;
+                    }
+
+                    // Populate DetailedBreakdown
+                    if (!dictionary[item.ProcessName].DetailedBreakdown.ContainsKey(groupedTitle))
+                    {
+                        dictionary[item.ProcessName].DetailedBreakdown[groupedTitle] = new Dictionary<string, TimeSpan>();
+                    }
+
+                    if (dictionary[item.ProcessName].DetailedBreakdown[groupedTitle].ContainsKey(specificTitle))
+                    {
+                        dictionary[item.ProcessName].DetailedBreakdown[groupedTitle][specificTitle] = dictionary[item.ProcessName].DetailedBreakdown[groupedTitle][specificTitle].Add(item.Duration);
+                    }
+                    else
+                    {
+                        dictionary[item.ProcessName].DetailedBreakdown[groupedTitle][specificTitle] = item.Duration;
                     }
                 }
                 return dictionary.Values.ToList();

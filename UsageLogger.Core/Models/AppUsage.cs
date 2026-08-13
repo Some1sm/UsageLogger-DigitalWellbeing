@@ -13,6 +13,7 @@ public class AppUsage
     public string ProcessName { get; set; } = string.Empty;
     public TimeSpan Duration { get; set; }
     public Dictionary<string, TimeSpan> ProgramBreakdown { get; set; } = [];
+    public Dictionary<string, Dictionary<string, TimeSpan>> DetailedBreakdown { get; set; } = [];
 
     public AppUsage(string processName, string programName, TimeSpan duration)
     {

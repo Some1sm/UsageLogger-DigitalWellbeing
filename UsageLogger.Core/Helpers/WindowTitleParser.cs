@@ -8,6 +8,40 @@ namespace UsageLogger.Core.Helpers
 {
     public static class WindowTitleParser
     {
+        /// <summary>
+        /// Cleans raw window titles by removing notification counts and browser suffixes,
+        /// preserving the specific page / document title without applying grouping rules.
+        /// </summary>
+        public static string CleanTitle(string processName, string rawTitle)
+        {
+            if (string.IsNullOrWhiteSpace(rawTitle)) return rawTitle;
+
+            // Clean Notification Counts: "(1) Instagram" -> "Instagram"
+            string cleaned = Regex.Replace(rawTitle, @"^\(\d+\+?\)\s*", "");
+
+            switch (processName.ToLower())
+            {
+                case "chrome":
+                case "msedge":
+                case "firefox":
+                case "brave":
+                case "opera":
+                case "vivaldi":
+                case "arc":
+                    var separators = new string[] { " - ", " – ", " — " };
+                    var parts = cleaned.Split(separators, StringSplitOptions.RemoveEmptyEntries).ToList();
+                    if (parts.Count > 1)
+                    {
+                        parts.RemoveAt(parts.Count - 1);
+                        return string.Join(" - ", parts);
+                    }
+                    return cleaned;
+
+                default:
+                    return cleaned;
+            }
+        }
+
         public static string Parse(string processName, string rawTitle, System.Collections.Generic.List<Models.CustomTitleRule>? rules = null)
         {
             if (string.IsNullOrWhiteSpace(rawTitle)) return rawTitle;

@@ -616,6 +616,239 @@ namespace UsageLogger.Views
             }
         }
 
+        private void SubItemGrid_Tapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            if (sender is FrameworkElement element && element.DataContext is AppUsageSubItem subItem)
+            {
+                if (subItem.HasChildren)
+                {
+                    subItem.ToggleExpand();
+                }
+            }
+        }
+
+        private void SubItemMenuFlyoutItem_ToggleUngroup_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currentSubItem != null)
+            {
+                _currentSubItem.ToggleExpand();
+            }
+        }
+
+        private AppUsageSubDetailItem _currentSubDetailItem;
+
+        private void SubDetailMenuFlyout_Opening(object sender, object e)
+        {
+            if (sender is MenuFlyout flyout && flyout.Target is FrameworkElement target && target.DataContext is AppUsageSubDetailItem detailItem)
+            {
+                _currentSubDetailItem = detailItem;
+            }
+        }
+
+        private async void SubDetailMenuFlyoutItem_SetTag_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currentSubDetailItem != null)
+            {
+                await OpenDetailTitleTagDialog(_currentSubDetailItem);
+            }
+        }
+
+        private async void SubDetailMenuFlyoutItem_SetDisplayName_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currentSubDetailItem == null) return;
+
+            string title = _currentSubDetailItem.Title;
+            string processName = _currentSubDetailItem.ParentProcessName;
+
+            string matchPattern = $"^{System.Text.RegularExpressions.Regex.Escape(title)}$";
+
+            var existingRule = UsageLogger.Helpers.UserPreferences.CustomTitleRules?
+                .FirstOrDefault(r => r.ProcessName == processName && r.MatchPattern == matchPattern);
+
+            string currentDisplayName = existingRule != null ? existingRule.Replacement : title;
+            bool hasCustomRule = existingRule != null;
+
+            var inputTextBox = new TextBox
+            {
+                PlaceholderText = $"Enter display name for '{title}'",
+                Text = hasCustomRule ? currentDisplayName : ""
+            };
+
+            var dialog = new ContentDialog
+            {
+                Title = "Set Display Name for Title",
+                Content = new StackPanel
+                {
+                    Children =
+                    {
+                        new TextBlock
+                        {
+                            Text = $"Original: {title}",
+                            TextWrapping = Microsoft.UI.Xaml.TextWrapping.Wrap,
+                            Margin = new Microsoft.UI.Xaml.Thickness(0, 0, 0, 12),
+                            Opacity = 0.7
+                        },
+                        inputTextBox
+                    }
+                },
+                PrimaryButtonText = "Save",
+                SecondaryButtonText = hasCustomRule ? "Remove Rule" : "Cancel",
+                CloseButtonText = "Cancel",
+                XamlRoot = this.XamlRoot
+            };
+
+            var result = await dialog.ShowAsync();
+            if (result == ContentDialogResult.Primary)
+            {
+                string newDisplayName = inputTextBox.Text.Trim();
+                if (!string.IsNullOrWhiteSpace(newDisplayName) && newDisplayName != title)
+                {
+                    if (existingRule != null)
+                    {
+                        UserPreferences.RemoveCustomTitleRule(processName, matchPattern);
+                    }
+
+                    var newRule = new UsageLogger.Core.Models.CustomTitleRule
+                    {
+                        ProcessName = processName,
+                        MatchPattern = matchPattern,
+                        Replacement = newDisplayName,
+                        IsRegex = true
+                    };
+
+                    UserPreferences.AddCustomTitleRule(newRule);
+                }
+                else
+                {
+                    UserPreferences.RemoveCustomTitleRule(processName, matchPattern);
+                }
+                ViewModel.RefreshDayView();
+            }
+            else if (result == ContentDialogResult.Secondary && hasCustomRule)
+            {
+                UserPreferences.RemoveCustomTitleRule(processName, matchPattern);
+                ViewModel.RefreshDayView();
+            }
+        }
+
+        private async void SubDetailMenuFlyoutItem_SetTimeLimit_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currentSubDetailItem == null) return;
+
+            string title = _currentSubDetailItem.Title;
+            string key = $"{_currentSubDetailItem.ParentProcessName}|{title}";
+
+            var inputTextBox = new TextBox
+            {
+                PlaceholderText = "Minutes (e.g., 60)",
+                InputScope = new Microsoft.UI.Xaml.Input.InputScope { Names = { new Microsoft.UI.Xaml.Input.InputScopeName(Microsoft.UI.Xaml.Input.InputScopeNameValue.Number) } }
+            };
+
+            if (UserPreferences.TitleTimeLimits.ContainsKey(key))
+            {
+                inputTextBox.Text = UserPreferences.TitleTimeLimits[key].ToString();
+            }
+
+            var dialog = new ContentDialog
+            {
+                Title = $"Set Time Limit for '{title}'",
+                Content = inputTextBox,
+                PrimaryButtonText = "Save",
+                SecondaryButtonText = "Cancel",
+                XamlRoot = this.XamlRoot
+            };
+
+            var result = await dialog.ShowAsync();
+            if (result == ContentDialogResult.Primary)
+            {
+                if (int.TryParse(inputTextBox.Text, out int minutes) && minutes > 0)
+                {
+                    UserPreferences.UpdateTitleTimeLimit(key, TimeSpan.FromMinutes(minutes));
+                }
+                else
+                {
+                    UserPreferences.UpdateTitleTimeLimit(key, TimeSpan.Zero);
+                }
+            }
+        }
+
+        private async void SubDetailMenuFlyoutItem_Exclude_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currentSubDetailItem == null) return;
+
+            string title = _currentSubDetailItem.Title;
+            string key = $"{_currentSubDetailItem.ParentProcessName}|{title}";
+
+            var dialog = new ContentDialog
+            {
+                Title = LocalizationHelper.GetString("Dialog_ExcludeSubApp_Title"),
+                Content = string.Format(LocalizationHelper.GetString("Dialog_ExcludeSubApp_Content"), title),
+                PrimaryButtonText = LocalizationHelper.GetString("Dialog_Exclude"),
+                SecondaryButtonText = LocalizationHelper.GetString("Dialog_Cancel"),
+                XamlRoot = this.XamlRoot
+            };
+
+            var result = await dialog.ShowAsync();
+            if (result == ContentDialogResult.Primary)
+            {
+                if (!UserPreferences.ExcludedTitles.Contains(key))
+                {
+                    UserPreferences.ExcludedTitles.Add(key);
+                    UserPreferences.Save();
+                    ViewModel.RefreshDayView();
+                }
+            }
+        }
+
+        private async Task OpenDetailTitleTagDialog(AppUsageSubDetailItem item)
+        {
+            StackPanel content = new StackPanel { Spacing = 10 };
+
+            TextBox keywordBox = new TextBox
+            {
+                Header = "Window Title Keyword",
+                Text = item.Title,
+                Description = "If the window title contains this text, it will be tagged specially."
+            };
+
+            ComboBox tagCombo = new ComboBox
+            {
+                Header = "Select Category",
+                HorizontalAlignment = Microsoft.UI.Xaml.HorizontalAlignment.Stretch,
+                DisplayMemberPath = "Key",
+                SelectedValuePath = "Value",
+            };
+
+            var choices = UsageLogger.Helpers.AppTagHelper.GetComboBoxChoices();
+            tagCombo.ItemsSource = choices;
+            tagCombo.SelectedValue = 0;
+
+            content.Children.Add(keywordBox);
+            content.Children.Add(tagCombo);
+
+            ContentDialog dialog = new ContentDialog
+            {
+                Title = "Tag Window Title",
+                Content = content,
+                PrimaryButtonText = "Save",
+                CloseButtonText = "Cancel",
+                XamlRoot = this.XamlRoot
+            };
+
+            var result = await dialog.ShowAsync();
+            if (result == ContentDialogResult.Primary)
+            {
+                string keyword = keywordBox.Text.Trim();
+                if (string.IsNullOrEmpty(keyword)) return;
+
+                if (tagCombo.SelectedValue is int tagId)
+                {
+                    UsageLogger.Helpers.AppTagHelper.UpdateTitleTag(item.ParentProcessName, keyword, tagId);
+                    ViewModel.RefreshDayView();
+                }
+            }
+        }
+
         // Keep old handler for backwards compatibility but it shouldn't be used anymore
         public void SubItem_RightTapped(object sender, Microsoft.UI.Xaml.Input.RightTappedRoutedEventArgs e)
         {

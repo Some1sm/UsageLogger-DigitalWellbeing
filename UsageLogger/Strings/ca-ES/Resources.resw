@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -372,6 +372,12 @@ Acaba: {2}</value>
   </data>
   <data name="Tray_Exit.Text" xml:space="preserve">
     <value>Sortir</value>
+  </data>
+  <data name="Dashboard_ToggleUngroup.Text" xml:space="preserve">
+    <value>Desagrupar / Agrupar</value>
+  </data>
+  <data name="SubApp_GroupedItemsTooltip" xml:space="preserve">
+    <value>{0} ({1} elements agrupats - fes clic per desagrupar)</value>
   </data>
   <data name="Dashboard_SetTimeLimit.Text" xml:space="preserve">
     <value>Límit de Temps</value>

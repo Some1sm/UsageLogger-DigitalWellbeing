@@ -9,6 +9,22 @@
     mc:Ignorable="d">
 
     <Page.Resources>
+        <DataTemplate x:Key="SubDetailItemTemplate">
+            <Grid Padding="75,2,15,2" Margin="0,1" ToolTipService.ToolTip="{Binding FullTitle}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="70"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" Grid.Column="0" Spacing="6" VerticalAlignment="Center">
+                    <FontIcon Glyph="&#xE97C;" FontSize="7" Opacity="0.4" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding Title}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" FontSize="11" Opacity="0.85"/>
+                </StackPanel>
+                <ProgressBar Grid.Column="1" Value="{Binding Percentage}" Maximum="100" Height="3" VerticalAlignment="Center" Margin="6,0" Opacity="0.75"/>
+                <TextBlock Grid.Column="2" Text="{Binding StrDuration}" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="11" Opacity="0.6"/>
+            </Grid>
+        </DataTemplate>
+
         <DataTemplate x:Key="AppUsageItemTemplate">
             <Border CornerRadius="12" Background="{Binding BrushAppTagBg}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="0" Margin="0,0,10,10">
                 <Border.ContextFlyout>
@@ -94,51 +110,77 @@
                         </ListView.ItemContainerStyle>
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <Grid Padding="60,4,15,4" Background="{Binding BackgroundBrush}" CornerRadius="4" Margin="4,2" ToolTipService.ToolTip="Right-click to Tag">
-                                    <Grid.ContextFlyout>
-                                        <MenuFlyout Opening="SubItemMenuFlyout_Opening">
-                                            <MenuFlyoutItem Text="Set Category (Tag)" Click="SubItemMenuFlyoutItem_SetTag_Click">
-                                                <MenuFlyoutItem.Icon>
-                                                    <FontIcon Glyph="&#xE8EC;"/>
-                                                </MenuFlyoutItem.Icon>
-                                            </MenuFlyoutItem>
-                                            <MenuFlyoutItem Text="Set Display Name..." Click="SubItemMenuFlyoutItem_SetDisplayName_Click">
-                                                <MenuFlyoutItem.Icon>
-                                                    <FontIcon Glyph="&#xE8AC;"/>
-                                                </MenuFlyoutItem.Icon>
-                                            </MenuFlyoutItem>
-                                            <MenuFlyoutItem Text="Set Time Limit" Click="SubItemMenuFlyoutItem_SetTimeLimit_Click">
-                                                <MenuFlyoutItem.Icon>
-                                                    <FontIcon Glyph="&#xE823;"/>
-                                                </MenuFlyoutItem.Icon>
-                                            </MenuFlyoutItem>
-                                            <MenuFlyoutSeparator/>
-                                            <MenuFlyoutItem Text="Exclude" Click="SubItemMenuFlyoutItem_Exclude_Click">
-                                                <MenuFlyoutItem.Icon>
-                                                    <FontIcon Glyph="&#xE74D;"/>
-                                                </MenuFlyoutItem.Icon>
-                                            </MenuFlyoutItem>
-                                        </MenuFlyout>
-                                    </Grid.ContextFlyout>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="100"/>
-                                        <ColumnDefinition Width="80"/>
-                                    </Grid.ColumnDefinitions>
-                                    
-                                    <StackPanel Orientation="Horizontal" Grid.Column="0" Spacing="8">
-                                        <Rectangle Width="4" Height="16" Fill="{Binding TagIndicatorBrush}" RadiusX="2" RadiusY="2" VerticalAlignment="Center"/>
-                                        
-                                        <!-- No icon for subitems -->
-                                        <!-- <Image Source="{Binding IconSource}" Width="16" Height="16" VerticalAlignment="Center"/> -->
-                                        
-                                        <TextBlock Text="{Binding Title}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" FontSize="12"/> 
-                                    </StackPanel>
+                                <StackPanel Margin="0,1">
+                                    <Grid Padding="55,4,15,4" Background="{Binding BackgroundBrush}" CornerRadius="4" Margin="4,1" 
+                                          ToolTipService.ToolTip="{Binding TooltipText}" Tapped="SubItemGrid_Tapped">
+                                        <Grid.ContextFlyout>
+                                            <MenuFlyout Opening="SubItemMenuFlyout_Opening">
+                                                <MenuFlyoutItem l:Uids.Uid="Dashboard_ToggleUngroup" Click="SubItemMenuFlyoutItem_ToggleUngroup_Click">
+                                                    <MenuFlyoutItem.Icon>
+                                                        <FontIcon Glyph="&#xE70B;"/>
+                                                    </MenuFlyoutItem.Icon>
+                                                </MenuFlyoutItem>
+                                                <MenuFlyoutSeparator/>
+                                                <MenuFlyoutItem l:Uids.Uid="Dashboard_SetCategory" Click="SubItemMenuFlyoutItem_SetTag_Click">
+                                                    <MenuFlyoutItem.Icon>
+                                                        <FontIcon Glyph="&#xE8EC;"/>
+                                                    </MenuFlyoutItem.Icon>
+                                                </MenuFlyoutItem>
+                                                <MenuFlyoutItem l:Uids.Uid="Dashboard_SetDisplayName" Click="SubItemMenuFlyoutItem_SetDisplayName_Click">
+                                                    <MenuFlyoutItem.Icon>
+                                                        <FontIcon Glyph="&#xE8AC;"/>
+                                                    </MenuFlyoutItem.Icon>
+                                                </MenuFlyoutItem>
+                                                <MenuFlyoutItem l:Uids.Uid="Dashboard_SetTimeLimit" Click="SubItemMenuFlyoutItem_SetTimeLimit_Click">
+                                                    <MenuFlyoutItem.Icon>
+                                                        <FontIcon Glyph="&#xE823;"/>
+                                                    </MenuFlyoutItem.Icon>
+                                                </MenuFlyoutItem>
+                                                <MenuFlyoutSeparator/>
+                                                <MenuFlyoutItem l:Uids.Uid="Dashboard_ExcludeApp" Click="SubItemMenuFlyoutItem_Exclude_Click">
+                                                    <MenuFlyoutItem.Icon>
+                                                        <FontIcon Glyph="&#xE74D;"/>
+                                                    </MenuFlyoutItem.Icon>
+                                                </MenuFlyoutItem>
+                                            </MenuFlyout>
+                                        </Grid.ContextFlyout>
 
-                                    <ProgressBar Grid.Column="1" Value="{Binding Percentage}" Maximum="100" Height="4" VerticalAlignment="Center" Margin="10,0"/>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="90"/>
+                                            <ColumnDefinition Width="70"/>
+                                            <ColumnDefinition Width="20"/>
+                                        </Grid.ColumnDefinitions>
+                                        
+                                        <StackPanel Orientation="Horizontal" Grid.Column="0" Spacing="8">
+                                            <Rectangle Width="4" Height="16" Fill="{Binding TagIndicatorBrush}" RadiusX="2" RadiusY="2" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding Title}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" FontSize="12" FontWeight="SemiBold"/> 
 
-                                    <TextBlock Grid.Column="2" Text="{Binding StrDuration}" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="12" Opacity="0.7"/>
-                                </Grid>
+                                            <!-- Grouped Item Count Badge -->
+                                            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="8" Padding="5,1" VerticalAlignment="Center"
+                                                    Visibility="{Binding HasChildren, Converter={StaticResource BoolToVisibilityConverter}}" Opacity="0.85">
+                                                <TextBlock Text="{Binding ItemCountBadge}" FontSize="10" FontWeight="SemiBold" Opacity="0.8"/>
+                                            </Border>
+                                        </StackPanel>
+
+                                        <ProgressBar Grid.Column="1" Value="{Binding Percentage}" Maximum="100" Height="4" VerticalAlignment="Center" Margin="6,0"/>
+
+                                        <TextBlock Grid.Column="2" Text="{Binding StrDuration}" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="12" Opacity="0.7"/>
+
+                                        <!-- Expand Chevron for Grouped Items -->
+                                        <FontIcon Grid.Column="3" Glyph="&#xE70D;" FontSize="10" Opacity="0.5" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                                  Visibility="{Binding HasChildren, Converter={StaticResource BoolToVisibilityConverter}}">
+                                            <FontIcon.RenderTransform>
+                                                <RotateTransform Angle="{Binding ChevronRotation}" CenterX="5" CenterY="5"/>
+                                            </FontIcon.RenderTransform>
+                                        </FontIcon>
+                                    </Grid>
+
+                                    <!-- Ungrouped Sub-Details List -->
+                                    <ItemsControl ItemsSource="{Binding SubDetails}" ItemTemplate="{StaticResource SubDetailItemTemplate}" 
+                                                  MaxHeight="{Binding AnimatedHeight}" 
+                                                  Visibility="{Binding HasChildren, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                </StackPanel>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>

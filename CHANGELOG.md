@@ -4,6 +4,18 @@ All notable changes to **UsageLogger for Windows** are documented in this file.
 
 ---
 
+## [Unreleased]
+
+### ✨ Added
+- **Sub-App Click-to-Ungroup** — Grouped sub-applications (e.g. under regex rules like YouTube, X, Reddit, Instagram) can now be clicked or right-clicked to expand and reveal individual post, video, and page breakdowns with specific durations and progress percentages.
+- **Grouped Count Badges & Chevrons** — Added a visual badge indicator and animated expand chevron for grouped sub-apps containing multiple links or titles.
+- **Granular Session Logging** — `ActivityLogger` now logs clean, granular window titles directly into session logs instead of pre-collapsing them at write time, enabling dynamic grouping in memory.
+
+### 🔧 Changed
+- **Accordion Expansion Capacity** — Increased max accordion animation heights to comfortably fit long lists of ungrouped sub-items without clipping.
+
+---
+
 ## [1.0.2] — 2026-03-14
 
 ### ✨ Added
