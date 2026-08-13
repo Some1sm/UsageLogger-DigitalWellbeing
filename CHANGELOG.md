@@ -25,6 +25,7 @@ All notable changes to **UsageLogger for Windows** are documented in this file.
 - **Incognito Watermark Redesign** — Redesigned the incognito privacy watermark with a subtle minimalist vector silhouette, soft drop shadow, and smooth transitions.
 
 ### 🐛 Fixed
+- **History Activity Heatmap Re-render on Navigation** — Fixed an issue in `Win2DHeatmap` where navigating away and back to History Page caused the Win2D canvas to be removed from the visual tree and nulled, preventing the heatmap from rendering on subsequent visits.
 - **Display Setting Caching & Instant Refresh** — Fixed an issue where changing "Days to Show on Graph", "Minimum Duration", or timeline day counts in Settings did not take effect until restarting the app; cached pages now detect preference changes and reload immediately upon navigation.
 - **Detailed Usage Blank Screen & Navigation Crash** — Fixed an issue in `Win2DTimelineControl` where navigating away and back to Detailed Usage destroyed the Win2D canvas, causing a blank view and null-reference crash on user interaction.
 - **SessionsViewModel Memory & Timer Leak** — Fixed an issue where opening Detailed Usage repeatedly spawned redundant background timer instances and caused visual list flickering.
