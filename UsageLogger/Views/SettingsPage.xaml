@@ -250,7 +250,7 @@
                      <!-- GROUP 1: Dashboard -->
                      <StackPanel Spacing="6">
                          <StackPanel Orientation="Horizontal" Spacing="8" Margin="4,0,0,2">
-                             <FontIcon Glyph="&#xE80F;" FontFamily="Segoe MDL2 Assets" FontSize="14" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+                             <FontIcon Glyph="&#xE80F;" FontFamily="Segoe MDL2 Assets" FontSize="16"/>
                              <TextBlock l:Uids.Uid="Settings_GroupDashboard" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
                          </StackPanel>
 
@@ -300,12 +300,25 @@
                                  <NumberBox x:Name="RefreshInterval" Width="150" SpinButtonPlacementMode="Compact" Minimum="6" Maximum="600" ValueChanged="RefreshInterval_ValueChanged" IsEnabled="{x:Bind EnableAutoRefresh.IsOn, Mode=OneWay}" KeyUp="Settings_KeyUp"/>
                              </StackPanel>
                          </Grid>
+
+                         <!-- Combined Audio View (Dashboard) -->
+                         <Grid x:Name="GridCombinedAudio" Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
+                             <Grid.ColumnDefinitions>
+                                 <ColumnDefinition Width="*"/>
+                                 <ColumnDefinition Width="Auto"/>
+                             </Grid.ColumnDefinitions>
+                             <StackPanel Grid.Column="0" Spacing="2">
+                                 <TextBlock l:Uids.Uid="Settings_CombinedAudio" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                                 <TextBlock l:Uids.Uid="Settings_CombinedAudioDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
+                             </StackPanel>
+                             <ToggleSwitch x:Name="ToggleCombinedAudioView" Grid.Column="1" Toggled="ToggleCombinedAudioView_Toggled"/>
+                         </Grid>
                      </StackPanel>
 
                      <!-- GROUP 2: Detailed Usage (Timeline) -->
                      <StackPanel Spacing="6">
                          <StackPanel Orientation="Horizontal" Spacing="8" Margin="4,0,0,2">
-                             <FontIcon Glyph="&#xE823;" FontFamily="Segoe MDL2 Assets" FontSize="14" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+                             <FontIcon Glyph="&#xE823;" FontFamily="Segoe MDL2 Assets" FontSize="16"/>
                              <TextBlock l:Uids.Uid="Settings_GroupDetailedUsage" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
                          </StackPanel>
 
@@ -352,25 +365,12 @@
                                  </ComboBox>
                              </StackPanel>
                          </Grid>
-
-                         <!-- Combined Audio View -->
-                         <Grid x:Name="GridCombinedAudio" Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
-                             <Grid.ColumnDefinitions>
-                                 <ColumnDefinition Width="*"/>
-                                 <ColumnDefinition Width="Auto"/>
-                             </Grid.ColumnDefinitions>
-                             <StackPanel Grid.Column="0" Spacing="2">
-                                 <TextBlock l:Uids.Uid="Settings_CombinedAudio" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                                 <TextBlock l:Uids.Uid="Settings_CombinedAudioDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
-                             </StackPanel>
-                             <ToggleSwitch x:Name="ToggleCombinedAudioView" Grid.Column="1" Toggled="ToggleCombinedAudioView_Toggled"/>
-                         </Grid>
                      </StackPanel>
 
                      <!-- GROUP 3: Appearance & Personalization / Misc -->
                      <StackPanel Spacing="6">
                          <StackPanel Orientation="Horizontal" Spacing="8" Margin="4,0,0,2">
-                             <FontIcon Glyph="&#xE790;" FontFamily="Segoe MDL2 Assets" FontSize="14" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+                             <FontIcon Glyph="&#xE790;" FontFamily="Segoe MDL2 Assets" FontSize="16"/>
                              <TextBlock l:Uids.Uid="Settings_GroupAppearance" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
                          </StackPanel>
 
