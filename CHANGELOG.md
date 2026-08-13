@@ -10,9 +10,23 @@ All notable changes to **UsageLogger for Windows** are documented in this file.
 - **Sub-App Click-to-Ungroup** — Grouped sub-applications (e.g. under regex rules like YouTube, X, Reddit, Instagram) can now be clicked or right-clicked to expand and reveal individual post, video, and page breakdowns with specific durations and progress percentages.
 - **Grouped Count Badges & Chevrons** — Added a visual badge indicator and animated expand chevron for grouped sub-apps containing multiple links or titles.
 - **Granular Session Logging** — `ActivityLogger` now logs clean, granular window titles directly into session logs instead of pre-collapsing them at write time, enabling dynamic grouping in memory.
+- **Midnight Session Boundary Splitting** — Long-running sessions spanning midnight are now automatically split at `00:00:00` so usage is credited accurately to each respective calendar day.
+- **Graceful Shutdown Flush Hooks** — Added `ApplicationExit`, `ProcessExit`, and `SessionEnding` lifecycle hooks to ensure all uncommitted in-memory session buffers are safely written to disk when Windows shuts down, logs off, or reboots.
+- **Seamless Page Navigation Caching** — Enabled `NavigationCacheMode.Required` across primary views (`DayAppUsagePage`, `HistoryPage`, `SessionsPage`, `MiscDataPage`, `FocusPage`) for instant, flicker-free tab switching.
 
-### 🔧 Changed
-- **Accordion Expansion Capacity** — Increased max accordion animation heights to comfortably fit long lists of ungrouped sub-items without clipping.
+### 🎨 UI & UX Improvements
+- **Startup "No Data" Screen Redesign** — Replaced the disruptive full-screen modal on startup/empty data with non-blocking, responsive inline empty-state cards across Dashboard, History, and Detailed Usage pages, allowing users to freely explore the app immediately.
+- **Incognito Watermark Redesign** — Redesigned the incognito privacy watermark with a subtle minimalist vector silhouette, soft drop shadow, and smooth transitions.
+
+### 🐛 Fixed
+- **Detailed Usage Blank Screen & Navigation Crash** — Fixed an issue in `Win2DTimelineControl` where navigating away and back to Detailed Usage destroyed the Win2D canvas, causing a blank view and null-reference crash on user interaction.
+- **SessionsViewModel Memory & Timer Leak** — Fixed an issue where opening Detailed Usage repeatedly spawned redundant background timer instances and caused visual list flickering.
+- **AFK vs Active Time Metric Integrity** — Fixed `ConsolidateSessions` to group by `ProcessName`, `ProgramName`, and `IsAfk` chronologically, preventing AFK periods from merging into active usage.
+- **IPC Mutex Deadlock & Kernel Handle Leaks** — Added `AbandonedMutexException` recovery and proper `MemoryMappedFile` disposal in `LiveSessionCache` to prevent deadlocks and OS handle leaks between the service and UI.
+- **Audio WASAPI & Win32 Process Leaks** — Wrapped NAudio COM audio objects (`MMDevice`, `AudioSessionControl`) and `Process` handles across the app in disposal blocks to eliminate unmanaged memory and handle leaks.
+- **Multi-Day Duration Formatting** — Fixed `StringHelper.TimeSpanToString` and `TimeSpanToShortString` to format total elapsed hours (`TotalHours`) instead of wrapping modulo 24 hours.
+- **Async Dialog Safety** — Converted custom title rule dialog handlers from `async void` to `async Task` with proper `await` calls in `SettingsPage`.
+- **Compiler Warnings** — Resolved all compiler warnings across the entire solution (**0 errors, 0 warnings**).
 
 ---
 
