@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -6,15 +6,15 @@
     <Nullable>disable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>disable</ImplicitUsings>
-    <Version>1.0.2</Version>
-    <AssemblyVersion>1.0.2.0</AssemblyVersion>
-    <FileVersion>1.0.2.0</FileVersion>
+    <Version>1.0.3</Version>
+    <AssemblyVersion>1.0.3.0</AssemblyVersion>
+    <FileVersion>1.0.3.0</FileVersion>
     <NeutralLanguage>en-US</NeutralLanguage>
     <Authors>David Cepero</Authors>
     <Company>David Cepero</Company>
     <Product>UsageLogger Installer</Product>
     <Description>Installer for UsageLogger</Description>
-    <Copyright>� 2025 David Cepero</Copyright>
+    <Copyright>© 2025 David Cepero</Copyright>
     <AssemblyTitle>UsageLogger Installer</AssemblyTitle>
   </PropertyGroup>
 

@@ -416,7 +416,7 @@ dotnet build UsageLogger/UsageLogger.csproj -c Release
 
 ### Version Numbers
 
-Current version: **v1.0.2** — update in all 4 places when bumping:
+Current version: **v1.0.3** — update in all 4 places when bumping:
 
 | Project | File | Line |
 |---|---|---|

@@ -1,16 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk">
+ï»¿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0-windows</TargetFramework>
-    <Authors>David Cepero López</Authors>
+    <Authors>David Cepero LÃ³pez</Authors>
     <Company>Some1sm</Company>
     <Product>UsageLogger.Core</Product>
     <Description>Needed libraries for UsageLogger for Windows</Description>
-    <Copyright>Copyright © 2026. Licensed under GNU GPLv3.</Copyright>
+    <Copyright>Copyright Â© 2026. Licensed under GNU GPLv3.</Copyright>
     <AssemblyTitle>UsageLogger.Core</AssemblyTitle>
-    <Version>1.0.2</Version>
-    <AssemblyVersion>1.0.2.0</AssemblyVersion>
-    <FileVersion>1.0.2.0</FileVersion>
+    <Version>1.0.3</Version>
+    <AssemblyVersion>1.0.3.0</AssemblyVersion>
+    <FileVersion>1.0.3.0</FileVersion>
     <UseWPF>false</UseWPF>
     <UseWindowsForms>false</UseWindowsForms>
   </PropertyGroup>

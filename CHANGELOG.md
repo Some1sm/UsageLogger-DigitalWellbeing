@@ -4,7 +4,7 @@ All notable changes to **UsageLogger for Windows** are documented in this file.
 
 ---
 
-## [Unreleased]
+## [1.0.3] — 2026-08-13
 
 ### ✨ Added
 - **Combine Short Interruptions in Detailed Usage** — Added a configurable setting to merge brief switches to other apps (shorter than 15s–120s) into the surrounding primary session, keeping timelines smooth and unified without fragmenting continuous blocks.
