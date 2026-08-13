@@ -470,6 +470,12 @@ namespace UsageLogger.ViewModels
             } // End Foreach
             
             if (pendingBlock != null) mergedBlocks.Add(pendingBlock);
+
+            // BRIDGE SHORT INTERRUPTIONS (Optional feature)
+            if (UserPreferences.MergeShortInterruptions && UserPreferences.InterruptionThresholdSeconds > 0)
+            {
+                mergedBlocks = BridgeShortInterruptions(mergedBlocks, pixelsPerHour, UserPreferences.InterruptionThresholdSeconds);
+            }
             
             // Add all merged blocks to the observable collection
             // Sort by Top to maintain approximate chronological visual order (though overlaps will happen)
@@ -590,6 +596,108 @@ namespace UsageLogger.ViewModels
         private void UpdateCurrentTimeVisibility()
         {
             CurrentTimeVisibility = IsToday ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private List<SessionBlock> BridgeShortInterruptions(List<SessionBlock> blocks, double pixelsPerHour, int thresholdSeconds)
+        {
+            if (blocks == null || blocks.Count <= 1 || thresholdSeconds <= 0) return blocks;
+
+            var result = new List<SessionBlock>();
+            int i = 0;
+
+            while (i < blocks.Count)
+            {
+                var current = blocks[i];
+                int j = i + 1;
+                var pendingInterruptions = new List<SessionBlock>();
+                int lastBridgedIndex = -1;
+
+                while (j < blocks.Count)
+                {
+                    var next = blocks[j];
+                    double durationSec = (next.EndTime - next.StartTime).TotalSeconds;
+
+                    bool isResumption = false;
+                    if (ViewMode == "Category")
+                    {
+                        isResumption = (next.Title == current.Title && next.IsAfk == current.IsAfk);
+                    }
+                    else
+                    {
+                        isResumption = (string.Equals(next.ProcessName, current.ProcessName, StringComparison.OrdinalIgnoreCase) 
+                                        && next.IsAfk == current.IsAfk);
+                    }
+
+                    if (isResumption && pendingInterruptions.Count > 0)
+                    {
+                        // Bridge found!
+                        foreach (var inter in pendingInterruptions)
+                        {
+                            current.Interruptions.Add(new InterruptionRecord
+                            {
+                                ProcessName = inter.ProcessName,
+                                ProgramName = inter.OriginalSession?.ProgramName ?? inter.Title,
+                                DisplayTitle = inter.Title,
+                                StartTime = inter.StartTime,
+                                EndTime = inter.EndTime,
+                                Tag = AppTagHelper.GetAppTag(inter.ProcessName),
+                                TagColor = inter.BackgroundColor
+                            });
+
+                            if (inter.HasInterruptions)
+                            {
+                                current.Interruptions.AddRange(inter.Interruptions);
+                            }
+                        }
+
+                        if (next.HasInterruptions)
+                        {
+                            current.Interruptions.AddRange(next.Interruptions);
+                        }
+
+                        // Extend current
+                        current.EndTime = next.EndTime;
+                        current.Height = (next.Top + next.Height) - current.Top;
+                        double totalMin = current.Height * 60.0 / pixelsPerHour;
+                        current.DurationText = UsageLogger.Core.Helpers.StringHelper.TimeSpanToString(TimeSpan.FromMinutes(totalMin));
+                        current.ShowDetails = current.Height > 20;
+
+                        if (next.AudioSources != null)
+                        {
+                            foreach (var aud in next.AudioSources)
+                            {
+                                if (!current.AudioSources.Contains(aud)) current.AudioSources.Add(aud);
+                            }
+                        }
+
+                        pendingInterruptions.Clear();
+                        lastBridgedIndex = j;
+                        j++;
+                    }
+                    else if (durationSec <= thresholdSeconds && pendingInterruptions.Count < 10)
+                    {
+                        pendingInterruptions.Add(next);
+                        j++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                result.Add(current);
+
+                if (lastBridgedIndex != -1)
+                {
+                    i = lastBridgedIndex + 1;
+                }
+                else
+                {
+                    i++;
+                }
+            }
+
+            return result;
         }
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)

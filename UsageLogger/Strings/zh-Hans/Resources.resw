@@ -994,4 +994,16 @@
   <data name="History_SearchNewThisPeriod" xml:space="preserve">
     <value>本期新增</value>
   </data>
+  <data name="Settings_MergeShortInterruptions.Text" xml:space="preserve">
+    <value>合并简短中断</value>
+  </data>
+  <data name="Settings_MergeShortInterruptionsDesc.Text" xml:space="preserve">
+    <value>在详细使用记录中合并短暂切换至其他应用的中断，使连续会话更加连贯，同时完整保留中断详情。</value>
+  </data>
+  <data name="Settings_InterruptionThreshold.Text" xml:space="preserve">
+    <value>最大中断时长：</value>
+  </data>
+  <data name="Sessions_MergeInterruptions.Text" xml:space="preserve">
+    <value>合并简短切换</value>
+  </data>
 </root>

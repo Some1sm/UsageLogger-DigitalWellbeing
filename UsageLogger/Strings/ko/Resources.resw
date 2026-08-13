@@ -994,4 +994,16 @@
   <data name="History_SearchNewThisPeriod" xml:space="preserve">
     <value>이번 기간에 신규</value>
   </data>
+  <data name="Settings_MergeShortInterruptions.Text" xml:space="preserve">
+    <value>짧은 중단 병합</value>
+  </data>
+  <data name="Settings_MergeShortInterruptionsDesc.Text" xml:space="preserve">
+    <value>상세 사용 기록에서 짧은 앱 전환을 병합하여 연속된 세션을 깔끔하게 표시하며, 중단 세부 정보는 그대로 유지합니다.</value>
+  </data>
+  <data name="Settings_InterruptionThreshold.Text" xml:space="preserve">
+    <value>최대 중단 시간:</value>
+  </data>
+  <data name="Sessions_MergeInterruptions.Text" xml:space="preserve">
+    <value>짧은 전환 병합</value>
+  </data>
 </root>

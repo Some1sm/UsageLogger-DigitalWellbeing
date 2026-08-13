@@ -994,4 +994,16 @@ Ende: {2}</value>
   <data name="History_SearchNewThisPeriod" xml:space="preserve">
     <value>Neu in diesem Zeitraum</value>
   </data>
+  <data name="Settings_MergeShortInterruptions.Text" xml:space="preserve">
+    <value>Kurze Unterbrechungen zusammenführen</value>
+  </data>
+  <data name="Settings_MergeShortInterruptionsDesc.Text" xml:space="preserve">
+    <value>Führt kurze Wechsel zu anderen Apps zusammen, damit kontinuierliche Sitzungen in der Detailansicht einheitlich aussehen, während Details erhalten bleiben.</value>
+  </data>
+  <data name="Settings_InterruptionThreshold.Text" xml:space="preserve">
+    <value>Max. Unterbrechungsdauer:</value>
+  </data>
+  <data name="Sessions_MergeInterruptions.Text" xml:space="preserve">
+    <value>Kurzwechsel verbinden</value>
+  </data>
 </root>

@@ -328,6 +328,32 @@ namespace UsageLogger.Views.Controls
                     Color afkColor = Color.FromArgb(80, 255, 185, 0);
                     ds.FillRoundedRectangle(4f, top, mainBlockWidth, height, 4f, 4f, afkColor);
                 }
+
+                // Draw Interruption Notches (Pips)
+                if (block.HasInterruptions)
+                {
+                    double pph = vm.CanvasHeight / 24.0;
+                    DateTime dayStart = vm.Date.Date;
+
+                    foreach (var inter in block.Interruptions)
+                    {
+                        float interTop = (float)((inter.StartTime - dayStart).TotalMinutes * pph / 60.0);
+                        float interHeight = Math.Max(2f, (float)(inter.Duration.TotalMinutes * pph / 60.0));
+
+                        Color interColor = Color.FromArgb(230, 255, 180, 0); // Warm accent default
+                        if (inter.TagColor is SolidColorBrush isb)
+                        {
+                            interColor = isb.Color;
+                        }
+
+                        // Left notch pip on the indicator bar
+                        ds.FillRoundedRectangle(0, interTop, 5f, interHeight, 1f, 1f, interColor);
+
+                        // Subtle accent band on the main block body
+                        Color bandColor = Color.FromArgb(75, interColor.R, interColor.G, interColor.B);
+                        ds.FillRoundedRectangle(4f, interTop, mainBlockWidth * 0.35f, interHeight, 1f, 1f, bandColor);
+                    }
+                }
                 
                 // Text
                 if (height > 16)
@@ -372,14 +398,18 @@ namespace UsageLogger.Views.Controls
                      
                      if (!string.IsNullOrEmpty(block.DurationText)) title += $" ({block.DurationText})";
                      
+                     // Append interruption badge indicator
+                     if (block.HasInterruptions)
+                     {
+                         title += block.Interruptions.Count > 1 ? $" ⚡{block.Interruptions.Count}" : " ⚡";
+                     }
+                     
                      using var layout = new CanvasTextLayout(ds, title, titleFormat, mainBlockWidth, height);
                      float textX = 8.0f;
                      
                      // Sticky Header Logic
                      float labelHeight = (float)layout.LayoutBounds.Height; // Approx
                      float textY = top + 2; // Default top
-                     
-                     textY = top + 2;
                      
                      ds.DrawTextLayout(layout, textX, textY, Colors.White);
                 }
@@ -536,20 +566,52 @@ namespace UsageLogger.Views.Controls
                  var block = vm.SessionBlocks.LastOrDefault(b => 
                      correctedY >= b.Top && correctedY <= b.Top + b.Height);
                      
-                 if (block != null)
-                 {
-                     TooltipText.Text = block.TooltipText;
-                     TooltipBorder.Visibility = Visibility.Visible;
-                     
-                     double viewportY = contentPt.Y - (MainScrollViewer?.VerticalOffset ?? 0);
-                     
-                     Canvas.SetLeft(TooltipBorder, contentPt.X + 10);
-                     Canvas.SetTop(TooltipBorder, viewportY + 10);
-                 }
-                 else
-                 {
-                     TooltipBorder.Visibility = Visibility.Collapsed;
-                 }
+                  if (block != null)
+                  {
+                      TooltipText.Text = block.TooltipText;
+                      TooltipBorder.Visibility = Visibility.Visible;
+                      
+                      // Measure tooltip size to handle edge collision detection
+                      TooltipBorder.Measure(new Windows.Foundation.Size(280, double.PositiveInfinity));
+                      double tipWidth = TooltipBorder.DesiredSize.Width > 0 ? TooltipBorder.DesiredSize.Width : (TooltipBorder.ActualWidth > 0 ? TooltipBorder.ActualWidth : 180);
+                      double tipHeight = TooltipBorder.DesiredSize.Height > 0 ? TooltipBorder.DesiredSize.Height : (TooltipBorder.ActualHeight > 0 ? TooltipBorder.ActualHeight : 60);
+
+                      double viewportY = contentPt.Y - (MainScrollViewer?.VerticalOffset ?? 0);
+                      double viewportX = contentPt.X;
+                      
+                      // Available boundary inside this timeline card
+                      double containerWidth = this.ActualWidth > 0 ? this.ActualWidth - 30 : 350;
+                      double containerHeight = MainScrollViewer?.ActualHeight > 0 ? MainScrollViewer.ActualHeight : 600;
+
+                      // HORIZONTAL: Default to right (+12px). If overflowing right edge, flip to left of cursor (-tipWidth - 12px)
+                      double targetX = viewportX + 12;
+                      if (targetX + tipWidth > containerWidth)
+                      {
+                          targetX = viewportX - tipWidth - 12;
+                      }
+                      if (targetX < 4)
+                      {
+                          targetX = 4;
+                      }
+
+                      // VERTICAL: Default to below (+12px). If overflowing bottom edge, flip to above cursor (-tipHeight - 12px)
+                      double targetY = viewportY + 12;
+                      if (targetY + tipHeight > containerHeight - 10)
+                      {
+                          targetY = viewportY - tipHeight - 12;
+                      }
+                      if (targetY < 4)
+                      {
+                          targetY = 4;
+                      }
+
+                      Canvas.SetLeft(TooltipBorder, targetX);
+                      Canvas.SetTop(TooltipBorder, targetY);
+                  }
+                  else
+                  {
+                      TooltipBorder.Visibility = Visibility.Collapsed;
+                  }
              }
              else
              {

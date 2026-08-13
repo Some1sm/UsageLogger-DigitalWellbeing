@@ -994,4 +994,16 @@
   <data name="History_SearchNewThisPeriod" xml:space="preserve">
     <value>今期間の新規</value>
   </data>
+  <data name="Settings_MergeShortInterruptions.Text" xml:space="preserve">
+    <value>短い中断を結合</value>
+  </data>
+  <data name="Settings_MergeShortInterruptionsDesc.Text" xml:space="preserve">
+    <value>短い別アプリへの切り替えを結合して詳細な使用状況で見やすくし、中断の詳細も保持します。</value>
+  </data>
+  <data name="Settings_InterruptionThreshold.Text" xml:space="preserve">
+    <value>最大中断時間:</value>
+  </data>
+  <data name="Sessions_MergeInterruptions.Text" xml:space="preserve">
+    <value>短い切り替えを結合</value>
+  </data>
 </root>

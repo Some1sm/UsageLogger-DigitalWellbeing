@@ -994,4 +994,16 @@ Acaba: {2}</value>
   <data name="History_SearchNewThisPeriod" xml:space="preserve">
     <value>Nova aquest periode</value>
   </data>
+  <data name="Settings_MergeShortInterruptions.Text" xml:space="preserve">
+    <value>Combinar interrupcions curtes</value>
+  </data>
+  <data name="Settings_MergeShortInterruptionsDesc.Text" xml:space="preserve">
+    <value>Uneix els canvis breus a altres aplicacions perquè les sessions contínues es vegin unificades en Ús Detallat, mantenint els detalls de les interrupcions.</value>
+  </data>
+  <data name="Settings_InterruptionThreshold.Text" xml:space="preserve">
+    <value>Durada màxima d'interrupció:</value>
+  </data>
+  <data name="Sessions_MergeInterruptions.Text" xml:space="preserve">
+    <value>Combinar canvis curts</value>
+  </data>
 </root>

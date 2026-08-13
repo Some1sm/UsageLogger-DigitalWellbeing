@@ -102,6 +102,21 @@ namespace UsageLogger.ViewModels
             }
         }
 
+        public bool MergeShortInterruptions
+        {
+            get => UserPreferences.MergeShortInterruptions;
+            set
+            {
+                if (UserPreferences.MergeShortInterruptions != value)
+                {
+                    UserPreferences.MergeShortInterruptions = value;
+                    UserPreferences.Save();
+                    OnPropertyChanged();
+                    RefreshCurrentView();
+                }
+            }
+        }
+
         private void UpdateColumnWidths()
         {
             if (Days.Count == 0 || _totalAvailableWidth <= 0) return;

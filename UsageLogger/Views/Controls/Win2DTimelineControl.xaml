@@ -48,17 +48,18 @@
             <canvas:CanvasControl Grid.Row="1" x:Name="TimelineCanvas" Draw="TimelineCanvas_Draw" IsHitTestVisible="False" />
 
             <!-- Layer 3: Tooltip Overlay -->
-            <Canvas Grid.Row="1" IsHitTestVisible="False">
+            <Canvas Grid.Row="1" IsHitTestVisible="False" Canvas.ZIndex="999">
                  <Border x:Name="TooltipBorder" 
                          Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}" 
                          BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" 
                          BorderThickness="1" 
-                         CornerRadius="4" 
-                         Padding="8,4,8,4" 
+                         CornerRadius="6" 
+                         Padding="10,6,10,6" 
+                         MaxWidth="280"
                          Visibility="Collapsed">
-                    <TextBlock x:Name="TooltipText" Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}" FontSize="12"/>
+                    <TextBlock x:Name="TooltipText" Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}" FontSize="12" TextWrapping="Wrap"/>
                  </Border>
-             </Canvas>
+            </Canvas>
         </Grid>
     </Border>
 </UserControl>

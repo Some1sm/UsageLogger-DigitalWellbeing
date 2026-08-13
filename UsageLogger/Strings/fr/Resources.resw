@@ -994,4 +994,16 @@ Fin : {2}</value>
   <data name="History_SearchNewThisPeriod" xml:space="preserve">
     <value>Nouvelle cette période</value>
   </data>
+  <data name="Settings_MergeShortInterruptions.Text" xml:space="preserve">
+    <value>Combiner les courtes interruptions</value>
+  </data>
+  <data name="Settings_MergeShortInterruptionsDesc.Text" xml:space="preserve">
+    <value>Fusionne les brefs passages à d'autres applications pour unifier les sessions continues dans l'Utilisation détaillée, tout en préservant les détails.</value>
+  </data>
+  <data name="Settings_InterruptionThreshold.Text" xml:space="preserve">
+    <value>Durée max d'interruption :</value>
+  </data>
+  <data name="Sessions_MergeInterruptions.Text" xml:space="preserve">
+    <value>Combiner les transitions</value>
+  </data>
 </root>

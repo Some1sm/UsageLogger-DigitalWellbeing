@@ -7,6 +7,9 @@ All notable changes to **UsageLogger for Windows** are documented in this file.
 ## [Unreleased]
 
 ### ✨ Added
+- **Combine Short Interruptions in Detailed Usage** — Added a configurable setting to merge brief switches to other apps (shorter than 15s–120s) into the surrounding primary session, keeping timelines smooth and unified without fragmenting continuous blocks.
+- **Interruption Visual Indicators & Inspection** — Merged blocks display color-coded visual accent notches at the exact timestamps of interruptions, a `⚡` badge indicator, and a rich multi-line tooltip breakdown with exact time ranges and durations.
+- **Quick-Toggle on Detailed Usage Toolbar** — Added a dedicated toggle button to the Detailed Usage toolbar to instantly toggle interruption merging on the fly.
 - **Sub-App Click-to-Ungroup** — Grouped sub-applications (e.g. under regex rules like YouTube, X, Reddit, Instagram) can now be clicked or right-clicked to expand and reveal individual post, video, and page breakdowns with specific durations and progress percentages.
 - **Grouped Count Badges & Chevrons** — Added a visual badge indicator and animated expand chevron for grouped sub-apps containing multiple links or titles.
 - **Granular Session Logging** — `ActivityLogger` now logs clean, granular window titles directly into session logs instead of pre-collapsing them at write time, enabling dynamic grouping in memory.
@@ -15,6 +18,7 @@ All notable changes to **UsageLogger for Windows** are documented in this file.
 - **Seamless Page Navigation Caching** — Enabled `NavigationCacheMode.Required` across primary views (`DayAppUsagePage`, `HistoryPage`, `SessionsPage`, `MiscDataPage`, `FocusPage`) for instant, flicker-free tab switching.
 
 ### 🎨 UI & UX Improvements
+- **Smart Tooltip Edge Collision & Flip** — Fixed timeline tooltips being clipped by container borders when hovering over blocks near the right or bottom edges by automatically measuring tooltip dimensions and flipping to the opposite side of the cursor.
 - **Startup "No Data" Screen Redesign** — Replaced the disruptive full-screen modal on startup/empty data with non-blocking, responsive inline empty-state cards across Dashboard, History, and Detailed Usage pages, allowing users to freely explore the app immediately.
 - **Incognito Watermark Redesign** — Redesigned the incognito privacy watermark with a subtle minimalist vector silhouette, soft drop shadow, and smooth transitions.
 

@@ -137,6 +137,8 @@ namespace UsageLogger.Views
         private string _origStartupMode;
         private bool _origMinimizeOnExit;
         private bool _origIncognitoMode;
+        private bool _origMergeShortInterruptions;
+        private int _origInterruptionThreshold;
         private int _origDayAmount;
         private double _origMinDuration;
         private bool _origAutoRefresh;
@@ -173,6 +175,9 @@ namespace UsageLogger.Views
                 // Toggles
                 hasChanges |= ToggleMinimizeOnExit.IsOn != _origMinimizeOnExit;
                 hasChanges |= ToggleIncognitoMode.IsOn != _origIncognitoMode;
+                hasChanges |= ToggleMergeInterruptions.IsOn != _origMergeShortInterruptions;
+                if (CmbInterruptionThreshold.SelectedItem is ComboBoxItem thresholdItem && int.TryParse(thresholdItem.Tag?.ToString(), out int threshVal))
+                    hasChanges |= threshVal != _origInterruptionThreshold;
                 hasChanges |= EnableAutoRefresh.IsOn != _origAutoRefresh;
                 hasChanges |= (BtnRamCache.IsChecked == true) != _origUseRamCache;
                 
@@ -254,6 +259,22 @@ namespace UsageLogger.Views
             LoadExcludedProcessItems();
             LoadTags();
             LoadCustomRules();
+
+            // Merge Short Interruptions
+            ToggleMergeInterruptions.IsOn = UserPreferences.MergeShortInterruptions;
+            PanelInterruptionThreshold.Visibility = UserPreferences.MergeShortInterruptions ? Visibility.Visible : Visibility.Collapsed;
+            int loadedThresh = UserPreferences.InterruptionThresholdSeconds;
+            bool foundThresh = false;
+            foreach (ComboBoxItem item in CmbInterruptionThreshold.Items)
+            {
+                if (int.TryParse(item.Tag?.ToString(), out int tagVal) && tagVal == loadedThresh)
+                {
+                    CmbInterruptionThreshold.SelectedItem = item;
+                    foundThresh = true;
+                    break;
+                }
+            }
+            if (!foundThresh) CmbInterruptionThreshold.SelectedIndex = 1; // Default 30s
 
             // Display
             DaysToShowTextBox.Value = UserPreferences.DayAmount;
@@ -363,6 +384,8 @@ namespace UsageLogger.Views
             _origStartupMode = StartupManager.GetStartupMode().ToString();
             _origMinimizeOnExit = UserPreferences.MinimizeOnExit;
             _origIncognitoMode = UserPreferences.IncognitoMode;
+            _origMergeShortInterruptions = UserPreferences.MergeShortInterruptions;
+            _origInterruptionThreshold = UserPreferences.InterruptionThresholdSeconds;
             _origDayAmount = UserPreferences.DayAmount;
             _origMinDuration = UserPreferences.MinimumDuration.TotalSeconds;
             _origAutoRefresh = UserPreferences.EnableAutoRefresh;
@@ -558,6 +581,11 @@ namespace UsageLogger.Views
             
             UserPreferences.MinimizeOnExit = ToggleMinimizeOnExit.IsOn;
             UserPreferences.IncognitoMode = ToggleIncognitoMode.IsOn;
+            UserPreferences.MergeShortInterruptions = ToggleMergeInterruptions.IsOn;
+            if (CmbInterruptionThreshold.SelectedItem is ComboBoxItem thresholdItem && int.TryParse(thresholdItem.Tag?.ToString(), out int threshVal))
+            {
+                UserPreferences.InterruptionThresholdSeconds = threshVal;
+            }
             UserPreferences.EnableAutoRefresh = EnableAutoRefresh.IsOn;
             UserPreferences.RefreshIntervalSeconds = (int)RefreshInterval.Value;
             
@@ -756,6 +784,22 @@ namespace UsageLogger.Views
             if (_isLoading) return;
             UserPreferences.ShowCombinedAudioView = ToggleCombinedAudioView.IsOn;
             UserPreferences.Save();
+        }
+
+        private void ToggleMergeInterruptions_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (_isLoading) return;
+            if (PanelInterruptionThreshold != null)
+            {
+                PanelInterruptionThreshold.Visibility = ToggleMergeInterruptions.IsOn ? Visibility.Visible : Visibility.Collapsed;
+            }
+            CheckForChanges();
+        }
+
+        private void CmbInterruptionThreshold_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_isLoading) return;
+            CheckForChanges();
         }
 
         // ===== RAM Cache segmented selector =====

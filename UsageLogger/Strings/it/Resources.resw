@@ -994,4 +994,16 @@ Fine: {2}</value>
   <data name="History_SearchNewThisPeriod" xml:space="preserve">
     <value>Nuova in questo periodo</value>
   </data>
+  <data name="Settings_MergeShortInterruptions.Text" xml:space="preserve">
+    <value>Combina brevi interruzioni</value>
+  </data>
+  <data name="Settings_MergeShortInterruptionsDesc.Text" xml:space="preserve">
+    <value>Unisci i brevi passaggi ad altre app per mantenere continue le sessioni nell'Utilizzo Dettagliato, preservando comunque i dettagli.</value>
+  </data>
+  <data name="Settings_InterruptionThreshold.Text" xml:space="preserve">
+    <value>Durata massima interruzione:</value>
+  </data>
+  <data name="Sessions_MergeInterruptions.Text" xml:space="preserve">
+    <value>Unisci cambi brevi</value>
+  </data>
 </root>

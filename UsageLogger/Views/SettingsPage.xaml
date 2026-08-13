@@ -178,6 +178,38 @@
                 
                 <Button Grid.Row="2" l:Uids.Uid="Settings_AddNewRule" Click="BtnAddRule_Click" HorizontalAlignment="Right"/>
             </Grid>
+
+            <!-- Merge Short Interruptions in Detailed Usage -->
+            <Grid Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Grid.Column="0" Spacing="2">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xE8AB;" FontFamily="Segoe MDL2 Assets" FontSize="16"/>
+                        <TextBlock l:Uids.Uid="Settings_MergeShortInterruptions" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                    </StackPanel>
+                    <TextBlock l:Uids.Uid="Settings_MergeShortInterruptionsDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
+                </StackPanel>
+                <ToggleSwitch x:Name="ToggleMergeInterruptions" Grid.Row="0" Grid.Column="1" Toggled="ToggleMergeInterruptions_Toggled"/>
+                
+                <StackPanel x:Name="PanelInterruptionThreshold" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" Spacing="12" Margin="0,10,0,0">
+                    <TextBlock l:Uids.Uid="Settings_InterruptionThreshold" VerticalAlignment="Center" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    <ComboBox x:Name="CmbInterruptionThreshold" SelectionChanged="CmbInterruptionThreshold_SelectionChanged" Width="130">
+                        <ComboBoxItem Content="15s" Tag="15"/>
+                        <ComboBoxItem Content="30s" Tag="30"/>
+                        <ComboBoxItem Content="45s" Tag="45"/>
+                        <ComboBoxItem Content="1m" Tag="60"/>
+                        <ComboBoxItem Content="90s" Tag="90"/>
+                        <ComboBoxItem Content="2m" Tag="120"/>
+                    </ComboBox>
+                </StackPanel>
+            </Grid>
             
             <!-- Power Tracking Settings -->
             <Grid Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">

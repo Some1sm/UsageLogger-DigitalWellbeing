@@ -994,4 +994,16 @@
   <data name="History_SearchNewThisPeriod" xml:space="preserve">
     <value>New this period</value>
   </data>
+  <data name="Settings_MergeShortInterruptions.Text" xml:space="preserve">
+    <value>Combine Short Interruptions</value>
+  </data>
+  <data name="Settings_MergeShortInterruptionsDesc.Text" xml:space="preserve">
+    <value>Bridge brief switches to other apps so continuous sessions look unified in Detailed Usage, while still preserving interruption details.</value>
+  </data>
+  <data name="Settings_InterruptionThreshold.Text" xml:space="preserve">
+    <value>Max interruption duration:</value>
+  </data>
+  <data name="Sessions_MergeInterruptions.Text" xml:space="preserve">
+    <value>Merge Short Switches</value>
+  </data>
 </root>
