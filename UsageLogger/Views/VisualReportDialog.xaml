@@ -8,13 +8,12 @@
     xmlns:l="using:WinUI3Localizer"
     mc:Ignorable="d"
     l:Uids.Uid="ReportDialog"
-    DefaultButton="Primary"
-    FullSizeDesired="True">
+    DefaultButton="Primary">
 
-    <Grid RowSpacing="12">
+    <Grid MinWidth="820" RowSpacing="12">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
@@ -23,15 +22,15 @@
                    Text="Share or save your weekly digital wellbeing infographic."
                    Style="{StaticResource CaptionTextBlockStyle}" 
                    Foreground="{ThemeResource TextFillColorSecondaryBrush}" 
-                   Margin="0,0,0,8"/>
+                   Margin="0,0,0,4"/>
 
         <!-- Image Preview Card -->
         <Border Grid.Row="1" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
                 CornerRadius="8" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" 
-                BorderThickness="1" Padding="16">
+                BorderThickness="1" Padding="12">
             <Grid>
                 <ProgressRing x:Name="LoadingRing" IsActive="True" Width="40" Height="40" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <Image x:Name="ReportImagePreview" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Image x:Name="ReportImagePreview" Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
             </Grid>
         </Border>
 
@@ -39,3 +38,4 @@
         <InfoBar x:Name="ReportInfoBar" Grid.Row="2" IsOpen="False" Severity="Success" Margin="0,8,0,0"/>
     </Grid>
 </ContentDialog>
+
