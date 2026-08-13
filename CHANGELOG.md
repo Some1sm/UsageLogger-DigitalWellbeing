@@ -9,7 +9,7 @@ All notable changes to **UsageLogger for Windows** are documented in this file.
 ### ✨ Added
 - **Combine Short Interruptions in Detailed Usage** — Added a configurable setting to merge brief switches to other apps (shorter than 15s–120s) into the surrounding primary session, keeping timelines smooth and unified without fragmenting continuous blocks.
 - **Interruption Visual Indicators & Inspection** — Merged blocks display color-coded visual accent notches at the exact timestamps of interruptions, a `⚡` badge indicator, and a rich multi-line tooltip breakdown with exact time ranges and durations.
-- **Quick-Toggle on Detailed Usage Toolbar** — Added a dedicated toggle button to the Detailed Usage toolbar to instantly toggle interruption merging on the fly.
+- **Full Localization for Timeline Tooltips** — Interruption breakdowns, timestamps, and AFK status in Detailed Usage tooltips are fully localized across all 11 supported languages.
 - **Sub-App Click-to-Ungroup** — Grouped sub-applications (e.g. under regex rules like YouTube, X, Reddit, Instagram) can now be clicked or right-clicked to expand and reveal individual post, video, and page breakdowns with specific durations and progress percentages.
 - **Grouped Count Badges & Chevrons** — Added a visual badge indicator and animated expand chevron for grouped sub-apps containing multiple links or titles.
 - **Granular Session Logging** — `ActivityLogger` now logs clean, granular window titles directly into session logs instead of pre-collapsing them at write time, enabling dynamic grouping in memory.
@@ -18,11 +18,14 @@ All notable changes to **UsageLogger for Windows** are documented in this file.
 - **Seamless Page Navigation Caching** — Enabled `NavigationCacheMode.Required` across primary views (`DayAppUsagePage`, `HistoryPage`, `SessionsPage`, `MiscDataPage`, `FocusPage`) for instant, flicker-free tab switching.
 
 ### 🎨 UI & UX Improvements
+- **Settings Page Display Grouping** — Reorganized the Display settings into three structured sections matching the application pages: **Dashboard**, **Detailed Usage (Timeline)**, and **Appearance & Personalization (Misc)**.
+- **Standardized Settings Design** — Unified card padding, borders, typography, and icon styling across all settings expanders for a consistent, polished look.
 - **Smart Tooltip Edge Collision & Flip** — Fixed timeline tooltips being clipped by container borders when hovering over blocks near the right or bottom edges by automatically measuring tooltip dimensions and flipping to the opposite side of the cursor.
 - **Startup "No Data" Screen Redesign** — Replaced the disruptive full-screen modal on startup/empty data with non-blocking, responsive inline empty-state cards across Dashboard, History, and Detailed Usage pages, allowing users to freely explore the app immediately.
 - **Incognito Watermark Redesign** — Redesigned the incognito privacy watermark with a subtle minimalist vector silhouette, soft drop shadow, and smooth transitions.
 
 ### 🐛 Fixed
+- **Display Setting Caching & Instant Refresh** — Fixed an issue where changing "Days to Show on Graph", "Minimum Duration", or timeline day counts in Settings did not take effect until restarting the app; cached pages now detect preference changes and reload immediately upon navigation.
 - **Detailed Usage Blank Screen & Navigation Crash** — Fixed an issue in `Win2DTimelineControl` where navigating away and back to Detailed Usage destroyed the Win2D canvas, causing a blank view and null-reference crash on user interaction.
 - **SessionsViewModel Memory & Timer Leak** — Fixed an issue where opening Detailed Usage repeatedly spawned redundant background timer instances and caused visual list flickering.
 - **AFK vs Active Time Metric Integrity** — Fixed `ConsolidateSessions` to group by `ProcessName`, `ProgramName`, and `IsAfk` chronologically, preventing AFK periods from merging into active usage.
