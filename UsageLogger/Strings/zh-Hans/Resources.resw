@@ -1015,4 +1015,19 @@
   <data name="Settings_GroupAppearance.Text" xml:space="preserve">
     <value>外观与个性化</value>
   </data>
+  <data name="Sessions_InterruptionHeader_Single" xml:space="preserve">
+    <value>{0}次简短切换 (共 {1}):</value>
+  </data>
+  <data name="Sessions_InterruptionHeader_Plural" xml:space="preserve">
+    <value>{0}次简短切换 (共 {1}):</value>
+  </data>
+  <data name="Sessions_InterruptionItem" xml:space="preserve">
+    <value>{0} ({1}，时间 {2})</value>
+  </data>
+  <data name="Sessions_InterruptionMore" xml:space="preserve">
+    <value>...还有 {0} 项</value>
+  </data>
+  <data name="Sessions_Tooltip_AFK" xml:space="preserve">
+    <value>离开</value>
+  </data>
 </root>

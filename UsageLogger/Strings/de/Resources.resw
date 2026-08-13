@@ -1015,4 +1015,19 @@ Ende: {2}</value>
   <data name="Settings_GroupAppearance.Text" xml:space="preserve">
     <value>Erscheinungsbild &amp; Personalisierung</value>
   </data>
+  <data name="Sessions_InterruptionHeader_Single" xml:space="preserve">
+    <value>{0} kurze Unterbrechung (insgesamt {1}):</value>
+  </data>
+  <data name="Sessions_InterruptionHeader_Plural" xml:space="preserve">
+    <value>{0} kurze Unterbrechungen (insgesamt {1}):</value>
+  </data>
+  <data name="Sessions_InterruptionItem" xml:space="preserve">
+    <value>{0} ({1} um {2})</value>
+  </data>
+  <data name="Sessions_InterruptionMore" xml:space="preserve">
+    <value>...+{0} weitere</value>
+  </data>
+  <data name="Sessions_Tooltip_AFK" xml:space="preserve">
+    <value>Abwesend</value>
+  </data>
 </root>

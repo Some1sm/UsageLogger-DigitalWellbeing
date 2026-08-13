@@ -51,18 +51,56 @@ namespace UsageLogger.Models
 
                 if (HasInterruptions)
                 {
-                    text += $"\n\n⚡ {Interruptions.Count} brief interruption{(Interruptions.Count > 1 ? "s" : "")} (total {UsageLogger.Core.Helpers.StringHelper.FormatDurationCompact(InterruptionDuration)}):";
+                    string headerFormat = Interruptions.Count == 1 
+                        ? UsageLogger.Helpers.LocalizationHelper.GetString("Sessions_InterruptionHeader_Single") 
+                        : UsageLogger.Helpers.LocalizationHelper.GetString("Sessions_InterruptionHeader_Plural");
+                    
+                    string totalDuration = UsageLogger.Core.Helpers.StringHelper.FormatDurationCompact(InterruptionDuration);
+                    
+                    if (!string.IsNullOrEmpty(headerFormat))
+                    {
+                        text += $"\n\n⚡ " + string.Format(headerFormat, Interruptions.Count, totalDuration);
+                    }
+                    else
+                    {
+                        text += $"\n\n⚡ {Interruptions.Count} brief interruption{(Interruptions.Count > 1 ? "s" : "")} (total {totalDuration}):";
+                    }
+
+                    string itemFormat = UsageLogger.Helpers.LocalizationHelper.GetString("Sessions_InterruptionItem");
                     foreach (var inter in Interruptions.Take(4))
                     {
-                        text += $"\n  • {inter.DisplayTitle} ({UsageLogger.Core.Helpers.StringHelper.FormatDurationCompact(inter.Duration)} at {inter.StartTime:HH:mm:ss})";
+                        string dur = UsageLogger.Core.Helpers.StringHelper.FormatDurationCompact(inter.Duration);
+                        string time = inter.StartTime.ToString("HH:mm:ss");
+                        if (!string.IsNullOrEmpty(itemFormat))
+                        {
+                            text += $"\n  • " + string.Format(itemFormat, inter.DisplayTitle, dur, time);
+                        }
+                        else
+                        {
+                            text += $"\n  • {inter.DisplayTitle} ({dur} at {time})";
+                        }
                     }
+
                     if (Interruptions.Count > 4)
                     {
-                        text += $"\n  • ... +{Interruptions.Count - 4} more";
+                        string moreFormat = UsageLogger.Helpers.LocalizationHelper.GetString("Sessions_InterruptionMore");
+                        int remaining = Interruptions.Count - 4;
+                        if (!string.IsNullOrEmpty(moreFormat))
+                        {
+                            text += $"\n  • " + string.Format(moreFormat, remaining);
+                        }
+                        else
+                        {
+                            text += $"\n  • ... +{remaining} more";
+                        }
                     }
                 }
                 
-                if (IsAfk) text += "\n[AFK]";
+                if (IsAfk)
+                {
+                    string afkLabel = UsageLogger.Helpers.LocalizationHelper.GetString("Sessions_Tooltip_AFK");
+                    text += !string.IsNullOrEmpty(afkLabel) ? $"\n[{afkLabel}]" : "\n[AFK]";
+                }
                 if (HasAudio) text += $"\n🔊 {AudioSourcesText}";
                 return text;
             }

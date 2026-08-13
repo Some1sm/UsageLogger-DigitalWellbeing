@@ -1015,4 +1015,19 @@ Acaba: {2}</value>
   <data name="Settings_GroupAppearance.Text" xml:space="preserve">
     <value>Aparença i Personalització</value>
   </data>
+  <data name="Sessions_InterruptionHeader_Single" xml:space="preserve">
+    <value>{0} canvi breu (total {1}):</value>
+  </data>
+  <data name="Sessions_InterruptionHeader_Plural" xml:space="preserve">
+    <value>{0} canvis breus (total {1}):</value>
+  </data>
+  <data name="Sessions_InterruptionItem" xml:space="preserve">
+    <value>{0} ({1} a les {2})</value>
+  </data>
+  <data name="Sessions_InterruptionMore" xml:space="preserve">
+    <value>...+{0} més</value>
+  </data>
+  <data name="Sessions_Tooltip_AFK" xml:space="preserve">
+    <value>Absent</value>
+  </data>
 </root>

@@ -1015,4 +1015,19 @@
   <data name="Settings_GroupAppearance.Text" xml:space="preserve">
     <value>Внешний вид и Персонализация</value>
   </data>
+  <data name="Sessions_InterruptionHeader_Single" xml:space="preserve">
+    <value>{0} короткое переключение (всего {1}):</value>
+  </data>
+  <data name="Sessions_InterruptionHeader_Plural" xml:space="preserve">
+    <value>{0} коротких переключений (всего {1}):</value>
+  </data>
+  <data name="Sessions_InterruptionItem" xml:space="preserve">
+    <value>{0} ({1} в {2})</value>
+  </data>
+  <data name="Sessions_InterruptionMore" xml:space="preserve">
+    <value>...+ещё {0}</value>
+  </data>
+  <data name="Sessions_Tooltip_AFK" xml:space="preserve">
+    <value>Не на месте</value>
+  </data>
 </root>

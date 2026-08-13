@@ -1015,4 +1015,19 @@
   <data name="Settings_GroupAppearance.Text" xml:space="preserve">
     <value>外観と個人用設定</value>
   </data>
+  <data name="Sessions_InterruptionHeader_Single" xml:space="preserve">
+    <value>{0}件の短い切り替え (合計 {1}):</value>
+  </data>
+  <data name="Sessions_InterruptionHeader_Plural" xml:space="preserve">
+    <value>{0}件の短い切り替え (合計 {1}):</value>
+  </data>
+  <data name="Sessions_InterruptionItem" xml:space="preserve">
+    <value>{0} ({1}、{2})</value>
+  </data>
+  <data name="Sessions_InterruptionMore" xml:space="preserve">
+    <value>...他 {0} 件</value>
+  </data>
+  <data name="Sessions_Tooltip_AFK" xml:space="preserve">
+    <value>離席中</value>
+  </data>
 </root>
