@@ -61,7 +61,11 @@ public class AppUsageViewModel : INotifyPropertyChanged
 
 	private bool _trendIsGood;
 
-	public static int NumberOfDaysToDisplay { get; set; } = UserPreferences.DayAmount;
+	public static int NumberOfDaysToDisplay
+	{
+		get => UserPreferences.DayAmount;
+		set => UserPreferences.DayAmount = value;
+	}
 
 	private static string folderPath => ApplicationPath.UsageLogsFolder;
 

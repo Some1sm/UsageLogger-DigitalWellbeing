@@ -34,6 +34,51 @@ namespace UsageLogger.Views
             this.Loaded += DayAppUsagePage_Loaded;
         }
 
+        private int _lastLoadedDayAmount = -1;
+        private double _lastMinDurationSec = -1;
+        private bool _lastCombinedAudio = false;
+        private int _lastDayStartMinutes = -1;
+
+        protected override void OnNavigatedTo(Microsoft.UI.Xaml.Navigation.NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+            if (ViewModel == null) return;
+
+            bool settingsChanged = false;
+
+            if (_lastLoadedDayAmount != UserPreferences.DayAmount)
+            {
+                _lastLoadedDayAmount = UserPreferences.DayAmount;
+                settingsChanged = true;
+            }
+
+            if (Math.Abs(_lastMinDurationSec - UserPreferences.MinimumDuration.TotalSeconds) > 0.1)
+            {
+                _lastMinDurationSec = UserPreferences.MinimumDuration.TotalSeconds;
+                settingsChanged = true;
+            }
+
+            if (_lastCombinedAudio != UserPreferences.ShowCombinedAudioView)
+            {
+                _lastCombinedAudio = UserPreferences.ShowCombinedAudioView;
+                UpdateViewMode(UserPreferences.ShowCombinedAudioView);
+                settingsChanged = true;
+            }
+
+            if (_lastDayStartMinutes != UserPreferences.DayStartMinutes)
+            {
+                _lastDayStartMinutes = UserPreferences.DayStartMinutes;
+                settingsChanged = true;
+            }
+
+            if (settingsChanged && ViewModel.IsWeeklyDataLoaded)
+            {
+                ViewModel.LoadUserExcludedProcesses();
+                ViewModel.LoadWeeklyData(ViewModel.LoadedDate);
+            }
+        }
+
         private void DayAppUsagePage_Loaded(object sender, RoutedEventArgs e)
         {
             if (ViewModel == null) return;
@@ -42,6 +87,10 @@ namespace UsageLogger.Views
             ViewModel.XamlRoot = this.XamlRoot;
             
             // Initialize view mode from saved preference
+            _lastCombinedAudio = UserPreferences.ShowCombinedAudioView;
+            _lastLoadedDayAmount = UserPreferences.DayAmount;
+            _lastMinDurationSec = UserPreferences.MinimumDuration.TotalSeconds;
+            _lastDayStartMinutes = UserPreferences.DayStartMinutes;
             UpdateViewMode(UserPreferences.ShowCombinedAudioView);
 
             // 1. Chart Injection Removed (Handled in XAML)

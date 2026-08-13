@@ -16,6 +16,10 @@ namespace UsageLogger.Views
             ViewModel = new SessionsViewModel();
         }
         
+        private int _lastDetailedDays = -1;
+        private bool _lastMergeInterruptions = true;
+        private int _lastInterruptionThreshold = -1;
+        
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -24,6 +28,27 @@ namespace UsageLogger.Views
             if (e.Parameter is System.DateTime date)
             {
                 ViewModel.SelectedDate = date;
+            }
+
+            bool settingsChanged = false;
+
+            if (_lastDetailedDays != UsageLogger.Helpers.UserPreferences.DetailedUsageDayCount)
+            {
+                _lastDetailedDays = UsageLogger.Helpers.UserPreferences.DetailedUsageDayCount;
+                settingsChanged = true;
+            }
+
+            if (_lastMergeInterruptions != UsageLogger.Helpers.UserPreferences.MergeShortInterruptions ||
+                _lastInterruptionThreshold != UsageLogger.Helpers.UserPreferences.InterruptionThresholdSeconds)
+            {
+                _lastMergeInterruptions = UsageLogger.Helpers.UserPreferences.MergeShortInterruptions;
+                _lastInterruptionThreshold = UsageLogger.Helpers.UserPreferences.InterruptionThresholdSeconds;
+                settingsChanged = true;
+            }
+
+            if (settingsChanged)
+            {
+                ViewModel.LoadSessions();
             }
         }
 
