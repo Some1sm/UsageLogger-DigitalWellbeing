@@ -69,20 +69,27 @@
                 <Frame x:Name="ContentFrame" />
                 
                 <!-- Incognito Mode Watermark -->
-                <!-- Incognito Mode Watermark -->
-                <Viewbox x:Name="IncognitoWatermark" Visibility="Collapsed" Width="200" Height="200" 
-                         Opacity="0.08" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False">
+                <Viewbox x:Name="IncognitoWatermark" Visibility="Collapsed" Width="160" Height="160" 
+                         Opacity="0.035" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False">
                     <Canvas Width="100" Height="100">
-                        <!-- Hat Top -->
-                        <Path Data="M22 42 L32 12 Q35 5 50 5 Q65 5 68 12 L78 42 Z" Fill="{ThemeResource TextFillColorPrimaryBrush}"/>
-                        <!-- Hat Brim -->
-                        <Rectangle Canvas.Left="5" Canvas.Top="42" Width="90" Height="10" RadiusX="5" RadiusY="5" Fill="{ThemeResource TextFillColorPrimaryBrush}"/>
-                        <!-- Left Eye -->
-                        <Ellipse Canvas.Left="13" Canvas.Top="55" Width="34" Height="34" Fill="{ThemeResource TextFillColorPrimaryBrush}"/>
-                        <!-- Right Eye -->
-                        <Ellipse Canvas.Left="53" Canvas.Top="55" Width="34" Height="34" Fill="{ThemeResource TextFillColorPrimaryBrush}"/>
-                        <!-- Bridge -->
-                        <Rectangle Canvas.Left="42" Canvas.Top="69" Width="16" Height="6" Fill="{ThemeResource TextFillColorPrimaryBrush}"/>
+                        <!-- Fedora Crown with Crease -->
+                        <Path Data="M31 44 C29.5 32 31.5 19 41 12.5 C44.5 10 49 13.5 50 13.5 C51 13.5 55.5 10 59 12.5 C68.5 19 70.5 32 69 44 Q50 47 31 44 Z" 
+                              Fill="{ThemeResource TextFillColorPrimaryBrush}"/>
+                        <!-- Fedora Ribbon / Band -->
+                        <Path Data="M30.5 43 Q50 46.5 69.5 43 L69 46 Q50 49.5 31 46 Z" 
+                              Fill="{ThemeResource TextFillColorPrimaryBrush}" Opacity="0.5"/>
+                        <!-- Fedora Brim (Curved & Tapered) -->
+                        <Path Data="M10 46 C6 46 6 50.5 10 50.5 C26 50.5 38 52.5 50 52.5 C62 52.5 74 50.5 90 50.5 C94 50.5 94 46 90 46 C74 46 62 44 50 44 C38 44 26 46 10 46 Z" 
+                              Fill="{ThemeResource TextFillColorPrimaryBrush}"/>
+                        <!-- Left Lens -->
+                        <Ellipse Canvas.Left="21" Canvas.Top="58" Width="24" Height="24" 
+                                 Fill="{ThemeResource TextFillColorPrimaryBrush}"/>
+                        <!-- Right Lens -->
+                        <Ellipse Canvas.Left="55" Canvas.Top="58" Width="24" Height="24" 
+                                 Fill="{ThemeResource TextFillColorPrimaryBrush}"/>
+                        <!-- Glasses Bridge (Arched) -->
+                        <Path Data="M43 68 Q50 63.5 57 68 L57 71 Q50 66.5 43 71 Z" 
+                              Fill="{ThemeResource TextFillColorPrimaryBrush}"/>
                     </Canvas>
                 </Viewbox>
             </Grid>
