@@ -34,6 +34,17 @@ namespace UsageLogger.Views
             }
         }
 
+        protected override void OnNavigatedTo(Microsoft.UI.Xaml.Navigation.NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            
+            // Ensure heatmap and charts redraw when navigating back to cached HistoryPage
+            DispatcherQueue?.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+            {
+                HeatMapContainer?.InvalidateCanvas();
+            });
+        }
+
         private void HistoryPage_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
 

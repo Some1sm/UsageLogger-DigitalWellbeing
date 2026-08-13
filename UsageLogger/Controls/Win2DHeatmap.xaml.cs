@@ -24,13 +24,32 @@ namespace UsageLogger.Controls
         public Win2DHeatmap()
         {
             this.InitializeComponent();
+            this.Loaded += Win2DHeatmap_Loaded;
             this.Unloaded += Win2DHeatmap_Unloaded;
+            this.SizeChanged += Win2DHeatmap_SizeChanged;
+        }
+
+        private void Win2DHeatmap_Loaded(object sender, RoutedEventArgs e)
+        {
+            DispatcherQueue?.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+            {
+                Canvas?.Invalidate();
+            });
+        }
+
+        private void Win2DHeatmap_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            Canvas?.Invalidate();
         }
 
         private void Win2DHeatmap_Unloaded(object sender, RoutedEventArgs e)
         {
-            Canvas.RemoveFromVisualTree();
-            Canvas = null;
+            _hoverCell = null;
+        }
+
+        public void InvalidateCanvas()
+        {
+            Canvas?.Invalidate();
         }
 
         public static readonly DependencyProperty ItemsSourceProperty =
