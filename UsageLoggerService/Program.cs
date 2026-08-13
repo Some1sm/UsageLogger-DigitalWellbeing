@@ -12,6 +12,25 @@ namespace UsageLoggerService;
 class Program
 {
     private static ActivityLogger? _activityLogger;
+    private static int _exitHandled = 0;
+
+    public static void Shutdown()
+    {
+        if (Interlocked.Exchange(ref _exitHandled, 1) == 1) return;
+        try
+        {
+            ServiceLogger.Log("Service", "Performing graceful shutdown and flushing buffers...");
+            _activityLogger?.SaveOnExitAsync().GetAwaiter().GetResult();
+        }
+        catch (Exception ex)
+        {
+            ServiceLogger.LogError("Shutdown", ex);
+        }
+        finally
+        {
+            TrayManager.Dispose();
+        }
+    }
 
     [STAThread]
     static void Main(string[] args)
@@ -40,8 +59,13 @@ class Program
         var sessionManager = new SessionManager(sessionsRepo);
         _activityLogger = new ActivityLogger(usageRepo, sessionManager);
 
-        // Start async logger loop on a background thread
-        Thread loggerThread = new Thread(async () =>
+        // Register Graceful Exit Handlers
+        Application.ApplicationExit += (s, e) => Shutdown();
+        AppDomain.CurrentDomain.ProcessExit += (s, e) => Shutdown();
+        Microsoft.Win32.SystemEvents.SessionEnding += (s, e) => Shutdown();
+
+        // Start async logger loop on a background task
+        Task.Run(async () =>
         {
             // Async initialization
             await _activityLogger.InitializeAsync();
@@ -61,8 +85,6 @@ class Program
                 await Task.Delay(ActivityLogger.TIMER_INTERVAL_SEC * 1000);
             }
         });
-        loggerThread.IsBackground = true;
-        loggerThread.Start();
 
         // Run Windows Forms message pump (keeps tray icon responsive)
         Application.Run();

@@ -135,7 +135,7 @@ namespace UsageLogger.Models
 
         public ICommand ToggleExpandCommand { get; private set; }
 
-        private DispatcherQueueTimer? _animTimer;
+        private DispatcherQueueTimer _animTimer;
 
         public AppUsageSubItem(string title, string parentProcessName, TimeSpan duration, int percentage, ImageSource icon, AppTag tag = AppTag.Untagged)
         {

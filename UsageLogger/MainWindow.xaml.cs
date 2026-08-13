@@ -66,7 +66,12 @@ namespace UsageLogger
             try
             {
                 var processes = System.Diagnostics.Process.GetProcessesByName("UsageLoggerService");
-                if (processes.Length > 0) return;
+                bool isRunning = processes.Length > 0;
+                foreach (var proc in processes)
+                {
+                    try { proc.Dispose(); } catch { }
+                }
+                if (isRunning) return;
 
                 string[] possiblePaths = new string[]
                 {
@@ -115,10 +120,10 @@ namespace UsageLogger
             });
         }
 
-        private async void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
+        private void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
         {
              // Validate context on activation/loading
-             await AppTagHelper.ValidateAppTags();
+             AppTagHelper.ValidateAppTags();
         }
 
         private void NavView_Loaded(object sender, RoutedEventArgs e)
@@ -322,7 +327,10 @@ namespace UsageLogger
                 var processes = System.Diagnostics.Process.GetProcessesByName("UsageLoggerService");
                 foreach (var proc in processes)
                 {
-                    try { proc.Kill(); } catch { }
+                    using (proc)
+                    {
+                        try { proc.Kill(); } catch { }
+                    }
                 }
             }
             catch { }

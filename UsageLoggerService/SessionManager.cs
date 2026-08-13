@@ -51,6 +51,7 @@ public class SessionManager
         }
         else
         {
+            bool dateChanged = _currentSession.StartTime.Date != now.Date;
             bool appChanged = _currentSession.ProcessName != processName;
             bool programChanged = _currentSession.ProgramName != programName; // Detect incognito mode changes
             bool stateChanged = _currentSession.IsAfk != isAfk;
@@ -69,11 +70,22 @@ public class SessionManager
                 if (!set1.SetEquals(set2)) audioChanged = true;
             }
 
-            if (appChanged || programChanged || stateChanged || audioChanged)
+            if (dateChanged || appChanged || programChanged || stateChanged || audioChanged)
             {
-                // Close current
-                FinalizeCurrentSession(now);
-                shouldStartNew = true;
+                if (dateChanged)
+                {
+                    // Split session cleanly at midnight
+                    DateTime midnight = now.Date;
+                    FinalizeCurrentSession(midnight.AddMilliseconds(-1));
+                    _currentSession = new AppSession(processName, programName, midnight, now, isAfk, audioSources);
+                    shouldStartNew = false;
+                }
+                else
+                {
+                    // Close current
+                    FinalizeCurrentSession(now);
+                    shouldStartNew = true;
+                }
             }
             else
             {

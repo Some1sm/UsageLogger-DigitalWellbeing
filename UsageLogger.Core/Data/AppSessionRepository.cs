@@ -164,12 +164,19 @@ public class AppSessionRepository : IAppSessionRepository
                 if (ramSession == null) continue;
                 if (ramSession.StartTime < windowStart || ramSession.StartTime >= windowEnd) continue;
 
-                var existing = sessions.FirstOrDefault(s => s.ProcessName == ramSession.ProcessName && Math.Abs((s.StartTime - ramSession.StartTime).TotalSeconds) < 2);
+                var existing = sessions.FirstOrDefault(s => 
+                    string.Equals(s.ProcessName, ramSession.ProcessName, StringComparison.OrdinalIgnoreCase) &&
+                    string.Equals(s.ProgramName, ramSession.ProgramName, StringComparison.OrdinalIgnoreCase) &&
+                    Math.Abs((s.StartTime - ramSession.StartTime).TotalSeconds) < 2);
 
                 if (existing != null)
                 {
                     existing.EndTime = ramSession.EndTime;
                     existing.IsAfk = ramSession.IsAfk;
+                    if (ramSession.AudioSources != null && ramSession.AudioSources.Count > 0)
+                    {
+                        existing.AudioSources = new List<string>(ramSession.AudioSources);
+                    }
                 }
                 else
                 {
@@ -189,7 +196,7 @@ public class AppSessionRepository : IAppSessionRepository
 
         var result = new List<AppSession>();
 
-        var groups = sessions.GroupBy(s => new { s.ProcessName, s.ProgramName });
+        var groups = sessions.GroupBy(s => new { s.ProcessName, s.ProgramName, s.IsAfk });
 
         foreach (var group in groups)
         {
@@ -224,7 +231,7 @@ public class AppSessionRepository : IAppSessionRepository
             result.Add(current);
         }
 
-        return result;
+        return result.OrderBy(s => s.StartTime).ToList();
     }
 
     public async Task AppendSessionsAsync(List<AppSession> sessions)
@@ -240,13 +247,15 @@ public class AppSessionRepository : IAppSessionRepository
 
             try
             {
-                await using var fs = new FileStream(filePath, FileMode.Append, FileAccess.Write, FileShare.Read);
+                await using var fs = new FileStream(filePath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
                 using var writer = new StreamWriter(fs);
                 
                 foreach (var session in group)
                 {
+                    string cleanProcess = session.ProcessName?.Replace("\t", " ")?.Replace("\r", "")?.Replace("\n", "") ?? "";
+                    string cleanProgram = session.ProgramName?.Replace("\t", " ")?.Replace("\r", "")?.Replace("\n", "") ?? "";
                     string audioStr = (session.AudioSources != null && session.AudioSources.Count > 0) ? string.Join(";", session.AudioSources) : "";
-                    string line = $"{session.ProcessName}\t{session.ProgramName}\t{session.StartTime.Ticks}\t{session.EndTime.Ticks}\t{session.IsAfk}\t{audioStr}";
+                    string line = $"{cleanProcess}\t{cleanProgram}\t{session.StartTime.Ticks}\t{session.EndTime.Ticks}\t{session.IsAfk}\t{audioStr}";
                     await writer.WriteLineAsync(line);
                 }
             }

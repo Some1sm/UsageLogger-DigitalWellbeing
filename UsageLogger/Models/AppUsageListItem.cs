@@ -146,7 +146,7 @@ namespace UsageLogger.Models
             });
         }
 
-        private DispatcherQueueTimer? _animTimer;
+        private DispatcherQueueTimer _animTimer;
 
         private void AnimateHeight(double targetHeight)
         {

@@ -13,6 +13,7 @@ namespace UsageLogger.Views
         public HistoryPage()
         {
             this.InitializeComponent();
+            this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Required;
             ViewModel = new HistoryViewModel();
             this.DataContext = ViewModel;
             this.Loaded += HistoryPage_Loaded;

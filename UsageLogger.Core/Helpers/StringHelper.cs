@@ -7,11 +7,11 @@ namespace UsageLogger.Core.Helpers
 {
     public static class StringHelper
     {
-        public static string NEWLINE = Environment.NewLine;
+        public static readonly string NEWLINE = Environment.NewLine;
 
         public static string TimeSpanToString(TimeSpan duration)
         {
-            string durationStr = (int)duration.Hours > 0 ? $"{duration.Hours}h " : "";
+            string durationStr = (int)duration.TotalHours > 0 ? $"{(int)duration.TotalHours}h " : "";
             durationStr += (int)duration.TotalMinutes > 0 ? $"{duration.Minutes}m " : "";
             durationStr += (int)duration.TotalSeconds > 0 ? $"{duration.Seconds}s " : "";
 
@@ -26,7 +26,7 @@ namespace UsageLogger.Core.Helpers
 
         public static string TimeSpanToShortString(TimeSpan duration)
         {
-            return $"{duration.Hours}h {duration.Minutes}m";
+            return $"{(int)duration.TotalHours}h {duration.Minutes}m";
         }
 
         /// <summary>

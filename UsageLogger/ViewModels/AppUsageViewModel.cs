@@ -365,9 +365,14 @@ public class AppUsageViewModel : INotifyPropertyChanged
 		GC.WaitForPendingFinalizers();
 	}
 
-	public void LoadUserExcludedProcesses()
+	public static void LoadUserExcludedProcessesStatic()
 	{
 		userExcludedProcesses = UserPreferences.UserExcludedProcesses.ToArray();
+	}
+
+	public void LoadUserExcludedProcesses()
+	{
+		LoadUserExcludedProcessesStatic();
 	}
 
 	public async void LoadWeeklyData(DateTime? baseDate = null)

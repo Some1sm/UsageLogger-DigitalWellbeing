@@ -51,7 +51,7 @@
                 </StackPanel>
 
                 <!-- Custom Range (Visible if custom) -->
-                <StackPanel Orientation="Horizontal" Spacing="10" Visibility="{Binding IsCustomDateRange, Converter={StaticResource BoolToVisibilityConverter}}">
+                <StackPanel Orientation="Horizontal" Spacing="10" Visibility="{x:Bind ViewModel.IsCustomDateRange, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
                     <!-- Start Date -->
                     <StackPanel Spacing="4">
                         <TextBlock l:Uids.Uid="History_StartDate" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>

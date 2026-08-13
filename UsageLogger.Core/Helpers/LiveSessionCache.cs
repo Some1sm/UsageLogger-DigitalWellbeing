@@ -55,10 +55,17 @@ namespace UsageLogger.Core.Helpers
                 string json = System.Text.Json.JsonSerializer.Serialize(allSessions, Contexts.AppJsonContext.Default.ListAppSession);
                 byte[] data = System.Text.Encoding.UTF8.GetBytes(json);
 
-                if (data.Length > MAP_SIZE - 4) return; // Too big
+                if (data.Length > FLUSH_SIGNAL_OFFSET - 4) return; // Too big
 
                 mutex = new Mutex(false, MUTEX_NAME);
-                hasMutex = mutex.WaitOne(500);
+                try
+                {
+                    hasMutex = mutex.WaitOne(500);
+                }
+                catch (AbandonedMutexException)
+                {
+                    hasMutex = true;
+                }
                 
                 if (hasMutex)
                 {
@@ -98,7 +105,14 @@ namespace UsageLogger.Core.Helpers
             try
             {
                 mutex = new Mutex(false, MUTEX_NAME);
-                hasMutex = mutex.WaitOne(500);
+                try
+                {
+                    hasMutex = mutex.WaitOne(500);
+                }
+                catch (AbandonedMutexException)
+                {
+                    hasMutex = true;
+                }
                 
                 if (hasMutex)
                 {
@@ -114,10 +128,11 @@ namespace UsageLogger.Core.Helpers
                     
                     if (mmf != null)
                     {
+                        using (mmf)
                         using (var accessor = mmf.CreateViewAccessor())
                         {
                             int length = accessor.ReadInt32(0);
-                            if (length > 0 && length < MAP_SIZE - 4)
+                            if (length > 0 && length < FLUSH_SIGNAL_OFFSET - 4)
                             {
                                 byte[] data = new byte[length];
                                 accessor.ReadArray(4, data, 0, length);

@@ -19,6 +19,7 @@ namespace UsageLogger.Views
         public FocusPage()
         {
             this.InitializeComponent();
+            this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Required;
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)

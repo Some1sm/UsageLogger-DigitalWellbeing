@@ -28,7 +28,7 @@ public class AppUsageRepository : IAppUsageRepository
         var sessions = await sessionRepo.GetSessionsForDateAsync(date);
 
         // Group by process and program name to reconstruct summary
-        var usageDict = new Dictionary<string, AppUsage>();
+        var usageDict = new Dictionary<string, AppUsage>(StringComparer.OrdinalIgnoreCase);
 
         foreach (var session in sessions)
         {

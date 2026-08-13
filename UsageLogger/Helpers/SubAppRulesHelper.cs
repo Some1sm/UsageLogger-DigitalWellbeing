@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UsageLogger.Core;
 using UsageLogger.Core.Models;
 using UsageLogger.Views;
@@ -74,7 +75,7 @@ public static class SubAppRulesHelper
     /// <summary>
     /// Shows dialog for adding a new custom title rule.
     /// </summary>
-    public static async void AddRule(XamlRoot xamlRoot, Action reloadRules)
+    public static async Task AddRuleAsync(XamlRoot xamlRoot, Action reloadRules)
     {
         var dialog = new EditTitleRuleDialog();
         dialog.XamlRoot = xamlRoot;
@@ -89,7 +90,7 @@ public static class SubAppRulesHelper
     /// <summary>
     /// Shows dialog for editing an existing custom title rule.
     /// </summary>
-    public static async void EditRule(object sender, XamlRoot xamlRoot, Action reloadRules)
+    public static async Task EditRuleAsync(object sender, XamlRoot xamlRoot, Action reloadRules)
     {
         var btn = sender as Button;
         var rule = btn?.Tag as CustomTitleRule;

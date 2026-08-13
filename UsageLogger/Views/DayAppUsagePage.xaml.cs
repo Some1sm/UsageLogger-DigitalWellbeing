@@ -28,6 +28,7 @@ namespace UsageLogger.Views
             }
             
             this.InitializeComponent();
+            this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Required;
             
             this.DataContext = ViewModel;
             this.Loaded += DayAppUsagePage_Loaded;

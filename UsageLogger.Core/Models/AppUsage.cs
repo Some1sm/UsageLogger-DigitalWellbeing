@@ -12,8 +12,8 @@ public class AppUsage
     public string ProgramName { get; set; } = string.Empty;
     public string ProcessName { get; set; } = string.Empty;
     public TimeSpan Duration { get; set; }
-    public Dictionary<string, TimeSpan> ProgramBreakdown { get; set; } = [];
-    public Dictionary<string, Dictionary<string, TimeSpan>> DetailedBreakdown { get; set; } = [];
+    public Dictionary<string, TimeSpan> ProgramBreakdown { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+    public Dictionary<string, Dictionary<string, TimeSpan>> DetailedBreakdown { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 
     public AppUsage(string processName, string programName, TimeSpan duration)
     {

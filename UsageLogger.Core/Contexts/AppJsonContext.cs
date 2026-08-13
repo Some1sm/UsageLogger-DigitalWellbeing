@@ -7,6 +7,12 @@ namespace UsageLogger.Core.Contexts
 {
     [JsonSerializable(typeof(List<AppSession>))]
     [JsonSerializable(typeof(AppSession))]
+    [JsonSerializable(typeof(List<CustomTitleRule>))]
+    [JsonSerializable(typeof(CustomTitleRule))]
+    [JsonSerializable(typeof(List<AppUsage>))]
+    [JsonSerializable(typeof(AppUsage))]
+    [JsonSerializable(typeof(AppTag))]
+    [JsonSerializable(typeof(Dictionary<string, AppTag>))]
     public partial class AppJsonContext : JsonSerializerContext
     {
     }

@@ -182,11 +182,6 @@ namespace UsageLogger.Views.Controls
                 _subscribedViewModel.PropertyChanged -= ViewModel_PropertyChanged;
                 _subscribedViewModel = null;
             }
-            if (TimelineCanvas != null)
-            {
-                TimelineCanvas.RemoveFromVisualTree();
-                TimelineCanvas = null;
-            }
         }
 
         private void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

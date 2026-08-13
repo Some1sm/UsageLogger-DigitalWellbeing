@@ -179,12 +179,8 @@ namespace UsageLogger.ViewModels
             int daysToShow = UserPreferences.DetailedUsageDayCount; 
             if (daysToShow < 1) daysToShow = 1;
 
-            // Clear immediately to show "loading" state (empty list)
-            // Or we could show a loading spinner property
-            Days.Clear();
-            
             // Refresh exclusion list from disk to pick up any Settings changes
-            new AppUsageViewModel().LoadUserExcludedProcesses();
+            AppUsageViewModel.LoadUserExcludedProcessesStatic();
             
             // Fetch All data concurrently
             var tasks = new List<Task<(DateTime Date, List<AppSession> Sessions)>>();

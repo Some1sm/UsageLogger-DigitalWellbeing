@@ -68,7 +68,7 @@ namespace UsageLogger.Helpers
             return new SolidColorBrush(ColorHelper.GetColorFromHex(hex));
         }
 
-        public static async Task ValidateAppTags()
+        public static void ValidateAppTags()
         {
             var validIds = UserPreferences.CustomTags.Select(t => t.Id).ToHashSet();
             // Default Tag (Untagged = 0) is always valid

@@ -244,8 +244,8 @@ public static class DayChartUpdater
                 UpdateListInPlace(column2Items, col2);
                 UpdateListInPlace(column3Items, col3);
 
-                TrendDataLoader.LoadAsync(loadedDate, totalDuration, appUsageFilter, viewModelDispatcher, setTrend);
-                GoalStreakCalculator.LoadAsync(goalStreaks, viewModelDispatcher);
+                _ = TrendDataLoader.LoadAsync(loadedDate, totalDuration, appUsageFilter, viewModelDispatcher, setTrend);
+                _ = GoalStreakCalculator.LoadAsync(goalStreaks, viewModelDispatcher);
 
                 if (loadedDate.Date == DateTime.Now.Date && xamlRoot != null)
                 {

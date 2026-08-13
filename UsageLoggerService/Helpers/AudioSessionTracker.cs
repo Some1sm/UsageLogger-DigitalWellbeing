@@ -43,56 +43,46 @@ namespace UsageLoggerService.Helpers
         {
             var activeApps = new List<string>();
             MMDeviceEnumerator? enumerator = null;
-            MMDeviceCollection? devices = null;
 
             try
             {
                 enumerator = new MMDeviceEnumerator();
-                devices = enumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active);
-
-                // Log($"NAudio found {devices.Count} devices.");
+                var devices = enumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active);
 
                 foreach (var device in devices)
                 {
                     try
                     {
-                        // NAudio handles the Activation internally via this property
-                        var sessions = device.AudioSessionManager.Sessions;
-                        
-                        if (sessions == null) continue;
-
-                        for (int i = 0; i < sessions.Count; i++)
+                        using (device)
                         {
-                            try
-                            {
-                                var session = sessions[i];
-                                
-                                // Log($"  Session: {session.DisplayName} State: {session.State}");
-                                // Log($"  Session: {session.DisplayName} State: {session.State}");
+                            var sessions = device.AudioSessionManager?.Sessions;
+                            if (sessions == null) continue;
 
-                                if (session.State == AudioSessionState.AudioSessionStateActive)
+                            for (int i = 0; i < sessions.Count; i++)
+                            {
+                                try
                                 {
-                                    // Check if actually playing sound (Peak Value > 0)
-                                    // Some apps keep session Active but Silent when paused.
-                                    if (session.AudioMeterInformation.MasterPeakValue > 0)
+                                    using var session = sessions[i];
+                                    if (session != null && session.State == AudioSessionState.AudioSessionStateActive)
                                     {
-                                        uint pid = session.GetProcessID;
-                                        if (pid > 0)
+                                        if (session.AudioMeterInformation.MasterPeakValue > 0)
                                         {
-                                            SafeAddProcessName((int)pid, activeApps);
+                                            uint pid = session.GetProcessID;
+                                            if (pid > 0)
+                                            {
+                                                SafeAddProcessName((int)pid, activeApps);
+                                            }
                                         }
                                     }
                                 }
-                            }
-                            catch
-                            {
-                                // Log($"  Session Error: {sEx.Message}");
+                                catch
+                                {
+                                }
                             }
                         }
                     }
                     catch
                     {
-                        // Log($"  Device Error (Activation/Access): {devEx.Message}");
                     }
                 }
             }
@@ -102,8 +92,7 @@ namespace UsageLoggerService.Helpers
             }
             finally
             {
-                // if (devices != null) devices.Dispose(); // MMDeviceCollection is not IDisposable in NAudio
-                if (enumerator != null) enumerator.Dispose();
+                enumerator?.Dispose();
             }
 
             return activeApps;
@@ -113,13 +102,10 @@ namespace UsageLoggerService.Helpers
         {
             try
             {
-                using (var p = Process.GetProcessById(pid))
+                using var p = Process.GetProcessById(pid);
+                if (!string.IsNullOrEmpty(p.ProcessName) && !activeApps.Contains(p.ProcessName))
                 {
-                    if (!string.IsNullOrEmpty(p.ProcessName) && !activeApps.Contains(p.ProcessName))
-                    {
-                        activeApps.Add(p.ProcessName);
-                        // Log($"Found: {p.ProcessName}");
-                    }
+                    activeApps.Add(p.ProcessName);
                 }
             }
             catch
@@ -150,11 +136,10 @@ namespace UsageLoggerService.Helpers
             try
             {
                 enumerator = new MMDeviceEnumerator();
-                var defaultDevice = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
+                using var defaultDevice = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
                 if (defaultDevice != null)
                 {
                     float peak = defaultDevice.AudioMeterInformation.MasterPeakValue;
-                    // Log($"[Fallback] Global Peak: {peak:P2}");
                     return peak > 0.01f; // 1% threshold to avoid noise
                 }
             }

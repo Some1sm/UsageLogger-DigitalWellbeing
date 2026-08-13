@@ -116,13 +116,16 @@ namespace UsageLoggerService.Helpers
                 var uiProcesses = Process.GetProcessesByName("UsageLogger");
                 foreach (var proc in uiProcesses)
                 {
-                    try { proc.Kill(); } catch { }
+                    using (proc)
+                    {
+                        try { proc.Kill(); } catch { }
+                    }
                 }
             }
             catch { }
 
-            Dispose();
-            Environment.Exit(0);
+            Program.Shutdown();
+            Application.Exit();
         }
 
         /// <summary>

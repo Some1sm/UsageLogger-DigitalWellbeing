@@ -12,6 +12,7 @@ namespace UsageLogger.Views
         public SessionsPage()
         {
             this.InitializeComponent();
+            this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Required;
             ViewModel = new SessionsViewModel();
         }
         

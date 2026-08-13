@@ -440,12 +440,12 @@ namespace UsageLogger.Views
 
         private async void BtnAddRule_Click(object sender, RoutedEventArgs e)
         {
-            SubAppRulesHelper.AddRule(this.XamlRoot, LoadCustomRules);
+            await SubAppRulesHelper.AddRuleAsync(this.XamlRoot, LoadCustomRules);
         }
 
         private async void BtnEditRule_Click(object sender, RoutedEventArgs e)
         {
-            SubAppRulesHelper.EditRule(sender, this.XamlRoot, LoadCustomRules);
+            await SubAppRulesHelper.EditRuleAsync(sender, this.XamlRoot, LoadCustomRules);
         }
 
         private void BtnDeleteRule_Click(object sender, RoutedEventArgs e)
@@ -922,8 +922,11 @@ namespace UsageLogger.Views
                 var processes = Process.GetProcessesByName("UsageLoggerService");
                 foreach (var proc in processes)
                 {
-                    proc.Kill();
-                    proc.WaitForExit(3000);
+                    using (proc)
+                    {
+                        try { proc.Kill(); } catch { }
+                        proc.WaitForExit(3000);
+                    }
                 }
 
                 // Start new instance

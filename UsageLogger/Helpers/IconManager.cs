@@ -97,33 +97,45 @@ namespace UsageLogger.Helpers
             try
             {
                 Process[] processes = Process.GetProcessesByName(appName);
-
-                if (processes.Length > 0)
+                try
                 {
-                    string filePath = "";
-                    try 
+                    if (processes.Length > 0)
                     {
-                        filePath = processes[0].MainModule.FileName;
-                    } 
-                    catch 
-                    {
-                        // Some system processes access denied
-                        return null; 
-                    }
-
-                    Debug.WriteLine($"Extracting icon for: {filePath}");
-
-                    using (Icon icon = GetIcon(filePath))
-                    {
-                        if (icon != null)
+                        string filePath = "";
+                        try 
                         {
-                            using (Bitmap rawBmp = icon.ToBitmap())
-                            using (Bitmap finalBmp = TrimAndScaleIcon(rawBmp, 64))
+                            filePath = processes[0].MainModule?.FileName ?? "";
+                        } 
+                        catch 
+                        {
+                            // Some system processes access denied
+                            return null; 
+                        }
+
+                        if (!string.IsNullOrEmpty(filePath))
+                        {
+                            Debug.WriteLine($"Extracting icon for: {filePath}");
+
+                            using (Icon icon = GetIcon(filePath))
                             {
-                                CacheImage(finalBmp, appName);
-                                return GetCachedImage(appName);
+                                if (icon != null)
+                                {
+                                    using (Bitmap rawBmp = icon.ToBitmap())
+                                    using (Bitmap finalBmp = TrimAndScaleIcon(rawBmp, 64))
+                                    {
+                                        CacheImage(finalBmp, appName);
+                                        return GetCachedImage(appName);
+                                    }
+                                }
                             }
                         }
+                    }
+                }
+                finally
+                {
+                    foreach (var p in processes)
+                    {
+                        try { p.Dispose(); } catch { }
                     }
                 }
             }

@@ -164,16 +164,19 @@ namespace UsageLogger.ViewModels
                 var processes = Process.GetProcessesByName(processName);
                 foreach (var proc in processes)
                 {
-                    try
+                    using (proc)
                     {
-                        proc.CloseMainWindow();
-                        // Give it a moment to close gracefully
-                        if (!proc.WaitForExit(2000))
+                        try
                         {
-                            proc.Kill();
+                            proc.CloseMainWindow();
+                            // Give it a moment to close gracefully
+                            if (!proc.WaitForExit(2000))
+                            {
+                                proc.Kill();
+                            }
                         }
+                        catch { }
                     }
-                    catch { }
                 }
             }
             catch (Exception ex)
