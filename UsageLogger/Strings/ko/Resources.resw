@@ -1153,4 +1153,25 @@
   <data name="MiscData_LateNightUsageDesc" xml:space="preserve">
     <value>총 활성 시간 중</value>
   </data>
+  <data name="DayPart_MorningLabel" xml:space="preserve">
+    <value>아침</value>
+  </data>
+  <data name="DayPart_AfternoonLabel" xml:space="preserve">
+    <value>오후</value>
+  </data>
+  <data name="DayPart_EveningLabel" xml:space="preserve">
+    <value>저녁</value>
+  </data>
+  <data name="DayPart_NightLabel" xml:space="preserve">
+    <value>심야</value>
+  </data>
+  <data name="Productivity_ProductiveLabel" xml:space="preserve">
+    <value>생산적</value>
+  </data>
+  <data name="Productivity_NeutralLabel" xml:space="preserve">
+    <value>보통</value>
+  </data>
+  <data name="Productivity_LeisureLabel" xml:space="preserve">
+    <value>여가</value>
+  </data>
 </root>

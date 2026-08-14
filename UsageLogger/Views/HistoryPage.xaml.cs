@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using UsageLogger.ViewModels;
 using UsageLogger.Controls;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 namespace UsageLogger.Views
@@ -175,6 +176,28 @@ namespace UsageLogger.Views
             DateTime start = ViewModel.StartDate != default ? ViewModel.StartDate.DateTime : DateTime.Now.Date;
             DateTime end = ViewModel.EndDate != default ? ViewModel.EndDate.DateTime : DateTime.Now.Date;
             await Helpers.DataExportHelper.ExportToJsonAsync(ViewModel.CachedSessions, start, end);
+        }
+
+        private void AppSwitchesFlyout_Opening(object sender, object e)
+        {
+            if (sender is Flyout flyout && flyout.Content is FrameworkElement fe)
+            {
+                var targetTheme = (App.MainWindow?.Content as FrameworkElement)?.ActualTheme ?? this.ActualTheme;
+                fe.RequestedTheme = targetTheme;
+            }
+        }
+
+        private void AppSwitchesFlyout_Opened(object sender, object e)
+        {
+            if (sender is Flyout flyout && flyout.Content is FrameworkElement fe)
+            {
+                var targetTheme = (App.MainWindow?.Content as FrameworkElement)?.ActualTheme ?? this.ActualTheme;
+                fe.RequestedTheme = targetTheme;
+                if (Microsoft.UI.Xaml.Media.VisualTreeHelper.GetParent(fe) is FrameworkElement presenter)
+                {
+                    presenter.RequestedTheme = targetTheme;
+                }
+            }
         }
     }
 }

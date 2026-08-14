@@ -1153,4 +1153,25 @@
   <data name="MiscData_LateNightUsageDesc" xml:space="preserve">
     <value>占总活跃时间</value>
   </data>
+  <data name="DayPart_MorningLabel" xml:space="preserve">
+    <value>早晨</value>
+  </data>
+  <data name="DayPart_AfternoonLabel" xml:space="preserve">
+    <value>下午</value>
+  </data>
+  <data name="DayPart_EveningLabel" xml:space="preserve">
+    <value>傍晚</value>
+  </data>
+  <data name="DayPart_NightLabel" xml:space="preserve">
+    <value>深夜</value>
+  </data>
+  <data name="Productivity_ProductiveLabel" xml:space="preserve">
+    <value>高效</value>
+  </data>
+  <data name="Productivity_NeutralLabel" xml:space="preserve">
+    <value>中性</value>
+  </data>
+  <data name="Productivity_LeisureLabel" xml:space="preserve">
+    <value>休闲</value>
+  </data>
 </root>

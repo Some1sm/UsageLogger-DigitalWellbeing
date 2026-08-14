@@ -1153,4 +1153,25 @@ Fin : {2}</value>
   <data name="MiscData_LateNightUsageDesc" xml:space="preserve">
     <value>du temps actif total</value>
   </data>
+  <data name="DayPart_MorningLabel" xml:space="preserve">
+    <value>Matin</value>
+  </data>
+  <data name="DayPart_AfternoonLabel" xml:space="preserve">
+    <value>Après-midi</value>
+  </data>
+  <data name="DayPart_EveningLabel" xml:space="preserve">
+    <value>Soirée</value>
+  </data>
+  <data name="DayPart_NightLabel" xml:space="preserve">
+    <value>Nuit</value>
+  </data>
+  <data name="Productivity_ProductiveLabel" xml:space="preserve">
+    <value>Productif</value>
+  </data>
+  <data name="Productivity_NeutralLabel" xml:space="preserve">
+    <value>Neutre</value>
+  </data>
+  <data name="Productivity_LeisureLabel" xml:space="preserve">
+    <value>Loisirs</value>
+  </data>
 </root>

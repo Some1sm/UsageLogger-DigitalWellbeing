@@ -1153,4 +1153,25 @@
   <data name="MiscData_LateNightUsageDesc" xml:space="preserve">
     <value>от общего активного времени</value>
   </data>
+  <data name="DayPart_MorningLabel" xml:space="preserve">
+    <value>Утро</value>
+  </data>
+  <data name="DayPart_AfternoonLabel" xml:space="preserve">
+    <value>День</value>
+  </data>
+  <data name="DayPart_EveningLabel" xml:space="preserve">
+    <value>Вечер</value>
+  </data>
+  <data name="DayPart_NightLabel" xml:space="preserve">
+    <value>Ночь</value>
+  </data>
+  <data name="Productivity_ProductiveLabel" xml:space="preserve">
+    <value>Продуктивно</value>
+  </data>
+  <data name="Productivity_NeutralLabel" xml:space="preserve">
+    <value>Нейтрально</value>
+  </data>
+  <data name="Productivity_LeisureLabel" xml:space="preserve">
+    <value>Отдых</value>
+  </data>
 </root>

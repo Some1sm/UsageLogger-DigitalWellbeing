@@ -1153,4 +1153,25 @@ Acaba: {2}</value>
   <data name="MiscData_LateNightUsageDesc" xml:space="preserve">
     <value>del temps actiu total</value>
   </data>
+  <data name="DayPart_MorningLabel" xml:space="preserve">
+    <value>Matí</value>
+  </data>
+  <data name="DayPart_AfternoonLabel" xml:space="preserve">
+    <value>Tarda</value>
+  </data>
+  <data name="DayPart_EveningLabel" xml:space="preserve">
+    <value>Vespre</value>
+  </data>
+  <data name="DayPart_NightLabel" xml:space="preserve">
+    <value>Nit</value>
+  </data>
+  <data name="Productivity_ProductiveLabel" xml:space="preserve">
+    <value>Productiu</value>
+  </data>
+  <data name="Productivity_NeutralLabel" xml:space="preserve">
+    <value>Neutral</value>
+  </data>
+  <data name="Productivity_LeisureLabel" xml:space="preserve">
+    <value>Oci</value>
+  </data>
 </root>

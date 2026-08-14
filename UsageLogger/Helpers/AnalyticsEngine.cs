@@ -24,7 +24,10 @@ namespace UsageLogger.Helpers
         HighFragmentation  // > 60 switches / hr
     }
 
-    public record AppSwitchItem(string ProcessName, string DisplayName, int Count, double Percentage);
+    public record AppSwitchItem(string ProcessName, string DisplayName, int Count, double Percentage)
+    {
+        public Microsoft.UI.Xaml.Media.ImageSource? IconSource => IconManager.GetIconSource(ProcessName);
+    }
 
     public record DayPartSummary(
         TimeSpan MorningDuration, 

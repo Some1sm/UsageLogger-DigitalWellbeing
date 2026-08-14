@@ -205,6 +205,27 @@ namespace UsageLogger.ViewModels
             set { if (_productivityBreakdownText != value) { _productivityBreakdownText = value; OnPropertyChanged(); } }
         }
 
+        private string _productiveTooltip = "Productive";
+        public string ProductiveTooltip
+        {
+            get => _productiveTooltip;
+            set { if (_productiveTooltip != value) { _productiveTooltip = value; OnPropertyChanged(); } }
+        }
+
+        private string _neutralTooltip = "Neutral";
+        public string NeutralTooltip
+        {
+            get => _neutralTooltip;
+            set { if (_neutralTooltip != value) { _neutralTooltip = value; OnPropertyChanged(); } }
+        }
+
+        private string _leisureTooltip = "Leisure";
+        public string LeisureTooltip
+        {
+            get => _leisureTooltip;
+            set { if (_leisureTooltip != value) { _leisureTooltip = value; OnPropertyChanged(); } }
+        }
+
         // Focus & Context Switches
         private string _switchesPerHourText = "0.0 / hr";
         public string SwitchesPerHourText
@@ -310,6 +331,34 @@ namespace UsageLogger.ViewModels
         {
             get => _dayPartNightRange;
             set { if (_dayPartNightRange != value) { _dayPartNightRange = value; OnPropertyChanged(); } }
+        }
+
+        private string _morningTooltip = "Morning";
+        public string MorningTooltip
+        {
+            get => _morningTooltip;
+            set { if (_morningTooltip != value) { _morningTooltip = value; OnPropertyChanged(); } }
+        }
+
+        private string _afternoonTooltip = "Afternoon";
+        public string AfternoonTooltip
+        {
+            get => _afternoonTooltip;
+            set { if (_afternoonTooltip != value) { _afternoonTooltip = value; OnPropertyChanged(); } }
+        }
+
+        private string _eveningTooltip = "Evening";
+        public string EveningTooltip
+        {
+            get => _eveningTooltip;
+            set { if (_eveningTooltip != value) { _eveningTooltip = value; OnPropertyChanged(); } }
+        }
+
+        private string _nightTooltip = "Night";
+        public string NightTooltip
+        {
+            get => _nightTooltip;
+            set { if (_nightTooltip != value) { _nightTooltip = value; OnPropertyChanged(); } }
         }
 
         public List<AppSession> CachedSessions => _cachedSessions;
@@ -785,6 +834,16 @@ namespace UsageLogger.ViewModels
                 LateNightUsageText = StringHelper.FormatDurationCompact(dayParts.NightDuration);
                 DayPartBreakdownText = $"{StringHelper.FormatDurationCompact(dayParts.MorningDuration)} • {StringHelper.FormatDurationCompact(dayParts.AfternoonDuration)} • {StringHelper.FormatDurationCompact(dayParts.EveningDuration)} • {StringHelper.FormatDurationCompact(dayParts.NightDuration)}";
 
+                string morningLbl = LocalizationHelper.GetString("DayPart_MorningLabel") ?? "Morning";
+                string afternoonLbl = LocalizationHelper.GetString("DayPart_AfternoonLabel") ?? "Afternoon";
+                string eveningLbl = LocalizationHelper.GetString("DayPart_EveningLabel") ?? "Evening";
+                string nightLbl = LocalizationHelper.GetString("DayPart_NightLabel") ?? "Night";
+
+                MorningTooltip = $"{morningLbl} ({dayParts.MorningRangeText}): {StringHelper.FormatDurationCompact(dayParts.MorningDuration)} ({dayParts.MorningPct:F0}%)";
+                AfternoonTooltip = $"{afternoonLbl} ({dayParts.AfternoonRangeText}): {StringHelper.FormatDurationCompact(dayParts.AfternoonDuration)} ({dayParts.AfternoonPct:F0}%)";
+                EveningTooltip = $"{eveningLbl} ({dayParts.EveningRangeText}): {StringHelper.FormatDurationCompact(dayParts.EveningDuration)} ({dayParts.EveningPct:F0}%)";
+                NightTooltip = $"{nightLbl} ({dayParts.NightRangeText}): {StringHelper.FormatDurationCompact(dayParts.NightDuration)} ({dayParts.NightPct:F0}%)";
+
                 // Compute Productivity
                 var prod = AnalyticsEngine.ComputeProductivity(allSessions);
                 ProductivityScore = prod.Score;
@@ -792,6 +851,14 @@ namespace UsageLogger.ViewModels
                 NeutralPercent = prod.NeutralPct;
                 LeisurePercent = prod.LeisurePct;
                 ProductivityBreakdownText = $"{StringHelper.FormatDurationCompact(prod.ProductiveDuration)} • {StringHelper.FormatDurationCompact(prod.NeutralDuration)} • {StringHelper.FormatDurationCompact(prod.LeisureDuration)}";
+
+                string prodLbl = LocalizationHelper.GetString("Productivity_ProductiveLabel") ?? "Productive";
+                string neutLbl = LocalizationHelper.GetString("Productivity_NeutralLabel") ?? "Neutral";
+                string leisLbl = LocalizationHelper.GetString("Productivity_LeisureLabel") ?? "Leisure";
+
+                ProductiveTooltip = $"{prodLbl}: {StringHelper.FormatDurationCompact(prod.ProductiveDuration)} ({prod.ProductivePct}%)";
+                NeutralTooltip = $"{neutLbl}: {StringHelper.FormatDurationCompact(prod.NeutralDuration)} ({prod.NeutralPct}%)";
+                LeisureTooltip = $"{leisLbl}: {StringHelper.FormatDurationCompact(prod.LeisureDuration)} ({prod.LeisurePct}%)";
 
                 // Compute Context Switches
                 var switches = AnalyticsEngine.ComputeContextSwitches(allSessions);
