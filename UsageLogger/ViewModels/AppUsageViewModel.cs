@@ -338,7 +338,7 @@ public class AppUsageViewModel : INotifyPropertyChanged
 		}
 	}
 
-	public string LivePowerDrawText => CurrentPowerSnapshot?.PowerStatusText ?? "⚡ -- W";
+	public string LivePowerDrawText => CurrentPowerSnapshot?.PowerStatusText ?? "-- W";
 	public string PowerDetailTooltip => CurrentPowerSnapshot?.PowerDetailTooltip ?? "";
 	public bool IsBatteryPresent => CurrentPowerSnapshot?.IsBatteryPresent ?? false;
 	public bool IsDischarging => CurrentPowerSnapshot?.PowerSource == PowerSourceType.Battery;

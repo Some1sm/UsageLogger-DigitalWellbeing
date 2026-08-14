@@ -135,7 +135,7 @@ public static class PowerTracker
                 string timeStr = snapshot.EstimatedTimeRemaining.HasValue
                     ? StringHelper.FormatDurationCompact(snapshot.EstimatedTimeRemaining.Value) + " left"
                     : "Discharging";
-                snapshot.PowerStatusText = $"🔋 {snapshot.BatteryPercentage}% • {snapshot.InstantDrawWatts:F1} W";
+                snapshot.PowerStatusText = $"{snapshot.BatteryPercentage}% • {snapshot.InstantDrawWatts:F1} W";
                 snapshot.PowerDetailTooltip = $"Battery: {snapshot.BatteryPercentage}%\nRate: {snapshot.InstantDrawWatts:F1} W discharge\nStatus: {timeStr}";
             }
             else if (hasBattery && isAc)
@@ -151,7 +151,7 @@ public static class PowerTracker
                 snapshot.IsSimulatedDraw = true;
 
                 string state = isCharging ? $"Charging ({snapshot.BatteryPercentage}%)" : $"Plugged in ({snapshot.BatteryPercentage}%)";
-                snapshot.PowerStatusText = $"⚡ {snapshot.InstantDrawWatts:F1} W (AC)";
+                snapshot.PowerStatusText = $"{snapshot.InstantDrawWatts:F1} W (AC)";
                 snapshot.PowerDetailTooltip = $"{state}\nEstimated System Draw: {snapshot.InstantDrawWatts:F1} W\n├─ CPU: {laptopCpu:F0} W ({cpuUsage:F0}% load)\n├─ GPU/Display: {laptopGpu:F0} W\n└─ Platform: {laptopPlatform:F0} W";
             }
             else
@@ -172,7 +172,7 @@ public static class PowerTracker
                 snapshot.InstantDrawWatts = totalDesktopWatts;
                 snapshot.IsSimulatedDraw = true;
 
-                snapshot.PowerStatusText = $"⚡ {snapshot.InstantDrawWatts:F1} W";
+                snapshot.PowerStatusText = $"{snapshot.InstantDrawWatts:F1} W";
                 snapshot.PowerDetailTooltip = $"Desktop System Draw: {snapshot.InstantDrawWatts:F1} W (Estimated)\n├─ CPU Package: {cpuWatts:F0} W ({cpuUsage:F0}% load)\n├─ GPU (2D/Display): {gpuWatts:F0} W\n└─ Platform (Mobo/RAM/Fans): {platformBase:F0} W";
             }
         }
@@ -182,7 +182,7 @@ public static class PowerTracker
             double fallbackWatts = Math.Round(ConfiguredAvgWatts > 20.0 ? ConfiguredAvgWatts : 120.0, 1);
             snapshot.InstantDrawWatts = fallbackWatts;
             snapshot.IsSimulatedDraw = true;
-            snapshot.PowerStatusText = $"⚡ {fallbackWatts:F1} W";
+            snapshot.PowerStatusText = $"{fallbackWatts:F1} W";
             snapshot.PowerDetailTooltip = $"Estimated Draw: {fallbackWatts:F1} W\nCPU Load: {cpuUsage:F0}%";
         }
 

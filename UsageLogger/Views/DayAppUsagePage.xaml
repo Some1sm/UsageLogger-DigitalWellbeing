@@ -307,8 +307,19 @@
                             BorderThickness="1" 
                             Padding="12,8" 
                             Margin="10,0,0,0" 
-                            VerticalAlignment="Center"
-                            ToolTipService.ToolTip="{x:Bind ViewModel.PowerDetailTooltip, Mode=OneWay}">
+                            VerticalAlignment="Center">
+                        <ToolTipService.ToolTip>
+                            <ToolTip Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
+                                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" 
+                                     BorderThickness="1" 
+                                     CornerRadius="8" 
+                                     Padding="12,10">
+                                <TextBlock Text="{x:Bind ViewModel.PowerDetailTooltip, Mode=OneWay}" 
+                                           FontSize="12" 
+                                           LineHeight="18" 
+                                           TextWrapping="Wrap"/>
+                            </ToolTip>
+                        </ToolTipService.ToolTip>
                         <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
                             <FontIcon Glyph="{x:Bind ViewModel.PowerBadgeGlyph, Mode=OneWay}" 
                                       FontSize="13" 
