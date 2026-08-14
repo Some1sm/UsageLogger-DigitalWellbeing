@@ -92,6 +92,10 @@ public class ServiceSettingsReader
             int dayStartMinute = ParseJsonInt(json, "DayStartMinute", 0, 0);
             UsageLogger.Core.Helpers.DateHelper.DayStartMinutes = Math.Clamp(dayStartHour, 0, 23) * 60 + Math.Clamp(dayStartMinute, 0, 59);
 
+            // Sync EstimatedPowerUsageWatts to PowerTracker
+            int avgWatts = ParseJsonInt(json, "EstimatedPowerUsageWatts", 150, 10);
+            UsageLogger.Core.Helpers.PowerTracker.ConfiguredAvgWatts = avgWatts;
+
             // Parse IgnoredWindowTitles array
             try
             {

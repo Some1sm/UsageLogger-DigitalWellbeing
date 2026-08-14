@@ -43,8 +43,8 @@ public static class PowerTracker
     private static DateTime _lastCpuSampleTime = DateTime.MinValue;
     private static double _cachedCpuUsage = 5.0;
 
-    // Default TDP estimate based on core count
-    private static readonly double BaseTdpWatts = Math.Clamp(Environment.ProcessorCount * 6.0, 25.0, 95.0);
+    // Configured average system power baseline (from user settings, default 150W)
+    public static double ConfiguredAvgWatts { get; set; } = 150.0;
 
     /// <summary>
     /// Gets the current system CPU load percentage (0.0 to 100.0%).
@@ -127,7 +127,7 @@ public static class PowerTracker
                 {
                     // Fallback to laptop battery discharge model
                     double baseLaptopIdle = 8.5;
-                    double dynamicCpu = (cpuUsage / 100.0) * (BaseTdpWatts * 0.45);
+                    double dynamicCpu = (cpuUsage / 100.0) * 35.0;
                     snapshot.InstantDrawWatts = Math.Round(baseLaptopIdle + dynamicCpu, 1);
                     snapshot.IsSimulatedDraw = true;
                 }
@@ -159,11 +159,14 @@ public static class PowerTracker
                 // Desktop PC (No battery - full desktop hardware platform)
                 snapshot.PowerSource = PowerSourceType.AC;
                 
-                double platformBase = 35.0; // Motherboard chipset, DDR RAM, NVMe SSDs, fans, PSU losses
-                double cpuIdlePackage = Math.Clamp(Environment.ProcessorCount * 2.8, 28.0, 50.0); // 30-50W CPU package idle/boost
-                double cpuPeakTdp = Math.Clamp(Environment.ProcessorCount * 8.5, 65.0, 180.0); // Peak Desktop CPU TDP
-                double cpuWatts = cpuIdlePackage + (cpuUsage / 100.0) * (cpuPeakTdp - cpuIdlePackage);
-                double gpuWatts = 22.0; // Dedicated GPU 2D/Display/Hardware acceleration baseline
+                double baseline = ConfiguredAvgWatts > 20.0 ? ConfiguredAvgWatts : 150.0;
+                
+                // Typical modern desktop split: 30% Platform, 50% CPU Package, 20% GPU (2D/Display)
+                double platformBase = Math.Round(baseline * 0.30, 1); // ~45W for 150W baseline
+                double cpuBase = Math.Round(baseline * 0.50 * 0.60, 1); // ~45W package idle
+                double cpuPeak = Math.Round(baseline * 0.50 * 1.50, 1); // ~112W peak CPU
+                double cpuWatts = Math.Round(cpuBase + (cpuUsage / 100.0) * (cpuPeak - cpuBase), 1);
+                double gpuWatts = Math.Round(baseline * 0.20, 1); // ~30W dedicated GPU 2D
 
                 double totalDesktopWatts = Math.Round(platformBase + cpuWatts + gpuWatts, 1);
                 snapshot.InstantDrawWatts = totalDesktopWatts;
@@ -176,7 +179,7 @@ public static class PowerTracker
         else
         {
             // Fallback estimation
-            double fallbackWatts = Math.Round(20.0 + (cpuUsage / 100.0) * BaseTdpWatts, 1);
+            double fallbackWatts = Math.Round(ConfiguredAvgWatts > 20.0 ? ConfiguredAvgWatts : 120.0, 1);
             snapshot.InstantDrawWatts = fallbackWatts;
             snapshot.IsSimulatedDraw = true;
             snapshot.PowerStatusText = $"⚡ {fallbackWatts:F1} W";

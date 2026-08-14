@@ -224,6 +224,12 @@
                         <TextBox x:Name="TxtCurrency" PlaceholderText="$" TextChanged="TxtCurrency_TextChanged"/>
                     </StackPanel>
                 </Grid>
+
+                <!-- Live Draw Status & Calibration -->
+                <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="10" Margin="0,10,0,0">
+                    <TextBlock x:Name="TxtLiveDrawStatus" Text="Live System Draw: ⚡ -- W" FontSize="12" Opacity="0.75" VerticalAlignment="Center"/>
+                    <Button x:Name="BtnCalibrateFromLive" Content="Use Live Draw" FontSize="11" Padding="8,3" VerticalAlignment="Center" Click="BtnCalibrateFromLive_Click"/>
+                </StackPanel>
             </Grid>
 
             <!-- Day-Part Intervals -->

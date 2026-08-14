@@ -282,12 +282,18 @@ namespace UsageLogger.ViewModels
                 }
                 // -------------------------
 
-                // --- Total Active Energy Consumed ---
+                // --- Total Active Energy & Electricity Cost ---
                 double totalActiveEnergyWh = sorted.Where(s => !isAfkSession(s)).Sum(s => s.EnergyWattHours > 0 ? s.EnergyWattHours : PowerTracker.CalculateEnergyWattHours(PowerTracker.EstimateProcessPower(true, s.AudioSources.Count > 0, s.Duration.TotalSeconds, 20.0).ProcessWatts, s.Duration));
                 if (totalActiveEnergyWh > 0.1)
                 {
-                    string activeEnergyStr = totalActiveEnergyWh >= 1000 ? $"{totalActiveEnergyWh / 1000.0:F2} kWh" : $"{totalActiveEnergyWh:F1} Wh";
+                    double activeKwh = totalActiveEnergyWh / 1000.0;
+                    string activeEnergyStr = totalActiveEnergyWh >= 1000 ? $"{activeKwh:F2} kWh" : $"{totalActiveEnergyWh:F1} Wh";
                     Stats.Add(new StatItem("\uE945", activeEnergyStr, "Active Energy Used", "Estimated energy consumed by active applications"));
+
+                    double activePrice = UserPreferences.KwhPrice;
+                    double activeCost = activeKwh * activePrice;
+                    string currency = UserPreferences.CurrencySymbol;
+                    Stats.Add(new StatItem("\uE1CF", $"{currency}{activeCost:F2}", "Active Energy Cost", $"Calculated at {currency}{activePrice:0.##}/kWh"));
 
                     var topEnergyGroup = sorted.Where(s => !isAfkSession(s))
                         .GroupBy(s => s.ProcessName)

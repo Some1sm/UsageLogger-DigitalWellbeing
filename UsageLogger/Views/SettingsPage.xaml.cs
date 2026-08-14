@@ -325,6 +325,7 @@ namespace UsageLogger.Views
             TxtAvgWatts.Text = UserPreferences.EstimatedPowerUsageWatts.ToString();
             TxtKwhPrice.Text = UserPreferences.KwhPrice.ToString("0.##"); // Format properly
             TxtCurrency.Text = UserPreferences.CurrencySymbol;
+            UpdateLivePowerDrawDisplay();
 
             // Theme
             string theme = UserPreferences.ThemeMode;
@@ -1085,6 +1086,33 @@ namespace UsageLogger.Views
         {
             if (_isLoading) return;
             CheckForChanges();
+        }
+
+        private void UpdateLivePowerDrawDisplay()
+        {
+            try
+            {
+                var snapshot = UsageLogger.Core.Helpers.PowerTracker.GetPowerSnapshot();
+                if (TxtLiveDrawStatus != null)
+                {
+                    TxtLiveDrawStatus.Text = $"Live System Draw: {snapshot.PowerStatusText}";
+                }
+            }
+            catch { }
+        }
+
+        private void BtnCalibrateFromLive_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var snapshot = UsageLogger.Core.Helpers.PowerTracker.GetPowerSnapshot();
+                if (snapshot.InstantDrawWatts > 10)
+                {
+                    TxtAvgWatts.Text = Math.Round(snapshot.InstantDrawWatts).ToString();
+                    CheckForChanges();
+                }
+            }
+            catch { }
         }
 
         private void PopulateDayPartComboBoxes()

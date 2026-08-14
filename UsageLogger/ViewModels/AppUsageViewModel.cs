@@ -467,6 +467,7 @@ public class AppUsageViewModel : INotifyPropertyChanged
 	{
 		try
 		{
+			PowerTracker.ConfiguredAvgWatts = UserPreferences.EstimatedPowerUsageWatts;
 			CurrentPowerSnapshot = PowerTracker.GetPowerSnapshot();
 		}
 		catch { }
