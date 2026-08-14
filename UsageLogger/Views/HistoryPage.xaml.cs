@@ -178,6 +178,160 @@ namespace UsageLogger.Views
             await Helpers.DataExportHelper.ExportToJsonAsync(ViewModel.CachedSessions, start, end);
         }
 
+        private ToolTip _prodBarToolTip = new ToolTip();
+        private ToolTip _dayPartBarToolTip = new ToolTip();
+
+        private void ProdBar_PointerMoved(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            if (ProdBarContainer == null || ViewModel == null) return;
+            double actualWidth = ProdBarContainer.ActualWidth;
+            if (actualWidth <= 0) return;
+
+            var pt = e.GetCurrentPoint(ProdBarContainer).Position;
+            double xRatio = Math.Clamp(pt.X / actualWidth, 0.0, 1.0);
+
+            double prodPct = ViewModel.ProductivePercent;
+            double neutPct = ViewModel.NeutralPercent;
+            double leisPct = ViewModel.LeisurePercent;
+            double totalPct = prodPct + neutPct + leisPct;
+
+            string info;
+            if (totalPct <= 0.001)
+            {
+                info = ViewModel.ProductivityBreakdownText;
+            }
+            else
+            {
+                double normProd = prodPct / totalPct;
+                double normNeut = neutPct / totalPct;
+
+                if (xRatio < normProd)
+                {
+                    info = ViewModel.ProductiveTooltip;
+                }
+                else if (xRatio < normProd + normNeut)
+                {
+                    info = ViewModel.NeutralTooltip;
+                }
+                else
+                {
+                    info = ViewModel.LeisureTooltip;
+                }
+            }
+
+            if (TxtProdHoverStatus != null) TxtProdHoverStatus.Text = info;
+            _prodBarToolTip.Content = info;
+            _prodBarToolTip.IsOpen = true;
+        }
+
+        private void ProdBar_PointerExited(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            if (TxtProdHoverStatus != null && ViewModel != null)
+            {
+                TxtProdHoverStatus.Text = ViewModel.ProductivityBreakdownText;
+            }
+            if (_prodBarToolTip != null)
+            {
+                _prodBarToolTip.IsOpen = false;
+            }
+        }
+
+        private void DayPartBar_PointerMoved(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            if (DayPartBarContainer == null || ViewModel == null) return;
+            double actualWidth = DayPartBarContainer.ActualWidth;
+            if (actualWidth <= 0) return;
+
+            var pt = e.GetCurrentPoint(DayPartBarContainer).Position;
+            double xRatio = Math.Clamp(pt.X / actualWidth, 0.0, 1.0);
+
+            double mornPct = ViewModel.MorningPercent;
+            double aftPct = ViewModel.AfternoonPercent;
+            double evePct = ViewModel.EveningPercent;
+            double nitePct = ViewModel.NightPercent;
+            double totalPct = mornPct + aftPct + evePct + nitePct;
+
+            string info;
+            if (totalPct <= 0.001)
+            {
+                info = ViewModel.DayPartBreakdownText;
+            }
+            else
+            {
+                double normMorn = mornPct / totalPct;
+                double normAft = aftPct / totalPct;
+                double normEve = evePct / totalPct;
+
+                if (xRatio < normMorn)
+                {
+                    info = ViewModel.MorningTooltip;
+                }
+                else if (xRatio < normMorn + normAft)
+                {
+                    info = ViewModel.AfternoonTooltip;
+                }
+                else if (xRatio < normMorn + normAft + normEve)
+                {
+                    info = ViewModel.EveningTooltip;
+                }
+                else
+                {
+                    info = ViewModel.NightTooltip;
+                }
+            }
+
+            if (TxtDayPartHoverStatus != null) TxtDayPartHoverStatus.Text = info;
+            _dayPartBarToolTip.Content = info;
+            _dayPartBarToolTip.IsOpen = true;
+        }
+
+        private void DayPartBar_PointerExited(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            if (TxtDayPartHoverStatus != null && ViewModel != null)
+            {
+                TxtDayPartHoverStatus.Text = ViewModel.DayPartBreakdownText;
+            }
+            if (_dayPartBarToolTip != null)
+            {
+                _dayPartBarToolTip.IsOpen = false;
+            }
+        }
+
+        private void LegendProductive_PointerEntered(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            if (TxtProdHoverStatus != null && ViewModel != null) TxtProdHoverStatus.Text = ViewModel.ProductiveTooltip;
+        }
+
+        private void LegendNeutral_PointerEntered(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            if (TxtProdHoverStatus != null && ViewModel != null) TxtProdHoverStatus.Text = ViewModel.NeutralTooltip;
+        }
+
+        private void LegendLeisure_PointerEntered(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            if (TxtProdHoverStatus != null && ViewModel != null) TxtProdHoverStatus.Text = ViewModel.LeisureTooltip;
+        }
+
+        private void LegendMorning_PointerEntered(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            if (TxtDayPartHoverStatus != null && ViewModel != null) TxtDayPartHoverStatus.Text = ViewModel.MorningTooltip;
+        }
+
+        private void LegendAfternoon_PointerEntered(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            if (TxtDayPartHoverStatus != null && ViewModel != null) TxtDayPartHoverStatus.Text = ViewModel.AfternoonTooltip;
+        }
+
+        private void LegendEvening_PointerEntered(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            if (TxtDayPartHoverStatus != null && ViewModel != null) TxtDayPartHoverStatus.Text = ViewModel.EveningTooltip;
+        }
+
+        private void LegendNight_PointerEntered(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            if (TxtDayPartHoverStatus != null && ViewModel != null) TxtDayPartHoverStatus.Text = ViewModel.NightTooltip;
+        }
+
         private void AppSwitchesFlyout_Opening(object sender, object e)
         {
             if (sender is Flyout flyout && flyout.Content is FrameworkElement fe)

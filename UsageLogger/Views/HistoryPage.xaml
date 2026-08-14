@@ -188,7 +188,7 @@
 
                     <!-- Card 1: Productivity Balance -->
                     <Border Grid.Column="0" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="16">
-                        <StackPanel Spacing="8">
+                        <StackPanel Spacing="10">
                             <StackPanel Spacing="2">
                                 <TextBlock l:Uids.Uid="History_ProductivityTitle" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
                                 <StackPanel Orientation="Horizontal" Spacing="4">
@@ -197,22 +197,46 @@
                                 </StackPanel>
                             </StackPanel>
 
-                            <!-- 3-Segment Ratio Bar -->
-                            <Border CornerRadius="6" Height="14" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" ToolTipService.ToolTip="{x:Bind ViewModel.ProductivityBreakdownText, Mode=OneWay}">
-                                <Grid>
+                            <!-- 3-Segment Ratio Bar with Interactive Pointer Hover -->
+                            <Border x:Name="ProdBarContainer" CornerRadius="8" Height="16" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" PointerEntered="ProdBar_PointerMoved" PointerMoved="ProdBar_PointerMoved" PointerExited="ProdBar_PointerExited" PointerCaptureLost="ProdBar_PointerExited">
+                                <Grid x:Name="ProdBarGrid">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="{x:Bind ViewModel.ProductivePercent, Mode=OneWay, Converter={StaticResource PercentToGridLengthConverter}}"/>
                                         <ColumnDefinition Width="{x:Bind ViewModel.NeutralPercent, Mode=OneWay, Converter={StaticResource PercentToGridLengthConverter}}"/>
                                         <ColumnDefinition Width="{x:Bind ViewModel.LeisurePercent, Mode=OneWay, Converter={StaticResource PercentToGridLengthConverter}}"/>
                                     </Grid.ColumnDefinitions>
-                                    <Border Grid.Column="0" Background="#107C41" CornerRadius="6,0,0,6" ToolTipService.ToolTip="{x:Bind ViewModel.ProductiveTooltip, Mode=OneWay}"/>
+                                    <Border Grid.Column="0" Background="#107C41" CornerRadius="8,0,0,8" ToolTipService.ToolTip="{x:Bind ViewModel.ProductiveTooltip, Mode=OneWay}"/>
                                     <Border Grid.Column="1" Background="#0078D4" ToolTipService.ToolTip="{x:Bind ViewModel.NeutralTooltip, Mode=OneWay}"/>
-                                    <Border Grid.Column="2" Background="#8764B8" CornerRadius="0,6,6,0" ToolTipService.ToolTip="{x:Bind ViewModel.LeisureTooltip, Mode=OneWay}"/>
+                                    <Border Grid.Column="2" Background="#8764B8" CornerRadius="0,8,8,0" ToolTipService.ToolTip="{x:Bind ViewModel.LeisureTooltip, Mode=OneWay}"/>
                                 </Grid>
                             </Border>
 
-                            <!-- Breakdown Legend -->
-                            <TextBlock Text="{x:Bind ViewModel.ProductivityBreakdownText, Mode=OneWay}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextTrimming="CharacterEllipsis"/>
+                            <!-- Dynamic Hover / Breakdown Status Text -->
+                            <TextBlock x:Name="TxtProdHoverStatus" Text="{x:Bind ViewModel.ProductivityBreakdownText, Mode=OneWay}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextTrimming="CharacterEllipsis"/>
+
+                            <!-- Visual Color Dot Legend with Category Names & Durations -->
+                            <Grid ColumnSpacing="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="4" ToolTipService.ToolTip="{x:Bind ViewModel.ProductiveTooltip, Mode=OneWay}" PointerEntered="LegendProductive_PointerEntered" PointerExited="ProdBar_PointerExited">
+                                    <Ellipse Width="7" Height="7" Fill="#107C41" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{x:Bind ViewModel.ProductiveLabelText, Mode=OneWay}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{x:Bind ViewModel.ProductiveDurationText, Mode=OneWay}" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4" ToolTipService.ToolTip="{x:Bind ViewModel.NeutralTooltip, Mode=OneWay}" PointerEntered="LegendNeutral_PointerEntered" PointerExited="ProdBar_PointerExited">
+                                    <Ellipse Width="7" Height="7" Fill="#0078D4" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{x:Bind ViewModel.NeutralLabelText, Mode=OneWay}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{x:Bind ViewModel.NeutralDurationText, Mode=OneWay}" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="4" ToolTipService.ToolTip="{x:Bind ViewModel.LeisureTooltip, Mode=OneWay}" PointerEntered="LegendLeisure_PointerEntered" PointerExited="ProdBar_PointerExited">
+                                    <Ellipse Width="7" Height="7" Fill="#8764B8" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{x:Bind ViewModel.LeisureLabelText, Mode=OneWay}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{x:Bind ViewModel.LeisureDurationText, Mode=OneWay}" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Grid>
                         </StackPanel>
                     </Border>
 
@@ -299,7 +323,7 @@
 
                     <!-- Card 3: Day-Part Routine -->
                     <Border Grid.Column="2" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="16">
-                        <StackPanel Spacing="8">
+                        <StackPanel Spacing="10">
                             <StackPanel Spacing="2">
                                 <TextBlock l:Uids.Uid="History_DayPartRoutineTitle" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
                                 <StackPanel Orientation="Horizontal" Spacing="6">
@@ -308,24 +332,54 @@
                                 </StackPanel>
                             </StackPanel>
 
-                            <!-- 4-Segment Routine Bar -->
-                            <Border CornerRadius="6" Height="14" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" ToolTipService.ToolTip="{x:Bind ViewModel.DayPartBreakdownText, Mode=OneWay}">
-                                <Grid>
+                            <!-- 4-Segment Routine Bar with Interactive Pointer Hover -->
+                            <Border x:Name="DayPartBarContainer" CornerRadius="8" Height="16" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" PointerEntered="DayPartBar_PointerMoved" PointerMoved="DayPartBar_PointerMoved" PointerExited="DayPartBar_PointerExited" PointerCaptureLost="DayPartBar_PointerExited">
+                                <Grid x:Name="DayPartBarGrid">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="{x:Bind ViewModel.MorningPercent, Mode=OneWay, Converter={StaticResource PercentToGridLengthConverter}}"/>
                                         <ColumnDefinition Width="{x:Bind ViewModel.AfternoonPercent, Mode=OneWay, Converter={StaticResource PercentToGridLengthConverter}}"/>
                                         <ColumnDefinition Width="{x:Bind ViewModel.EveningPercent, Mode=OneWay, Converter={StaticResource PercentToGridLengthConverter}}"/>
                                         <ColumnDefinition Width="{x:Bind ViewModel.NightPercent, Mode=OneWay, Converter={StaticResource PercentToGridLengthConverter}}"/>
                                     </Grid.ColumnDefinitions>
-                                    <Border Grid.Column="0" Background="#FFB900" CornerRadius="6,0,0,6" ToolTipService.ToolTip="{x:Bind ViewModel.MorningTooltip, Mode=OneWay}"/>
+                                    <Border Grid.Column="0" Background="#FFB900" CornerRadius="8,0,0,8" ToolTipService.ToolTip="{x:Bind ViewModel.MorningTooltip, Mode=OneWay}"/>
                                     <Border Grid.Column="1" Background="#0078D4" ToolTipService.ToolTip="{x:Bind ViewModel.AfternoonTooltip, Mode=OneWay}"/>
                                     <Border Grid.Column="2" Background="#E74856" ToolTipService.ToolTip="{x:Bind ViewModel.EveningTooltip, Mode=OneWay}"/>
-                                    <Border Grid.Column="3" Background="#5C2D91" CornerRadius="0,6,6,0" ToolTipService.ToolTip="{x:Bind ViewModel.NightTooltip, Mode=OneWay}"/>
+                                    <Border Grid.Column="3" Background="#5C2D91" CornerRadius="0,8,8,0" ToolTipService.ToolTip="{x:Bind ViewModel.NightTooltip, Mode=OneWay}"/>
                                 </Grid>
                             </Border>
 
-                            <!-- Breakdown Legend -->
-                            <TextBlock Text="{x:Bind ViewModel.DayPartBreakdownText, Mode=OneWay}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextTrimming="CharacterEllipsis"/>
+                            <!-- Dynamic Hover / Breakdown Status Text -->
+                            <TextBlock x:Name="TxtDayPartHoverStatus" Text="{x:Bind ViewModel.DayPartBreakdownText, Mode=OneWay}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextTrimming="CharacterEllipsis"/>
+
+                            <!-- Visual Color Dot Legend with Routine Names & Durations -->
+                            <Grid ColumnSpacing="6">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="3" ToolTipService.ToolTip="{x:Bind ViewModel.MorningTooltip, Mode=OneWay}" PointerEntered="LegendMorning_PointerEntered" PointerExited="DayPartBar_PointerExited">
+                                    <Ellipse Width="6" Height="6" Fill="#FFB900" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{x:Bind ViewModel.MorningLabelText, Mode=OneWay}" FontSize="10" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{x:Bind ViewModel.MorningDurationText, Mode=OneWay}" FontSize="10" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="3" ToolTipService.ToolTip="{x:Bind ViewModel.AfternoonTooltip, Mode=OneWay}" PointerEntered="LegendAfternoon_PointerEntered" PointerExited="DayPartBar_PointerExited">
+                                    <Ellipse Width="6" Height="6" Fill="#0078D4" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{x:Bind ViewModel.AfternoonLabelText, Mode=OneWay}" FontSize="10" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{x:Bind ViewModel.AfternoonDurationText, Mode=OneWay}" FontSize="10" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="3" ToolTipService.ToolTip="{x:Bind ViewModel.EveningTooltip, Mode=OneWay}" PointerEntered="LegendEvening_PointerEntered" PointerExited="DayPartBar_PointerExited">
+                                    <Ellipse Width="6" Height="6" Fill="#E74856" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{x:Bind ViewModel.EveningLabelText, Mode=OneWay}" FontSize="10" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{x:Bind ViewModel.EveningDurationText, Mode=OneWay}" FontSize="10" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="3" ToolTipService.ToolTip="{x:Bind ViewModel.NightTooltip, Mode=OneWay}" PointerEntered="LegendNight_PointerEntered" PointerExited="DayPartBar_PointerExited">
+                                    <Ellipse Width="6" Height="6" Fill="#5C2D91" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{x:Bind ViewModel.NightLabelText, Mode=OneWay}" FontSize="10" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{x:Bind ViewModel.NightDurationText, Mode=OneWay}" FontSize="10" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Grid>
                         </StackPanel>
                     </Border>
                 </Grid>
