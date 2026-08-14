@@ -10,10 +10,16 @@
     l:Uids.Uid="ReportDialog"
     DefaultButton="Primary">
 
-    <Grid MinWidth="820" RowSpacing="12">
+    <ContentDialog.Resources>
+        <x:Double x:Key="ContentDialogMaxWidth">1100</x:Double>
+        <x:Double x:Key="ContentDialogMaxHeight">850</x:Double>
+        <x:Double x:Key="ContentDialogMinWidth">600</x:Double>
+    </ContentDialog.Resources>
+
+    <Grid RowSpacing="12" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
@@ -27,15 +33,16 @@
         <!-- Image Preview Card -->
         <Border Grid.Row="1" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
                 CornerRadius="8" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" 
-                BorderThickness="1" Padding="12">
-            <Grid>
+                BorderThickness="1" Padding="8">
+            <Grid MinHeight="250">
                 <ProgressRing x:Name="LoadingRing" IsActive="True" Width="40" Height="40" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <Image x:Name="ReportImagePreview" Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+                <Image x:Name="ReportImagePreview" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Grid>
         </Border>
 
         <!-- Feedback Notification -->
-        <InfoBar x:Name="ReportInfoBar" Grid.Row="2" IsOpen="False" Severity="Success" Margin="0,8,0,0"/>
+        <InfoBar x:Name="ReportInfoBar" Grid.Row="2" IsOpen="False" Severity="Success" Margin="0,4,0,0"/>
     </Grid>
 </ContentDialog>
+
 
