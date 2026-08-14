@@ -83,13 +83,13 @@
     <value>Общее экранное время</value>
   </data>
   <data name="History_DailyTrends.Text" xml:space="preserve">
-    <value>Среднее за пред. период</value>
+    <value>Среднесуточное</value>
   </data>
-  <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>📊 Дневные тренды</value>
+  <data name="History_PrevPeriodAvgTitle.Text" xml:space="preserve">
+    <value>Предыдущее среднее</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
-    <value>Историческое среднее</value>
+    <value>Ориентир</value>
   </data>
   <data name="History_UsageTrends.Text" xml:space="preserve">
     <value>Тренды использования</value>

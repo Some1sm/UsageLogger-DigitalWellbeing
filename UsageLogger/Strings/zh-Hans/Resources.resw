@@ -83,13 +83,13 @@
     <value>总屏幕时间</value>
   </data>
   <data name="History_DailyTrends.Text" xml:space="preserve">
-    <value>上期平均</value>
+    <value>日均时长</value>
   </data>
-  <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>📊 每日趋势</value>
+  <data name="History_PrevPeriodAvgTitle.Text" xml:space="preserve">
+    <value>上期均值</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
-    <value>历史平均</value>
+    <value>基准线</value>
   </data>
   <data name="History_UsageTrends.Text" xml:space="preserve">
     <value>使用趋势</value>

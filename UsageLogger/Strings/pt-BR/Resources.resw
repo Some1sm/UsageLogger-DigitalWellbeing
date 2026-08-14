@@ -83,13 +83,13 @@
     <value>Tempo Total de Tela</value>
   </data>
   <data name="History_DailyTrends.Text" xml:space="preserve">
-    <value>Média anterior</value>
+    <value>Média Diária</value>
   </data>
-  <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>📊 Tendências diárias</value>
+  <data name="History_PrevPeriodAvgTitle.Text" xml:space="preserve">
+    <value>Média Anterior</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
-    <value>Média histórica</value>
+    <value>Linha de referência</value>
   </data>
   <data name="History_UsageTrends.Text" xml:space="preserve">
     <value>Tendências de Uso</value>

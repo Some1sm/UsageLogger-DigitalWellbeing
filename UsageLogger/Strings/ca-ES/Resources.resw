@@ -86,13 +86,13 @@
     <value>Temps Total Absent (AFK)</value>
   </data>
   <data name="History_DailyTrends.Text" xml:space="preserve">
-    <value>Mitjana del període anterior</value>
+    <value>Mitjana Diària</value>
   </data>
-  <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>📊 Tendències diàries</value>
+  <data name="History_PrevPeriodAvgTitle.Text" xml:space="preserve">
+    <value>Mitjana Anterior</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
-    <value>Mitjana històrica</value>
+    <value>Línia de referència</value>
   </data>
   <data name="History_UsageTrends.Text" xml:space="preserve">
     <value>Tendències d'Ús</value>

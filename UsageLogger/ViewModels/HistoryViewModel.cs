@@ -139,6 +139,21 @@ namespace UsageLogger.ViewModels
             set { if (_afkTimeText != value) { _afkTimeText = value; OnPropertyChanged(); } }
         }
         
+        // Current period daily average
+        private string _currentPeriodAvgText = "0h 0m";
+        public string CurrentPeriodAvgText
+        {
+            get => _currentPeriodAvgText;
+            set { if (_currentPeriodAvgText != value) { _currentPeriodAvgText = value; OnPropertyChanged(); } }
+        }
+
+        private string _avgChangeText = "";
+        public string AvgChangeText
+        {
+            get => _avgChangeText;
+            set { if (_avgChangeText != value) { _avgChangeText = value; OnPropertyChanged(); } }
+        }
+
         // Previous period average line value (for trend chart)
         private double _previousPeriodAverage;
         public double PreviousPeriodAverage
@@ -587,6 +602,9 @@ namespace UsageLogger.ViewModels
                 {
                     TotalHoursText = "0h 0m 0s";
                     TotalChangeText = "No data found for this period.";
+                    CurrentPeriodAvgText = "0h 0m";
+                    AvgChangeText = "";
+                    PrevPeriodAvgText = "0h 0m";
                     ErrorMessage = "No activity logs found for the selected date range.";
                     TopAppText = null;
                     TopAppComparisonText = null;
@@ -795,6 +813,11 @@ namespace UsageLogger.ViewModels
             // Calculate KPIs
             double currentTotal = dailyTotals.Values.Sum();
             TotalHoursText = StringHelper.FormatDurationFull(TimeSpan.FromMinutes(currentTotal));
+
+            int currentDays = (int)(end - start).Days + 1;
+            if (currentDays <= 0) currentDays = 1;
+            double currentAvg = currentTotal / currentDays;
+            CurrentPeriodAvgText = StringHelper.FormatDurationCompact(TimeSpan.FromMinutes(currentAvg));
             
             // Calculate AFK time (Away + LogonUI)
             double afkMinutes = currentSessions
@@ -808,10 +831,15 @@ namespace UsageLogger.ViewModels
                 TotalChangePositive = changePercent >= 0;
                 string arrow = TotalChangePositive ? "↑" : "↓";
                 TotalChangeText = $"{arrow} {Math.Abs(changePercent):F0}% {string.Format(LocalizationHelper.GetString("History_VsPreviousDays"), prevDays)}";
+
+                double avgDiff = ((currentAvg - prevAvg) / prevAvg) * 100;
+                string avgArrow = avgDiff >= 0 ? "↑" : "↓";
+                AvgChangeText = $"{avgArrow} {Math.Abs(avgDiff):F0}% {string.Format(LocalizationHelper.GetString("History_VsPreviousDays"), prevDays)}";
             }
             else
             {
                 TotalChangeText = LocalizationHelper.GetString("History_NoPreviousData");
+                AvgChangeText = LocalizationHelper.GetString("History_NoPreviousData");
                 TotalChangePositive = true;
             }
 

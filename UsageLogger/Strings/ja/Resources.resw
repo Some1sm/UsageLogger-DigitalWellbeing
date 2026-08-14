@@ -83,13 +83,13 @@
     <value>総スクリーン時間</value>
   </data>
   <data name="History_DailyTrends.Text" xml:space="preserve">
-    <value>前期平均</value>
+    <value>1日の平均</value>
   </data>
-  <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>📊 日次トレンド</value>
+  <data name="History_PrevPeriodAvgTitle.Text" xml:space="preserve">
+    <value>前回の平均</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
-    <value>過去平均</value>
+    <value>基準線</value>
   </data>
   <data name="History_UsageTrends.Text" xml:space="preserve">
     <value>利用トレンド</value>

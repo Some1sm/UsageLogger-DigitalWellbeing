@@ -83,13 +83,13 @@
     <value>총 스크린 타임</value>
   </data>
   <data name="History_DailyTrends.Text" xml:space="preserve">
-    <value>이전 기간 평균</value>
+    <value>일일 평균</value>
   </data>
-  <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>📊 일일 트렌드</value>
+  <data name="History_PrevPeriodAvgTitle.Text" xml:space="preserve">
+    <value>이전 평균</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
-    <value>과거 평균</value>
+    <value>기준선</value>
   </data>
   <data name="History_UsageTrends.Text" xml:space="preserve">
     <value>사용 트렌드</value>

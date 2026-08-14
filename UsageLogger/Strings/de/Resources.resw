@@ -83,13 +83,13 @@
     <value>Gesamte Bildschirmzeit</value>
   </data>
   <data name="History_DailyTrends.Text" xml:space="preserve">
-    <value>Durchschnitt vorheriger Zeitraum</value>
+    <value>Täglicher Durchschnitt</value>
   </data>
-  <data name="History_DailyTrendsSubtitle.Text" xml:space="preserve">
-    <value>📊 Tägliche Trends</value>
+  <data name="History_PrevPeriodAvgTitle.Text" xml:space="preserve">
+    <value>Vorheriger Durchschnitt</value>
   </data>
   <data name="History_DailyTrendsLegend.Text" xml:space="preserve">
-    <value>Historischer Durchschnitt</value>
+    <value>Referenzlinie</value>
   </data>
   <data name="History_UsageTrends.Text" xml:space="preserve">
     <value>Nutzungstrends</value>
