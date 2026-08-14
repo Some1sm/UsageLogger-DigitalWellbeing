@@ -90,7 +90,7 @@ namespace UsageLoggerService.UI
             
             var titleLabel = new Label
             {
-                Text = "📊 Today's Usage",
+                Text = "Today's Usage",
                 Font = new Font("Segoe UI", 10.5f, FontStyle.Bold),
                 ForeColor = Color.FromArgb(235, 235, 240),
                 AutoSize = true,
@@ -205,7 +205,7 @@ namespace UsageLoggerService.UI
 
             var focusLabel = new Label
             {
-                Text = _isFocusActive ? $"🎯 Focus: {_focusName}" : "🎯 Focus Mode: Off",
+                Text = _isFocusActive ? $"Focus: {_focusName}" : "Focus Mode: Off",
                 Font = new Font("Segoe UI", 8.5f, FontStyle.Regular),
                 ForeColor = _isFocusActive ? Color.FromArgb(120, 230, 140) : Color.FromArgb(160, 160, 170),
                 Dock = DockStyle.Fill,

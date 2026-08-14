@@ -22,7 +22,7 @@ namespace UsageLoggerService.Helpers
         public static void Init()
         {
             _contextMenu = new ContextMenuStrip();
-            _contextMenu.Items.Add("📊 Quick Glance", null, (s, e) => UI.QuickGlanceForm.ShowQuickGlance());
+            _contextMenu.Items.Add("Quick Glance", null, (s, e) => UI.QuickGlanceForm.ShowQuickGlance());
             _contextMenu.Items.Add("Open Dashboard", null, (s, e) => LaunchUI());
             _contextMenu.Items.Add("-"); // Separator
             _contextMenu.Items.Add("Exit", null, (s, e) => ExitAll());
