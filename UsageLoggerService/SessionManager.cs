@@ -110,12 +110,53 @@ public class SessionManager
             _currentSession.PowerImpact = level.ToString();
         }
 
-        // Write ALL sessions (buffer + current) to RAM for real-time UI updates
+        // Track Heavy Background Compute Processes (e.g. Rendering, Compilation, AI, VMs, Downloads)
+        var heavyBg = UsageLogger.Core.Helpers.PowerTracker.DetectHeavyBackgroundCompute(
+            processId, 
+            audioSources, 
+            3.0, 
+            powerSnapshot.InstantDrawWatts);
+
+        var activeBgNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var bg in heavyBg)
+        {
+            activeBgNames.Add(bg.ProcessName);
+            double bgIntervalWh = (bg.Watts * 2.0) / 3600.0;
+
+            if (_activeBackgroundComputeSessions.TryGetValue(bg.ProcessName, out var existingBg))
+            {
+                existingBg.EndTime = now;
+                existingBg.EnergyWattHours += bgIntervalWh;
+                existingBg.PowerImpact = bg.Level.ToString();
+            }
+            else
+            {
+                var newBg = new AppSession(bg.ProcessName, "Background Task", now, now, false, null, bgIntervalWh, bg.Level.ToString(), isBackgroundCompute: true);
+                _activeBackgroundComputeSessions[bg.ProcessName] = newBg;
+            }
+        }
+
+        // Close background compute sessions that finished or dropped below threshold
+        var endedBg = _activeBackgroundComputeSessions.Keys.Where(k => !activeBgNames.Contains(k)).ToList();
+        foreach (var endedKey in endedBg)
+        {
+            var endedSession = _activeBackgroundComputeSessions[endedKey];
+            if (endedSession.Duration.TotalSeconds >= 2)
+            {
+                _sessionBuffer.Add(endedSession);
+            }
+            _activeBackgroundComputeSessions.Remove(endedKey);
+        }
+
+        // Write ALL sessions (buffer + current + active bg compute) to RAM for real-time UI updates
         UpdateRAMCache();
     }
 
+    private readonly Dictionary<string, AppSession> _activeBackgroundComputeSessions = new(StringComparer.OrdinalIgnoreCase);
+
     /// <summary>
-    /// Write ALL sessions (completed buffer + current) to RAM cache.
+    /// Write ALL sessions (completed buffer + current + active background compute) to RAM cache.
     /// This allows UI to read real-time data without disk access.
     /// </summary>
     private void UpdateRAMCache()
@@ -127,6 +168,10 @@ public class SessionManager
             if (_currentSession != null)
             {
                 allSessions.Add(_currentSession);
+            }
+            foreach (var bg in _activeBackgroundComputeSessions.Values)
+            {
+                allSessions.Add(bg);
             }
             
             UsageLogger.Core.Helpers.LiveSessionCache.WriteAll(allSessions);
@@ -166,8 +211,17 @@ public class SessionManager
             {
                 await _repository.UpdateOrAppendAsync(_currentSession);
             }
+
+            // 3. Persist Active Background Compute Sessions
+            foreach (var bg in _activeBackgroundComputeSessions.Values)
+            {
+                if (bg.Duration.TotalSeconds > 1)
+                {
+                    await _repository.UpdateOrAppendAsync(bg);
+                }
+            }
             
-            // Update RAM cache (buffer is now empty, only current remains)
+            // Update RAM cache (buffer is now empty, only active remain)
             UpdateRAMCache();
         } 
         catch (Exception ex)
@@ -179,6 +233,11 @@ public class SessionManager
     public async Task SaveOnExitAsync()
     {
         FinalizeCurrentSession(DateTime.Now);
+        foreach (var bg in _activeBackgroundComputeSessions.Values)
+        {
+            _sessionBuffer.Add(bg);
+        }
+        _activeBackgroundComputeSessions.Clear();
         await FlushBufferAsync();
         // Clear RAM cache on exit
         try 

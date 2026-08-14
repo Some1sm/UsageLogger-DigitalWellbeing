@@ -66,7 +66,10 @@ public static class SessionAggregator
             }
 
             var appUsage = usageMap[session.ProcessName];
-            appUsage.Duration = appUsage.Duration.Add(session.Duration);
+            if (!session.IsBackgroundCompute)
+            {
+                appUsage.Duration = appUsage.Duration.Add(session.Duration);
+            }
 
             double sessionEnergy = session.EnergyWattHours;
             if (sessionEnergy <= 0.001 && session.Duration.TotalSeconds > 0)
@@ -105,29 +108,32 @@ public static class SessionAggregator
                 appUsage.ProgramName = groupedTitle;
             }
 
-            // Aggregate into ProgramBreakdown (Grouped umbrella title)
-            if (appUsage.ProgramBreakdown.ContainsKey(groupedTitle))
+            if (!session.IsBackgroundCompute)
             {
-                appUsage.ProgramBreakdown[groupedTitle] = appUsage.ProgramBreakdown[groupedTitle].Add(session.Duration);
-            }
-            else
-            {
-                appUsage.ProgramBreakdown[groupedTitle] = session.Duration;
-            }
+                // Aggregate into ProgramBreakdown (Grouped umbrella title)
+                if (appUsage.ProgramBreakdown.ContainsKey(groupedTitle))
+                {
+                    appUsage.ProgramBreakdown[groupedTitle] = appUsage.ProgramBreakdown[groupedTitle].Add(session.Duration);
+                }
+                else
+                {
+                    appUsage.ProgramBreakdown[groupedTitle] = session.Duration;
+                }
 
-            // Aggregate into DetailedBreakdown (Specific titles under Grouped title)
-            if (!appUsage.DetailedBreakdown.ContainsKey(groupedTitle))
-            {
-                appUsage.DetailedBreakdown[groupedTitle] = new Dictionary<string, TimeSpan>();
-            }
+                // Aggregate into DetailedBreakdown (Specific titles under Grouped title)
+                if (!appUsage.DetailedBreakdown.ContainsKey(groupedTitle))
+                {
+                    appUsage.DetailedBreakdown[groupedTitle] = new Dictionary<string, TimeSpan>();
+                }
 
-            if (appUsage.DetailedBreakdown[groupedTitle].ContainsKey(specificTitle))
-            {
-                appUsage.DetailedBreakdown[groupedTitle][specificTitle] = appUsage.DetailedBreakdown[groupedTitle][specificTitle].Add(session.Duration);
-            }
-            else
-            {
-                appUsage.DetailedBreakdown[groupedTitle][specificTitle] = session.Duration;
+                if (appUsage.DetailedBreakdown[groupedTitle].ContainsKey(specificTitle))
+                {
+                    appUsage.DetailedBreakdown[groupedTitle][specificTitle] = appUsage.DetailedBreakdown[groupedTitle][specificTitle].Add(session.Duration);
+                }
+                else
+                {
+                    appUsage.DetailedBreakdown[groupedTitle][specificTitle] = session.Duration;
+                }
             }
         }
         return usageMap.Values.ToList();

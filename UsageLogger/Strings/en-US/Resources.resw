@@ -1195,4 +1195,7 @@
   <data name="History_BackgroundAudioLabel.Text" xml:space="preserve">
     <value>Background Audio</value>
   </data>
+  <data name="History_BackgroundComputeLabel.Text" xml:space="preserve">
+    <value>Background Compute</value>
+  </data>
 </root>

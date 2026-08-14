@@ -1,6 +1,8 @@
 #nullable enable
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.InteropServices;
 using UsageLogger.Core.Models;
 
@@ -299,4 +301,115 @@ public static class PowerTracker
     {
         return (watts * duration.TotalSeconds) / 3600.0;
     }
+
+    private static DateTime _lastAllProcessSampleTime = DateTime.MinValue;
+    private static readonly Dictionary<int, (ulong Ticks, DateTime SampleTime)> _allProcessCpuHistory = new();
+
+    /// <summary>
+    /// Scans running processes to detect non-foreground, non-audio background applications consuming significant CPU (>= minCpuPercent).
+    /// </summary>
+    public static List<BackgroundComputeProcess> DetectHeavyBackgroundCompute(
+        int foregroundPid, 
+        ICollection<string>? audioProcesses = null, 
+        double minCpuPercent = 3.0, 
+        double systemWatts = 150.0)
+    {
+        var results = new List<BackgroundComputeProcess>();
+        DateTime now = DateTime.UtcNow;
+
+        // Rate limit full process scan to once every 1.5 seconds
+        if ((now - _lastAllProcessSampleTime).TotalMilliseconds < 1500)
+        {
+            return results;
+        }
+
+        try
+        {
+            var processes = Process.GetProcesses();
+            int currentPid = Environment.ProcessId;
+
+            foreach (var p in processes)
+            {
+                try
+                {
+                    int pid = p.Id;
+                    if (pid <= 4 || pid == foregroundPid || pid == currentPid) continue;
+
+                    string name = p.ProcessName;
+                    if (string.IsNullOrEmpty(name) || 
+                        name.Equals("Idle", StringComparison.OrdinalIgnoreCase) || 
+                        name.Equals("System", StringComparison.OrdinalIgnoreCase) ||
+                        name.Equals("Registry", StringComparison.OrdinalIgnoreCase) ||
+                        name.Equals("smss", StringComparison.OrdinalIgnoreCase) ||
+                        name.Equals("csrss", StringComparison.OrdinalIgnoreCase) ||
+                        name.Equals("wininit", StringComparison.OrdinalIgnoreCase) ||
+                        name.Equals("services", StringComparison.OrdinalIgnoreCase) ||
+                        name.Equals("lsass", StringComparison.OrdinalIgnoreCase) ||
+                        name.Equals("svchost", StringComparison.OrdinalIgnoreCase) ||
+                        name.Equals("dwm", StringComparison.OrdinalIgnoreCase) ||
+                        name.Equals("UsageLoggerService", StringComparison.OrdinalIgnoreCase) ||
+                        name.Equals("UsageLogger", StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
+
+                    if (audioProcesses != null && audioProcesses.Contains(name))
+                    {
+                        continue; // Audio processes are tracked separately
+                    }
+
+                    var totalTime = p.TotalProcessorTime;
+                    if (_allProcessCpuHistory.TryGetValue(pid, out var last))
+                    {
+                        double elapsedSec = (now - last.SampleTime).TotalSeconds;
+                        if (elapsedSec > 1.2)
+                        {
+                            double procCpuSec = (totalTime - TimeSpan.FromTicks((long)last.Ticks)).TotalSeconds;
+                            _allProcessCpuHistory[pid] = ((ulong)totalTime.Ticks, now);
+                            double cpuPercent = (procCpuSec / (elapsedSec * Environment.ProcessorCount)) * 100.0;
+
+                            if (cpuPercent >= minCpuPercent)
+                            {
+                                var (watts, level) = EstimateProcessPower(false, false, 2.0, systemWatts, cpuPercent);
+                                results.Add(new BackgroundComputeProcess(pid, name, cpuPercent, watts, level));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        _allProcessCpuHistory[pid] = ((ulong)totalTime.Ticks, now);
+                    }
+                }
+                catch
+                {
+                    // Process exited or access denied
+                }
+                finally
+                {
+                    p.Dispose();
+                }
+            }
+
+            _lastAllProcessSampleTime = now;
+
+            // Prune dead PIDs from history periodically
+            if (_allProcessCpuHistory.Count > 300)
+            {
+                var activePids = new HashSet<int>(processes.Select(x => x.Id));
+                var deadPids = _allProcessCpuHistory.Keys.Where(k => !activePids.Contains(k)).ToList();
+                foreach (var dead in deadPids)
+                {
+                    _allProcessCpuHistory.Remove(dead);
+                }
+            }
+        }
+        catch { }
+
+        return results;
+    }
 }
+
+/// <summary>
+/// Structure representing a background heavy compute process.
+/// </summary>
+public readonly record struct BackgroundComputeProcess(int ProcessId, string ProcessName, double CpuPercent, double Watts, PowerImpactLevel Level);

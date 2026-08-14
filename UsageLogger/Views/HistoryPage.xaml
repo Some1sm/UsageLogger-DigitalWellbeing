@@ -523,11 +523,13 @@
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="{x:Bind ViewModel.ActiveEnergyPercent, Mode=OneWay, Converter={StaticResource PercentToGridLengthConverter}}"/>
                                                     <ColumnDefinition Width="{x:Bind ViewModel.BackgroundAudioEnergyPercent, Mode=OneWay, Converter={StaticResource PercentToGridLengthConverter}}"/>
+                                                    <ColumnDefinition Width="{x:Bind ViewModel.BackgroundComputeEnergyPercent, Mode=OneWay, Converter={StaticResource PercentToGridLengthConverter}}"/>
                                                     <ColumnDefinition Width="{x:Bind ViewModel.AfkEnergyPercent, Mode=OneWay, Converter={StaticResource PercentToGridLengthConverter}}"/>
                                                 </Grid.ColumnDefinitions>
                                                 <Border Grid.Column="0" Background="#0078D4" CornerRadius="7,0,0,7"/>
                                                 <Border Grid.Column="1" Background="#107C41"/>
-                                                <Border Grid.Column="2" Background="#8764B8" CornerRadius="0,7,7,0"/>
+                                                <Border Grid.Column="2" Background="#D83B01"/>
+                                                <Border Grid.Column="3" Background="#8764B8" CornerRadius="0,7,7,0"/>
                                             </Grid>
                                         </Border>
                                     </Grid>
@@ -558,6 +560,19 @@
                                                 <TextBlock l:Uids.Uid="History_BackgroundAudioLabel" Text="Background Audio" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                                             </StackPanel>
                                             <TextBlock Grid.Column="2" Text="{x:Bind ViewModel.BackgroundAudioEnergyText, Mode=OneWay}" FontSize="11" FontWeight="SemiBold"/>
+                                        </Grid>
+
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="6">
+                                                <Ellipse Width="8" Height="8" Fill="#D83B01" VerticalAlignment="Center"/>
+                                                <TextBlock l:Uids.Uid="History_BackgroundComputeLabel" Text="Background Compute" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                            </StackPanel>
+                                            <TextBlock Grid.Column="2" Text="{x:Bind ViewModel.BackgroundComputeEnergyText, Mode=OneWay}" FontSize="11" FontWeight="SemiBold"/>
                                         </Grid>
                                     </StackPanel>
                                 </StackPanel>

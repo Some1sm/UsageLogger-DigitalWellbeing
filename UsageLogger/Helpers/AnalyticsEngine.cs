@@ -85,7 +85,7 @@ namespace UsageLogger.Helpers
 
             foreach (var s in sessions)
             {
-                if (IsAfk(s) || AppUsageViewModel.IsProcessExcluded(s.ProcessName)) continue;
+                if (IsAfk(s) || s.IsBackgroundCompute || AppUsageViewModel.IsProcessExcluded(s.ProcessName)) continue;
                 if (s.Duration.TotalSeconds <= 0) continue;
 
                 // Divide session into 1-minute or discrete slices across boundaries
@@ -152,7 +152,7 @@ namespace UsageLogger.Helpers
 
             foreach (var s in sessions)
             {
-                if (IsAfk(s) || AppUsageViewModel.IsProcessExcluded(s.ProcessName)) continue;
+                if (IsAfk(s) || s.IsBackgroundCompute || AppUsageViewModel.IsProcessExcluded(s.ProcessName)) continue;
 
                 AppTag tag = AppTagHelper.GetAppTag(s.ProcessName);
                 if (!string.IsNullOrEmpty(s.ProgramName))
@@ -197,7 +197,7 @@ namespace UsageLogger.Helpers
         /// </summary>
         public static ContextSwitchSummary ComputeContextSwitches(List<AppSession> sessions)
         {
-            var sorted = sessions.Where(s => !IsAfk(s) && !AppUsageViewModel.IsProcessExcluded(s.ProcessName))
+            var sorted = sessions.Where(s => !IsAfk(s) && !s.IsBackgroundCompute && !AppUsageViewModel.IsProcessExcluded(s.ProcessName))
                                  .OrderBy(s => s.StartTime)
                                  .ToList();
 

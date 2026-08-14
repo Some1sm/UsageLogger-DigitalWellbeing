@@ -266,6 +266,13 @@ namespace UsageLogger.ViewModels
             set { if (Math.Abs(_backgroundAudioEnergyPercent - value) > 0.1) { _backgroundAudioEnergyPercent = value; OnPropertyChanged(); } }
         }
 
+        private double _backgroundComputeEnergyPercent = 0;
+        public double BackgroundComputeEnergyPercent
+        {
+            get => _backgroundComputeEnergyPercent;
+            set { if (Math.Abs(_backgroundComputeEnergyPercent - value) > 0.1) { _backgroundComputeEnergyPercent = value; OnPropertyChanged(); } }
+        }
+
         private double _afkEnergyPercent = 0;
         public double AfkEnergyPercent
         {
@@ -285,6 +292,13 @@ namespace UsageLogger.ViewModels
         {
             get => _backgroundAudioEnergyText;
             set { if (_backgroundAudioEnergyText != value) { _backgroundAudioEnergyText = value; OnPropertyChanged(); } }
+        }
+
+        private string _backgroundComputeEnergyText = "0 Wh";
+        public string BackgroundComputeEnergyText
+        {
+            get => _backgroundComputeEnergyText;
+            set { if (_backgroundComputeEnergyText != value) { _backgroundComputeEnergyText = value; OnPropertyChanged(); } }
         }
 
         private ObservableCollection<TopEnergyAppItem> _topEnergyApps = new();
@@ -1439,26 +1453,30 @@ namespace UsageLogger.ViewModels
             string symbol = string.IsNullOrEmpty(UserPreferences.CurrencySymbol) ? "$" : UserPreferences.CurrencySymbol;
             PeriodElectricityCostText = $"{symbol}{cost:F2}";
 
-            // Active vs Audio vs Passive split
-            double activeEnergy = allSessions.Where(s => !s.IsAfk && (s.AudioSources == null || s.AudioSources.Count == 0) && !AppUsageViewModel.IsProcessExcluded(s.ProcessName)).Sum(s => s.EnergyWattHours);
-            double audioEnergy = allSessions.Where(s => s.AudioSources != null && s.AudioSources.Count > 0 && !AppUsageViewModel.IsProcessExcluded(s.ProcessName)).Sum(s => s.EnergyWattHours);
-            double afkEnergy = allSessions.Where(s => s.IsAfk && !AppUsageViewModel.IsProcessExcluded(s.ProcessName)).Sum(s => s.EnergyWattHours);
+            // Active vs Audio vs Background Compute vs Passive split
+            double activeEnergy = allSessions.Where(s => !s.IsAfk && !s.IsBackgroundCompute && (s.AudioSources == null || s.AudioSources.Count == 0) && !AppUsageViewModel.IsProcessExcluded(s.ProcessName)).Sum(s => s.EnergyWattHours);
+            double audioEnergy = allSessions.Where(s => !s.IsAfk && !s.IsBackgroundCompute && s.AudioSources != null && s.AudioSources.Count > 0 && !AppUsageViewModel.IsProcessExcluded(s.ProcessName)).Sum(s => s.EnergyWattHours);
+            double bgComputeEnergy = allSessions.Where(s => s.IsBackgroundCompute && !AppUsageViewModel.IsProcessExcluded(s.ProcessName)).Sum(s => s.EnergyWattHours);
+            double afkEnergy = allSessions.Where(s => s.IsAfk && !s.IsBackgroundCompute && !AppUsageViewModel.IsProcessExcluded(s.ProcessName)).Sum(s => s.EnergyWattHours);
 
             if (totalEnergy > 0)
             {
                 ActiveEnergyPercent = Math.Round((activeEnergy / totalEnergy) * 100.0, 1);
                 BackgroundAudioEnergyPercent = Math.Round((audioEnergy / totalEnergy) * 100.0, 1);
+                BackgroundComputeEnergyPercent = Math.Round((bgComputeEnergy / totalEnergy) * 100.0, 1);
                 AfkEnergyPercent = Math.Round((afkEnergy / totalEnergy) * 100.0, 1);
             }
             else
             {
                 ActiveEnergyPercent = 100;
                 BackgroundAudioEnergyPercent = 0;
+                BackgroundComputeEnergyPercent = 0;
                 AfkEnergyPercent = 0;
             }
 
             ActiveEnergyText = activeEnergy >= 1000 ? $"{activeEnergy / 1000.0:F2} kWh" : $"{activeEnergy:F1} Wh";
             BackgroundAudioEnergyText = audioEnergy >= 1000 ? $"{audioEnergy / 1000.0:F2} kWh" : $"{audioEnergy:F1} Wh";
+            BackgroundComputeEnergyText = bgComputeEnergy >= 1000 ? $"{bgComputeEnergy / 1000.0:F2} kWh" : $"{bgComputeEnergy:F1} Wh";
 
             // Top Energy Apps
             var appEnergyGroups = allSessions
