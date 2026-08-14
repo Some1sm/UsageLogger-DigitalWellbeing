@@ -112,13 +112,13 @@ public static class PowerTracker
                 if (status.BatteryLifeTime > 0 && status.BatteryLifeTime < 86400 * 2)
                 {
                     snapshot.EstimatedTimeRemaining = TimeSpan.FromSeconds(status.BatteryLifeTime);
-                    // Approximate typical battery capacity ~52 Wh if not specified
-                    double batteryCapWh = 52.0;
+                    // Approximate typical battery capacity ~56 Wh if not specified
+                    double batteryCapWh = 56.0;
                     double hoursLeft = snapshot.EstimatedTimeRemaining.Value.TotalHours;
                     if (hoursLeft > 0.05 && snapshot.BatteryPercentage > 0)
                     {
                         double remainingWh = batteryCapWh * (snapshot.BatteryPercentage / 100.0);
-                        snapshot.InstantDrawWatts = Math.Clamp(remainingWh / hoursLeft, 4.0, 85.0);
+                        snapshot.InstantDrawWatts = Math.Clamp(remainingWh / hoursLeft, 5.0, 95.0);
                         snapshot.IsSimulatedDraw = false;
                     }
                 }
@@ -126,43 +126,51 @@ public static class PowerTracker
                 if (snapshot.InstantDrawWatts <= 0)
                 {
                     // Fallback to laptop battery discharge model
-                    double baseLaptopIdle = 6.5;
+                    double baseLaptopIdle = 8.5;
                     double dynamicCpu = (cpuUsage / 100.0) * (BaseTdpWatts * 0.45);
                     snapshot.InstantDrawWatts = Math.Round(baseLaptopIdle + dynamicCpu, 1);
                     snapshot.IsSimulatedDraw = true;
                 }
-            }
-            else
-            {
-                // On AC power or Desktop PC
-                snapshot.PowerSource = isAc ? PowerSourceType.AC : PowerSourceType.Unknown;
-                
-                double baseIdle = hasBattery ? 8.0 : 25.0; // Desktop idle ~25W, laptop on AC ~8W
-                double dynamicCpu = (cpuUsage / 100.0) * BaseTdpWatts;
-                snapshot.InstantDrawWatts = Math.Round(baseIdle + dynamicCpu, 1);
-                snapshot.IsSimulatedDraw = true;
-            }
 
-            // Build status and tooltip text
-            if (snapshot.PowerSource == PowerSourceType.Battery)
-            {
                 string timeStr = snapshot.EstimatedTimeRemaining.HasValue
                     ? StringHelper.FormatDurationCompact(snapshot.EstimatedTimeRemaining.Value) + " left"
                     : "Discharging";
                 snapshot.PowerStatusText = $"🔋 {snapshot.BatteryPercentage}% • {snapshot.InstantDrawWatts:F1} W";
                 snapshot.PowerDetailTooltip = $"Battery: {snapshot.BatteryPercentage}%\nRate: {snapshot.InstantDrawWatts:F1} W discharge\nStatus: {timeStr}";
             }
-            else if (snapshot.IsBatteryPresent)
+            else if (hasBattery && isAc)
             {
+                // Laptop on AC Power
+                snapshot.PowerSource = PowerSourceType.AC;
+                double laptopPlatform = 10.0;
+                double laptopCpu = 15.0 + (cpuUsage / 100.0) * 35.0;
+                double laptopGpu = 8.0;
+                double totalLaptopWatts = Math.Round(laptopPlatform + laptopCpu + laptopGpu, 1);
+
+                snapshot.InstantDrawWatts = totalLaptopWatts;
+                snapshot.IsSimulatedDraw = true;
+
                 string state = isCharging ? $"Charging ({snapshot.BatteryPercentage}%)" : $"Plugged in ({snapshot.BatteryPercentage}%)";
                 snapshot.PowerStatusText = $"⚡ {snapshot.InstantDrawWatts:F1} W (AC)";
-                snapshot.PowerDetailTooltip = $"{state}\nActive Draw: {snapshot.InstantDrawWatts:F1} W (Estimated)\nCPU Load: {cpuUsage:F0}%";
+                snapshot.PowerDetailTooltip = $"{state}\nEstimated System Draw: {snapshot.InstantDrawWatts:F1} W\n├─ CPU: {laptopCpu:F0} W ({cpuUsage:F0}% load)\n├─ GPU/Display: {laptopGpu:F0} W\n└─ Platform: {laptopPlatform:F0} W";
             }
             else
             {
-                // Pure Desktop
+                // Desktop PC (No battery - full desktop hardware platform)
+                snapshot.PowerSource = PowerSourceType.AC;
+                
+                double platformBase = 35.0; // Motherboard chipset, DDR RAM, NVMe SSDs, fans, PSU losses
+                double cpuIdlePackage = Math.Clamp(Environment.ProcessorCount * 2.8, 28.0, 50.0); // 30-50W CPU package idle/boost
+                double cpuPeakTdp = Math.Clamp(Environment.ProcessorCount * 8.5, 65.0, 180.0); // Peak Desktop CPU TDP
+                double cpuWatts = cpuIdlePackage + (cpuUsage / 100.0) * (cpuPeakTdp - cpuIdlePackage);
+                double gpuWatts = 22.0; // Dedicated GPU 2D/Display/Hardware acceleration baseline
+
+                double totalDesktopWatts = Math.Round(platformBase + cpuWatts + gpuWatts, 1);
+                snapshot.InstantDrawWatts = totalDesktopWatts;
+                snapshot.IsSimulatedDraw = true;
+
                 snapshot.PowerStatusText = $"⚡ {snapshot.InstantDrawWatts:F1} W";
-                snapshot.PowerDetailTooltip = $"Desktop AC Power\nActive Draw: {snapshot.InstantDrawWatts:F1} W (Estimated)\nCPU Load: {cpuUsage:F0}%";
+                snapshot.PowerDetailTooltip = $"Desktop System Draw: {snapshot.InstantDrawWatts:F1} W (Estimated)\n├─ CPU Package: {cpuWatts:F0} W ({cpuUsage:F0}% load)\n├─ GPU (2D/Display): {gpuWatts:F0} W\n└─ Platform (Mobo/RAM/Fans): {platformBase:F0} W";
             }
         }
         else
