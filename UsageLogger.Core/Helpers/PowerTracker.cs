@@ -310,6 +310,7 @@ public static class PowerTracker
     /// </summary>
     public static List<BackgroundComputeProcess> DetectHeavyBackgroundCompute(
         int foregroundPid, 
+        string? foregroundProcessName = null,
         ICollection<string>? audioProcesses = null, 
         double minCpuPercent = 3.0, 
         double systemWatts = 150.0)
@@ -322,6 +323,23 @@ public static class PowerTracker
         {
             return results;
         }
+
+        // Normalize audio processes for fast case-insensitive lookup
+        var audioSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        if (audioProcesses != null)
+        {
+            foreach (var a in audioProcesses)
+            {
+                if (string.IsNullOrWhiteSpace(a)) continue;
+                string clean = a.EndsWith(".exe", StringComparison.OrdinalIgnoreCase) ? a[..^4] : a;
+                audioSet.Add(clean);
+                audioSet.Add(a);
+            }
+        }
+
+        string cleanForeground = !string.IsNullOrEmpty(foregroundProcessName) && foregroundProcessName.EndsWith(".exe", StringComparison.OrdinalIgnoreCase)
+            ? foregroundProcessName[..^4]
+            : (foregroundProcessName ?? string.Empty);
 
         try
         {
@@ -353,9 +371,17 @@ public static class PowerTracker
                         continue;
                     }
 
-                    if (audioProcesses != null && audioProcesses.Contains(name))
+                    // Exclude any process or child worker of the active foreground app
+                    if (!string.IsNullOrEmpty(cleanForeground) && 
+                        (name.Equals(cleanForeground, StringComparison.OrdinalIgnoreCase) || name.Equals(foregroundProcessName, StringComparison.OrdinalIgnoreCase)))
                     {
-                        continue; // Audio processes are tracked separately
+                        continue;
+                    }
+
+                    // Exclude any app currently playing audio
+                    if (audioSet.Contains(name))
+                    {
+                        continue;
                     }
 
                     var totalTime = p.TotalProcessorTime;

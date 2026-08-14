@@ -111,8 +111,10 @@ public class SessionManager
         }
 
         // Track Heavy Background Compute Processes (e.g. Rendering, Compilation, AI, VMs, Downloads)
+        // Excludes foreground app and audio playing apps to prevent duplication
         var heavyBg = UsageLogger.Core.Helpers.PowerTracker.DetectHeavyBackgroundCompute(
             processId, 
+            processName,
             audioSources, 
             3.0, 
             powerSnapshot.InstantDrawWatts);
