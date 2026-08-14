@@ -33,6 +33,22 @@ namespace UsageLogger.Models
         }
         
         public string StrDuration { get => StringHelper.TimeSpanToString(Duration); }
+
+        private double _energyWattHours;
+        public double EnergyWattHours
+        {
+            get => _energyWattHours;
+            set { if (_energyWattHours != value) { _energyWattHours = value; OnPropertyChanged(); OnPropertyChanged(nameof(StrEnergy)); } }
+        }
+        public string StrEnergy => EnergyWattHours > 0.05 ? (EnergyWattHours >= 1000 ? $"⚡ {EnergyWattHours / 1000.0:F2} kWh" : $"⚡ {EnergyWattHours:F1} Wh") : "";
+
+        private string _powerImpact = "";
+        public string PowerImpact
+        {
+            get => _powerImpact;
+            set { if (_powerImpact != value) { _powerImpact = value; OnPropertyChanged(); } }
+        }
+
         private ImageSource _iconSource;
         public ImageSource IconSource 
         { 

@@ -7,6 +7,7 @@ using Microsoft.UI;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
+using UsageLogger.Core.Helpers;
 using UsageLogger.Core.Models;
 using UsageLogger.Helpers;
 using UsageLogger.Models;
@@ -120,6 +121,17 @@ public static class DayChartUpdater
 
                     AppTag appTag = AppTagHelper.GetAppTag(item.ProcessName);
                     AppUsageListItem listItem = new AppUsageListItem(item.ProcessName, item.ProgramName, item.Duration, (int)percentage, appTag);
+                    if (item.EnergyWattHours > 0)
+                    {
+                        listItem.EnergyWattHours = item.EnergyWattHours;
+                        listItem.PowerImpact = item.PowerImpact;
+                    }
+                    else if (listItem.Duration.TotalSeconds > 0)
+                    {
+                        var (estWatts, level) = PowerTracker.EstimateProcessPower(true, false, listItem.Duration.TotalSeconds, 20.0);
+                        listItem.EnergyWattHours = PowerTracker.CalculateEnergyWattHours(estWatts, listItem.Duration);
+                        listItem.PowerImpact = level.ToString();
+                    }
 
                     if (item.ProgramBreakdown != null && item.ProgramBreakdown.Count > 0)
                     {
@@ -410,7 +422,12 @@ public static class DayChartUpdater
                 {
                     if (audio.Duration < UserPreferences.MinimumDuration) continue;
                     AppTag appTag = AppTagHelper.GetAppTag(audio.ProcessName);
-                    backgroundAudioItems.Add(new AppUsageListItem(audio.ProcessName, audio.ProgramName, audio.Duration, 0, appTag));
+                    var (audioWatts, audioLevel) = PowerTracker.EstimateProcessPower(false, true, audio.Duration.TotalSeconds, 20.0);
+                    backgroundAudioItems.Add(new AppUsageListItem(audio.ProcessName, audio.ProgramName, audio.Duration, 0, appTag)
+                    {
+                        EnergyWattHours = PowerTracker.CalculateEnergyWattHours(audioWatts, audio.Duration),
+                        PowerImpact = audioLevel.ToString()
+                    });
                 }
 
                 int idx = 0;

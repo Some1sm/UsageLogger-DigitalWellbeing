@@ -56,7 +56,7 @@ namespace UsageLogger.Helpers
 
                 var sb = new StringBuilder();
                 // Headers
-                sb.AppendLine("Date,Start Time,End Time,Process Name,Display Name,Window Title,Category,Productivity Tier,Duration Seconds,Duration Formatted,Is AFK");
+                sb.AppendLine("Date,Start Time,End Time,Process Name,Display Name,Window Title,Category,Productivity Tier,Duration Seconds,Duration Formatted,Energy Wh,Power Impact,Is AFK");
 
                 var sorted = sessions.OrderBy(s => s.StartTime).ToList();
                 foreach (var s in sorted)
@@ -82,8 +82,10 @@ namespace UsageLogger.Helpers
                     double sec = Math.Round(s.Duration.TotalSeconds, 1);
                     string durFormatted = StringHelper.FormatDurationCompact(s.Duration);
                     bool isAfk = AnalyticsEngine.IsAfk(s);
+                    double energyWh = Math.Round(s.EnergyWattHours > 0 ? s.EnergyWattHours : PowerTracker.CalculateEnergyWattHours(PowerTracker.EstimateProcessPower(!isAfk, s.AudioSources.Count > 0, s.Duration.TotalSeconds, 20.0).ProcessWatts, s.Duration), 2);
+                    string powerImpact = !string.IsNullOrEmpty(s.PowerImpact) ? s.PowerImpact : (isAfk ? "VeryLow" : "Low");
 
-                    sb.AppendLine($"{EscapeCsv(dateStr)},{EscapeCsv(startTimeStr)},{EscapeCsv(endTimeStr)},{EscapeCsv(proc)},{EscapeCsv(disp)},{EscapeCsv(title)},{EscapeCsv(category)},{EscapeCsv(tier)},{sec},{EscapeCsv(durFormatted)},{isAfk}");
+                    sb.AppendLine($"{EscapeCsv(dateStr)},{EscapeCsv(startTimeStr)},{EscapeCsv(endTimeStr)},{EscapeCsv(proc)},{EscapeCsv(disp)},{EscapeCsv(title)},{EscapeCsv(category)},{EscapeCsv(tier)},{sec},{EscapeCsv(durFormatted)},{energyWh},{EscapeCsv(powerImpact)},{isAfk}");
                 }
 
                 await Windows.Storage.FileIO.WriteTextAsync(file, sb.ToString(), Windows.Storage.Streams.UnicodeEncoding.Utf8);
@@ -134,6 +136,7 @@ namespace UsageLogger.Helpers
                         TotalActiveSeconds = totalActiveSec,
                         TotalAfkDuration = StringHelper.FormatDurationFull(TimeSpan.FromSeconds(totalAfkSec)),
                         TotalAfkSeconds = totalAfkSec,
+                        TotalEnergyWattHours = Math.Round(sessions.Where(s => !AnalyticsEngine.IsAfk(s)).Sum(s => s.EnergyWattHours > 0 ? s.EnergyWattHours : PowerTracker.CalculateEnergyWattHours(PowerTracker.EstimateProcessPower(true, s.AudioSources.Count > 0, s.Duration.TotalSeconds, 20.0).ProcessWatts, s.Duration)), 2),
                         ProductivityScore = productivity.Score,
                         ProductivePercentage = productivity.ProductivePct,
                         NeutralPercentage = productivity.NeutralPct,
@@ -165,6 +168,10 @@ namespace UsageLogger.Helpers
                             if (titleTag != AppTag.Untagged) tag = titleTag;
                         }
 
+                        bool isAfk = AnalyticsEngine.IsAfk(s);
+                        double energyWh = Math.Round(s.EnergyWattHours > 0 ? s.EnergyWattHours : PowerTracker.CalculateEnergyWattHours(PowerTracker.EstimateProcessPower(!isAfk, s.AudioSources.Count > 0, s.Duration.TotalSeconds, 20.0).ProcessWatts, s.Duration), 2);
+                        string powerImpact = !string.IsNullOrEmpty(s.PowerImpact) ? s.PowerImpact : (isAfk ? "VeryLow" : "Low");
+
                         return new
                         {
                             StartTime = s.StartTime.ToString("o"),
@@ -176,7 +183,9 @@ namespace UsageLogger.Helpers
                             ProductivityTier = UserPreferences.GetTagTier(tag).ToString(),
                             DurationSeconds = s.Duration.TotalSeconds,
                             DurationFormatted = StringHelper.FormatDurationCompact(s.Duration),
-                            IsAfk = AnalyticsEngine.IsAfk(s)
+                            EnergyWattHours = energyWh,
+                            PowerImpact = powerImpact,
+                            IsAfk = isAfk
                         };
                     })
                 };

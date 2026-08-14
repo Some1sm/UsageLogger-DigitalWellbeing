@@ -131,11 +131,29 @@ public class AppSessionRepository : IAppSessionRepository
                             audioSources = parts[5].Split(';').ToList();
                         }
 
-                        var session = new AppSession(processName, programName, new DateTime(startTicks), new DateTime(endTicks), isAfk, audioSources);
+                        double energyWh = 0.0;
+                        string powerImpact = "";
+                        if (parts.Length >= 7 && double.TryParse(parts[6], CultureInfo.InvariantCulture, out double parsedEnergy))
+                        {
+                            energyWh = parsedEnergy;
+                        }
+                        if (parts.Length >= 8)
+                        {
+                            powerImpact = parts[7];
+                        }
+
+                        var session = new AppSession(processName, programName, new DateTime(startTicks), new DateTime(endTicks), isAfk, audioSources, energyWh, powerImpact);
 
                         // Retroactive fix: if audio was playing, it can't truly be AFK
                         if (session.IsAfk && session.AudioSources.Count > 0)
                             session.IsAfk = false;
+
+                        // Ensure energy is calculated if legacy log had 0
+                        if (session.EnergyWattHours <= 0 && session.Duration.TotalSeconds > 0)
+                        {
+                            var (estWatts, _) = PowerTracker.EstimateProcessPower(!session.IsAfk, session.AudioSources.Count > 0, session.Duration.TotalSeconds, 20.0);
+                            session.EnergyWattHours = PowerTracker.CalculateEnergyWattHours(estWatts, session.Duration);
+                        }
 
                         sessions.Add(session);
                     }
@@ -255,7 +273,7 @@ public class AppSessionRepository : IAppSessionRepository
                     string cleanProcess = session.ProcessName?.Replace("\t", " ")?.Replace("\r", "")?.Replace("\n", "") ?? "";
                     string cleanProgram = session.ProgramName?.Replace("\t", " ")?.Replace("\r", "")?.Replace("\n", "") ?? "";
                     string audioStr = (session.AudioSources != null && session.AudioSources.Count > 0) ? string.Join(";", session.AudioSources) : "";
-                    string line = $"{cleanProcess}\t{cleanProgram}\t{session.StartTime.Ticks}\t{session.EndTime.Ticks}\t{session.IsAfk}\t{audioStr}";
+                    string line = $"{cleanProcess}\t{cleanProgram}\t{session.StartTime.Ticks}\t{session.EndTime.Ticks}\t{session.IsAfk}\t{audioStr}\t{session.EnergyWattHours.ToString("F3", CultureInfo.InvariantCulture)}\t{session.PowerImpact}";
                     await writer.WriteLineAsync(line);
                 }
             }
@@ -277,7 +295,7 @@ public class AppSessionRepository : IAppSessionRepository
             string cleanProgram = session.ProgramName?.Replace("\t", " ")?.Replace("\r", "")?.Replace("\n", "") ?? "";
 
             string audioStr = (session.AudioSources != null && session.AudioSources.Count > 0) ? string.Join(";", session.AudioSources) : "";
-            string newLine = $"{cleanProcess}\t{cleanProgram}\t{session.StartTime.Ticks}\t{session.EndTime.Ticks}\t{session.IsAfk}\t{audioStr}";
+            string newLine = $"{cleanProcess}\t{cleanProgram}\t{session.StartTime.Ticks}\t{session.EndTime.Ticks}\t{session.IsAfk}\t{audioStr}\t{session.EnergyWattHours.ToString("F3", CultureInfo.InvariantCulture)}\t{session.PowerImpact}";
 
             await using var fs = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
 

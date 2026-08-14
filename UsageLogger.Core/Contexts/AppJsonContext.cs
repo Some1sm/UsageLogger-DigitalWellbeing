@@ -13,6 +13,7 @@ namespace UsageLogger.Core.Contexts
     [JsonSerializable(typeof(AppUsage))]
     [JsonSerializable(typeof(AppTag))]
     [JsonSerializable(typeof(Dictionary<string, AppTag>))]
+    [JsonSerializable(typeof(PowerSnapshot))]
     public partial class AppJsonContext : JsonSerializerContext
     {
     }

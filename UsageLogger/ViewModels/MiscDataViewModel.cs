@@ -282,6 +282,27 @@ namespace UsageLogger.ViewModels
                 }
                 // -------------------------
 
+                // --- Total Active Energy Consumed ---
+                double totalActiveEnergyWh = sorted.Where(s => !isAfkSession(s)).Sum(s => s.EnergyWattHours > 0 ? s.EnergyWattHours : PowerTracker.CalculateEnergyWattHours(PowerTracker.EstimateProcessPower(true, s.AudioSources.Count > 0, s.Duration.TotalSeconds, 20.0).ProcessWatts, s.Duration));
+                if (totalActiveEnergyWh > 0.1)
+                {
+                    string activeEnergyStr = totalActiveEnergyWh >= 1000 ? $"{totalActiveEnergyWh / 1000.0:F2} kWh" : $"{totalActiveEnergyWh:F1} Wh";
+                    Stats.Add(new StatItem("\uE945", activeEnergyStr, "Active Energy Used", "Estimated energy consumed by active applications"));
+
+                    var topEnergyGroup = sorted.Where(s => !isAfkSession(s))
+                        .GroupBy(s => s.ProcessName)
+                        .Select(g => new { App = g.Key, EnergyWh = g.Sum(x => x.EnergyWattHours > 0 ? x.EnergyWattHours : PowerTracker.CalculateEnergyWattHours(PowerTracker.EstimateProcessPower(true, x.AudioSources.Count > 0, x.Duration.TotalSeconds, 20.0).ProcessWatts, x.Duration)) })
+                        .OrderByDescending(x => x.EnergyWh)
+                        .FirstOrDefault();
+
+                    if (topEnergyGroup != null && topEnergyGroup.EnergyWh > 0.1)
+                    {
+                        string topEnergyVal = topEnergyGroup.EnergyWh >= 1000 ? $"{topEnergyGroup.EnergyWh / 1000.0:F2} kWh" : $"{topEnergyGroup.EnergyWh:F1} Wh";
+                        Stats.Add(new StatItem("\uEC4A", topEnergyVal, "Highest Energy App", UserPreferences.GetDisplayName(topEnergyGroup.App)));
+                    }
+                }
+                // ------------------------------------
+
                 // 4. Active Time
                 var activeTime = TimeSpan.FromSeconds(sorted.Where(s => !isAfkSession(s)).Sum(s => s.Duration.TotalSeconds));
                 Stats.Add(new StatItem("\uE770", StringHelper.FormatDurationCompact(activeTime), LocalizationHelper.GetString("MiscData_ActiveTime"), LocalizationHelper.GetString("MiscData_ActiveTimeDesc")));

@@ -322,6 +322,45 @@ public class AppUsageViewModel : INotifyPropertyChanged
 	}
 	public string LockDurationStr => UsageLogger.Core.Helpers.StringHelper.FormatDurationCompact(_lockDuration);
 
+	private PowerSnapshot _currentPowerSnapshot = new PowerSnapshot();
+	public PowerSnapshot CurrentPowerSnapshot
+	{
+		get => _currentPowerSnapshot;
+		set
+		{
+			_currentPowerSnapshot = value;
+			OnPropertyChanged();
+			OnPropertyChanged(nameof(LivePowerDrawText));
+			OnPropertyChanged(nameof(PowerDetailTooltip));
+			OnPropertyChanged(nameof(IsBatteryPresent));
+			OnPropertyChanged(nameof(IsDischarging));
+			OnPropertyChanged(nameof(PowerBadgeGlyph));
+		}
+	}
+
+	public string LivePowerDrawText => CurrentPowerSnapshot?.PowerStatusText ?? "⚡ -- W";
+	public string PowerDetailTooltip => CurrentPowerSnapshot?.PowerDetailTooltip ?? "";
+	public bool IsBatteryPresent => CurrentPowerSnapshot?.IsBatteryPresent ?? false;
+	public bool IsDischarging => CurrentPowerSnapshot?.PowerSource == PowerSourceType.Battery;
+	public string PowerBadgeGlyph => IsDischarging ? "\uE83F" : "\uE945";
+
+	private double _totalDailyEnergyWh;
+	public double TotalDailyEnergyWh
+	{
+		get => _totalDailyEnergyWh;
+		set
+		{
+			if (Math.Abs(_totalDailyEnergyWh - value) > 0.01)
+			{
+				_totalDailyEnergyWh = value;
+				OnPropertyChanged();
+				OnPropertyChanged(nameof(TotalDailyEnergyText));
+			}
+		}
+	}
+
+	public string TotalDailyEnergyText => TotalDailyEnergyWh >= 1000 ? $"{TotalDailyEnergyWh / 1000.0:F2} kWh" : $"{TotalDailyEnergyWh:F1} Wh";
+
 	public event PropertyChangedEventHandler PropertyChanged;
 
 	private void OnBarChartClick(object param)
@@ -351,6 +390,7 @@ public class AppUsageViewModel : INotifyPropertyChanged
 			InitFormatters();
 			LoadUserExcludedProcesses();
 			InitAutoRefreshTimer();
+			InitPowerTimer();
 			BarChartClickCommand = new RelayCommand(OnBarChartClick);
 			LoadWeeklyData();
 		}
@@ -403,6 +443,35 @@ public class AppUsageViewModel : INotifyPropertyChanged
 		return $"{(int)timeSpan.TotalHours}h {timeSpan.Minutes}m";
 	}
 
+	private DispatcherTimer _powerTimer;
+
+	private void InitPowerTimer()
+	{
+		try
+		{
+			_powerTimer = new DispatcherTimer
+			{
+				Interval = TimeSpan.FromSeconds(2)
+			};
+			_powerTimer.Tick += (s, e) =>
+			{
+				UpdatePowerSnapshot();
+			};
+			_powerTimer.Start();
+			UpdatePowerSnapshot();
+		}
+		catch { }
+	}
+
+	public void UpdatePowerSnapshot()
+	{
+		try
+		{
+			CurrentPowerSnapshot = PowerTracker.GetPowerSnapshot();
+		}
+		catch { }
+	}
+
 	private void InitAutoRefreshTimer()
 	{
 		TimeSpan interval = TimeSpan.FromSeconds(UserPreferences.RefreshIntervalSeconds);
@@ -426,6 +495,7 @@ public class AppUsageViewModel : INotifyPropertyChanged
 	public void StopTimer()
 	{
 		refreshTimer?.Stop();
+		_powerTimer?.Stop();
 	}
 
 	/// <summary>
@@ -437,6 +507,8 @@ public class AppUsageViewModel : INotifyPropertyChanged
 		{
 			refreshTimer.Start();
 		}
+		_powerTimer?.Start();
+		UpdatePowerSnapshot();
 	}
 
 	/// <summary>

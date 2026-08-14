@@ -94,9 +94,19 @@ public class SessionManager
             }
         }
 
+        // Calculate real-time power impact and interval energy
+        var powerSnapshot = UsageLogger.Core.Helpers.PowerTracker.GetPowerSnapshot();
+        var (procWatts, level) = UsageLogger.Core.Helpers.PowerTracker.EstimateProcessPower(!isAfk, audioPlaying || audioSources.Count > 0, 2.0, powerSnapshot.InstantDrawWatts);
+        double intervalEnergyWh = (procWatts * 2.0) / 3600.0;
+
         if (shouldStartNew)
         {
-            _currentSession = new AppSession(processName, programName, now, now, isAfk, audioSources);
+            _currentSession = new AppSession(processName, programName, now, now, isAfk, audioSources, intervalEnergyWh, level.ToString());
+        }
+        else if (_currentSession != null)
+        {
+            _currentSession.EnergyWattHours += intervalEnergyWh;
+            _currentSession.PowerImpact = level.ToString();
         }
 
         // Write ALL sessions (buffer + current) to RAM for real-time UI updates

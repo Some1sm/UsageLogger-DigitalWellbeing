@@ -221,14 +221,20 @@ public class ActivityLogger
 
         var existingEntry = _cachedUsage.FirstOrDefault(u => u.ProcessName == processName);
 
+        var powerSnapshot = UsageLogger.Core.Helpers.PowerTracker.GetPowerSnapshot();
+        var (procWatts, level) = UsageLogger.Core.Helpers.PowerTracker.EstimateProcessPower(true, false, TIMER_INTERVAL_SEC, powerSnapshot.InstantDrawWatts);
+        double intervalEnergyWh = (procWatts * TIMER_INTERVAL_SEC) / 3600.0;
+
         if (existingEntry != null)
         {
             existingEntry.Duration = existingEntry.Duration.Add(TimeSpan.FromSeconds(TIMER_INTERVAL_SEC));
+            existingEntry.EnergyWattHours += intervalEnergyWh;
+            existingEntry.PowerImpact = level.ToString();
         }
         else
         {
             if (string.IsNullOrEmpty(programName)) programName = "";
-            _cachedUsage.Add(new AppUsage(processName, programName, TimeSpan.FromSeconds(TIMER_INTERVAL_SEC)));
+            _cachedUsage.Add(new AppUsage(processName, programName, TimeSpan.FromSeconds(TIMER_INTERVAL_SEC), intervalEnergyWh, level.ToString()));
         }
 
         if ((DateTime.Now - _lastFlushTime).TotalSeconds >= _settingsReader.GetBufferFlushInterval())
