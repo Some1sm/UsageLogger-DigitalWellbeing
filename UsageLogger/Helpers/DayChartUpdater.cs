@@ -121,6 +121,8 @@ public static class DayChartUpdater
 
                     AppTag appTag = AppTagHelper.GetAppTag(item.ProcessName);
                     AppUsageListItem listItem = new AppUsageListItem(item.ProcessName, item.ProgramName, item.Duration, (int)percentage, appTag);
+                    double currentLiveWatts = PowerTracker.GetPowerSnapshot().InstantDrawWatts;
+
                     if (item.EnergyWattHours > 0)
                     {
                         listItem.EnergyWattHours = item.EnergyWattHours;
@@ -128,7 +130,7 @@ public static class DayChartUpdater
                     }
                     else if (listItem.Duration.TotalSeconds > 0)
                     {
-                        var (estWatts, level) = PowerTracker.EstimateProcessPower(true, false, listItem.Duration.TotalSeconds, 20.0);
+                        var (estWatts, level) = PowerTracker.EstimateProcessPower(true, false, listItem.Duration.TotalSeconds, currentLiveWatts);
                         listItem.EnergyWattHours = PowerTracker.CalculateEnergyWattHours(estWatts, listItem.Duration);
                         listItem.PowerImpact = level.ToString();
                     }
@@ -153,6 +155,8 @@ public static class DayChartUpdater
                             AppTag titleTag = AppTagHelper.GetTitleTag(item.ProcessName, sub.Key);
 
                             AppUsageSubItem subItem = new AppUsageSubItem(title, item.ProcessName, sub.Value, subPercentage, null, titleTag);
+                            double subRatio = sub.Value.TotalSeconds / parentSec;
+                            subItem.EnergyWattHours = Math.Round(listItem.EnergyWattHours * subRatio, 1);
                             if (titleTag == AppTag.Untagged)
                             {
                                 subItem.TagIndicatorBrush = new SolidColorBrush(Colors.Transparent);
@@ -296,6 +300,8 @@ public static class DayChartUpdater
             {
                 existing.Duration = updated.Duration;
                 existing.Percentage = updated.Percentage;
+                existing.EnergyWattHours = updated.EnergyWattHours;
+                existing.PowerImpact = updated.PowerImpact;
                 existing.Refresh();
                 if (existing.Children.Count != updated.Children.Count)
                 {
@@ -312,6 +318,7 @@ public static class DayChartUpdater
                         {
                             existingChild.Duration = newChild.Duration;
                             existingChild.Percentage = newChild.Percentage;
+                            existingChild.EnergyWattHours = newChild.EnergyWattHours;
 
                             // Sync SubDetails
                             if (existingChild.SubDetails.Count != newChild.SubDetails.Count)
@@ -418,14 +425,15 @@ public static class DayChartUpdater
                 col2.Clear();
                 col3.Clear();
 
+                double currentLiveWatts = PowerTracker.GetPowerSnapshot().InstantDrawWatts;
                 foreach (var audio in backgroundAudioList)
                 {
                     if (audio.Duration < UserPreferences.MinimumDuration) continue;
                     AppTag appTag = AppTagHelper.GetAppTag(audio.ProcessName);
-                    var (audioWatts, audioLevel) = PowerTracker.EstimateProcessPower(false, true, audio.Duration.TotalSeconds, 20.0);
+                    var (audioWatts, audioLevel) = PowerTracker.EstimateProcessPower(false, true, audio.Duration.TotalSeconds, currentLiveWatts);
                     backgroundAudioItems.Add(new AppUsageListItem(audio.ProcessName, audio.ProgramName, audio.Duration, 0, appTag)
                     {
-                        EnergyWattHours = PowerTracker.CalculateEnergyWattHours(audioWatts, audio.Duration),
+                        EnergyWattHours = audio.EnergyWattHours > 0 ? audio.EnergyWattHours : PowerTracker.CalculateEnergyWattHours(audioWatts, audio.Duration),
                         PowerImpact = audioLevel.ToString()
                     });
                 }

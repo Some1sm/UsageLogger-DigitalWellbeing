@@ -68,6 +68,19 @@ public static class SessionAggregator
             var appUsage = usageMap[session.ProcessName];
             appUsage.Duration = appUsage.Duration.Add(session.Duration);
 
+            double sessionEnergy = session.EnergyWattHours;
+            if (sessionEnergy <= 0.001 && session.Duration.TotalSeconds > 0)
+            {
+                var (estWatts, level) = PowerTracker.EstimateProcessPower(!session.IsAfk, session.AudioSources != null && session.AudioSources.Count > 0, session.Duration.TotalSeconds, PowerTracker.GetPowerSnapshot().InstantDrawWatts);
+                sessionEnergy = PowerTracker.CalculateEnergyWattHours(estWatts, session.Duration);
+                session.PowerImpact = level.ToString();
+            }
+            appUsage.EnergyWattHours += sessionEnergy;
+            if (!string.IsNullOrEmpty(session.PowerImpact))
+            {
+                appUsage.PowerImpact = session.PowerImpact;
+            }
+
             string specificTitle = !string.IsNullOrEmpty(session.ProgramName) ? session.ProgramName : session.ProcessName;
             string groupedTitle = specificTitle;
 

@@ -171,7 +171,10 @@
 
                                         <ProgressBar Grid.Column="1" Value="{Binding Percentage}" Maximum="100" Height="4" VerticalAlignment="Center" Margin="6,0"/>
 
-                                        <TextBlock Grid.Column="2" Text="{Binding StrDuration}" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="12" Opacity="0.7"/>
+                                        <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                            <TextBlock Text="{Binding StrDuration}" HorizontalAlignment="Right" FontSize="12" Opacity="0.8"/>
+                                            <TextBlock Text="{Binding StrEnergy}" HorizontalAlignment="Right" FontSize="10" Opacity="0.5" Margin="0,1,0,0"/>
+                                        </StackPanel>
 
                                         <!-- Expand Chevron for Grouped Items -->
                                         <FontIcon Grid.Column="3" Glyph="&#xE70D;" FontSize="10" Opacity="0.5" VerticalAlignment="Center" HorizontalAlignment="Center"

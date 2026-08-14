@@ -883,6 +883,20 @@ public class AppUsageViewModel : INotifyPropertyChanged
                         dictionary[item.ProcessName] = new AppUsage(item.ProcessName, groupedTitle, TimeSpan.Zero);
                     }
                     dictionary[item.ProcessName].Duration = dictionary[item.ProcessName].Duration.Add(item.Duration);
+
+                    double sessionEnergy = item.EnergyWattHours;
+                    if (sessionEnergy <= 0.001 && item.Duration.TotalSeconds > 0)
+                    {
+                        var (estWatts, level) = UsageLogger.Core.Helpers.PowerTracker.EstimateProcessPower(!item.IsAfk, item.AudioSources != null && item.AudioSources.Count > 0, item.Duration.TotalSeconds, UsageLogger.Core.Helpers.PowerTracker.GetPowerSnapshot().InstantDrawWatts);
+                        sessionEnergy = UsageLogger.Core.Helpers.PowerTracker.CalculateEnergyWattHours(estWatts, item.Duration);
+                        item.PowerImpact = level.ToString();
+                    }
+                    dictionary[item.ProcessName].EnergyWattHours += sessionEnergy;
+                    if (!string.IsNullOrEmpty(item.PowerImpact))
+                    {
+                        dictionary[item.ProcessName].PowerImpact = item.PowerImpact;
+                    }
+
                     if (string.IsNullOrEmpty(dictionary[item.ProcessName].ProgramName) && !string.IsNullOrEmpty(groupedTitle))
                     {
                         dictionary[item.ProcessName].ProgramName = groupedTitle;
