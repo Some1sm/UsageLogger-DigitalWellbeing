@@ -142,7 +142,13 @@ public class AppSessionRepository : IAppSessionRepository
                             powerImpact = parts[7];
                         }
 
-                        var session = new AppSession(processName, programName, new DateTime(startTicks), new DateTime(endTicks), isAfk, audioSources, energyWh, powerImpact);
+                        bool isBackgroundCompute = false;
+                        if (parts.Length >= 9 && bool.TryParse(parts[8], out bool parsedBg))
+                        {
+                            isBackgroundCompute = parsedBg;
+                        }
+
+                        var session = new AppSession(processName, programName, new DateTime(startTicks), new DateTime(endTicks), isAfk, audioSources, energyWh, powerImpact, isBackgroundCompute);
 
                         // Retroactive fix: if audio was playing, it can't truly be AFK
                         if (session.IsAfk && session.AudioSources.Count > 0)
@@ -151,8 +157,13 @@ public class AppSessionRepository : IAppSessionRepository
                         // Ensure energy is calculated if legacy log had 0
                         if (session.EnergyWattHours <= 0 && session.Duration.TotalSeconds > 0)
                         {
-                            var (estWatts, _) = PowerTracker.EstimateProcessPower(!session.IsAfk, session.AudioSources.Count > 0, session.Duration.TotalSeconds, PowerTracker.GetPowerSnapshot().InstantDrawWatts);
+                            double baselineWatts = PowerTracker.ConfiguredAvgWatts > 20.0 ? PowerTracker.ConfiguredAvgWatts : 150.0;
+                            var (estWatts, level) = PowerTracker.EstimateProcessPower(!session.IsAfk, session.AudioSources != null && session.AudioSources.Count > 0, session.Duration.TotalSeconds, baselineWatts);
                             session.EnergyWattHours = PowerTracker.CalculateEnergyWattHours(estWatts, session.Duration);
+                            if (string.IsNullOrEmpty(session.PowerImpact))
+                            {
+                                session.PowerImpact = level.ToString();
+                            }
                         }
 
                         sessions.Add(session);
@@ -185,12 +196,16 @@ public class AppSessionRepository : IAppSessionRepository
                 var existing = sessions.FirstOrDefault(s => 
                     string.Equals(s.ProcessName, ramSession.ProcessName, StringComparison.OrdinalIgnoreCase) &&
                     string.Equals(s.ProgramName, ramSession.ProgramName, StringComparison.OrdinalIgnoreCase) &&
+                    s.IsBackgroundCompute == ramSession.IsBackgroundCompute &&
                     Math.Abs((s.StartTime - ramSession.StartTime).TotalSeconds) < 2);
 
                 if (existing != null)
                 {
                     existing.EndTime = ramSession.EndTime;
                     existing.IsAfk = ramSession.IsAfk;
+                    existing.EnergyWattHours = ramSession.EnergyWattHours;
+                    existing.PowerImpact = ramSession.PowerImpact;
+                    existing.IsBackgroundCompute = ramSession.IsBackgroundCompute;
                     if (ramSession.AudioSources != null && ramSession.AudioSources.Count > 0)
                     {
                         existing.AudioSources = new List<string>(ramSession.AudioSources);
@@ -214,7 +229,7 @@ public class AppSessionRepository : IAppSessionRepository
 
         var result = new List<AppSession>();
 
-        var groups = sessions.GroupBy(s => new { s.ProcessName, s.ProgramName, s.IsAfk });
+        var groups = sessions.GroupBy(s => new { s.ProcessName, s.ProgramName, s.IsAfk, s.IsBackgroundCompute });
 
         foreach (var group in groups)
         {
@@ -229,6 +244,10 @@ public class AppSessionRepository : IAppSessionRepository
                 {
                     if (next.EndTime > current.EndTime)
                         current.EndTime = next.EndTime;
+
+                    current.EnergyWattHours += next.EnergyWattHours;
+                    if (!string.IsNullOrEmpty(next.PowerImpact))
+                        current.PowerImpact = next.PowerImpact;
                     
                     if (next.AudioSources != null && next.AudioSources.Count > 0)
                     {
@@ -273,7 +292,7 @@ public class AppSessionRepository : IAppSessionRepository
                     string cleanProcess = session.ProcessName?.Replace("\t", " ")?.Replace("\r", "")?.Replace("\n", "") ?? "";
                     string cleanProgram = session.ProgramName?.Replace("\t", " ")?.Replace("\r", "")?.Replace("\n", "") ?? "";
                     string audioStr = (session.AudioSources != null && session.AudioSources.Count > 0) ? string.Join(";", session.AudioSources) : "";
-                    string line = $"{cleanProcess}\t{cleanProgram}\t{session.StartTime.Ticks}\t{session.EndTime.Ticks}\t{session.IsAfk}\t{audioStr}\t{session.EnergyWattHours.ToString("F3", CultureInfo.InvariantCulture)}\t{session.PowerImpact}";
+                    string line = $"{cleanProcess}\t{cleanProgram}\t{session.StartTime.Ticks}\t{session.EndTime.Ticks}\t{session.IsAfk}\t{audioStr}\t{session.EnergyWattHours.ToString("F3", CultureInfo.InvariantCulture)}\t{session.PowerImpact}\t{session.IsBackgroundCompute}";
                     await writer.WriteLineAsync(line);
                 }
             }
@@ -295,7 +314,7 @@ public class AppSessionRepository : IAppSessionRepository
             string cleanProgram = session.ProgramName?.Replace("\t", " ")?.Replace("\r", "")?.Replace("\n", "") ?? "";
 
             string audioStr = (session.AudioSources != null && session.AudioSources.Count > 0) ? string.Join(";", session.AudioSources) : "";
-            string newLine = $"{cleanProcess}\t{cleanProgram}\t{session.StartTime.Ticks}\t{session.EndTime.Ticks}\t{session.IsAfk}\t{audioStr}\t{session.EnergyWattHours.ToString("F3", CultureInfo.InvariantCulture)}\t{session.PowerImpact}";
+            string newLine = $"{cleanProcess}\t{cleanProgram}\t{session.StartTime.Ticks}\t{session.EndTime.Ticks}\t{session.IsAfk}\t{audioStr}\t{session.EnergyWattHours.ToString("F3", CultureInfo.InvariantCulture)}\t{session.PowerImpact}\t{session.IsBackgroundCompute}";
 
             await using var fs = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
 

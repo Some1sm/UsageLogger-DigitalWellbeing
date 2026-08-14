@@ -912,12 +912,16 @@ public class AppUsageViewModel : INotifyPropertyChanged
                     {
                         dictionary[item.ProcessName] = new AppUsage(item.ProcessName, groupedTitle, TimeSpan.Zero);
                     }
-                    dictionary[item.ProcessName].Duration = dictionary[item.ProcessName].Duration.Add(item.Duration);
+                    if (!item.IsBackgroundCompute)
+                    {
+                        dictionary[item.ProcessName].Duration = dictionary[item.ProcessName].Duration.Add(item.Duration);
+                    }
 
                     double sessionEnergy = item.EnergyWattHours;
                     if (sessionEnergy <= 0.001 && item.Duration.TotalSeconds > 0)
                     {
-                        var (estWatts, level) = UsageLogger.Core.Helpers.PowerTracker.EstimateProcessPower(!item.IsAfk, item.AudioSources != null && item.AudioSources.Count > 0, item.Duration.TotalSeconds, UsageLogger.Core.Helpers.PowerTracker.GetPowerSnapshot().InstantDrawWatts);
+                        double baselineWatts = UsageLogger.Core.Helpers.PowerTracker.ConfiguredAvgWatts > 20.0 ? UsageLogger.Core.Helpers.PowerTracker.ConfiguredAvgWatts : 150.0;
+                        var (estWatts, level) = UsageLogger.Core.Helpers.PowerTracker.EstimateProcessPower(!item.IsAfk, item.AudioSources != null && item.AudioSources.Count > 0, item.Duration.TotalSeconds, baselineWatts);
                         sessionEnergy = UsageLogger.Core.Helpers.PowerTracker.CalculateEnergyWattHours(estWatts, item.Duration);
                         item.PowerImpact = level.ToString();
                     }
@@ -932,28 +936,31 @@ public class AppUsageViewModel : INotifyPropertyChanged
                         dictionary[item.ProcessName].ProgramName = groupedTitle;
                     }
                     
-                    if (dictionary[item.ProcessName].ProgramBreakdown.ContainsKey(groupedTitle))
+                    if (!item.IsBackgroundCompute)
                     {
-                        dictionary[item.ProcessName].ProgramBreakdown[groupedTitle] = dictionary[item.ProcessName].ProgramBreakdown[groupedTitle].Add(item.Duration);
-                    }
-                    else
-                    {
-                        dictionary[item.ProcessName].ProgramBreakdown[groupedTitle] = item.Duration;
-                    }
+                        if (dictionary[item.ProcessName].ProgramBreakdown.ContainsKey(groupedTitle))
+                        {
+                            dictionary[item.ProcessName].ProgramBreakdown[groupedTitle] = dictionary[item.ProcessName].ProgramBreakdown[groupedTitle].Add(item.Duration);
+                        }
+                        else
+                        {
+                            dictionary[item.ProcessName].ProgramBreakdown[groupedTitle] = item.Duration;
+                        }
 
-                    // Populate DetailedBreakdown
-                    if (!dictionary[item.ProcessName].DetailedBreakdown.ContainsKey(groupedTitle))
-                    {
-                        dictionary[item.ProcessName].DetailedBreakdown[groupedTitle] = new Dictionary<string, TimeSpan>();
-                    }
+                        // Populate DetailedBreakdown
+                        if (!dictionary[item.ProcessName].DetailedBreakdown.ContainsKey(groupedTitle))
+                        {
+                            dictionary[item.ProcessName].DetailedBreakdown[groupedTitle] = new Dictionary<string, TimeSpan>();
+                        }
 
-                    if (dictionary[item.ProcessName].DetailedBreakdown[groupedTitle].ContainsKey(specificTitle))
-                    {
-                        dictionary[item.ProcessName].DetailedBreakdown[groupedTitle][specificTitle] = dictionary[item.ProcessName].DetailedBreakdown[groupedTitle][specificTitle].Add(item.Duration);
-                    }
-                    else
-                    {
-                        dictionary[item.ProcessName].DetailedBreakdown[groupedTitle][specificTitle] = item.Duration;
+                        if (dictionary[item.ProcessName].DetailedBreakdown[groupedTitle].ContainsKey(specificTitle))
+                        {
+                            dictionary[item.ProcessName].DetailedBreakdown[groupedTitle][specificTitle] = dictionary[item.ProcessName].DetailedBreakdown[groupedTitle][specificTitle].Add(item.Duration);
+                        }
+                        else
+                        {
+                            dictionary[item.ProcessName].DetailedBreakdown[groupedTitle][specificTitle] = item.Duration;
+                        }
                     }
                 }
                 return dictionary.Values.ToList();

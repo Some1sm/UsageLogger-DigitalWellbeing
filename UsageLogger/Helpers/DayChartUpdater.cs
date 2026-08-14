@@ -122,7 +122,7 @@ public static class DayChartUpdater
 
                     AppTag appTag = AppTagHelper.GetAppTag(item.ProcessName);
                     AppUsageListItem listItem = new AppUsageListItem(item.ProcessName, item.ProgramName, item.Duration, (int)percentage, appTag);
-                    double currentLiveWatts = PowerTracker.GetPowerSnapshot().InstantDrawWatts;
+                    double baselineWatts = PowerTracker.ConfiguredAvgWatts > 20.0 ? PowerTracker.ConfiguredAvgWatts : 150.0;
 
                     if (item.EnergyWattHours > 0)
                     {
@@ -131,7 +131,7 @@ public static class DayChartUpdater
                     }
                     else if (listItem.Duration.TotalSeconds > 0)
                     {
-                        var (estWatts, level) = PowerTracker.EstimateProcessPower(true, false, listItem.Duration.TotalSeconds, currentLiveWatts);
+                        var (estWatts, level) = PowerTracker.EstimateProcessPower(true, false, listItem.Duration.TotalSeconds, baselineWatts);
                         listItem.EnergyWattHours = PowerTracker.CalculateEnergyWattHours(estWatts, listItem.Duration);
                         listItem.PowerImpact = level.ToString();
                     }
@@ -243,7 +243,7 @@ public static class DayChartUpdater
                 }
 
                 setTotalDuration(totalDuration);
-                double totalEnergyWh = newList.Sum(x => x.EnergyWattHours);
+                double totalEnergyWh = appUsageList.Where(u => !AppUsageViewModel.IsProcessExcluded(u.ProcessName)).Sum(x => x.EnergyWattHours);
                 setTotalDailyEnergy?.Invoke(totalEnergyWh);
                 UpdatePieChartInPlace(pieChartItems, newPie);
                 UpdateListInPlace(dayListItems, newList);
@@ -428,16 +428,16 @@ public static class DayChartUpdater
                 col2.Clear();
                 col3.Clear();
 
-                double currentLiveWatts = PowerTracker.GetPowerSnapshot().InstantDrawWatts;
+                double baselineWatts = PowerTracker.ConfiguredAvgWatts > 20.0 ? PowerTracker.ConfiguredAvgWatts : 150.0;
                 foreach (var audio in backgroundAudioList)
                 {
                     if (audio.Duration < UserPreferences.MinimumDuration) continue;
                     AppTag appTag = AppTagHelper.GetAppTag(audio.ProcessName);
-                    var (audioWatts, audioLevel) = PowerTracker.EstimateProcessPower(false, true, audio.Duration.TotalSeconds, currentLiveWatts);
+                    var (audioWatts, audioLevel) = PowerTracker.EstimateProcessPower(false, true, audio.Duration.TotalSeconds, baselineWatts);
                     backgroundAudioItems.Add(new AppUsageListItem(audio.ProcessName, audio.ProgramName, audio.Duration, 0, appTag)
                     {
                         EnergyWattHours = audio.EnergyWattHours > 0 ? audio.EnergyWattHours : PowerTracker.CalculateEnergyWattHours(audioWatts, audio.Duration),
-                        PowerImpact = audioLevel.ToString()
+                        PowerImpact = string.IsNullOrEmpty(audio.PowerImpact) ? audioLevel.ToString() : audio.PowerImpact
                     });
                 }
 

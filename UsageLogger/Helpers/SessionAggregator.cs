@@ -74,7 +74,8 @@ public static class SessionAggregator
             double sessionEnergy = session.EnergyWattHours;
             if (sessionEnergy <= 0.001 && session.Duration.TotalSeconds > 0)
             {
-                var (estWatts, level) = PowerTracker.EstimateProcessPower(!session.IsAfk, session.AudioSources != null && session.AudioSources.Count > 0, session.Duration.TotalSeconds, PowerTracker.GetPowerSnapshot().InstantDrawWatts);
+                double baselineWatts = PowerTracker.ConfiguredAvgWatts > 20.0 ? PowerTracker.ConfiguredAvgWatts : 150.0;
+                var (estWatts, level) = PowerTracker.EstimateProcessPower(!session.IsAfk, session.AudioSources != null && session.AudioSources.Count > 0, session.Duration.TotalSeconds, baselineWatts);
                 sessionEnergy = PowerTracker.CalculateEnergyWattHours(estWatts, session.Duration);
                 session.PowerImpact = level.ToString();
             }
