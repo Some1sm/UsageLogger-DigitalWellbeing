@@ -38,6 +38,7 @@ namespace UsageLogger.Views
         protected override void OnNavigatedTo(Microsoft.UI.Xaml.Navigation.NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            UpdateLocalizedTexts();
             
             // Ensure heatmap and charts redraw when navigating back to cached HistoryPage
             DispatcherQueue?.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
@@ -48,6 +49,7 @@ namespace UsageLogger.Views
 
         private void HistoryPage_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
+            UpdateLocalizedTexts();
 
 
             // Inject Trend Chart Removed (Handled in XAML)
@@ -140,6 +142,22 @@ namespace UsageLogger.Views
             catch (System.Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"[VisualReport] ShowDialog error: {ex.Message}");
+            }
+        }
+
+        private void UpdateLocalizedTexts()
+        {
+            if (TxtVisualReport != null)
+            {
+                var localized = Helpers.LocalizationHelper.GetString("History_VisualReportText.Text");
+                if (string.IsNullOrEmpty(localized) || localized == "History_VisualReportText.Text")
+                {
+                    localized = Helpers.LocalizationHelper.GetString("History_VisualReportText");
+                }
+                if (!string.IsNullOrEmpty(localized) && localized != "History_VisualReportText" && localized != "History_VisualReportText.Text")
+                {
+                    TxtVisualReport.Text = localized;
+                }
             }
         }
     }

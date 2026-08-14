@@ -55,7 +55,7 @@
   <!-- WinUI3Localizer: Copy all "Resources.resw" files in the "Strings" folder to the output folder. -->
   <ItemGroup>
     <Content Include="Strings\**\*.resw">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
