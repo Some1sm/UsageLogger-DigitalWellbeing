@@ -26,7 +26,7 @@ public class SessionManager
         _sessionBuffer = new List<AppSession>();
     }
 
-    public void Update(string processName, string programName, List<string>? audioSources = null, bool audioPlaying = false)
+    public void Update(string processName, string programName, List<string>? audioSources = null, bool audioPlaying = false, int processId = 0)
     {
         if (string.IsNullOrEmpty(processName)) return;
         if (audioSources == null) audioSources = new List<string>();
@@ -94,9 +94,10 @@ public class SessionManager
             }
         }
 
-        // Calculate real-time power impact and interval energy
+        // Calculate real-time power impact and interval energy using measured process CPU cycles
+        double procCpu = processId > 0 ? UsageLogger.Core.Helpers.PowerTracker.GetProcessCpuUsage(processId) : -1.0;
         var powerSnapshot = UsageLogger.Core.Helpers.PowerTracker.GetPowerSnapshot();
-        var (procWatts, level) = UsageLogger.Core.Helpers.PowerTracker.EstimateProcessPower(!isAfk, audioPlaying || audioSources.Count > 0, 2.0, powerSnapshot.InstantDrawWatts);
+        var (procWatts, level) = UsageLogger.Core.Helpers.PowerTracker.EstimateProcessPower(!isAfk, audioPlaying || audioSources.Count > 0, 2.0, powerSnapshot.InstantDrawWatts, procCpu);
         double intervalEnergyWh = (procWatts * 2.0) / 3600.0;
 
         if (shouldStartNew)

@@ -338,8 +338,33 @@ public class AppUsageViewModel : INotifyPropertyChanged
 		}
 	}
 
-	public string LivePowerDrawText => CurrentPowerSnapshot?.PowerStatusText ?? "-- W";
-	public string PowerDetailTooltip => CurrentPowerSnapshot?.PowerDetailTooltip ?? "";
+	public string LivePowerDrawText
+	{
+		get
+		{
+			string live = CurrentPowerSnapshot?.PowerStatusText ?? "-- W";
+			if (TotalDailyEnergyWh > 0.05)
+			{
+				return $"{live} • Total: {TotalDailyEnergyText}";
+			}
+			return live;
+		}
+	}
+
+	public string PowerDetailTooltip
+	{
+		get
+		{
+			string baseTip = CurrentPowerSnapshot?.PowerDetailTooltip ?? "";
+			if (TotalDailyEnergyWh > 0.05)
+			{
+				string dateLabel = LoadedDate.Date == DateHelper.GetLogicalToday() ? "Today's" : $"{LoadedDate:dddd, MMM d}'s";
+				return $"{baseTip}\n\n{dateLabel} Total Active Energy: {TotalDailyEnergyText}";
+			}
+			return baseTip;
+		}
+	}
+
 	public bool IsBatteryPresent => CurrentPowerSnapshot?.IsBatteryPresent ?? false;
 	public bool IsDischarging => CurrentPowerSnapshot?.PowerSource == PowerSourceType.Battery;
 	public string PowerBadgeGlyph => IsDischarging ? "\uE83F" : "\uE945";
@@ -355,6 +380,8 @@ public class AppUsageViewModel : INotifyPropertyChanged
 				_totalDailyEnergyWh = value;
 				OnPropertyChanged();
 				OnPropertyChanged(nameof(TotalDailyEnergyText));
+				OnPropertyChanged(nameof(LivePowerDrawText));
+				OnPropertyChanged(nameof(PowerDetailTooltip));
 			}
 		}
 	}
@@ -772,6 +799,7 @@ public class AppUsageViewModel : INotifyPropertyChanged
 			PieChartItems, DayListItems, Column1Items, Column2Items, Column3Items,
 			GoalStreaks, LoadedDate, XamlRoot, dispatcherQueue,
 			(td) => TotalDuration = td,
+			(te) => TotalDailyEnergyWh = te,
 			(p, d, g) => { TrendPercentage = p; TrendDescription = d; TrendIsGood = g; },
 			NotifyChange,
 			SetLoading,
@@ -828,6 +856,8 @@ public class AppUsageViewModel : INotifyPropertyChanged
 		OnPropertyChanged("StrMinimumDuration");
 		OnPropertyChanged("CanGoNext");
 		OnPropertyChanged("CanGoPrev");
+		OnPropertyChanged("LivePowerDrawText");
+		OnPropertyChanged("PowerDetailTooltip");
 		NotifyGoalChanged();
 	}
 

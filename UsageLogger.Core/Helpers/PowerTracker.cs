@@ -189,28 +189,95 @@ public static class PowerTracker
         return snapshot;
     }
 
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<int, (ulong LastTicks, DateTime LastSample)> _procCpuHistory = new();
+
     /// <summary>
-    /// Computes the estimated power impact and Watts for a specific process given its activity.
+    /// Measures the exact CPU utilization percentage (0.0 to 100.0%) for a specific process ID using Windows kernel times.
     /// </summary>
-    public static (double ProcessWatts, PowerImpactLevel Level) EstimateProcessPower(bool isForeground, bool hasAudio, double durationSeconds, double systemWatts)
+    public static double GetProcessCpuUsage(int pid)
     {
+        if (pid <= 0) return 0.0;
+        try
+        {
+            using var proc = Process.GetProcessById(pid);
+            var totalTime = proc.TotalProcessorTime;
+            DateTime now = DateTime.UtcNow;
+
+            if (_procCpuHistory.TryGetValue(pid, out var last))
+            {
+                double elapsedSec = (now - last.LastSample).TotalSeconds;
+                if (elapsedSec > 0.4)
+                {
+                    double procCpuSec = (totalTime - TimeSpan.FromTicks((long)last.LastTicks)).TotalSeconds;
+                    _procCpuHistory[pid] = ((ulong)totalTime.Ticks, now);
+                    double cpuPercent = (procCpuSec / (elapsedSec * Environment.ProcessorCount)) * 100.0;
+                    return Math.Clamp(cpuPercent, 0.0, 100.0);
+                }
+            }
+            else
+            {
+                _procCpuHistory[pid] = ((ulong)totalTime.Ticks, now);
+            }
+        }
+        catch
+        {
+            _procCpuHistory.TryRemove(pid, out _);
+        }
+        return 0.0;
+    }
+
+    /// <summary>
+    /// Computes the estimated power impact and Watts for a specific process given its measured CPU load and system state.
+    /// </summary>
+    public static (double ProcessWatts, PowerImpactLevel Level) EstimateProcessPower(
+        bool isForeground, 
+        bool hasAudio, 
+        double durationSeconds, 
+        double systemWatts, 
+        double procCpuPercent = -1.0)
+    {
+        double sysCpu = GetSystemCpuUsage();
         double procWatts;
 
-        if (isForeground)
+        if (procCpuPercent >= 0.0)
         {
-            // Active foreground application: drives screen interactions and user workload (~20-25% of system draw)
-            procWatts = Math.Clamp(systemWatts * 0.22, 6.0, 45.0);
-        }
-        else if (hasAudio)
-        {
-            // Background audio streaming (e.g. YouTube Music, Spotify): minimal CPU load (<1%) and 0% GPU
-            // Realistic physical draw is approximately 1.5W - 2.5W for audio stream decoding and WASAPI buffers
-            procWatts = 2.0;
+            // Real Measured Process CPU Power
+            double dynamicSystemWatts = Math.Max(5.0, systemWatts * 0.65);
+            double cpuShare = sysCpu > 0.5 ? Math.Clamp(procCpuPercent / sysCpu, 0.0, 1.0) : (procCpuPercent / 100.0);
+            double dynamicProcWatts = cpuShare * dynamicSystemWatts;
+
+            if (isForeground)
+            {
+                // Foreground active app has active rendering/DWM/display baseline
+                double interactiveBase = Math.Max(4.0, systemWatts * 0.08);
+                procWatts = Math.Round(interactiveBase + dynamicProcWatts, 1);
+            }
+            else if (hasAudio)
+            {
+                // Background audio stream
+                procWatts = Math.Round(0.8 + dynamicProcWatts, 1);
+            }
+            else
+            {
+                // Passive background process
+                procWatts = Math.Round(0.1 + dynamicProcWatts, 1);
+            }
         }
         else
         {
-            // Passive background process
-            procWatts = 0.3;
+            // Aggregate heuristic fallback when specific PID CPU sampling is not active
+            if (isForeground)
+            {
+                procWatts = Math.Round(Math.Clamp(systemWatts * 0.18, 5.0, 45.0), 1);
+            }
+            else if (hasAudio)
+            {
+                procWatts = 1.2;
+            }
+            else
+            {
+                procWatts = 0.2;
+            }
         }
 
         PowerImpactLevel level = procWatts switch

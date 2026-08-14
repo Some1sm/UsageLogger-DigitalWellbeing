@@ -190,7 +190,7 @@ public class ActivityLogger
 
             if (string.IsNullOrEmpty(programName)) programName = "";
 
-            await UpdateTimeEntryAsync(processName, programName);
+            await UpdateTimeEntryAsync(processName, programName, (int)currProcessId);
 
             // Audio Tracking with Persistence (Debounce)
             var currentAudioApps = AudioSessionTracker.GetActiveAudioSessions();
@@ -204,7 +204,7 @@ public class ActivityLogger
             }
 
             var validAudioApps = _audioTracker.UpdatePersistence(currentAudioApps);
-            _sessionManager.Update(processName, programName, validAudioApps, audioPlaying);
+            _sessionManager.Update(processName, programName, validAudioApps, audioPlaying, (int)currProcessId);
 
             // Check Focus Schedule enforcement
             _focusManager.CheckFocusSchedules(processName, programName);
@@ -215,14 +215,15 @@ public class ActivityLogger
         }
     }
 
-    private async Task UpdateTimeEntryAsync(string processName, string programName)
+    private async Task UpdateTimeEntryAsync(string processName, string programName, int processId = 0)
     {
         if (string.IsNullOrEmpty(processName)) return;
 
         var existingEntry = _cachedUsage.FirstOrDefault(u => u.ProcessName == processName);
 
+        double procCpu = processId > 0 ? UsageLogger.Core.Helpers.PowerTracker.GetProcessCpuUsage(processId) : -1.0;
         var powerSnapshot = UsageLogger.Core.Helpers.PowerTracker.GetPowerSnapshot();
-        var (procWatts, level) = UsageLogger.Core.Helpers.PowerTracker.EstimateProcessPower(true, false, TIMER_INTERVAL_SEC, powerSnapshot.InstantDrawWatts);
+        var (procWatts, level) = UsageLogger.Core.Helpers.PowerTracker.EstimateProcessPower(true, false, TIMER_INTERVAL_SEC, powerSnapshot.InstantDrawWatts, procCpu);
         double intervalEnergyWh = (procWatts * TIMER_INTERVAL_SEC) / 3600.0;
 
         if (existingEntry != null)

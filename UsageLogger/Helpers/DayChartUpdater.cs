@@ -40,6 +40,7 @@ public static class DayChartUpdater
         XamlRoot xamlRoot,
         DispatcherQueue viewModelDispatcher,
         Action<TimeSpan> setTotalDuration,
+        Action<double> setTotalDailyEnergy,
         Action<string, string, bool> setTrend,
         Action notifyChange,
         Action<bool> setLoading,
@@ -242,6 +243,8 @@ public static class DayChartUpdater
                 }
 
                 setTotalDuration(totalDuration);
+                double totalEnergyWh = newList.Sum(x => x.EnergyWattHours);
+                setTotalDailyEnergy?.Invoke(totalEnergyWh);
                 UpdatePieChartInPlace(pieChartItems, newPie);
                 UpdateListInPlace(dayListItems, newList);
 
