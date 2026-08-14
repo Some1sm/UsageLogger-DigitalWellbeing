@@ -42,6 +42,32 @@ namespace UsageLogger.Helpers
             EnsureResources();
         }
 
+        /// <summary>
+        /// Sets the thread and application CultureInfo to match the active language code.
+        /// </summary>
+        public static void SetAppCulture(string languageCode)
+        {
+            if (string.IsNullOrEmpty(languageCode))
+            {
+                var languages = Windows.System.UserProfile.GlobalizationPreferences.Languages;
+                languageCode = (languages != null && languages.Count > 0) ? languages[0] : "en-US";
+            }
+
+            try
+            {
+                var culture = new System.Globalization.CultureInfo(languageCode);
+                System.Globalization.CultureInfo.DefaultThreadCurrentCulture = culture;
+                System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = culture;
+                System.Threading.Thread.CurrentThread.CurrentCulture = culture;
+                System.Threading.Thread.CurrentThread.CurrentUICulture = culture;
+                Debug.WriteLine($"[LocalizationHelper] CultureInfo synchronized to: {culture.Name}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[LocalizationHelper] Failed to set CultureInfo for '{languageCode}': {ex.Message}");
+            }
+        }
+
         private static void EnsureResources()
         {
             string targetLanguage = UserPreferences.LanguageCode;
@@ -52,6 +78,7 @@ namespace UsageLogger.Helpers
                 try
                 {
                     _currentLanguage = targetLanguage;
+                    SetAppCulture(targetLanguage);
                     
                     if (_resourceManager == null)
                         _resourceManager = new ResourceManager();

@@ -168,6 +168,7 @@ namespace UsageLogger
 
                 // Set the user's preferred language
                 await localizer.SetLanguage(preferredLanguage);
+                Helpers.LocalizationHelper.SetAppCulture(preferredLanguage);
 
                 Debug.WriteLine($"[App] WinUI3Localizer initialized with language: {preferredLanguage}");
             }

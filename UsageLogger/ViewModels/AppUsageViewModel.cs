@@ -75,11 +75,18 @@ public class AppUsageViewModel : INotifyPropertyChanged
 	{
 		get
 		{
+			string dayName = LoadedDate.ToString("dddd");
+			if (!string.IsNullOrEmpty(dayName))
+			{
+				dayName = char.ToUpper(dayName[0]) + dayName.Substring(1);
+			}
+
 			if (!(LoadedDate.Date == DateHelper.GetLogicalToday()))
 			{
-				return LoadedDate.ToString("dddd, MMM dd yyyy");
+				string datePart = LoadedDate.ToString("MMM dd yyyy");
+				return $"{dayName}, {datePart}";
 			}
-			return LocalizationHelper.GetString("Today") + ", " + LoadedDate.ToString("dddd");
+			return $"{LocalizationHelper.GetString("Today")}, {dayName}";
 		}
 	}
 

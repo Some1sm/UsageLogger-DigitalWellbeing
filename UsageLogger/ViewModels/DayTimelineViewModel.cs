@@ -18,7 +18,18 @@ namespace UsageLogger.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
         
         public DateTime Date { get; private set; }
-        public string DateString => Date.ToString("D"); // Full date format
+        public string DateString
+        {
+            get
+            {
+                string formatted = Date.ToString("D");
+                if (!string.IsNullOrEmpty(formatted))
+                {
+                    return char.ToUpper(formatted[0]) + formatted.Substring(1);
+                }
+                return formatted;
+            }
+        }
 
         private double _timelineWidth;
         public double TimelineWidth
