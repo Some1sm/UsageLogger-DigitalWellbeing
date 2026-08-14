@@ -1048,9 +1048,6 @@
   <data name="Sessions_SearchHighlight.PlaceholderText" xml:space="preserve">
     <value>高亮显示应用或分类...</value>
   </data>
-  <data name="History_VisualReportButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>生成每周活动摘要信息图</value>
-  </data>
   <data name="History_VisualReportText.Text" xml:space="preserve">
     <value>视觉周报</value>
   </data>
@@ -1074,8 +1071,5 @@
   </data>
   <data name="Dashboard_GoalOver" xml:space="preserve">
     <value>+{0} 超出目标</value>
-  </data>
-  <data name="Dashboard_GoalAdjust.ToolTipService.ToolTip" xml:space="preserve">
-    <value>调整每日目标</value>
   </data>
 </root>

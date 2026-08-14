@@ -1048,9 +1048,6 @@ Termina: {2}</value>
   <data name="Sessions_SearchHighlight.PlaceholderText" xml:space="preserve">
     <value>Resaltar app o categoría...</value>
   </data>
-  <data name="History_VisualReportButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Generar infografía de resumen semanal</value>
-  </data>
   <data name="History_VisualReportText.Text" xml:space="preserve">
     <value>Informe Visual</value>
   </data>
@@ -1074,8 +1071,5 @@ Termina: {2}</value>
   </data>
   <data name="Dashboard_GoalOver" xml:space="preserve">
     <value>+{0} sobre el objetivo</value>
-  </data>
-  <data name="Dashboard_GoalAdjust.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Ajustar objetivo diario</value>
   </data>
 </root>

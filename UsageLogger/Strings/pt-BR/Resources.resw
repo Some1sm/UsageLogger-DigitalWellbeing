@@ -1048,9 +1048,6 @@ Fim: {2}</value>
   <data name="Sessions_SearchHighlight.PlaceholderText" xml:space="preserve">
     <value>Destacar app ou categoria...</value>
   </data>
-  <data name="History_VisualReportButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Gerar infográfico de resumo semanal</value>
-  </data>
   <data name="History_VisualReportText.Text" xml:space="preserve">
     <value>Relatório Visual</value>
   </data>
@@ -1074,8 +1071,5 @@ Fim: {2}</value>
   </data>
   <data name="Dashboard_GoalOver" xml:space="preserve">
     <value>+{0} acima da meta</value>
-  </data>
-  <data name="Dashboard_GoalAdjust.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Ajustar meta diária</value>
   </data>
 </root>

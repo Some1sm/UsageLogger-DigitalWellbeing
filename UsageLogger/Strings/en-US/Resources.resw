@@ -1048,9 +1048,6 @@
   <data name="Sessions_SearchHighlight.PlaceholderText" xml:space="preserve">
     <value>Highlight app or category...</value>
   </data>
-  <data name="History_VisualReportButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Generate Weekly Visual Report Infographic</value>
-  </data>
   <data name="History_VisualReportText.Text" xml:space="preserve">
     <value>Visual Report</value>
   </data>
@@ -1074,8 +1071,5 @@
   </data>
   <data name="Dashboard_GoalOver" xml:space="preserve">
     <value>+{0} over goal</value>
-  </data>
-  <data name="Dashboard_GoalAdjust.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Adjust Daily Goal</value>
   </data>
 </root>

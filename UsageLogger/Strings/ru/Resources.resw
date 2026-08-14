@@ -1048,9 +1048,6 @@
   <data name="Sessions_SearchHighlight.PlaceholderText" xml:space="preserve">
     <value>Выделить приложение или категорию...</value>
   </data>
-  <data name="History_VisualReportButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Создать недельный инфографический отчет</value>
-  </data>
   <data name="History_VisualReportText.Text" xml:space="preserve">
     <value>Визуальный отчет</value>
   </data>
@@ -1074,8 +1071,5 @@
   </data>
   <data name="Dashboard_GoalOver" xml:space="preserve">
     <value>+{0} сверх цели</value>
-  </data>
-  <data name="Dashboard_GoalAdjust.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Настроить дневную цель</value>
   </data>
 </root>
