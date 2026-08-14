@@ -160,7 +160,9 @@ namespace UsageLogger.Controls
             if (hoveredItem != null)
             {
                 // Update tooltip text
-                TooltipText.Text = $"{hoveredItem.Name}\n{hoveredItem.FormattedValue} ({hoveredItem.Percentage:F1}%)";
+                TooltipText.Text = !string.IsNullOrEmpty(hoveredItem.TooltipText) 
+                    ? hoveredItem.TooltipText 
+                    : $"{hoveredItem.Name}\n{hoveredItem.FormattedValue} ({hoveredItem.Percentage:F1}%)";
                 TooltipBorder.Visibility = Visibility.Visible;
 
                 // Measure tooltip

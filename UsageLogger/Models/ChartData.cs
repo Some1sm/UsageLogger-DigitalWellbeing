@@ -76,4 +76,19 @@ namespace UsageLogger.Models
         }
         public Color Color { get; set; }
     }
+
+    /// <summary>
+    /// Represents an app's energy consumption metrics for distribution insights.
+    /// </summary>
+    public class TopEnergyAppItem
+    {
+        public string ProcessName { get; set; }
+        public string DisplayName { get; set; }
+        public Microsoft.UI.Xaml.Media.ImageSource IconSource { get; set; }
+        public double EnergyWattHours { get; set; }
+        public string FormattedEnergy { get; set; }
+        public double Percentage { get; set; }
+        public string PowerImpact { get; set; }
+        public Microsoft.UI.Xaml.Media.Brush ImpactBadgeBrush { get; set; }
+    }
 }

@@ -1174,4 +1174,25 @@
   <data name="Productivity_LeisureLabel" xml:space="preserve">
     <value>Leisure</value>
   </data>
+  <data name="History_PowerEnergyAnalytics.Text" xml:space="preserve">
+    <value>Power &amp; Energy Analytics</value>
+  </data>
+  <data name="History_EnergyAllocation.Text" xml:space="preserve">
+    <value>Energy Allocation</value>
+  </data>
+  <data name="History_TopEnergyDrainers.Text" xml:space="preserve">
+    <value>Top Energy Drainers</value>
+  </data>
+  <data name="History_TotalEnergyLabel.Text" xml:space="preserve">
+    <value>Total Energy:</value>
+  </data>
+  <data name="History_EstCostLabel.Text" xml:space="preserve">
+    <value>Est. Cost:</value>
+  </data>
+  <data name="History_ActiveAppsLabel.Text" xml:space="preserve">
+    <value>Active Apps</value>
+  </data>
+  <data name="History_BackgroundAudioLabel.Text" xml:space="preserve">
+    <value>Background Audio</value>
+  </data>
 </root>

@@ -154,12 +154,159 @@ namespace UsageLogger.ViewModels
             set { if (_avgChangeText != value) { _avgChangeText = value; OnPropertyChanged(); } }
         }
 
+        // Metric Switcher Modes
+        private bool _isEnergyDistributionMode;
+        public bool IsEnergyDistributionMode
+        {
+            get => _isEnergyDistributionMode;
+            set
+            {
+                if (_isEnergyDistributionMode != value)
+                {
+                    _isEnergyDistributionMode = value;
+                    OnPropertyChanged();
+                    if (_cachedSessions != null)
+                    {
+                        List<AppUsage> aggregatedUsage = AggregateSessions(_cachedSessions);
+                        switch (CurrentViewMode)
+                        {
+                            case ChartViewMode.Categories:
+                                GenerateTagChart(aggregatedUsage);
+                                break;
+                            case ChartViewMode.Apps:
+                                GenerateAppChart(aggregatedUsage);
+                                break;
+                            case ChartViewMode.SubApps:
+                                GenerateSubAppChart(aggregatedUsage);
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+
+        private bool _isEnergyTrendMode;
+        public bool IsEnergyTrendMode
+        {
+            get => _isEnergyTrendMode;
+            set
+            {
+                if (_isEnergyTrendMode != value)
+                {
+                    _isEnergyTrendMode = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(TrendUnitSuffix));
+                    if (_cachedSessions != null && _cachedPrevSessions != null)
+                    {
+                        GenerateTrendChart(_cachedSessions, _cachedPrevSessions, StartDate.Date, EndDate.Date);
+                    }
+                }
+            }
+        }
+
+        public string TrendUnitSuffix => IsEnergyTrendMode ? (TotalPeriodEnergyWh >= 1000 ? " kWh" : " Wh") : "h";
+
+        // Previous period energy average line value
+        private double _previousPeriodEnergyAverage;
+        public double PreviousPeriodEnergyAverage
+        {
+            get => _previousPeriodEnergyAverage;
+            set { if (_previousPeriodEnergyAverage != value) { _previousPeriodEnergyAverage = value; OnPropertyChanged(); } }
+        }
+
+        // Energy Analytics Insights
+        private double _totalPeriodEnergyWh;
+        public double TotalPeriodEnergyWh
+        {
+            get => _totalPeriodEnergyWh;
+            set 
+            { 
+                if (Math.Abs(_totalPeriodEnergyWh - value) > 0.01) 
+                { 
+                    _totalPeriodEnergyWh = value; 
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(TotalPeriodEnergyText));
+                    OnPropertyChanged(nameof(TrendUnitSuffix));
+                } 
+            }
+        }
+
+        private string _totalPeriodEnergyText = "0 Wh";
+        public string TotalPeriodEnergyText
+        {
+            get => _totalPeriodEnergyText;
+            set { if (_totalPeriodEnergyText != value) { _totalPeriodEnergyText = value; OnPropertyChanged(); } }
+        }
+
+        private string _periodElectricityCostText = "$0.00";
+        public string PeriodElectricityCostText
+        {
+            get => _periodElectricityCostText;
+            set { if (_periodElectricityCostText != value) { _periodElectricityCostText = value; OnPropertyChanged(); } }
+        }
+
+        private string _averagePowerWattsText = "-- W";
+        public string AveragePowerWattsText
+        {
+            get => _averagePowerWattsText;
+            set { if (_averagePowerWattsText != value) { _averagePowerWattsText = value; OnPropertyChanged(); } }
+        }
+
+        private double _activeEnergyPercent = 100;
+        public double ActiveEnergyPercent
+        {
+            get => _activeEnergyPercent;
+            set { if (Math.Abs(_activeEnergyPercent - value) > 0.1) { _activeEnergyPercent = value; OnPropertyChanged(); } }
+        }
+
+        private double _backgroundAudioEnergyPercent = 0;
+        public double BackgroundAudioEnergyPercent
+        {
+            get => _backgroundAudioEnergyPercent;
+            set { if (Math.Abs(_backgroundAudioEnergyPercent - value) > 0.1) { _backgroundAudioEnergyPercent = value; OnPropertyChanged(); } }
+        }
+
+        private double _afkEnergyPercent = 0;
+        public double AfkEnergyPercent
+        {
+            get => _afkEnergyPercent;
+            set { if (Math.Abs(_afkEnergyPercent - value) > 0.1) { _afkEnergyPercent = value; OnPropertyChanged(); } }
+        }
+
+        private string _activeEnergyText = "0 Wh";
+        public string ActiveEnergyText
+        {
+            get => _activeEnergyText;
+            set { if (_activeEnergyText != value) { _activeEnergyText = value; OnPropertyChanged(); } }
+        }
+
+        private string _backgroundAudioEnergyText = "0 Wh";
+        public string BackgroundAudioEnergyText
+        {
+            get => _backgroundAudioEnergyText;
+            set { if (_backgroundAudioEnergyText != value) { _backgroundAudioEnergyText = value; OnPropertyChanged(); } }
+        }
+
+        private ObservableCollection<TopEnergyAppItem> _topEnergyApps = new();
+        public ObservableCollection<TopEnergyAppItem> TopEnergyApps
+        {
+            get => _topEnergyApps;
+            set { if (_topEnergyApps != value) { _topEnergyApps = value; OnPropertyChanged(); } }
+        }
+
         // Previous period average line value (for trend chart)
         private double _previousPeriodAverage;
         public double PreviousPeriodAverage
         {
             get => _previousPeriodAverage;
             set { if (_previousPeriodAverage != value) { _previousPeriodAverage = value; OnPropertyChanged(); } }
+        }
+
+        private double _targetLineValue;
+        public double TargetLineValue
+        {
+            get => _targetLineValue;
+            set { if (Math.Abs(_targetLineValue - value) > 0.001) { _targetLineValue = value; OnPropertyChanged(); } }
         }
 
         private string _prevPeriodAvgText = "0h 0m";
@@ -991,6 +1138,9 @@ namespace UsageLogger.ViewModels
                 };
                 TopSwitchedApps = new ObservableCollection<AppSwitchItem>(switches.TopSwitchedApps);
 
+                // Compute Energy & Power Distribution Insights
+                ComputeEnergyDistribution(allSessions);
+
                 // Aggregate for Pie Charts
                 List<AppUsage> aggregatedUsage = AggregateSessions(allSessions);
 
@@ -1154,24 +1304,38 @@ namespace UsageLogger.ViewModels
         {
             // Group current period by date
             var dailyTotals = new Dictionary<DateTime, double>();
+            var dailyEnergy = new Dictionary<DateTime, double>();
             for (var d = start; d <= end; d = d.AddDays(1))
+            {
                 dailyTotals[d.Date] = 0;
+                dailyEnergy[d.Date] = 0;
+            }
 
             foreach (var s in currentSessions)
             {
                 if (AppUsageViewModel.IsProcessExcluded(s.ProcessName)) continue;
                 if (dailyTotals.ContainsKey(s.StartTime.Date))
+                {
                     dailyTotals[s.StartTime.Date] += s.Duration.TotalMinutes;
+                    dailyEnergy[s.StartTime.Date] += s.EnergyWattHours;
+                }
             }
 
             // Calculate previous period average
             double prevTotal = prevSessions
                 .Where(s => !AppUsageViewModel.IsProcessExcluded(s.ProcessName))
                 .Sum(s => s.Duration.TotalMinutes);
+            double prevEnergyTotal = prevSessions
+                .Where(s => !AppUsageViewModel.IsProcessExcluded(s.ProcessName))
+                .Sum(s => s.EnergyWattHours);
+
             int prevDays = (int)(start - start.AddDays(-(end - start).Days - 1)).Days;
             if (prevDays <= 0) prevDays = 1;
             double prevAvg = prevTotal / prevDays;
+            double prevEnergyAvg = prevEnergyTotal / prevDays;
+
             PreviousPeriodAverage = prevAvg / 60.0;
+            PreviousPeriodEnergyAverage = prevEnergyAvg;
             PrevPeriodAvgText = StringHelper.FormatDurationCompact(TimeSpan.FromMinutes(prevAvg));
 
             // Calculate KPIs
@@ -1207,33 +1371,145 @@ namespace UsageLogger.ViewModels
                 TotalChangePositive = true;
             }
 
-            // Create bar chart
             // Create bar chart items
             var trendItems = new ObservableCollection<BarChartItem>();
             var uiSettings = new Windows.UI.ViewManagement.UISettings();
             var accent = uiSettings.GetColorValue(Windows.UI.ViewManagement.UIColorType.Accent);
-            
-            foreach(var kvp in dailyTotals.OrderBy(x => x.Key))
+            Color energyColor = Color.FromArgb(255, 245, 158, 11); // Amber/Gold for energy
+
+            if (IsEnergyTrendMode)
             {
-                double hours = kvp.Value / 60.0;
-                string label = kvp.Key.ToString("MM/dd");
-                
-                // Enhanced tooltip: Include date for context when labels are hidden
-                string tooltipDate = kvp.Key.ToString("ddd, MMM d");
-                string tooltipDuration = ChartFactory.FormatHours(hours);
-                
-                trendItems.Add(new BarChartItem
+                TargetLineValue = PreviousPeriodEnergyAverage;
+                foreach (var kvp in dailyEnergy.OrderBy(x => x.Key))
                 {
-                    Value = hours,
-                    Label = label,
-                    Date = kvp.Key,
-                    Tooltip = $"{tooltipDate} • {tooltipDuration}",
-                    Color = accent
-                });
+                    double energyWh = kvp.Value;
+                    string label = kvp.Key.ToString("MM/dd");
+                    string tooltipDate = kvp.Key.ToString("ddd, MMM d");
+                    string energyStr = energyWh >= 1000 ? $"{energyWh / 1000.0:F2} kWh" : $"{energyWh:F1} Wh";
+
+                    trendItems.Add(new BarChartItem
+                    {
+                        Value = energyWh,
+                        Label = label,
+                        Date = kvp.Key,
+                        Tooltip = $"{tooltipDate} • {energyStr}",
+                        Color = energyColor
+                    });
+                }
+            }
+            else
+            {
+                TargetLineValue = PreviousPeriodAverage;
+                foreach (var kvp in dailyTotals.OrderBy(x => x.Key))
+                {
+                    double hours = kvp.Value / 60.0;
+                    string label = kvp.Key.ToString("MM/dd");
+                    string tooltipDate = kvp.Key.ToString("ddd, MMM d");
+                    string tooltipDuration = ChartFactory.FormatHours(hours);
+
+                    trendItems.Add(new BarChartItem
+                    {
+                        Value = hours,
+                        Label = label,
+                        Date = kvp.Key,
+                        Tooltip = $"{tooltipDate} • {tooltipDuration}",
+                        Color = accent
+                    });
+                }
             }
 
             TrendData = trendItems;
-            // Axis labels are handled by Win2DBarChart via BarChartItem.Label
+        }
+
+        private void ComputeEnergyDistribution(List<AppSession> allSessions)
+        {
+            if (allSessions == null || allSessions.Count == 0)
+            {
+                TopEnergyApps = new ObservableCollection<TopEnergyAppItem>();
+                return;
+            }
+
+            // Total energy
+            double totalEnergy = allSessions.Where(s => !AppUsageViewModel.IsProcessExcluded(s.ProcessName)).Sum(s => s.EnergyWattHours);
+            TotalPeriodEnergyWh = totalEnergy;
+            TotalPeriodEnergyText = totalEnergy >= 1000 ? $"{totalEnergy / 1000.0:F2} kWh" : $"{totalEnergy:F1} Wh";
+
+            // Electricity cost
+            double cost = (totalEnergy / 1000.0) * UserPreferences.KwhPrice;
+            string symbol = string.IsNullOrEmpty(UserPreferences.CurrencySymbol) ? "$" : UserPreferences.CurrencySymbol;
+            PeriodElectricityCostText = $"{symbol}{cost:F2}";
+
+            // Active vs Audio vs Passive split
+            double activeEnergy = allSessions.Where(s => !s.IsAfk && (s.AudioSources == null || s.AudioSources.Count == 0) && !AppUsageViewModel.IsProcessExcluded(s.ProcessName)).Sum(s => s.EnergyWattHours);
+            double audioEnergy = allSessions.Where(s => s.AudioSources != null && s.AudioSources.Count > 0 && !AppUsageViewModel.IsProcessExcluded(s.ProcessName)).Sum(s => s.EnergyWattHours);
+            double afkEnergy = allSessions.Where(s => s.IsAfk && !AppUsageViewModel.IsProcessExcluded(s.ProcessName)).Sum(s => s.EnergyWattHours);
+
+            if (totalEnergy > 0)
+            {
+                ActiveEnergyPercent = Math.Round((activeEnergy / totalEnergy) * 100.0, 1);
+                BackgroundAudioEnergyPercent = Math.Round((audioEnergy / totalEnergy) * 100.0, 1);
+                AfkEnergyPercent = Math.Round((afkEnergy / totalEnergy) * 100.0, 1);
+            }
+            else
+            {
+                ActiveEnergyPercent = 100;
+                BackgroundAudioEnergyPercent = 0;
+                AfkEnergyPercent = 0;
+            }
+
+            ActiveEnergyText = activeEnergy >= 1000 ? $"{activeEnergy / 1000.0:F2} kWh" : $"{activeEnergy:F1} Wh";
+            BackgroundAudioEnergyText = audioEnergy >= 1000 ? $"{audioEnergy / 1000.0:F2} kWh" : $"{audioEnergy:F1} Wh";
+
+            // Top Energy Apps
+            var appEnergyGroups = allSessions
+                .Where(s => !AppUsageViewModel.IsProcessExcluded(s.ProcessName))
+                .GroupBy(s => s.ProcessName)
+                .Select(g => new
+                {
+                    ProcessName = g.Key,
+                    TotalWh = g.Sum(s => s.EnergyWattHours),
+                    TotalDuration = TimeSpan.FromSeconds(g.Sum(s => s.Duration.TotalSeconds)),
+                    Impact = g.OrderByDescending(s => s.EnergyWattHours).FirstOrDefault()?.PowerImpact ?? "Low"
+                })
+                .Where(x => x.TotalWh >= 0.05)
+                .OrderByDescending(x => x.TotalWh)
+                .Take(5)
+                .ToList();
+
+            var topList = new ObservableCollection<TopEnergyAppItem>();
+            foreach (var app in appEnergyGroups)
+            {
+                double pct = totalEnergy > 0 ? (app.TotalWh / totalEnergy) * 100.0 : 0;
+                string formatted = app.TotalWh >= 1000 ? $"{app.TotalWh / 1000.0:F2} kWh" : $"{app.TotalWh:F1} Wh";
+                var icon = IconManager.GetIconSource(app.ProcessName);
+
+                topList.Add(new TopEnergyAppItem
+                {
+                    ProcessName = app.ProcessName,
+                    DisplayName = UserPreferences.GetDisplayName(app.ProcessName),
+                    IconSource = icon,
+                    EnergyWattHours = app.TotalWh,
+                    FormattedEnergy = formatted,
+                    Percentage = pct,
+                    PowerImpact = app.Impact,
+                    ImpactBadgeBrush = GetPowerImpactBrush(app.Impact)
+                });
+            }
+
+            TopEnergyApps = topList;
+        }
+
+        private static Microsoft.UI.Xaml.Media.Brush GetPowerImpactBrush(string impact)
+        {
+            return impact switch
+            {
+                "VeryLow" => new Microsoft.UI.Xaml.Media.SolidColorBrush(Color.FromArgb(255, 16, 124, 65)),
+                "Low" => new Microsoft.UI.Xaml.Media.SolidColorBrush(Color.FromArgb(255, 0, 120, 212)),
+                "Moderate" => new Microsoft.UI.Xaml.Media.SolidColorBrush(Color.FromArgb(255, 255, 185, 0)),
+                "High" => new Microsoft.UI.Xaml.Media.SolidColorBrush(Color.FromArgb(255, 231, 72, 86)),
+                "VeryHigh" => new Microsoft.UI.Xaml.Media.SolidColorBrush(Color.FromArgb(255, 154, 0, 7)),
+                _ => new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Gray)
+            };
         }
         
         // Method for heatmap cell click -> navigate to that day
@@ -1255,17 +1531,17 @@ namespace UsageLogger.ViewModels
 
         private void GenerateTagChart(List<AppUsage> usage)
         {
-            TreemapData = HistoryChartGenerator.GenerateTagChart(usage);
+            TreemapData = HistoryChartGenerator.GenerateTagChart(usage, IsEnergyDistributionMode);
         }
 
         private void GenerateAppChart(List<AppUsage> usage)
         {
-            TreemapData = HistoryChartGenerator.GenerateAppChart(usage);
+            TreemapData = HistoryChartGenerator.GenerateAppChart(usage, IsEnergyDistributionMode);
         }
 
         private void GenerateSubAppChart(List<AppUsage> usage)
         {
-            TreemapData = HistoryChartGenerator.GenerateSubAppChart(usage);
+            TreemapData = HistoryChartGenerator.GenerateSubAppChart(usage, IsEnergyDistributionMode);
         }
 
 

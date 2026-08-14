@@ -11,6 +11,7 @@
     xmlns:controls="using:UsageLogger.Controls"
     xmlns:helpers="using:UsageLogger.Helpers"
     xmlns:converters="using:UsageLogger.Converters"
+    xmlns:models="using:UsageLogger.Models"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -407,8 +408,22 @@
                 <!-- Trend Chart -->
                 <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="20">
                     <StackPanel>
-                        <TextBlock l:Uids.Uid="History_UsageTrends" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,10"/>
-                        <controls:Win2DBarChart x:Name="TrendChartContainer" ItemsSource="{x:Bind ViewModel.TrendData, Mode=OneWay}" OverlaySource="{x:Bind ViewModel.SearchOverlayData, Mode=OneWay}" TargetLineValue="{x:Bind ViewModel.PreviousPeriodAverage, Mode=OneWay}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Height="250"/>
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock l:Uids.Uid="History_UsageTrends" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                            
+                            <!-- Metric Toggle: Time vs Energy -->
+                            <Border Grid.Column="1" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" CornerRadius="8" Padding="3">
+                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                    <RadioButton Content="⏱ Time" IsChecked="True" Checked="TrendTimeRadio_Checked" GroupName="TrendMetricGroup" MinWidth="75" FontSize="12" Padding="6,2"/>
+                                    <RadioButton Content="⚡ Energy" Checked="TrendEnergyRadio_Checked" GroupName="TrendMetricGroup" MinWidth="75" FontSize="12" Padding="6,2"/>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                        <controls:Win2DBarChart x:Name="TrendChartContainer" ItemsSource="{x:Bind ViewModel.TrendData, Mode=OneWay}" OverlaySource="{x:Bind ViewModel.SearchOverlayData, Mode=OneWay}" TargetLineValue="{x:Bind ViewModel.TargetLineValue, Mode=OneWay}" UnitSuffix="{x:Bind ViewModel.TrendUnitSuffix, Mode=OneWay}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Height="250"/>
                     </StackPanel>
                 </Border>
 
@@ -446,8 +461,141 @@
                 <!-- Distribution Analysis -->
                 <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="20">
                     <StackPanel>
-                        <TextBlock l:Uids.Uid="History_DistributionAnalysis" FontSize="18" FontWeight="SemiBold"/>
-                        <ContentControl x:Name="HistoryChartContainer" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Height="350" Margin="0,10,0,0"/>
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock l:Uids.Uid="History_DistributionAnalysis" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                            
+                            <!-- Metric Toggle: Time vs Energy -->
+                            <Border Grid.Column="1" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" CornerRadius="8" Padding="3">
+                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                    <RadioButton Content="⏱ Time" IsChecked="True" Checked="DistributionTimeRadio_Checked" GroupName="DistributionMetricGroup" MinWidth="75" FontSize="12" Padding="6,2"/>
+                                    <RadioButton Content="⚡ Energy" Checked="DistributionEnergyRadio_Checked" GroupName="DistributionMetricGroup" MinWidth="75" FontSize="12" Padding="6,2"/>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                        <ContentControl x:Name="HistoryChartContainer" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Height="350" Margin="0,5,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Power & Energy Distribution Insights -->
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="20">
+                    <StackPanel Spacing="14">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                                <TextBlock Text="⚡" FontSize="18" VerticalAlignment="Center"/>
+                                <TextBlock l:Uids.Uid="History_PowerEnergyAnalytics" Text="Power &amp; Energy Analytics" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="16" VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                                    <TextBlock l:Uids.Uid="History_TotalEnergyLabel" Text="Total Energy:" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{x:Bind ViewModel.TotalPeriodEnergyText, Mode=OneWay}" FontWeight="Bold" FontSize="14" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                                    <TextBlock l:Uids.Uid="History_EstCostLabel" Text="Est. Cost:" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{x:Bind ViewModel.PeriodElectricityCostText, Mode=OneWay}" FontWeight="Bold" FontSize="14" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- 2-Column Insights: Left = Active vs Background Energy Split, Right = Top Energy Drainers -->
+                        <Grid ColumnSpacing="20">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="1.2*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Left Column: Energy Distribution Split -->
+                            <Border Grid.Column="0" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" CornerRadius="10" Padding="14">
+                                <StackPanel Spacing="10">
+                                    <TextBlock l:Uids.Uid="History_EnergyAllocation" Text="Energy Allocation" FontWeight="SemiBold" FontSize="13"/>
+                                    
+                                    <!-- Multi-segment progress bar -->
+                                    <Grid Height="14">
+                                        <Border CornerRadius="7" Background="{ThemeResource SurfaceStrokeColorDefaultBrush}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="{x:Bind ViewModel.ActiveEnergyPercent, Mode=OneWay, Converter={StaticResource PercentToGridLengthConverter}}"/>
+                                                    <ColumnDefinition Width="{x:Bind ViewModel.BackgroundAudioEnergyPercent, Mode=OneWay, Converter={StaticResource PercentToGridLengthConverter}}"/>
+                                                    <ColumnDefinition Width="{x:Bind ViewModel.AfkEnergyPercent, Mode=OneWay, Converter={StaticResource PercentToGridLengthConverter}}"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Border Grid.Column="0" Background="#0078D4" CornerRadius="7,0,0,7"/>
+                                                <Border Grid.Column="1" Background="#107C41"/>
+                                                <Border Grid.Column="2" Background="#8764B8" CornerRadius="0,7,7,0"/>
+                                            </Grid>
+                                        </Border>
+                                    </Grid>
+
+                                    <!-- Legend -->
+                                    <StackPanel Spacing="6">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="6">
+                                                <Ellipse Width="8" Height="8" Fill="#0078D4" VerticalAlignment="Center"/>
+                                                <TextBlock l:Uids.Uid="History_ActiveAppsLabel" Text="Active Apps" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                            </StackPanel>
+                                            <TextBlock Grid.Column="2" Text="{x:Bind ViewModel.ActiveEnergyText, Mode=OneWay}" FontSize="11" FontWeight="SemiBold"/>
+                                        </Grid>
+
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="6">
+                                                <Ellipse Width="8" Height="8" Fill="#107C41" VerticalAlignment="Center"/>
+                                                <TextBlock l:Uids.Uid="History_BackgroundAudioLabel" Text="Background Audio" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                            </StackPanel>
+                                            <TextBlock Grid.Column="2" Text="{x:Bind ViewModel.BackgroundAudioEnergyText, Mode=OneWay}" FontSize="11" FontWeight="SemiBold"/>
+                                        </Grid>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Right Column: Top Energy Apps List -->
+                            <Border Grid.Column="1" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" CornerRadius="10" Padding="14">
+                                <StackPanel Spacing="8">
+                                    <TextBlock l:Uids.Uid="History_TopEnergyDrainers" Text="Top Energy Drainers" FontWeight="SemiBold" FontSize="13"/>
+                                    <ListView ItemsSource="{x:Bind ViewModel.TopEnergyApps, Mode=OneWay}" SelectionMode="None">
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate x:DataType="models:TopEnergyAppItem">
+                                                <Grid Padding="0,4" ColumnSpacing="10">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Image Grid.Column="0" Source="{x:Bind IconSource}" Width="20" Height="20" VerticalAlignment="Center"/>
+                                                    <TextBlock Grid.Column="1" Text="{x:Bind DisplayName}" TextTrimming="CharacterEllipsis" FontSize="12" VerticalAlignment="Center"/>
+                                                    
+                                                    <!-- Power Impact Badge -->
+                                                    <Border Grid.Column="2" Background="{x:Bind ImpactBadgeBrush}" CornerRadius="4" Padding="6,1" VerticalAlignment="Center">
+                                                        <TextBlock Text="{x:Bind PowerImpact}" FontSize="10" FontWeight="SemiBold" Foreground="White"/>
+                                                    </Border>
+
+                                                    <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                                                        <TextBlock Text="{x:Bind FormattedEnergy}" FontWeight="SemiBold" FontSize="12"/>
+                                                        <TextBlock Text="{x:Bind Percentage, Converter={StaticResource PercentConverter}}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
                     </StackPanel>
                 </Border>
                 

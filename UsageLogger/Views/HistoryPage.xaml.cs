@@ -393,5 +393,25 @@ namespace UsageLogger.Views
                 }
             }
         }
+
+        private void TrendTimeRadio_Checked(object sender, RoutedEventArgs e)
+        {
+            if (ViewModel != null) ViewModel.IsEnergyTrendMode = false;
+        }
+
+        private void TrendEnergyRadio_Checked(object sender, RoutedEventArgs e)
+        {
+            if (ViewModel != null) ViewModel.IsEnergyTrendMode = true;
+        }
+
+        private void DistributionTimeRadio_Checked(object sender, RoutedEventArgs e)
+        {
+            if (ViewModel != null) ViewModel.IsEnergyDistributionMode = false;
+        }
+
+        private void DistributionEnergyRadio_Checked(object sender, RoutedEventArgs e)
+        {
+            if (ViewModel != null) ViewModel.IsEnergyDistributionMode = true;
+        }
     }
 }

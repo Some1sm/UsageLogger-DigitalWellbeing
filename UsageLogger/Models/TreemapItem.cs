@@ -13,6 +13,11 @@ namespace UsageLogger.Models
         public string FormattedValue { get; set; }
         public Brush Fill { get; set; }
         
+        public double EnergyWattHours { get; set; }
+        public bool IsEnergyMode { get; set; }
+        public string Subtitle { get; set; }
+        public string TooltipText { get; set; }
+
         // Layout - calculated by TreemapLayout
         public double X { get; set; }
         public double Y { get; set; }

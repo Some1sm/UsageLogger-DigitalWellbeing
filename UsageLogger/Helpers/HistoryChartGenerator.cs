@@ -20,9 +20,9 @@ public static class HistoryChartGenerator
     /// <summary>
     /// Generates category-level treemap data by aggregating usage per AppTag.
     /// </summary>
-    public static ObservableCollection<TreemapItem> GenerateTagChart(List<AppUsage> usage)
+    public static ObservableCollection<TreemapItem> GenerateTagChart(List<AppUsage> usage, bool isEnergyMode = false)
     {
-        Dictionary<AppTag, double> tagDurations = new Dictionary<AppTag, double>();
+        Dictionary<AppTag, (double Minutes, double EnergyWh)> tagData = new();
 
         foreach (var app in usage)
         {
@@ -30,6 +30,7 @@ public static class HistoryChartGenerator
 
             AppTag parentTag = AppTagHelper.GetAppTag(app.ProcessName);
             double remainingMinutes = app.Duration.TotalMinutes;
+            double appEnergy = app.EnergyWattHours;
 
             if (app.ProgramBreakdown != null && app.ProgramBreakdown.Count > 0)
             {
@@ -39,10 +40,18 @@ public static class HistoryChartGenerator
                     if (childTag != AppTag.Untagged && childTag != parentTag)
                     {
                         double childMinutes = child.Value.TotalMinutes;
-                        if (tagDurations.ContainsKey(childTag))
-                            tagDurations[childTag] += childMinutes;
+                        double childEnergyRatio = app.Duration.TotalMinutes > 0 ? (childMinutes / app.Duration.TotalMinutes) : 0;
+                        double childEnergy = appEnergy * childEnergyRatio;
+
+                        if (tagData.ContainsKey(childTag))
+                        {
+                            var existing = tagData[childTag];
+                            tagData[childTag] = (existing.Minutes + childMinutes, existing.EnergyWh + childEnergy);
+                        }
                         else
-                            tagDurations[childTag] = childMinutes;
+                        {
+                            tagData[childTag] = (childMinutes, childEnergy);
+                        }
                         remainingMinutes -= childMinutes;
                     }
                 }
@@ -50,45 +59,59 @@ public static class HistoryChartGenerator
 
             if (remainingMinutes > 0)
             {
-                if (tagDurations.ContainsKey(parentTag))
-                    tagDurations[parentTag] += remainingMinutes;
+                double remRatio = app.Duration.TotalMinutes > 0 ? (remainingMinutes / app.Duration.TotalMinutes) : 1.0;
+                double remEnergy = appEnergy * remRatio;
+
+                if (tagData.ContainsKey(parentTag))
+                {
+                    var existing = tagData[parentTag];
+                    tagData[parentTag] = (existing.Minutes + remainingMinutes, existing.EnergyWh + remEnergy);
+                }
                 else
-                    tagDurations[parentTag] = remainingMinutes;
+                {
+                    tagData[parentTag] = (remainingMinutes, remEnergy);
+                }
             }
         }
 
-        var filteredTags = tagDurations.Where(k => k.Value >= 1.0).ToList();
-        double totalDuration = filteredTags.Sum(k => k.Value);
+        var filteredTags = isEnergyMode
+            ? tagData.Where(k => k.Value.EnergyWh >= 0.05).OrderByDescending(k => k.Value.EnergyWh).ToList()
+            : tagData.Where(k => k.Value.Minutes >= 1.0).OrderByDescending(k => k.Value.Minutes).ToList();
+
+        double totalMetric = isEnergyMode
+            ? filteredTags.Sum(k => k.Value.EnergyWh)
+            : filteredTags.Sum(k => k.Value.Minutes);
 
         var treemapItems = new ObservableCollection<TreemapItem>();
-        foreach (var kvp in filteredTags.OrderByDescending(k => k.Value))
+        foreach (var kvp in filteredTags)
         {
-            try
-            {
-                var brush = (SolidColorBrush)AppTagHelper.GetTagColor(kvp.Key);
-                double percentage = totalDuration > 0 ? (kvp.Value / totalDuration) * 100 : 0;
+            double val = isEnergyMode ? kvp.Value.EnergyWh : kvp.Value.Minutes;
+            double percentage = totalMetric > 0 ? (val / totalMetric) * 100 : 0;
+            string formattedVal = isEnergyMode
+                ? (kvp.Value.EnergyWh >= 1000 ? $"{kvp.Value.EnergyWh / 1000.0:F2} kWh" : $"{kvp.Value.EnergyWh:F1} Wh")
+                : StringHelper.FormatDurationFull(TimeSpan.FromMinutes(kvp.Value.Minutes));
 
-                treemapItems.Add(new TreemapItem
-                {
-                    Name = AppTagHelper.GetTagDisplayName(kvp.Key),
-                    Value = kvp.Value,
-                    Percentage = percentage,
-                    FormattedValue = StringHelper.FormatDurationFull(TimeSpan.FromMinutes(kvp.Value)),
-                    Fill = brush
-                });
-            }
-            catch
+            string durationStr = StringHelper.FormatDurationFull(TimeSpan.FromMinutes(kvp.Value.Minutes));
+            string energyStr = kvp.Value.EnergyWh >= 1000 ? $"{kvp.Value.EnergyWh / 1000.0:F2} kWh" : $"{kvp.Value.EnergyWh:F1} Wh";
+            string tooltip = isEnergyMode
+                ? $"{AppTagHelper.GetTagDisplayName(kvp.Key)}\n⚡ {energyStr} ({percentage:F1}% of energy)\n⏱ {durationStr}"
+                : $"{AppTagHelper.GetTagDisplayName(kvp.Key)}\n⏱ {durationStr} ({percentage:F1}% of time)\n⚡ {energyStr}";
+
+            Brush brush;
+            try { brush = (SolidColorBrush)AppTagHelper.GetTagColor(kvp.Key); }
+            catch { brush = new SolidColorBrush(Microsoft.UI.Colors.Gray); }
+
+            treemapItems.Add(new TreemapItem
             {
-                double percentage = totalDuration > 0 ? (kvp.Value / totalDuration) * 100 : 0;
-                treemapItems.Add(new TreemapItem
-                {
-                    Name = AppTagHelper.GetTagDisplayName(kvp.Key),
-                    Value = kvp.Value,
-                    Percentage = percentage,
-                    FormattedValue = StringHelper.FormatDurationFull(TimeSpan.FromMinutes(kvp.Value)),
-                    Fill = new SolidColorBrush(Microsoft.UI.Colors.Gray)
-                });
-            }
+                Name = AppTagHelper.GetTagDisplayName(kvp.Key),
+                Value = val,
+                Percentage = percentage,
+                FormattedValue = formattedVal,
+                EnergyWattHours = kvp.Value.EnergyWh,
+                IsEnergyMode = isEnergyMode,
+                TooltipText = tooltip,
+                Fill = brush
+            });
         }
 
         return treemapItems;
@@ -97,38 +120,63 @@ public static class HistoryChartGenerator
     /// <summary>
     /// Generates app-level treemap data.
     /// </summary>
-    public static ObservableCollection<TreemapItem> GenerateAppChart(List<AppUsage> usage)
+    public static ObservableCollection<TreemapItem> GenerateAppChart(List<AppUsage> usage, bool isEnergyMode = false)
     {
-        Dictionary<string, double> appDurations = new Dictionary<string, double>();
+        Dictionary<string, (double Minutes, double EnergyWh)> appData = new();
 
         foreach (var app in usage)
         {
             if (AppUsageViewModel.IsProcessExcluded(app.ProcessName)) continue;
 
-            if (appDurations.ContainsKey(app.ProcessName))
-                appDurations[app.ProcessName] += app.Duration.TotalMinutes;
+            if (appData.ContainsKey(app.ProcessName))
+            {
+                var existing = appData[app.ProcessName];
+                appData[app.ProcessName] = (existing.Minutes + app.Duration.TotalMinutes, existing.EnergyWh + app.EnergyWattHours);
+            }
             else
-                appDurations[app.ProcessName] = app.Duration.TotalMinutes;
+            {
+                appData[app.ProcessName] = (app.Duration.TotalMinutes, app.EnergyWattHours);
+            }
         }
 
-        var visibleApps = appDurations.Where(k => k.Value >= 1.0).OrderByDescending(k => k.Value).Take(15).ToList();
-        double totalDuration = visibleApps.Sum(k => k.Value);
+        var visibleApps = isEnergyMode
+            ? appData.Where(k => k.Value.EnergyWh >= 0.05).OrderByDescending(k => k.Value.EnergyWh).Take(15).ToList()
+            : appData.Where(k => k.Value.Minutes >= 1.0).OrderByDescending(k => k.Value.Minutes).Take(15).ToList();
+
+        double totalMetric = isEnergyMode
+            ? visibleApps.Sum(k => k.Value.EnergyWh)
+            : visibleApps.Sum(k => k.Value.Minutes);
 
         var palette = GenerateAccentPalette(visibleApps.Count);
-
         var treemapItems = new ObservableCollection<TreemapItem>();
         int colorIndex = 0;
+
         foreach (var kvp in visibleApps)
         {
-            double percentage = totalDuration > 0 ? (kvp.Value / totalDuration) * 100 : 0;
+            double val = isEnergyMode ? kvp.Value.EnergyWh : kvp.Value.Minutes;
+            double percentage = totalMetric > 0 ? (val / totalMetric) * 100 : 0;
+            string formattedVal = isEnergyMode
+                ? (kvp.Value.EnergyWh >= 1000 ? $"{kvp.Value.EnergyWh / 1000.0:F2} kWh" : $"{kvp.Value.EnergyWh:F1} Wh")
+                : StringHelper.FormatDurationFull(TimeSpan.FromMinutes(kvp.Value.Minutes));
+
+            string durationStr = StringHelper.FormatDurationFull(TimeSpan.FromMinutes(kvp.Value.Minutes));
+            string energyStr = kvp.Value.EnergyWh >= 1000 ? $"{kvp.Value.EnergyWh / 1000.0:F2} kWh" : $"{kvp.Value.EnergyWh:F1} Wh";
+            string displayName = UserPreferences.GetDisplayName(kvp.Key);
+            string tooltip = isEnergyMode
+                ? $"{displayName}\n⚡ {energyStr} ({percentage:F1}% of energy)\n⏱ {durationStr}"
+                : $"{displayName}\n⏱ {durationStr} ({percentage:F1}% of time)\n⚡ {energyStr}";
+
             var brush = new SolidColorBrush(palette[colorIndex % palette.Count]);
 
             treemapItems.Add(new TreemapItem
             {
-                Name = TruncateName(UserPreferences.GetDisplayName(kvp.Key)),
-                Value = kvp.Value,
+                Name = TruncateName(displayName),
+                Value = val,
                 Percentage = percentage,
-                FormattedValue = StringHelper.FormatDurationFull(TimeSpan.FromMinutes(kvp.Value)),
+                FormattedValue = formattedVal,
+                EnergyWattHours = kvp.Value.EnergyWh,
+                IsEnergyMode = isEnergyMode,
+                TooltipText = tooltip,
                 Fill = brush
             });
             colorIndex++;
@@ -140,9 +188,9 @@ public static class HistoryChartGenerator
     /// <summary>
     /// Generates sub-app-level treemap data (window titles as individual entries).
     /// </summary>
-    public static ObservableCollection<TreemapItem> GenerateSubAppChart(List<AppUsage> usage)
+    public static ObservableCollection<TreemapItem> GenerateSubAppChart(List<AppUsage> usage, bool isEnergyMode = false)
     {
-        Dictionary<string, (string DisplayName, double Minutes)> subAppDurations = new();
+        Dictionary<string, (string DisplayName, double Minutes, double EnergyWh)> subAppData = new();
 
         foreach (var app in usage)
         {
@@ -165,49 +213,71 @@ public static class HistoryChartGenerator
                     else
                         subAppDisplayName = subApp.Key;
 
-                    if (subAppDurations.ContainsKey(titleKey))
+                    double subRatio = app.Duration.TotalMinutes > 0 ? (subApp.Value.TotalMinutes / app.Duration.TotalMinutes) : 0;
+                    double subEnergy = app.EnergyWattHours * subRatio;
+
+                    if (subAppData.ContainsKey(titleKey))
                     {
-                        var existing = subAppDurations[titleKey];
-                        subAppDurations[titleKey] = (existing.DisplayName, existing.Minutes + subApp.Value.TotalMinutes);
+                        var existing = subAppData[titleKey];
+                        subAppData[titleKey] = (existing.DisplayName, existing.Minutes + subApp.Value.TotalMinutes, existing.EnergyWh + subEnergy);
                     }
                     else
                     {
-                        subAppDurations[titleKey] = (subAppDisplayName, subApp.Value.TotalMinutes);
+                        subAppData[titleKey] = (subAppDisplayName, subApp.Value.TotalMinutes, subEnergy);
                     }
                 }
             }
             else
             {
-                if (subAppDurations.ContainsKey(app.ProcessName))
+                if (subAppData.ContainsKey(app.ProcessName))
                 {
-                    var existing = subAppDurations[app.ProcessName];
-                    subAppDurations[app.ProcessName] = (existing.DisplayName, existing.Minutes + app.Duration.TotalMinutes);
+                    var existing = subAppData[app.ProcessName];
+                    subAppData[app.ProcessName] = (existing.DisplayName, existing.Minutes + app.Duration.TotalMinutes, existing.EnergyWh + app.EnergyWattHours);
                 }
                 else
                 {
-                    subAppDurations[app.ProcessName] = (parentDisplayName, app.Duration.TotalMinutes);
+                    subAppData[app.ProcessName] = (parentDisplayName, app.Duration.TotalMinutes, app.EnergyWattHours);
                 }
             }
         }
 
-        var visibleApps = subAppDurations.Where(k => k.Value.Minutes >= 1.0).OrderByDescending(k => k.Value.Minutes).Take(20).ToList();
-        double totalDuration = visibleApps.Sum(k => k.Value.Minutes);
+        var visibleApps = isEnergyMode
+            ? subAppData.Where(k => k.Value.EnergyWh >= 0.05).OrderByDescending(k => k.Value.EnergyWh).Take(20).ToList()
+            : subAppData.Where(k => k.Value.Minutes >= 1.0).OrderByDescending(k => k.Value.Minutes).Take(20).ToList();
+
+        double totalMetric = isEnergyMode
+            ? visibleApps.Sum(k => k.Value.EnergyWh)
+            : visibleApps.Sum(k => k.Value.Minutes);
 
         var palette = GenerateAccentPalette(visibleApps.Count);
-
         var treemapItems = new ObservableCollection<TreemapItem>();
         int colorIndex = 0;
+
         foreach (var kvp in visibleApps)
         {
-            double percentage = totalDuration > 0 ? (kvp.Value.Minutes / totalDuration) * 100 : 0;
+            double val = isEnergyMode ? kvp.Value.EnergyWh : kvp.Value.Minutes;
+            double percentage = totalMetric > 0 ? (val / totalMetric) * 100 : 0;
+            string formattedVal = isEnergyMode
+                ? (kvp.Value.EnergyWh >= 1000 ? $"{kvp.Value.EnergyWh / 1000.0:F2} kWh" : $"{kvp.Value.EnergyWh:F1} Wh")
+                : StringHelper.FormatDurationFull(TimeSpan.FromMinutes(kvp.Value.Minutes));
+
+            string durationStr = StringHelper.FormatDurationFull(TimeSpan.FromMinutes(kvp.Value.Minutes));
+            string energyStr = kvp.Value.EnergyWh >= 1000 ? $"{kvp.Value.EnergyWh / 1000.0:F2} kWh" : $"{kvp.Value.EnergyWh:F1} Wh";
+            string tooltip = isEnergyMode
+                ? $"{kvp.Value.DisplayName}\n⚡ {energyStr} ({percentage:F1}% of energy)\n⏱ {durationStr}"
+                : $"{kvp.Value.DisplayName}\n⏱ {durationStr} ({percentage:F1}% of time)\n⚡ {energyStr}";
+
             var brush = new SolidColorBrush(palette[colorIndex % palette.Count]);
 
             treemapItems.Add(new TreemapItem
             {
                 Name = TruncateName(kvp.Value.DisplayName),
-                Value = kvp.Value.Minutes,
+                Value = val,
                 Percentage = percentage,
-                FormattedValue = StringHelper.FormatDurationFull(TimeSpan.FromMinutes(kvp.Value.Minutes)),
+                FormattedValue = formattedVal,
+                EnergyWattHours = kvp.Value.EnergyWh,
+                IsEnergyMode = isEnergyMode,
+                TooltipText = tooltip,
                 Fill = brush
             });
             colorIndex++;

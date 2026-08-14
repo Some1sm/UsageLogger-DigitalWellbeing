@@ -214,6 +214,15 @@ namespace UsageLogger.Controls
             set => SetValue(MaxBarWidthProperty, value);
         }
 
+        public static readonly DependencyProperty UnitSuffixProperty =
+            DependencyProperty.Register(nameof(UnitSuffix), typeof(string), typeof(Win2DBarChart), new PropertyMetadata("h", OnPropertyChanged));
+
+        public string UnitSuffix
+        {
+            get => (string)GetValue(UnitSuffixProperty);
+            set => SetValue(UnitSuffixProperty, value);
+        }
+
         // Overlay data source (for search highlight)
         public static readonly DependencyProperty OverlaySourceProperty =
             DependencyProperty.Register(nameof(OverlaySource), typeof(IEnumerable<BarChartItem>), typeof(Win2DBarChart), new PropertyMetadata(null, OnPropertyChanged));
@@ -287,7 +296,14 @@ namespace UsageLogger.Controls
                 float yPos = height - marginBottom - (float)(val / maxVal * chartHeight);
                 
                 // Label
-                ds.DrawText($"{val:F1}h", marginLeft - 5, yPos, Colors.Gray, labelFormat);
+                string unit = string.IsNullOrEmpty(UnitSuffix) ? "h" : UnitSuffix;
+                string labelText = unit.Trim() switch
+                {
+                    "Wh" => $"{val:F0} Wh",
+                    "kWh" => $"{val:F2} kWh",
+                    _ => $"{val:F1}{unit}"
+                };
+                ds.DrawText(labelText, marginLeft - 5, yPos, Colors.Gray, labelFormat);
                 
                 // Grid Line (except for the bottom axis which we draw later)
                 if (i > 0)
