@@ -178,12 +178,9 @@ namespace UsageLogger.Views
             await Helpers.DataExportHelper.ExportToJsonAsync(ViewModel.CachedSessions, start, end);
         }
 
-        private ToolTip _prodBarToolTip = new ToolTip();
-        private ToolTip _dayPartBarToolTip = new ToolTip();
-
         private void ProdBar_PointerMoved(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
-            if (ProdBarContainer == null || ViewModel == null) return;
+            if (ProdBarContainer == null || ViewModel == null || ProdHoverPopup == null || ProdHoverPopupText == null) return;
             double actualWidth = ProdBarContainer.ActualWidth;
             if (actualWidth <= 0) return;
 
@@ -219,26 +216,24 @@ namespace UsageLogger.Views
                 }
             }
 
-            if (TxtProdHoverStatus != null) TxtProdHoverStatus.Text = info;
-            _prodBarToolTip.Content = info;
-            _prodBarToolTip.IsOpen = true;
+            ProdHoverPopupText.Text = info;
+            double offset = Math.Clamp(pt.X - 50, 0, Math.Max(0, actualWidth - 120));
+            ProdHoverPopup.HorizontalOffset = offset;
+            ProdHoverPopup.VerticalOffset = -34;
+            ProdHoverPopup.IsOpen = true;
         }
 
         private void ProdBar_PointerExited(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
-            if (TxtProdHoverStatus != null && ViewModel != null)
+            if (ProdHoverPopup != null)
             {
-                TxtProdHoverStatus.Text = ViewModel.ProductivityBreakdownText;
-            }
-            if (_prodBarToolTip != null)
-            {
-                _prodBarToolTip.IsOpen = false;
+                ProdHoverPopup.IsOpen = false;
             }
         }
 
         private void DayPartBar_PointerMoved(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
-            if (DayPartBarContainer == null || ViewModel == null) return;
+            if (DayPartBarContainer == null || ViewModel == null || DayPartHoverPopup == null || DayPartHoverPopupText == null) return;
             double actualWidth = DayPartBarContainer.ActualWidth;
             if (actualWidth <= 0) return;
 
@@ -280,56 +275,101 @@ namespace UsageLogger.Views
                 }
             }
 
-            if (TxtDayPartHoverStatus != null) TxtDayPartHoverStatus.Text = info;
-            _dayPartBarToolTip.Content = info;
-            _dayPartBarToolTip.IsOpen = true;
+            DayPartHoverPopupText.Text = info;
+            double offset = Math.Clamp(pt.X - 70, 0, Math.Max(0, actualWidth - 150));
+            DayPartHoverPopup.HorizontalOffset = offset;
+            DayPartHoverPopup.VerticalOffset = -34;
+            DayPartHoverPopup.IsOpen = true;
         }
 
         private void DayPartBar_PointerExited(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
-            if (TxtDayPartHoverStatus != null && ViewModel != null)
+            if (DayPartHoverPopup != null)
             {
-                TxtDayPartHoverStatus.Text = ViewModel.DayPartBreakdownText;
-            }
-            if (_dayPartBarToolTip != null)
-            {
-                _dayPartBarToolTip.IsOpen = false;
+                DayPartHoverPopup.IsOpen = false;
             }
         }
 
         private void LegendProductive_PointerEntered(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
-            if (TxtProdHoverStatus != null && ViewModel != null) TxtProdHoverStatus.Text = ViewModel.ProductiveTooltip;
+            if (ProdHoverPopup != null && ProdHoverPopupText != null && ViewModel != null)
+            {
+                ProdHoverPopupText.Text = ViewModel.ProductiveTooltip;
+                ProdHoverPopup.HorizontalOffset = 0;
+                ProdHoverPopup.VerticalOffset = -34;
+                ProdHoverPopup.IsOpen = true;
+            }
         }
 
         private void LegendNeutral_PointerEntered(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
-            if (TxtProdHoverStatus != null && ViewModel != null) TxtProdHoverStatus.Text = ViewModel.NeutralTooltip;
+            if (ProdHoverPopup != null && ProdHoverPopupText != null && ViewModel != null)
+            {
+                ProdHoverPopupText.Text = ViewModel.NeutralTooltip;
+                double actualWidth = ProdBarContainer?.ActualWidth ?? 200;
+                ProdHoverPopup.HorizontalOffset = Math.Max(0, actualWidth * 0.35);
+                ProdHoverPopup.VerticalOffset = -34;
+                ProdHoverPopup.IsOpen = true;
+            }
         }
 
         private void LegendLeisure_PointerEntered(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
-            if (TxtProdHoverStatus != null && ViewModel != null) TxtProdHoverStatus.Text = ViewModel.LeisureTooltip;
+            if (ProdHoverPopup != null && ProdHoverPopupText != null && ViewModel != null)
+            {
+                ProdHoverPopupText.Text = ViewModel.LeisureTooltip;
+                double actualWidth = ProdBarContainer?.ActualWidth ?? 200;
+                ProdHoverPopup.HorizontalOffset = Math.Max(0, actualWidth * 0.65);
+                ProdHoverPopup.VerticalOffset = -34;
+                ProdHoverPopup.IsOpen = true;
+            }
         }
 
         private void LegendMorning_PointerEntered(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
-            if (TxtDayPartHoverStatus != null && ViewModel != null) TxtDayPartHoverStatus.Text = ViewModel.MorningTooltip;
+            if (DayPartHoverPopup != null && DayPartHoverPopupText != null && ViewModel != null)
+            {
+                DayPartHoverPopupText.Text = ViewModel.MorningTooltip;
+                DayPartHoverPopup.HorizontalOffset = 0;
+                DayPartHoverPopup.VerticalOffset = -34;
+                DayPartHoverPopup.IsOpen = true;
+            }
         }
 
         private void LegendAfternoon_PointerEntered(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
-            if (TxtDayPartHoverStatus != null && ViewModel != null) TxtDayPartHoverStatus.Text = ViewModel.AfternoonTooltip;
+            if (DayPartHoverPopup != null && DayPartHoverPopupText != null && ViewModel != null)
+            {
+                DayPartHoverPopupText.Text = ViewModel.AfternoonTooltip;
+                double actualWidth = DayPartBarContainer?.ActualWidth ?? 200;
+                DayPartHoverPopup.HorizontalOffset = Math.Max(0, actualWidth * 0.25);
+                DayPartHoverPopup.VerticalOffset = -34;
+                DayPartHoverPopup.IsOpen = true;
+            }
         }
 
         private void LegendEvening_PointerEntered(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
-            if (TxtDayPartHoverStatus != null && ViewModel != null) TxtDayPartHoverStatus.Text = ViewModel.EveningTooltip;
+            if (DayPartHoverPopup != null && DayPartHoverPopupText != null && ViewModel != null)
+            {
+                DayPartHoverPopupText.Text = ViewModel.EveningTooltip;
+                double actualWidth = DayPartBarContainer?.ActualWidth ?? 200;
+                DayPartHoverPopup.HorizontalOffset = Math.Max(0, actualWidth * 0.5);
+                DayPartHoverPopup.VerticalOffset = -34;
+                DayPartHoverPopup.IsOpen = true;
+            }
         }
 
         private void LegendNight_PointerEntered(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
-            if (TxtDayPartHoverStatus != null && ViewModel != null) TxtDayPartHoverStatus.Text = ViewModel.NightTooltip;
+            if (DayPartHoverPopup != null && DayPartHoverPopupText != null && ViewModel != null)
+            {
+                DayPartHoverPopupText.Text = ViewModel.NightTooltip;
+                double actualWidth = DayPartBarContainer?.ActualWidth ?? 200;
+                DayPartHoverPopup.HorizontalOffset = Math.Max(0, actualWidth * 0.7);
+                DayPartHoverPopup.VerticalOffset = -34;
+                DayPartHoverPopup.IsOpen = true;
+            }
         }
 
         private void AppSwitchesFlyout_Opening(object sender, object e)
