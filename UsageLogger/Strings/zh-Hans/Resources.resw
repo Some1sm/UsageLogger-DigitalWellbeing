@@ -1066,4 +1066,16 @@
   <data name="ReportDialog.CloseButtonText" xml:space="preserve">
     <value>关闭</value>
   </data>
+  <data name="Dashboard_GoalOfTarget" xml:space="preserve">
+    <value>{1} 目标的 {0:F0}%</value>
+  </data>
+  <data name="Dashboard_GoalRemaining" xml:space="preserve">
+    <value>剩余 {0}</value>
+  </data>
+  <data name="Dashboard_GoalOver" xml:space="preserve">
+    <value>+{0} 超出目标</value>
+  </data>
+  <data name="Dashboard_GoalAdjust.ToolTipService.ToolTip" xml:space="preserve">
+    <value>调整每日目标</value>
+  </data>
 </root>

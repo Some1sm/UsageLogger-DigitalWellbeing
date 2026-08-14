@@ -1066,4 +1066,16 @@ Acaba: {2}</value>
   <data name="ReportDialog.CloseButtonText" xml:space="preserve">
     <value>Tancar</value>
   </data>
+  <data name="Dashboard_GoalOfTarget" xml:space="preserve">
+    <value>{0:F0}% de l'objectiu de {1}</value>
+  </data>
+  <data name="Dashboard_GoalRemaining" xml:space="preserve">
+    <value>{0} restant</value>
+  </data>
+  <data name="Dashboard_GoalOver" xml:space="preserve">
+    <value>+{0} sobre l'objectiu</value>
+  </data>
+  <data name="Dashboard_GoalAdjust.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ajustar objectiu diari</value>
+  </data>
 </root>

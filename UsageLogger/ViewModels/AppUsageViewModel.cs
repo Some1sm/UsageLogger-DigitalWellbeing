@@ -132,7 +132,10 @@ public class AppUsageViewModel : INotifyPropertyChanged
 			int targetHours = DailyGoalMinutes / 60;
 			int targetMins = DailyGoalMinutes % 60;
 			string targetStr = targetMins > 0 ? $"{targetHours}h {targetMins}m" : $"{targetHours}h";
-			return $"{DailyGoalProgress:F0}% of {targetStr} goal";
+			string format = LocalizationHelper.GetString("Dashboard_GoalOfTarget");
+			if (string.IsNullOrEmpty(format) || format == "Dashboard_GoalOfTarget")
+				format = "{0:F0}% of {1}";
+			return string.Format(format, DailyGoalProgress, targetStr);
 		}
 	}
 
@@ -148,7 +151,10 @@ public class AppUsageViewModel : INotifyPropertyChanged
 				int h = remaining / 60;
 				int m = remaining % 60;
 				string remStr = h > 0 ? $"{h}h {m}m" : $"{m}m";
-				return $"{remStr} left";
+				string format = LocalizationHelper.GetString("Dashboard_GoalRemaining");
+				if (string.IsNullOrEmpty(format) || format == "Dashboard_GoalRemaining")
+					format = "{0} left";
+				return string.Format(format, remStr);
 			}
 			else
 			{
@@ -156,7 +162,10 @@ public class AppUsageViewModel : INotifyPropertyChanged
 				int h = over / 60;
 				int m = over % 60;
 				string overStr = h > 0 ? $"{h}h {m}m" : $"{m}m";
-				return $"+{overStr} over goal";
+				string format = LocalizationHelper.GetString("Dashboard_GoalOver");
+				if (string.IsNullOrEmpty(format) || format == "Dashboard_GoalOver")
+					format = "+{0} over goal";
+				return string.Format(format, overStr);
 			}
 		}
 	}

@@ -1066,4 +1066,16 @@ Fin : {2}</value>
   <data name="ReportDialog.CloseButtonText" xml:space="preserve">
     <value>Fermer</value>
   </data>
+  <data name="Dashboard_GoalOfTarget" xml:space="preserve">
+    <value>{0:F0}% de l'objectif de {1}</value>
+  </data>
+  <data name="Dashboard_GoalRemaining" xml:space="preserve">
+    <value>{0} restant</value>
+  </data>
+  <data name="Dashboard_GoalOver" xml:space="preserve">
+    <value>+{0} au-delà de l'objectif</value>
+  </data>
+  <data name="Dashboard_GoalAdjust.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ajuster l'objectif quotidien</value>
+  </data>
 </root>

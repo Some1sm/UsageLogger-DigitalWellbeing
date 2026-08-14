@@ -1066,4 +1066,16 @@ Fim: {2}</value>
   <data name="ReportDialog.CloseButtonText" xml:space="preserve">
     <value>Fechar</value>
   </data>
+  <data name="Dashboard_GoalOfTarget" xml:space="preserve">
+    <value>{0:F0}% da meta de {1}</value>
+  </data>
+  <data name="Dashboard_GoalRemaining" xml:space="preserve">
+    <value>{0} restante</value>
+  </data>
+  <data name="Dashboard_GoalOver" xml:space="preserve">
+    <value>+{0} acima da meta</value>
+  </data>
+  <data name="Dashboard_GoalAdjust.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ajustar meta diária</value>
+  </data>
 </root>

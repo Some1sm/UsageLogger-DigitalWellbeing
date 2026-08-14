@@ -60,12 +60,13 @@
 
                 <!-- Generate Visual Report / Infographic -->
                 <Button x:Name="BtnVisualReport" 
+                        l:Uids.Uid="History_VisualReportButton"
                         Click="BtnVisualReport_Click" 
                         VerticalAlignment="Bottom" 
                         Padding="14,6">
                     <StackPanel Orientation="Horizontal" Spacing="6">
                         <TextBlock Text="📸" VerticalAlignment="Center"/>
-                        <TextBlock l:Uids.Uid="History_VisualReportText" Text="Visual Report" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                        <TextBlock l:Uids.Uid="History_VisualReportText" VerticalAlignment="Center" FontWeight="SemiBold"/>
                     </StackPanel>
                 </Button>
                 
