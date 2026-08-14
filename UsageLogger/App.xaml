@@ -15,6 +15,7 @@
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
             <converters:ColorToBrushConverter x:Key="ColorToBrushConverter"/>
             <converters:PercentConverter x:Key="PercentConverter"/>
+            <converters:PercentToGridLengthConverter x:Key="PercentToGridLengthConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

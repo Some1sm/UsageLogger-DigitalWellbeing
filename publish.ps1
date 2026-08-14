@@ -11,15 +11,32 @@ $zipName = "UsageLogger_Portable.zip"
 $installerName = "UsageLogger_Installer.exe"
 $setupDir = "UsageLogger.Setup"
 
+function Safe-CopyItem($source, $destination) {
+    $maxRetries = 5
+    for ($i = 1; $i -le $maxRetries; $i++) {
+        try {
+            Copy-Item -Force $source $destination
+            return
+        } catch {
+            if ($i -eq $maxRetries) { throw $_ }
+            Start-Sleep -Milliseconds 400
+        }
+    }
+}
+
 Write-Host "==========================================" -ForegroundColor Cyan
 Write-Host "   UsageLogger Release Publish Pipeline   " -ForegroundColor Cyan
 Write-Host "==========================================" -ForegroundColor Cyan
 
-# 1. Clean previous build artifacts
-Write-Host "[1/5] Cleaning output directories..." -ForegroundColor Yellow
-if (Test-Path $releaseDir) { Remove-Item -Recurse -Force $releaseDir }
-if (Test-Path $zipName) { Remove-Item -Force $zipName }
-if (Test-Path "$setupDir/$zipName") { Remove-Item -Force "$setupDir/$zipName" }
+# 1. Clean previous build artifacts and stop any dangling installer instances
+Write-Host "[1/5] Cleaning output directories and unlocking binaries..." -ForegroundColor Yellow
+Get-Process -Name "UsageLogger_Installer", "UsageLogger.Setup" -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+Start-Sleep -Milliseconds 200
+
+if (Test-Path $releaseDir) { Remove-Item -Recurse -Force $releaseDir -ErrorAction SilentlyContinue }
+if (Test-Path $zipName) { Remove-Item -Force $zipName -ErrorAction SilentlyContinue }
+if (Test-Path "$setupDir/$zipName") { Remove-Item -Force "$setupDir/$zipName" -ErrorAction SilentlyContinue }
+if (Test-Path $installerName) { Remove-Item -Force $installerName -ErrorAction SilentlyContinue }
 
 New-Item -ItemType Directory -Force -Path $finalDir | Out-Null
 
@@ -56,7 +73,7 @@ if ($AppOnly) {
 # 4. Build Uninstaller directly into distribution folder
 Write-Host "[4/5] Building lightweight Uninstaller..." -ForegroundColor Yellow
 dotnet build -c Release -p:EmbedPayload=false -o "$releaseDir/Uninstaller" $setupDir/UsageLogger.Setup.csproj -v q
-Copy-Item -Force "$releaseDir/Uninstaller/UsageLogger.Setup.exe" "$finalDir/Uninstall.exe"
+Safe-CopyItem "$releaseDir/Uninstaller/UsageLogger.Setup.exe" "$finalDir/Uninstall.exe"
 Remove-Item -Recurse -Force "$releaseDir/Uninstaller"
 
 # 5. Compress once directly to Portable Zip & Installer Payload
@@ -71,13 +88,13 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
 )
 
 # Copy zip payload for the installer embedding
-Copy-Item -Force $zipName "$setupDir/$zipName"
+Safe-CopyItem $zipName "$setupDir/$zipName"
 
 # Build Full Installer (With Payload)
 dotnet build -c Release -o "$releaseDir/Setup" $setupDir/UsageLogger.Setup.csproj -v q
-Copy-Item -Force "$releaseDir/Setup/UsageLogger.Setup.exe" $installerName
+Safe-CopyItem "$releaseDir/Setup/UsageLogger.Setup.exe" $installerName
 Remove-Item -Recurse -Force "$releaseDir/Setup"
-if (Test-Path "$setupDir/$zipName") { Remove-Item -Force "$setupDir/$zipName" }
+if (Test-Path "$setupDir/$zipName") { Remove-Item -Force "$setupDir/$zipName" -ErrorAction SilentlyContinue }
 
 Write-Host "`n==========================================" -ForegroundColor Green
 Write-Host "Build Succeeded!" -ForegroundColor Green
