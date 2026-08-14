@@ -194,25 +194,31 @@ public static class PowerTracker
     /// </summary>
     public static (double ProcessWatts, PowerImpactLevel Level) EstimateProcessPower(bool isForeground, bool hasAudio, double durationSeconds, double systemWatts)
     {
-        double procWatts = 1.0; // Base passive background
+        double procWatts;
 
         if (isForeground)
         {
-            // Foreground active app drives the active load and platform draw (~85% of system power)
-            procWatts = Math.Max(12.0, systemWatts * 0.85);
+            // Active foreground application: drives screen interactions and user workload (~20-25% of system draw)
+            procWatts = Math.Clamp(systemWatts * 0.22, 6.0, 45.0);
         }
         else if (hasAudio)
         {
-            // Background audio/media process
-            procWatts = Math.Max(3.5, systemWatts * 0.20);
+            // Background audio streaming (e.g. YouTube Music, Spotify): minimal CPU load (<1%) and 0% GPU
+            // Realistic physical draw is approximately 1.5W - 2.5W for audio stream decoding and WASAPI buffers
+            procWatts = 2.0;
+        }
+        else
+        {
+            // Passive background process
+            procWatts = 0.3;
         }
 
         PowerImpactLevel level = procWatts switch
         {
-            < 10.0 => PowerImpactLevel.VeryLow,
-            < 35.0 => PowerImpactLevel.Low,
-            < 75.0 => PowerImpactLevel.Moderate,
-            < 130.0 => PowerImpactLevel.High,
+            < 3.0 => PowerImpactLevel.VeryLow,
+            < 10.0 => PowerImpactLevel.Low,
+            < 25.0 => PowerImpactLevel.Moderate,
+            < 50.0 => PowerImpactLevel.High,
             _ => PowerImpactLevel.VeryHigh
         };
 

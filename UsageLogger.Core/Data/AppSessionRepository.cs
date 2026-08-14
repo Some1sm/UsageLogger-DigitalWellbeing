@@ -151,7 +151,7 @@ public class AppSessionRepository : IAppSessionRepository
                         // Ensure energy is calculated if legacy log had 0
                         if (session.EnergyWattHours <= 0 && session.Duration.TotalSeconds > 0)
                         {
-                            var (estWatts, _) = PowerTracker.EstimateProcessPower(!session.IsAfk, session.AudioSources.Count > 0, session.Duration.TotalSeconds, 20.0);
+                            var (estWatts, _) = PowerTracker.EstimateProcessPower(!session.IsAfk, session.AudioSources.Count > 0, session.Duration.TotalSeconds, PowerTracker.GetPowerSnapshot().InstantDrawWatts);
                             session.EnergyWattHours = PowerTracker.CalculateEnergyWattHours(estWatts, session.Duration);
                         }
 
