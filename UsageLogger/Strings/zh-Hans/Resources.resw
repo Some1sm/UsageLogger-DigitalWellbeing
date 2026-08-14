@@ -1070,6 +1070,87 @@
     <value>剩余 {0}</value>
   </data>
   <data name="Dashboard_GoalOver" xml:space="preserve">
-    <value>+{0} 超出目标</value>
+    <value>超出目标 +{0}</value>
+  </data>
+  <data name="Productivity_Productive.Content" xml:space="preserve">
+    <value>高效</value>
+  </data>
+  <data name="Productivity_Neutral.Content" xml:space="preserve">
+    <value>中性</value>
+  </data>
+  <data name="Productivity_Leisure.Content" xml:space="preserve">
+    <value>休闲</value>
+  </data>
+  <data name="Settings_DayPartsTitle.Text" xml:space="preserve">
+    <value>时段区间设置</value>
+  </data>
+  <data name="Settings_DayPartsDesc.Text" xml:space="preserve">
+    <value>自定义早晨、下午、傍晚和深夜作息的起始时间</value>
+  </data>
+  <data name="Settings_MorningStart.Text" xml:space="preserve">
+    <value>早晨开始</value>
+  </data>
+  <data name="Settings_AfternoonStart.Text" xml:space="preserve">
+    <value>下午开始</value>
+  </data>
+  <data name="Settings_EveningStart.Text" xml:space="preserve">
+    <value>傍晚开始</value>
+  </data>
+  <data name="Settings_NightStart.Text" xml:space="preserve">
+    <value>深夜开始</value>
+  </data>
+  <data name="History_ExportButton.Text" xml:space="preserve">
+    <value>导出数据</value>
+  </data>
+  <data name="History_ExportCsv.Text" xml:space="preserve">
+    <value>导出为 CSV...</value>
+  </data>
+  <data name="History_ExportJson.Text" xml:space="preserve">
+    <value>导出为 JSON...</value>
+  </data>
+  <data name="History_ProductivityTitle.Text" xml:space="preserve">
+    <value>生产力平衡</value>
+  </data>
+  <data name="History_ContextSwitchesTitle.Text" xml:space="preserve">
+    <value>应用切换 / 小时</value>
+  </data>
+  <data name="History_DayPartRoutineTitle.Text" xml:space="preserve">
+    <value>时段作息分布</value>
+  </data>
+  <data name="History_LateNightLabel.Text" xml:space="preserve">
+    <value>深夜使用:</value>
+  </data>
+  <data name="History_AppSwitchesButton.Text" xml:space="preserve">
+    <value>切换详情</value>
+  </data>
+  <data name="History_AppSwitchesBreakdown.Text" xml:space="preserve">
+    <value>应用切换频次统计</value>
+  </data>
+  <data name="FocusRating_DeepFocus" xml:space="preserve">
+    <value>深度专注</value>
+  </data>
+  <data name="FocusRating_BalancedFlow" xml:space="preserve">
+    <value>平衡心流</value>
+  </data>
+  <data name="FocusRating_FrequentSwitching" xml:space="preserve">
+    <value>频繁切换</value>
+  </data>
+  <data name="FocusRating_HighFragmentation" xml:space="preserve">
+    <value>高度分散</value>
+  </data>
+  <data name="MiscData_SwitchesPerHour" xml:space="preserve">
+    <value>每小时切换次数</value>
+  </data>
+  <data name="MiscData_MostSwitchedApp" xml:space="preserve">
+    <value>切换最频繁的应用</value>
+  </data>
+  <data name="MiscData_ProductivityScore" xml:space="preserve">
+    <value>生产力得分</value>
+  </data>
+  <data name="MiscData_LateNightUsage" xml:space="preserve">
+    <value>深夜屏幕时间</value>
+  </data>
+  <data name="MiscData_LateNightUsageDesc" xml:space="preserve">
+    <value>占总活跃时间</value>
   </data>
 </root>

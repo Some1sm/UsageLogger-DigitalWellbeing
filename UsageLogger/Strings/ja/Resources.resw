@@ -1070,6 +1070,87 @@
     <value>残り {0}</value>
   </data>
   <data name="Dashboard_GoalOver" xml:space="preserve">
-    <value>+{0} 目標超過</value>
+    <value>目標を+{0}超過</value>
+  </data>
+  <data name="Productivity_Productive.Content" xml:space="preserve">
+    <value>生産的</value>
+  </data>
+  <data name="Productivity_Neutral.Content" xml:space="preserve">
+    <value>普通</value>
+  </data>
+  <data name="Productivity_Leisure.Content" xml:space="preserve">
+    <value>娯楽</value>
+  </data>
+  <data name="Settings_DayPartsTitle.Text" xml:space="preserve">
+    <value>時間帯の間隔</value>
+  </data>
+  <data name="Settings_DayPartsDesc.Text" xml:space="preserve">
+    <value>朝、昼、夕方、夜のルーティン開始時刻をカスタマイズ設定します</value>
+  </data>
+  <data name="Settings_MorningStart.Text" xml:space="preserve">
+    <value>朝の開始</value>
+  </data>
+  <data name="Settings_AfternoonStart.Text" xml:space="preserve">
+    <value>昼の開始</value>
+  </data>
+  <data name="Settings_EveningStart.Text" xml:space="preserve">
+    <value>夕方の開始</value>
+  </data>
+  <data name="Settings_NightStart.Text" xml:space="preserve">
+    <value>夜の開始</value>
+  </data>
+  <data name="History_ExportButton.Text" xml:space="preserve">
+    <value>データのエクスポート</value>
+  </data>
+  <data name="History_ExportCsv.Text" xml:space="preserve">
+    <value>CSV形式でエクスポート...</value>
+  </data>
+  <data name="History_ExportJson.Text" xml:space="preserve">
+    <value>JSON形式でエクスポート...</value>
+  </data>
+  <data name="History_ProductivityTitle.Text" xml:space="preserve">
+    <value>生産性バランス</value>
+  </data>
+  <data name="History_ContextSwitchesTitle.Text" xml:space="preserve">
+    <value>アプリ切り替え / 時間</value>
+  </data>
+  <data name="History_DayPartRoutineTitle.Text" xml:space="preserve">
+    <value>時間帯別ルーティン</value>
+  </data>
+  <data name="History_LateNightLabel.Text" xml:space="preserve">
+    <value>深夜:</value>
+  </data>
+  <data name="History_AppSwitchesButton.Text" xml:space="preserve">
+    <value>切り替え詳細</value>
+  </data>
+  <data name="History_AppSwitchesBreakdown.Text" xml:space="preserve">
+    <value>アプリ別切り替え回数</value>
+  </data>
+  <data name="FocusRating_DeepFocus" xml:space="preserve">
+    <value>深い集中</value>
+  </data>
+  <data name="FocusRating_BalancedFlow" xml:space="preserve">
+    <value>バランスの良いフロー</value>
+  </data>
+  <data name="FocusRating_FrequentSwitching" xml:space="preserve">
+    <value>頻繁な切り替え</value>
+  </data>
+  <data name="FocusRating_HighFragmentation" xml:space="preserve">
+    <value>注意散漫</value>
+  </data>
+  <data name="MiscData_SwitchesPerHour" xml:space="preserve">
+    <value>1時間あたりの切り替え数</value>
+  </data>
+  <data name="MiscData_MostSwitchedApp" xml:space="preserve">
+    <value>最も切り替えの多いアプリ</value>
+  </data>
+  <data name="MiscData_ProductivityScore" xml:space="preserve">
+    <value>生産性スコア</value>
+  </data>
+  <data name="MiscData_LateNightUsage" xml:space="preserve">
+    <value>深夜の画面使用時間</value>
+  </data>
+  <data name="MiscData_LateNightUsageDesc" xml:space="preserve">
+    <value>総アクティブ時間中</value>
   </data>
 </root>

@@ -208,6 +208,29 @@ namespace UsageLogger.ViewModels
                 int windowSwitches = sorted.Count(s => !s.IsAfk);
                 Stats.Add(new StatItem("\uE8A5", windowSwitches.ToString("N0"), LocalizationHelper.GetString("MiscData_WindowSwitches"), LocalizationHelper.GetString("MiscData_WindowSwitchesDesc")));
 
+                // 1b. Switches Per Hour (Focus Fragmentation)
+                var contextSwitches = AnalyticsEngine.ComputeContextSwitches(sessions);
+                Stats.Add(new StatItem("\uE7C3", $"{contextSwitches.SwitchesPerHour:F1} / hr", LocalizationHelper.GetString("MiscData_SwitchesPerHour"), contextSwitches.RatingLabel));
+
+                // 1c. Most Switched App
+                if (contextSwitches.TopSwitchedApps.Count > 0)
+                {
+                    var topSwitched = contextSwitches.TopSwitchedApps[0];
+                    Stats.Add(new StatItem("\uE8FD", $"{topSwitched.Count:N0}x", LocalizationHelper.GetString("MiscData_MostSwitchedApp"), topSwitched.DisplayName));
+                }
+
+                // 1d. Productivity Score
+                var productivity = AnalyticsEngine.ComputeProductivity(sessions);
+                string prodDesc = $"{productivity.ProductivePct}% Productive ({StringHelper.FormatDurationCompact(productivity.ProductiveDuration)})";
+                Stats.Add(new StatItem("\uE9D9", $"{productivity.Score}%", LocalizationHelper.GetString("MiscData_ProductivityScore"), prodDesc));
+
+                // 1e. Day-Part & Late-Night Usage
+                var dayParts = AnalyticsEngine.ComputeDayParts(sessions);
+                if (dayParts.NightDuration.TotalMinutes > 0)
+                {
+                    Stats.Add(new StatItem("\uEC46", StringHelper.FormatDurationCompact(dayParts.NightDuration), LocalizationHelper.GetString("MiscData_LateNightUsage"), $"{dayParts.NightPct:F0}% {LocalizationHelper.GetString("MiscData_LateNightUsageDesc")}"));
+                }
+
                 // 2. Audio Plays (Rising Edge)
                 int audioPlays = 0;
                 bool prevHadAudio = false;

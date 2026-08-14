@@ -168,6 +168,151 @@ namespace UsageLogger.ViewModels
             get => _prevPeriodAvgText;
             set { if (_prevPeriodAvgText != value) { _prevPeriodAvgText = value; OnPropertyChanged(); } }
         }
+
+        // Productivity Analytics
+        private int _productivityScore = 100;
+        public int ProductivityScore
+        {
+            get => _productivityScore;
+            set { if (_productivityScore != value) { _productivityScore = value; OnPropertyChanged(); } }
+        }
+
+        private int _productivePercent;
+        public int ProductivePercent
+        {
+            get => _productivePercent;
+            set { if (_productivePercent != value) { _productivePercent = value; OnPropertyChanged(); } }
+        }
+
+        private int _neutralPercent;
+        public int NeutralPercent
+        {
+            get => _neutralPercent;
+            set { if (_neutralPercent != value) { _neutralPercent = value; OnPropertyChanged(); } }
+        }
+
+        private int _leisurePercent;
+        public int LeisurePercent
+        {
+            get => _leisurePercent;
+            set { if (_leisurePercent != value) { _leisurePercent = value; OnPropertyChanged(); } }
+        }
+
+        private string _productivityBreakdownText = "";
+        public string ProductivityBreakdownText
+        {
+            get => _productivityBreakdownText;
+            set { if (_productivityBreakdownText != value) { _productivityBreakdownText = value; OnPropertyChanged(); } }
+        }
+
+        // Focus & Context Switches
+        private string _switchesPerHourText = "0.0 / hr";
+        public string SwitchesPerHourText
+        {
+            get => _switchesPerHourText;
+            set { if (_switchesPerHourText != value) { _switchesPerHourText = value; OnPropertyChanged(); } }
+        }
+
+        private string _totalSwitchesText = "0 switches";
+        public string TotalSwitchesText
+        {
+            get => _totalSwitchesText;
+            set { if (_totalSwitchesText != value) { _totalSwitchesText = value; OnPropertyChanged(); } }
+        }
+
+        private string _focusRatingText = "Balanced Flow";
+        public string FocusRatingText
+        {
+            get => _focusRatingText;
+            set { if (_focusRatingText != value) { _focusRatingText = value; OnPropertyChanged(); } }
+        }
+
+        private string _focusRatingColor = "#0078D4";
+        public string FocusRatingColor
+        {
+            get => _focusRatingColor;
+            set { if (_focusRatingColor != value) { _focusRatingColor = value; OnPropertyChanged(); } }
+        }
+
+        private ObservableCollection<AppSwitchItem> _topSwitchedApps = new();
+        public ObservableCollection<AppSwitchItem> TopSwitchedApps
+        {
+            get => _topSwitchedApps;
+            set { if (_topSwitchedApps != value) { _topSwitchedApps = value; OnPropertyChanged(); } }
+        }
+
+        // Day-Part Routine
+        private double _morningPercent;
+        public double MorningPercent
+        {
+            get => _morningPercent;
+            set { if (_morningPercent != value) { _morningPercent = value; OnPropertyChanged(); } }
+        }
+
+        private double _afternoonPercent;
+        public double AfternoonPercent
+        {
+            get => _afternoonPercent;
+            set { if (_afternoonPercent != value) { _afternoonPercent = value; OnPropertyChanged(); } }
+        }
+
+        private double _eveningPercent;
+        public double EveningPercent
+        {
+            get => _eveningPercent;
+            set { if (_eveningPercent != value) { _eveningPercent = value; OnPropertyChanged(); } }
+        }
+
+        private double _nightPercent;
+        public double NightPercent
+        {
+            get => _nightPercent;
+            set { if (_nightPercent != value) { _nightPercent = value; OnPropertyChanged(); } }
+        }
+
+        private string _dayPartBreakdownText = "";
+        public string DayPartBreakdownText
+        {
+            get => _dayPartBreakdownText;
+            set { if (_dayPartBreakdownText != value) { _dayPartBreakdownText = value; OnPropertyChanged(); } }
+        }
+
+        private string _lateNightUsageText = "0m";
+        public string LateNightUsageText
+        {
+            get => _lateNightUsageText;
+            set { if (_lateNightUsageText != value) { _lateNightUsageText = value; OnPropertyChanged(); } }
+        }
+
+        private string _dayPartMorningRange = "06:00 - 12:00";
+        public string DayPartMorningRange
+        {
+            get => _dayPartMorningRange;
+            set { if (_dayPartMorningRange != value) { _dayPartMorningRange = value; OnPropertyChanged(); } }
+        }
+
+        private string _dayPartAfternoonRange = "12:00 - 18:00";
+        public string DayPartAfternoonRange
+        {
+            get => _dayPartAfternoonRange;
+            set { if (_dayPartAfternoonRange != value) { _dayPartAfternoonRange = value; OnPropertyChanged(); } }
+        }
+
+        private string _dayPartEveningRange = "18:00 - 22:00";
+        public string DayPartEveningRange
+        {
+            get => _dayPartEveningRange;
+            set { if (_dayPartEveningRange != value) { _dayPartEveningRange = value; OnPropertyChanged(); } }
+        }
+
+        private string _dayPartNightRange = "22:00 - 06:00";
+        public string DayPartNightRange
+        {
+            get => _dayPartNightRange;
+            set { if (_dayPartNightRange != value) { _dayPartNightRange = value; OnPropertyChanged(); } }
+        }
+
+        public List<AppSession> CachedSessions => _cachedSessions;
         
         // Navigation event for heatmap cell click
         public event Action<DateTime> NavigateToDate;
@@ -626,6 +771,41 @@ namespace UsageLogger.ViewModels
 
                 // Generate Trend Chart (day-by-day bars with previous period average line)
                 GenerateTrendChart(allSessions, prevSessions, StartDate.Date, EndDate.Date);
+
+                // Compute Day-Parts
+                var dayParts = AnalyticsEngine.ComputeDayParts(allSessions);
+                MorningPercent = dayParts.MorningPct;
+                AfternoonPercent = dayParts.AfternoonPct;
+                EveningPercent = dayParts.EveningPct;
+                NightPercent = dayParts.NightPct;
+                DayPartMorningRange = dayParts.MorningRangeText;
+                DayPartAfternoonRange = dayParts.AfternoonRangeText;
+                DayPartEveningRange = dayParts.EveningRangeText;
+                DayPartNightRange = dayParts.NightRangeText;
+                LateNightUsageText = StringHelper.FormatDurationCompact(dayParts.NightDuration);
+                DayPartBreakdownText = $"{StringHelper.FormatDurationCompact(dayParts.MorningDuration)} • {StringHelper.FormatDurationCompact(dayParts.AfternoonDuration)} • {StringHelper.FormatDurationCompact(dayParts.EveningDuration)} • {StringHelper.FormatDurationCompact(dayParts.NightDuration)}";
+
+                // Compute Productivity
+                var prod = AnalyticsEngine.ComputeProductivity(allSessions);
+                ProductivityScore = prod.Score;
+                ProductivePercent = prod.ProductivePct;
+                NeutralPercent = prod.NeutralPct;
+                LeisurePercent = prod.LeisurePct;
+                ProductivityBreakdownText = $"{StringHelper.FormatDurationCompact(prod.ProductiveDuration)} • {StringHelper.FormatDurationCompact(prod.NeutralDuration)} • {StringHelper.FormatDurationCompact(prod.LeisureDuration)}";
+
+                // Compute Context Switches
+                var switches = AnalyticsEngine.ComputeContextSwitches(allSessions);
+                SwitchesPerHourText = $"{switches.SwitchesPerHour:F1} / hr";
+                TotalSwitchesText = $"{switches.TotalSwitches} switches";
+                FocusRatingText = switches.RatingLabel;
+                FocusRatingColor = switches.Rating switch
+                {
+                    FocusRating.DeepFocus => "#107C41",
+                    FocusRating.BalancedFlow => "#0078D4",
+                    FocusRating.FrequentSwitching => "#FFA500",
+                    _ => "#DC143C"
+                };
+                TopSwitchedApps = new ObservableCollection<AppSwitchItem>(switches.TopSwitchedApps);
 
                 // Aggregate for Pie Charts
                 List<AppUsage> aggregatedUsage = AggregateSessions(allSessions);

@@ -6,8 +6,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:helpers="using:UsageLogger.Helpers"
     xmlns:models="using:UsageLogger.Models"
+    xmlns:converters="using:UsageLogger.Converters"
     xmlns:l="using:WinUI3Localizer"
     mc:Ignorable="d">
+
+    <Page.Resources>
+        <converters:EnumToIntConverter x:Key="EnumToIntConverter"/>
+    </Page.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -217,6 +222,54 @@
                     <StackPanel Grid.Column="2" Spacing="4" Width="80">
                         <TextBlock l:Uids.Uid="Settings_Currency" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                         <TextBox x:Name="TxtCurrency" PlaceholderText="$" TextChanged="TxtCurrency_TextChanged"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+
+            <!-- Day-Part Intervals -->
+            <Grid Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="12">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Spacing="2" Margin="0,0,0,10">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xEC46;" FontFamily="Segoe MDL2 Assets" FontSize="16"/>
+                        <TextBlock l:Uids.Uid="Settings_DayPartsTitle" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                    </StackPanel>
+                    <TextBlock l:Uids.Uid="Settings_DayPartsDesc" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
+                </StackPanel>
+                
+                <Grid Grid.Row="1" ColumnSpacing="12" RowSpacing="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <!-- Morning -->
+                    <StackPanel Grid.Column="0" Spacing="4">
+                        <TextBlock l:Uids.Uid="Settings_MorningStart" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <ComboBox x:Name="CmbMorningStart" HorizontalAlignment="Stretch" SelectionChanged="DayPart_SelectionChanged"/>
+                    </StackPanel>
+                    
+                    <!-- Afternoon -->
+                    <StackPanel Grid.Column="1" Spacing="4">
+                        <TextBlock l:Uids.Uid="Settings_AfternoonStart" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <ComboBox x:Name="CmbAfternoonStart" HorizontalAlignment="Stretch" SelectionChanged="DayPart_SelectionChanged"/>
+                    </StackPanel>
+                    
+                    <!-- Evening -->
+                    <StackPanel Grid.Column="2" Spacing="4">
+                        <TextBlock l:Uids.Uid="Settings_EveningStart" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <ComboBox x:Name="CmbEveningStart" HorizontalAlignment="Stretch" SelectionChanged="DayPart_SelectionChanged"/>
+                    </StackPanel>
+                    
+                    <!-- Night -->
+                    <StackPanel Grid.Column="3" Spacing="4">
+                        <TextBlock l:Uids.Uid="Settings_NightStart" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <ComboBox x:Name="CmbNightStart" HorizontalAlignment="Stretch" SelectionChanged="DayPart_SelectionChanged"/>
                     </StackPanel>
                 </Grid>
             </Grid>
@@ -587,26 +640,34 @@
                      <ListView.ItemTemplate>
                          <DataTemplate x:DataType="models:CustomAppTag">
                              <Grid Margin="0,4">
-                                 <Grid.ColumnDefinitions>
-                                     <ColumnDefinition Width="Auto"/> <!-- Color -->
-                                     <ColumnDefinition Width="*"/>    <!-- Name -->
-                                     <ColumnDefinition Width="Auto"/> <!-- Delete -->
-                                 </Grid.ColumnDefinitions>
-                                 
-                                 <Button Grid.Column="0" Width="32" Height="32" CornerRadius="16" Margin="0,0,12,0" Padding="0"
-                                         Background="{x:Bind helpers:AppTagHelper.GetBrush(HexColor)}">
-                                     <Button.Flyout>
-                                         <Flyout Closed="ColorPickerFlyout_Closed">
-                                             <ColorPicker ColorSpectrumShape="Ring" IsMoreButtonVisible="True" IsColorSliderVisible="True" IsColorChannelTextInputVisible="False" 
-                                                          ColorChanged="ColorPicker_ColorChanged" Tag="{x:Bind Id}"/>
-                                         </Flyout>
-                                     </Button.Flyout>
-                                 </Button>
-                                 
-                                 <TextBox Grid.Column="1" Text="{x:Bind Name, Mode=TwoWay}" LostFocus="TagName_LostFocus" VerticalAlignment="Center"/>
-                                 
-                                 <Button Grid.Column="2" Content="&#xE74D;" FontFamily="Segoe MDL2 Assets" Click="BtnDeleteTag_Click" Tag="{x:Bind Id}" Margin="10,0,0,0" Background="Transparent"/>
-                             </Grid>
+                                  <Grid.ColumnDefinitions>
+                                      <ColumnDefinition Width="Auto"/> <!-- Color -->
+                                      <ColumnDefinition Width="*"/>    <!-- Name -->
+                                      <ColumnDefinition Width="Auto"/> <!-- Productivity Tier -->
+                                      <ColumnDefinition Width="Auto"/> <!-- Delete -->
+                                  </Grid.ColumnDefinitions>
+                                  
+                                  <Button Grid.Column="0" Width="32" Height="32" CornerRadius="16" Margin="0,0,12,0" Padding="0"
+                                          Background="{x:Bind helpers:AppTagHelper.GetBrush(HexColor)}">
+                                      <Button.Flyout>
+                                          <Flyout Closed="ColorPickerFlyout_Closed">
+                                              <ColorPicker ColorSpectrumShape="Ring" IsMoreButtonVisible="True" IsColorSliderVisible="True" IsColorChannelTextInputVisible="False" 
+                                                           ColorChanged="ColorPicker_ColorChanged" Tag="{x:Bind Id}"/>
+                                          </Flyout>
+                                      </Button.Flyout>
+                                  </Button>
+                                  
+                                  <TextBox Grid.Column="1" Text="{x:Bind Name, Mode=TwoWay}" LostFocus="TagName_LostFocus" VerticalAlignment="Center"/>
+                                  
+                                  <ComboBox Grid.Column="2" SelectedIndex="{x:Bind Tier, Mode=TwoWay, Converter={StaticResource EnumToIntConverter}}"
+                                            SelectionChanged="TagTier_SelectionChanged" Tag="{x:Bind Id}" Margin="10,0,0,0" VerticalAlignment="Center" Width="130">
+                                      <ComboBoxItem l:Uids.Uid="Productivity_Productive" Content="Productive"/>
+                                      <ComboBoxItem l:Uids.Uid="Productivity_Neutral" Content="Neutral"/>
+                                      <ComboBoxItem l:Uids.Uid="Productivity_Leisure" Content="Leisure"/>
+                                  </ComboBox>
+
+                                  <Button Grid.Column="3" Content="&#xE74D;" FontFamily="Segoe MDL2 Assets" Click="BtnDeleteTag_Click" Tag="{x:Bind Id}" Margin="8,0,0,0" Background="Transparent"/>
+                              </Grid>
                          </DataTemplate>
                      </ListView.ItemTemplate>
                  </ListView>

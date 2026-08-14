@@ -158,6 +158,10 @@ namespace UsageLogger.Views
         private string _origBackdrop;
         private int _origDayStartHour;
         private int _origDayStartMinute;
+        private int _origMorningStartHour;
+        private int _origAfternoonStartHour;
+        private int _origEveningStartHour;
+        private int _origNightStartHour;
 
         /// <summary>
         /// Compares current UI values against original loaded values.
@@ -224,8 +228,11 @@ namespace UsageLogger.Views
                 if (CBLanguage.SelectedItem is ComboBoxItem langItem)
                     hasChanges |= (langItem.Tag?.ToString() ?? "") != (_originalLanguageCode ?? "");
                 
-                // Log Location
-                hasChanges |= (TxtLogLocation.Text ?? "") != (_origLogLocation ?? "");
+                // Day-Part Intervals
+                hasChanges |= CmbMorningStart.SelectedIndex != _origMorningStartHour;
+                hasChanges |= CmbAfternoonStart.SelectedIndex != _origAfternoonStartHour;
+                hasChanges |= CmbEveningStart.SelectedIndex != _origEveningStartHour;
+                hasChanges |= CmbNightStart.SelectedIndex != _origNightStartHour;
                 
                 UnsavedChangesBanner.Visibility = hasChanges ? Visibility.Visible : Visibility.Collapsed;
             }
@@ -388,6 +395,9 @@ namespace UsageLogger.Views
             // Log Location
             LoadLogLocation();
 
+            // Day-Part Intervals
+            PopulateDayPartComboBoxes();
+
             // Store original values for smart dirty detection
             _origStartupMode = StartupManager.GetStartupMode().ToString();
             _origMinimizeOnExit = UserPreferences.MinimizeOnExit;
@@ -412,6 +422,10 @@ namespace UsageLogger.Views
             _origLogLocation = TxtLogLocation.Text ?? "";
             _origDayStartHour = UserPreferences.DayStartMinutes / 60;
             _origDayStartMinute = UserPreferences.DayStartMinutes % 60;
+            _origMorningStartHour = UserPreferences.MorningStartHour;
+            _origAfternoonStartHour = UserPreferences.AfternoonStartHour;
+            _origEveningStartHour = UserPreferences.EveningStartHour;
+            _origNightStartHour = UserPreferences.NightStartHour;
 
             _isLoading = false;
             MarkClean();
@@ -704,6 +718,12 @@ namespace UsageLogger.Views
                 // Restart service to pick up new path
                 RestartBackgroundService();
             }
+
+            // Day-Part Intervals
+            if (CmbMorningStart.SelectedIndex >= 0) UserPreferences.MorningStartHour = CmbMorningStart.SelectedIndex;
+            if (CmbAfternoonStart.SelectedIndex >= 0) UserPreferences.AfternoonStartHour = CmbAfternoonStart.SelectedIndex;
+            if (CmbEveningStart.SelectedIndex >= 0) UserPreferences.EveningStartHour = CmbEveningStart.SelectedIndex;
+            if (CmbNightStart.SelectedIndex >= 0) UserPreferences.NightStartHour = CmbNightStart.SelectedIndex;
 
             // Save
             UserPreferences.Save();
@@ -1065,6 +1085,40 @@ namespace UsageLogger.Views
         {
             if (_isLoading) return;
             CheckForChanges();
+        }
+
+        private void PopulateDayPartComboBoxes()
+        {
+            var hourItems = Enumerable.Range(0, 24).Select(h => $"{h:D2}:00").ToList();
+            CmbMorningStart.ItemsSource = hourItems;
+            CmbAfternoonStart.ItemsSource = new List<string>(hourItems);
+            CmbEveningStart.ItemsSource = new List<string>(hourItems);
+            CmbNightStart.ItemsSource = new List<string>(hourItems);
+
+            CmbMorningStart.SelectedIndex = Math.Clamp(UserPreferences.MorningStartHour, 0, 23);
+            CmbAfternoonStart.SelectedIndex = Math.Clamp(UserPreferences.AfternoonStartHour, 0, 23);
+            CmbEveningStart.SelectedIndex = Math.Clamp(UserPreferences.EveningStartHour, 0, 23);
+            CmbNightStart.SelectedIndex = Math.Clamp(UserPreferences.NightStartHour, 0, 23);
+        }
+
+        private void DayPart_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_isLoading) return;
+            CheckForChanges();
+        }
+
+        private void TagTier_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_isLoading) return;
+            if (sender is ComboBox cmb && cmb.Tag is int tagId && cmb.SelectedIndex >= 0)
+            {
+                var tag = Tags.FirstOrDefault(t => t.Id == tagId);
+                if (tag != null)
+                {
+                    tag.Tier = (ProductivityTier)cmb.SelectedIndex;
+                    SaveTags();
+                }
+            }
         }
     }
 }

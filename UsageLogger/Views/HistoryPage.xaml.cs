@@ -160,5 +160,21 @@ namespace UsageLogger.Views
                 }
             }
         }
+
+        private async void BtnExportCsv_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            if (ViewModel.CachedSessions == null || ViewModel.CachedSessions.Count == 0) return;
+            DateTime start = ViewModel.StartDate != default ? ViewModel.StartDate.DateTime : DateTime.Now.Date;
+            DateTime end = ViewModel.EndDate != default ? ViewModel.EndDate.DateTime : DateTime.Now.Date;
+            await Helpers.DataExportHelper.ExportToCsvAsync(ViewModel.CachedSessions, start, end);
+        }
+
+        private async void BtnExportJson_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            if (ViewModel.CachedSessions == null || ViewModel.CachedSessions.Count == 0) return;
+            DateTime start = ViewModel.StartDate != default ? ViewModel.StartDate.DateTime : DateTime.Now.Date;
+            DateTime end = ViewModel.EndDate != default ? ViewModel.EndDate.DateTime : DateTime.Now.Date;
+            await Helpers.DataExportHelper.ExportToJsonAsync(ViewModel.CachedSessions, start, end);
+        }
     }
 }

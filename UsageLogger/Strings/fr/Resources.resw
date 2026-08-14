@@ -1072,4 +1072,85 @@ Fin : {2}</value>
   <data name="Dashboard_GoalOver" xml:space="preserve">
     <value>+{0} au-delà de l'objectif</value>
   </data>
+  <data name="Productivity_Productive.Content" xml:space="preserve">
+    <value>Productif</value>
+  </data>
+  <data name="Productivity_Neutral.Content" xml:space="preserve">
+    <value>Neutre</value>
+  </data>
+  <data name="Productivity_Leisure.Content" xml:space="preserve">
+    <value>Loisirs</value>
+  </data>
+  <data name="Settings_DayPartsTitle.Text" xml:space="preserve">
+    <value>Intervalles des Parties de la Journée</value>
+  </data>
+  <data name="Settings_DayPartsDesc.Text" xml:space="preserve">
+    <value>Configurez les heures de début des routines Matin, Après-midi, Soirée et Nuit</value>
+  </data>
+  <data name="Settings_MorningStart.Text" xml:space="preserve">
+    <value>Début Matin</value>
+  </data>
+  <data name="Settings_AfternoonStart.Text" xml:space="preserve">
+    <value>Début Après-midi</value>
+  </data>
+  <data name="Settings_EveningStart.Text" xml:space="preserve">
+    <value>Début Soirée</value>
+  </data>
+  <data name="Settings_NightStart.Text" xml:space="preserve">
+    <value>Début Nuit</value>
+  </data>
+  <data name="History_ExportButton.Text" xml:space="preserve">
+    <value>Exporter les Données</value>
+  </data>
+  <data name="History_ExportCsv.Text" xml:space="preserve">
+    <value>Exporter en CSV...</value>
+  </data>
+  <data name="History_ExportJson.Text" xml:space="preserve">
+    <value>Exporter en JSON...</value>
+  </data>
+  <data name="History_ProductivityTitle.Text" xml:space="preserve">
+    <value>Équilibre de Productivité</value>
+  </data>
+  <data name="History_ContextSwitchesTitle.Text" xml:space="preserve">
+    <value>Changements d'App / Heure</value>
+  </data>
+  <data name="History_DayPartRoutineTitle.Text" xml:space="preserve">
+    <value>Routine par Partie de Journée</value>
+  </data>
+  <data name="History_LateNightLabel.Text" xml:space="preserve">
+    <value>Nuit tardive :</value>
+  </data>
+  <data name="History_AppSwitchesButton.Text" xml:space="preserve">
+    <value>Changements d'app</value>
+  </data>
+  <data name="History_AppSwitchesBreakdown.Text" xml:space="preserve">
+    <value>Nombre de Changements d'App</value>
+  </data>
+  <data name="FocusRating_DeepFocus" xml:space="preserve">
+    <value>Concentration Profonde</value>
+  </data>
+  <data name="FocusRating_BalancedFlow" xml:space="preserve">
+    <value>Flux Équilibré</value>
+  </data>
+  <data name="FocusRating_FrequentSwitching" xml:space="preserve">
+    <value>Changements Fréquents</value>
+  </data>
+  <data name="FocusRating_HighFragmentation" xml:space="preserve">
+    <value>Forte Fragmentation</value>
+  </data>
+  <data name="MiscData_SwitchesPerHour" xml:space="preserve">
+    <value>Changements par Heure</value>
+  </data>
+  <data name="MiscData_MostSwitchedApp" xml:space="preserve">
+    <value>App la Plus Changée</value>
+  </data>
+  <data name="MiscData_ProductivityScore" xml:space="preserve">
+    <value>Score de Productivité</value>
+  </data>
+  <data name="MiscData_LateNightUsage" xml:space="preserve">
+    <value>Temps d'Écran Nocturne</value>
+  </data>
+  <data name="MiscData_LateNightUsageDesc" xml:space="preserve">
+    <value>du temps actif total</value>
+  </data>
 </root>

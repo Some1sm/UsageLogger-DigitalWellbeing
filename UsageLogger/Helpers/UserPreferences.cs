@@ -55,6 +55,12 @@ namespace UsageLogger.Helpers
         public static bool EnableDailyGoal { get; set; } = true; // Daily screen time budget goal
         public static int DailyGoalMinutes { get; set; } = 360; // Default daily goal: 6 hours (360 mins)
 
+        // Day-Part Interval Settings (Hour 0-23)
+        public static int MorningStartHour { get; set; } = 6;
+        public static int AfternoonStartHour { get; set; } = 12;
+        public static int EveningStartHour { get; set; } = 18;
+        public static int NightStartHour { get; set; } = 22;
+
         static UserPreferences()
         {
             Load();
@@ -102,6 +108,10 @@ namespace UsageLogger.Helpers
                     InterruptionThresholdSeconds,
                     EnableDailyGoal,
                     DailyGoalMinutes,
+                    MorningStartHour,
+                    AfternoonStartHour,
+                    EveningStartHour,
+                    NightStartHour,
                     DayStartHour = DayStartMinutes / 60,
                     DayStartMinute = DayStartMinutes % 60
                 };
@@ -158,6 +168,10 @@ namespace UsageLogger.Helpers
                     if (data.TryGetProperty(nameof(InterruptionThresholdSeconds), out prop)) InterruptionThresholdSeconds = prop.GetInt32();
                     if (data.TryGetProperty(nameof(EnableDailyGoal), out prop)) EnableDailyGoal = prop.GetBoolean();
                     if (data.TryGetProperty(nameof(DailyGoalMinutes), out prop)) DailyGoalMinutes = prop.GetInt32();
+                    if (data.TryGetProperty(nameof(MorningStartHour), out prop)) MorningStartHour = Math.Clamp(prop.GetInt32(), 0, 23);
+                    if (data.TryGetProperty(nameof(AfternoonStartHour), out prop)) AfternoonStartHour = Math.Clamp(prop.GetInt32(), 0, 23);
+                    if (data.TryGetProperty(nameof(EveningStartHour), out prop)) EveningStartHour = Math.Clamp(prop.GetInt32(), 0, 23);
+                    if (data.TryGetProperty(nameof(NightStartHour), out prop)) NightStartHour = Math.Clamp(prop.GetInt32(), 0, 23);
                     int _dsh = 0, _dsm = 0;
                     if (data.TryGetProperty("DayStartHour", out prop)) _dsh = Math.Clamp(prop.GetInt32(), 0, 23);
                     if (data.TryGetProperty("DayStartMinute", out prop)) _dsm = Math.Clamp(prop.GetInt32(), 0, 59);
@@ -191,13 +205,13 @@ namespace UsageLogger.Helpers
                     CustomTags = new List<CustomAppTag>
                     {
                         // Untagged (0) is implicit usually, but good to have explicit if we want a color
-                        new CustomAppTag(0, "Untagged", "#808080"), 
-                        new CustomAppTag(1, "Work", "#1E90FF"),
-                        new CustomAppTag(2, "Education", "#FFA500"),
-                        new CustomAppTag(3, "Entertainment", "#9370DB"),
-                        new CustomAppTag(4, "Social", "#FF1493"),
-                        new CustomAppTag(5, "Utility", "#00FF3A"),
-                        new CustomAppTag(6, "Game", "#DC143C")
+                        new CustomAppTag(0, "Untagged", "#808080", ProductivityTier.Neutral), 
+                        new CustomAppTag(1, "Work", "#1E90FF", ProductivityTier.Productive),
+                        new CustomAppTag(2, "Education", "#FFA500", ProductivityTier.Productive),
+                        new CustomAppTag(3, "Entertainment", "#9370DB", ProductivityTier.Leisure),
+                        new CustomAppTag(4, "Social", "#FF1493", ProductivityTier.Leisure),
+                        new CustomAppTag(5, "Utility", "#00FF3A", ProductivityTier.Productive),
+                        new CustomAppTag(6, "Game", "#DC143C", ProductivityTier.Leisure)
                     };
                     Save();
                 }
@@ -206,6 +220,22 @@ namespace UsageLogger.Helpers
             {
                 System.Diagnostics.Debug.WriteLine($"[UserPreferences] Load error: {ex.Message}");
             }
+        }
+
+        /// <summary>
+        /// Gets the productivity tier (Productive, Neutral, Leisure) for a given AppTag.
+        /// </summary>
+        public static ProductivityTier GetTagTier(AppTag tag)
+        {
+            var customTag = CustomTags?.FirstOrDefault(t => t.Id == (int)tag);
+            if (customTag != null) return customTag.Tier;
+            
+            return tag switch
+            {
+                AppTag.Work or AppTag.Education or AppTag.Utility => ProductivityTier.Productive,
+                AppTag.Entertainment or AppTag.Game or AppTag.Social => ProductivityTier.Leisure,
+                _ => ProductivityTier.Neutral
+            };
         }
 
         private static void RepairCustomIconPaths()

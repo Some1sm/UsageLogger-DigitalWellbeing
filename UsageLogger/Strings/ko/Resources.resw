@@ -1070,6 +1070,87 @@
     <value>{0} 남음</value>
   </data>
   <data name="Dashboard_GoalOver" xml:space="preserve">
-    <value>+{0} 목표 초과</value>
+    <value>목표 +{0} 초과</value>
+  </data>
+  <data name="Productivity_Productive.Content" xml:space="preserve">
+    <value>생산적</value>
+  </data>
+  <data name="Productivity_Neutral.Content" xml:space="preserve">
+    <value>보통</value>
+  </data>
+  <data name="Productivity_Leisure.Content" xml:space="preserve">
+    <value>여가</value>
+  </data>
+  <data name="Settings_DayPartsTitle.Text" xml:space="preserve">
+    <value>시간대 구간 설정</value>
+  </data>
+  <data name="Settings_DayPartsDesc.Text" xml:space="preserve">
+    <value>아침, 오후, 저녁, 심야 루틴의 시작 시간을 맞춤 설정합니다</value>
+  </data>
+  <data name="Settings_MorningStart.Text" xml:space="preserve">
+    <value>아침 시작</value>
+  </data>
+  <data name="Settings_AfternoonStart.Text" xml:space="preserve">
+    <value>오후 시작</value>
+  </data>
+  <data name="Settings_EveningStart.Text" xml:space="preserve">
+    <value>저녁 시작</value>
+  </data>
+  <data name="Settings_NightStart.Text" xml:space="preserve">
+    <value>심야 시작</value>
+  </data>
+  <data name="History_ExportButton.Text" xml:space="preserve">
+    <value>데이터 내보내기</value>
+  </data>
+  <data name="History_ExportCsv.Text" xml:space="preserve">
+    <value>CSV로 내보내기...</value>
+  </data>
+  <data name="History_ExportJson.Text" xml:space="preserve">
+    <value>JSON으로 내보내기...</value>
+  </data>
+  <data name="History_ProductivityTitle.Text" xml:space="preserve">
+    <value>생산성 균형</value>
+  </data>
+  <data name="History_ContextSwitchesTitle.Text" xml:space="preserve">
+    <value>앱 전환 / 시간</value>
+  </data>
+  <data name="History_DayPartRoutineTitle.Text" xml:space="preserve">
+    <value>시간대별 루틴</value>
+  </data>
+  <data name="History_LateNightLabel.Text" xml:space="preserve">
+    <value>심야 사용:</value>
+  </data>
+  <data name="History_AppSwitchesButton.Text" xml:space="preserve">
+    <value>앱 전환</value>
+  </data>
+  <data name="History_AppSwitchesBreakdown.Text" xml:space="preserve">
+    <value>앱별 전환 횟수</value>
+  </data>
+  <data name="FocusRating_DeepFocus" xml:space="preserve">
+    <value>깊은 몰입</value>
+  </data>
+  <data name="FocusRating_BalancedFlow" xml:space="preserve">
+    <value>균형 잡힌 흐름</value>
+  </data>
+  <data name="FocusRating_FrequentSwitching" xml:space="preserve">
+    <value>잦은 전환</value>
+  </data>
+  <data name="FocusRating_HighFragmentation" xml:space="preserve">
+    <value>주의 분산</value>
+  </data>
+  <data name="MiscData_SwitchesPerHour" xml:space="preserve">
+    <value>시간당 전환 수</value>
+  </data>
+  <data name="MiscData_MostSwitchedApp" xml:space="preserve">
+    <value>가장 많이 전환된 앱</value>
+  </data>
+  <data name="MiscData_ProductivityScore" xml:space="preserve">
+    <value>생산성 점수</value>
+  </data>
+  <data name="MiscData_LateNightUsage" xml:space="preserve">
+    <value>심야 화면 시간</value>
+  </data>
+  <data name="MiscData_LateNightUsageDesc" xml:space="preserve">
+    <value>총 활성 시간 중</value>
   </data>
 </root>

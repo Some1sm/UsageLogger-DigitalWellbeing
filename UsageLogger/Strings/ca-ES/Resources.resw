@@ -1072,4 +1072,85 @@ Acaba: {2}</value>
   <data name="Dashboard_GoalOver" xml:space="preserve">
     <value>+{0} sobre l'objectiu</value>
   </data>
+  <data name="Productivity_Productive.Content" xml:space="preserve">
+    <value>Productiu</value>
+  </data>
+  <data name="Productivity_Neutral.Content" xml:space="preserve">
+    <value>Neutral</value>
+  </data>
+  <data name="Productivity_Leisure.Content" xml:space="preserve">
+    <value>Oci</value>
+  </data>
+  <data name="Settings_DayPartsTitle.Text" xml:space="preserve">
+    <value>Intervals de Parts del Dia</value>
+  </data>
+  <data name="Settings_DayPartsDesc.Text" xml:space="preserve">
+    <value>Configura les hores d'inici de les rutines de Matí, Tarda, Vespre i Nit</value>
+  </data>
+  <data name="Settings_MorningStart.Text" xml:space="preserve">
+    <value>Inici de Matí</value>
+  </data>
+  <data name="Settings_AfternoonStart.Text" xml:space="preserve">
+    <value>Inici de Tarda</value>
+  </data>
+  <data name="Settings_EveningStart.Text" xml:space="preserve">
+    <value>Inici de Vespre</value>
+  </data>
+  <data name="Settings_NightStart.Text" xml:space="preserve">
+    <value>Inici de Nit</value>
+  </data>
+  <data name="History_ExportButton.Text" xml:space="preserve">
+    <value>Exportar Dades</value>
+  </data>
+  <data name="History_ExportCsv.Text" xml:space="preserve">
+    <value>Exportar com a CSV...</value>
+  </data>
+  <data name="History_ExportJson.Text" xml:space="preserve">
+    <value>Exportar com a JSON...</value>
+  </data>
+  <data name="History_ProductivityTitle.Text" xml:space="preserve">
+    <value>Balanç de Productivitat</value>
+  </data>
+  <data name="History_ContextSwitchesTitle.Text" xml:space="preserve">
+    <value>Canvis d'App / Hora</value>
+  </data>
+  <data name="History_DayPartRoutineTitle.Text" xml:space="preserve">
+    <value>Rutina per Parts del Dia</value>
+  </data>
+  <data name="History_LateNightLabel.Text" xml:space="preserve">
+    <value>Nit:</value>
+  </data>
+  <data name="History_AppSwitchesButton.Text" xml:space="preserve">
+    <value>Canvis per app</value>
+  </data>
+  <data name="History_AppSwitchesBreakdown.Text" xml:space="preserve">
+    <value>Recompte de Canvis per App</value>
+  </data>
+  <data name="FocusRating_DeepFocus" xml:space="preserve">
+    <value>Enfocament Profund</value>
+  </data>
+  <data name="FocusRating_BalancedFlow" xml:space="preserve">
+    <value>Flux Equilibrat</value>
+  </data>
+  <data name="FocusRating_FrequentSwitching" xml:space="preserve">
+    <value>Canvis Freqüents</value>
+  </data>
+  <data name="FocusRating_HighFragmentation" xml:space="preserve">
+    <value>Alta Fragmentació</value>
+  </data>
+  <data name="MiscData_SwitchesPerHour" xml:space="preserve">
+    <value>Canvis per Hora</value>
+  </data>
+  <data name="MiscData_MostSwitchedApp" xml:space="preserve">
+    <value>App Més Canviada</value>
+  </data>
+  <data name="MiscData_ProductivityScore" xml:space="preserve">
+    <value>Puntuació de Productivitat</value>
+  </data>
+  <data name="MiscData_LateNightUsage" xml:space="preserve">
+    <value>Temps de Pantalla Nocturn</value>
+  </data>
+  <data name="MiscData_LateNightUsageDesc" xml:space="preserve">
+    <value>del temps actiu total</value>
+  </data>
 </root>

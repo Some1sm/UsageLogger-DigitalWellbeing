@@ -1,3 +1,4 @@
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Data;
 using System;
 
@@ -7,11 +8,16 @@ namespace UsageLogger.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (value is double d)
+            double d = 0;
+            if (value is double db) d = db;
+            else if (value is int i) d = (double)i;
+
+            if (targetType == typeof(GridLength))
             {
-                return $"{d:0.0}%";
+                return new GridLength(Math.Max(0.001, d), GridUnitType.Star);
             }
-            return "0%";
+
+            return $"{d:0.0}%";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

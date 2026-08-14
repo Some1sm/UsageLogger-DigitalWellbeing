@@ -9,7 +9,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:l="using:WinUI3Localizer"
     xmlns:controls="using:UsageLogger.Controls"
+    xmlns:helpers="using:UsageLogger.Helpers"
+    xmlns:converters="using:UsageLogger.Converters"
     mc:Ignorable="d">
+
+    <Page.Resources>
+        <converters:PercentConverter x:Key="PercentConverter"/>
+    </Page.Resources>
 
     <Grid Padding="20">
         <Grid.RowDefinitions>
@@ -68,6 +74,28 @@
                         <TextBlock x:Name="TxtVisualReport" l:Uids.Uid="History_VisualReportText" VerticalAlignment="Center" FontWeight="SemiBold"/>
                     </StackPanel>
                 </Button>
+
+                <!-- Export Data (CSV / JSON) -->
+                <DropDownButton x:Name="BtnExportData" VerticalAlignment="Bottom" Padding="14,6">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <FontIcon Glyph="&#xEDE1;" FontSize="13" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="TxtExportButton" l:Uids.Uid="History_ExportButton" Text="Export Data" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                    </StackPanel>
+                    <DropDownButton.Flyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem l:Uids.Uid="History_ExportCsv" Text="Export as CSV..." Click="BtnExportCsv_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xE8A5;"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem l:Uids.Uid="History_ExportJson" Text="Export as JSON..." Click="BtnExportJson_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xE943;"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                        </MenuFlyout>
+                    </DropDownButton.Flyout>
+                </DropDownButton>
                 
             </StackPanel>
         </Border>
@@ -146,6 +174,128 @@
                                 </StackPanel>
                             </StackPanel>
                         </Grid>
+                    </Border>
+                </Grid>
+
+                <!-- Analytics Insights Row: Productivity, Context Switches, Day-Part Routine -->
+                <Grid ColumnSpacing="16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Card 1: Productivity Balance -->
+                    <Border Grid.Column="0" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="16">
+                        <StackPanel Spacing="8">
+                            <StackPanel Spacing="2">
+                                <TextBlock l:Uids.Uid="History_ProductivityTitle" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                    <TextBlock Text="{x:Bind ViewModel.ProductivityScore, Mode=OneWay}" FontSize="24" FontWeight="Bold"/>
+                                    <TextBlock Text="%" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Bottom" Margin="0,0,0,3" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <!-- 3-Segment Ratio Bar -->
+                            <Grid Height="8" CornerRadius="4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="{x:Bind ViewModel.ProductivePercent, Mode=OneWay, Converter={StaticResource PercentConverter}}"/>
+                                    <ColumnDefinition Width="{x:Bind ViewModel.NeutralPercent, Mode=OneWay, Converter={StaticResource PercentConverter}}"/>
+                                    <ColumnDefinition Width="{x:Bind ViewModel.LeisurePercent, Mode=OneWay, Converter={StaticResource PercentConverter}}"/>
+                                </Grid.ColumnDefinitions>
+                                <Rectangle Grid.Column="0" Fill="#107C41"/>
+                                <Rectangle Grid.Column="1" Fill="#0078D4"/>
+                                <Rectangle Grid.Column="2" Fill="#8764B8"/>
+                            </Grid>
+
+                            <!-- Breakdown Legend -->
+                            <TextBlock Text="{x:Bind ViewModel.ProductivityBreakdownText, Mode=OneWay}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextTrimming="CharacterEllipsis"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Card 2: Focus & Context Switching -->
+                    <Border Grid.Column="1" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="16">
+                        <StackPanel Spacing="8">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Spacing="2">
+                                    <TextBlock l:Uids.Uid="History_ContextSwitchesTitle" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                                    <TextBlock Text="{x:Bind ViewModel.SwitchesPerHourText, Mode=OneWay}" FontSize="24" FontWeight="Bold" TextTrimming="CharacterEllipsis"/>
+                                </StackPanel>
+                                <Border Grid.Column="1" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" CornerRadius="6" Padding="8,4" VerticalAlignment="Top">
+                                    <TextBlock Text="{x:Bind ViewModel.FocusRatingText, Mode=OneWay}" FontSize="11" FontWeight="SemiBold"/>
+                                </Border>
+                            </Grid>
+
+                            <!-- Bottom Action: View Top Switched Apps -->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{x:Bind ViewModel.TotalSwitchesText, Mode=OneWay}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center"/>
+                                <Button Grid.Column="1" Padding="6,2" FontSize="11" Background="Transparent" BorderThickness="0">
+                                    <StackPanel Orientation="Horizontal" Spacing="4">
+                                        <TextBlock l:Uids.Uid="History_AppSwitchesButton" Text="App switches"/>
+                                        <FontIcon Glyph="&#xE76C;" FontSize="9" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <Button.Flyout>
+                                        <Flyout>
+                                            <StackPanel Width="250" Spacing="8">
+                                                <TextBlock l:Uids.Uid="History_AppSwitchesBreakdown" Text="App Switch Count" FontWeight="SemiBold" FontSize="13"/>
+                                                <ListView ItemsSource="{x:Bind ViewModel.TopSwitchedApps, Mode=OneWay}" SelectionMode="None" MaxHeight="220">
+                                                    <ListView.ItemTemplate>
+                                                        <DataTemplate x:DataType="helpers:AppSwitchItem">
+                                                            <Grid Padding="0,3">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="*"/>
+                                                                    <ColumnDefinition Width="Auto"/>
+                                                                </Grid.ColumnDefinitions>
+                                                                <TextBlock Grid.Column="0" Text="{x:Bind DisplayName}" TextTrimming="CharacterEllipsis" FontSize="12"/>
+                                                                <TextBlock Grid.Column="1" Text="{x:Bind Count}" FontWeight="SemiBold" FontSize="12" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" Margin="8,0,0,0"/>
+                                                            </Grid>
+                                                        </DataTemplate>
+                                                    </ListView.ItemTemplate>
+                                                </ListView>
+                                            </StackPanel>
+                                        </Flyout>
+                                    </Button.Flyout>
+                                </Button>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Card 3: Day-Part Routine -->
+                    <Border Grid.Column="2" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="16">
+                        <StackPanel Spacing="8">
+                            <StackPanel Spacing="2">
+                                <TextBlock l:Uids.Uid="History_DayPartRoutineTitle" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <TextBlock l:Uids.Uid="History_LateNightLabel" Text="Late Night:" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="13" VerticalAlignment="Bottom" Margin="0,0,0,2"/>
+                                    <TextBlock Text="{x:Bind ViewModel.LateNightUsageText, Mode=OneWay}" FontSize="24" FontWeight="Bold"/>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <!-- 4-Segment Routine Bar -->
+                            <Grid Height="8" CornerRadius="4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="{x:Bind ViewModel.MorningPercent, Mode=OneWay, Converter={StaticResource PercentConverter}}"/>
+                                    <ColumnDefinition Width="{x:Bind ViewModel.AfternoonPercent, Mode=OneWay, Converter={StaticResource PercentConverter}}"/>
+                                    <ColumnDefinition Width="{x:Bind ViewModel.EveningPercent, Mode=OneWay, Converter={StaticResource PercentConverter}}"/>
+                                    <ColumnDefinition Width="{x:Bind ViewModel.NightPercent, Mode=OneWay, Converter={StaticResource PercentConverter}}"/>
+                                </Grid.ColumnDefinitions>
+                                <Rectangle Grid.Column="0" Fill="#FFB900" ToolTipService.ToolTip="{x:Bind ViewModel.DayPartMorningRange, Mode=OneWay}"/>
+                                <Rectangle Grid.Column="1" Fill="#0078D4" ToolTipService.ToolTip="{x:Bind ViewModel.DayPartAfternoonRange, Mode=OneWay}"/>
+                                <Rectangle Grid.Column="2" Fill="#E74856" ToolTipService.ToolTip="{x:Bind ViewModel.DayPartEveningRange, Mode=OneWay}"/>
+                                <Rectangle Grid.Column="3" Fill="#5C2D91" ToolTipService.ToolTip="{x:Bind ViewModel.DayPartNightRange, Mode=OneWay}"/>
+                            </Grid>
+
+                            <!-- Breakdown Legend -->
+                            <TextBlock Text="{x:Bind ViewModel.DayPartBreakdownText, Mode=OneWay}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextTrimming="CharacterEllipsis"/>
+                        </StackPanel>
                     </Border>
                 </Grid>
                 
